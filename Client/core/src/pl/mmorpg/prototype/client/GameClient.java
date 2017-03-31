@@ -1,4 +1,4 @@
-package pl.mmorpg.protptype.client;
+package pl.mmorpg.prototype.client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
