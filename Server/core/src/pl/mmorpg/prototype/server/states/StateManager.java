@@ -9,9 +9,9 @@ public class StateManager
 {
     private Stack<State> states = new Stack<State>();
 
-    public void update()
+	public void update(float deltaTime)
     {
-        usedState().update();
+		usedState().update(deltaTime);
     }
 
     private State usedState()
