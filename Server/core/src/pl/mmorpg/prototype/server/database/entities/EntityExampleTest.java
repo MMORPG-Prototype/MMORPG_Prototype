@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.tests.database;
+package pl.mmorpg.prototype.server.database.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

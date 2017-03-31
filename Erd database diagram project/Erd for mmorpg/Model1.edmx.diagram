@@ -6,9 +6,9 @@
     <edmx:Diagrams>
       <Diagram DiagramId="085008284f1d43a582e93abaf3cd927d" Name="Diagram1" >
         <EntityTypeShape EntityType="Model1.Users" Width="1.5" PointX="2.375" PointY="0.75" />
-        <EntityTypeShape EntityType="Model1.UserCharacters" Width="1.5" PointX="4.625" PointY="0.875" />
+        <EntityTypeShape EntityType="Model1.UserCharacters" Width="1.5" PointX="4.625" PointY="0.75" />
         <AssociationConnector Association="Model1.UserCharactersUsers" />
-        <EntityTypeShape EntityType="Model1.CharacterItem" Width="1.5" PointX="7" PointY="1" />
+        <EntityTypeShape EntityType="Model1.CharacterItem" Width="1.5" PointX="6.875" PointY="0.75" />
         <AssociationConnector Association="Model1.CharacterItemUserCharacters" />
       </Diagram>
     </edmx:Diagrams>

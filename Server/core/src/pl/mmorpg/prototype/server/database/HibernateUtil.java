@@ -9,6 +9,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.reflections.Reflections;
 
+
+
 public class HibernateUtil
 {
 	private static final SessionFactory sessionFactory;
@@ -28,7 +30,7 @@ public class HibernateUtil
 
 	private static void registerEntityTypes(Configuration config)
 	{
-		Reflections reflections = new Reflections("pl.mmorpg.prototype");
+		Reflections reflections = new Reflections("pl.mmorpg.prototype.server.database.entities");
 		Set<Class<?>> entityTypes = reflections.getTypesAnnotatedWith(Table.class);
 		for (Class<?> type : entityTypes)
 			config = config.addAnnotatedClass(type);
@@ -42,5 +44,14 @@ public class HibernateUtil
 	public static Session openSession()
 	{
 		return sessionFactory.openSession();
+	}
+
+	public static void makeOperation(SessionAction sessionAction)
+	{
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		sessionAction.make(session);
+		session.getTransaction().commit();
+		session.close();
 	}
 }
