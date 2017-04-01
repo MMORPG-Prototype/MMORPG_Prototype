@@ -32,13 +32,13 @@ public class PacketsRegisterer
 
     private static String getUsedPackageName()
     {
-		return "pl.gda.pg.student.project.packets";
+		return "pl.mmorpg.prototype.clientservercommon.packets";
     }
 
     public static Kryo registerAllAnnotated(Kryo destination, Class<? extends Annotation> annotationType,
             String sourcePackageName)
     {
-        Reflections reflections = new Reflections(sourcePackageName);
+		Reflections reflections = new Reflections(PacketsRegisterer.class.getPackage().getName());
         Set<Class<?>> registerableTypes = reflections.getTypesAnnotatedWith(annotationType);
         destination = registerCollection(destination, registerableTypes);
         Set<Class<?>> registerableBaseTypes = reflections.getTypesAnnotatedWith(defaultAnnotationBase);

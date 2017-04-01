@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.InputAdapter;
 
-public class InputProcessorAdapter implements InputProcessor
+public class InputProcessorAdapter extends InputAdapter
 {
     private Map<String, KeyHandler> keyHandlers;
     protected Map<Integer, KeyHandler> keyHandlersToActivate = Collections
@@ -33,42 +33,6 @@ public class InputProcessorAdapter implements InputProcessor
     {
         keyHandlersToActivate.remove(keycode);
         return true;
-    }
-
-    @Override
-    public boolean keyTyped(char character)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount)
-    {
-        return false;
     }
 
     public void process()

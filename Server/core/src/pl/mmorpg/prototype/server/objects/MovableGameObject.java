@@ -9,6 +9,8 @@ import pl.mmorpg.prototype.server.collision.CollisionMap;
 public abstract class MovableGameObject extends GameObject
 {
     private float moveSpeed = 100.0f;
+	private float movementX = 0.0f;
+	private float movementY = 0.0f;
 
 	protected MovableGameObject(Texture lookout)
     {
@@ -16,11 +18,58 @@ public abstract class MovableGameObject extends GameObject
     }
 
 	public GameObject moveRight(CollisionMap collisionMap)
-    {
-        moveRight();
-		GameObject collision = collisionMap.isColliding(getCollisionRect());
+	{
+		movementX += getMoveSpeed() * Gdx.graphics.getDeltaTime();
+		int collisionMoveValue = (int) movementX;
+		movementX -= (int) movementX;
+		GameObject collision = moveRight(collisionMap, collisionMoveValue);
 		if (collision != null)
-			fixPositionOnCollisionAfterMovingRight(collision);
+			while (moveRight(collisionMap, 1) == null)
+				;
+		return collision;
+	}
+
+	public GameObject moveLeft(CollisionMap collisionMap)
+	{
+		movementX -= getMoveSpeed() * Gdx.graphics.getDeltaTime();
+		int collisionMoveValue = (int) -movementX;
+		movementX -= (int) movementX;
+		GameObject collision = moveLeft(collisionMap, collisionMoveValue);
+		if (collision != null)
+			while (moveLeft(collisionMap, 1) == null)
+				;
+		return collision;
+	}
+
+	public GameObject moveDown(CollisionMap collisionMap)
+	{
+		movementY -= getMoveSpeed() * Gdx.graphics.getDeltaTime();
+		int collisionMoveValue = (int) -movementY;
+		movementY -= (int) movementY;
+		GameObject collision = moveDown(collisionMap, collisionMoveValue);
+		if (collision != null)
+			while (moveDown(collisionMap, 1) == null)
+				;
+		return collision;
+	}
+
+	public GameObject moveUp(CollisionMap collisionMap)
+	{
+		movementY += getMoveSpeed() * Gdx.graphics.getDeltaTime();
+		int collisionMoveValue = (int) movementY;
+		movementY -= (int) movementY;
+		GameObject collision = moveUp(collisionMap, collisionMoveValue);
+		if (collision != null)
+			while (moveUp(collisionMap, 1) == null)
+				;
+		return collision;
+	}
+
+	public GameObject moveRight(CollisionMap collisionMap, int moveValue)
+    {
+		GameObject collision = collisionMap.tryToRepositionCollisionGoingRight(moveValue, this);
+		if (collision == null)
+			setX(getX() + moveValue);
         return collision;
     }
 
@@ -34,13 +83,12 @@ public abstract class MovableGameObject extends GameObject
 		 */
     }
 
-	public GameObject moveLeft(CollisionMap collisionMap)
+	public GameObject moveLeft(CollisionMap collisionMap, int moveValue)
     {
-        moveLeft();
-		GameObject collision = collisionMap.isColliding(getCollisionRect());
-		if (collision != null)
-			fixPositionOnCollisionAfterMovingLeft(collision);
-        return collision;
+		GameObject collision = collisionMap.tryToRepositionCollisionGoingLeft(moveValue, this);
+		if (collision == null)
+			setX(getX() - moveValue);
+		return collision;
     }
 
     private void fixPositionOnCollisionAfterMovingLeft(GameObject collision)
@@ -53,13 +101,12 @@ public abstract class MovableGameObject extends GameObject
 		 */
     }
 
-	public GameObject moveUp(CollisionMap collisionMap)
+	public GameObject moveUp(CollisionMap collisionMap, int moveValue)
     {
-        moveUp();
-		GameObject collision = collisionMap.isColliding(getCollisionRect());
-		if (collision != null)
-			fixPositionOnCollisionAfterMovingUp(collision);
-        return collision;
+		GameObject collision = collisionMap.tryToRepositionCollisionGoingUp(moveValue, this);
+		if (collision == null)
+			setY(getY() + moveValue);
+		return collision;
     }
 
     private void fixPositionOnCollisionAfterMovingUp(GameObject collision)
@@ -72,13 +119,12 @@ public abstract class MovableGameObject extends GameObject
 		 */
     }
 
-	public GameObject moveDown(CollisionMap collisionMap)
+	public GameObject moveDown(CollisionMap collisionMap, int moveValue)
     {
-        moveDown();
-		GameObject collision = collisionMap.isColliding(getCollisionRect());
-		if (collision != null)
-			fixPositionOnCollisionAfterMovingDown(collision);
-        return collision;
+		GameObject collision = collisionMap.tryToRepositionCollisionGoingDown(moveValue, this);
+		if (collision == null)
+			setY(getY() - moveValue);
+		return collision;
     }
 
     private void fixPositionOnCollisionAfterMovingDown(GameObject collision)

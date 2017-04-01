@@ -11,10 +11,10 @@ public class IntegerRectangle
 
 	public IntegerRectangle(Rectangle rectangle)
 	{
-		this.x = Math.round(rectangle.x);
-		this.y = Math.round(rectangle.y);
-		this.width = Math.round(rectangle.width);
-		this.height = Math.round(rectangle.height);
+		this.x = (int) rectangle.x;
+		this.y = (int) rectangle.y;
+		this.width = (int) rectangle.width;
+		this.height = (int) rectangle.height;
 	}
 
 	public IntegerRectangle(int x, int y, int width, int height)

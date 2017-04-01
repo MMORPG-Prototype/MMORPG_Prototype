@@ -10,23 +10,25 @@ public abstract class GameObject
 	public static final NullGameObject NULL_OBJECT = new NullGameObject();
 	private Sprite sprite;
 
-	private Rectangle collisionRectangle;
+	private Rectangle collisionRectangle = new Rectangle();
 
 	private int layer;
 
 	public GameObject(Texture lookout)
 	{
-		sprite.setTexture(lookout);
-		this.setSize(lookout.getWidth(), lookout.getHeight());
+		sprite = new Sprite(lookout);
+		sprite.setRegion(lookout);
+		collisionRectangle.width = lookout.getWidth();
+		collisionRectangle.height = lookout.getHeight();
 	}
 
 	private GameObject()
 	{
 	}
 
-	protected abstract void update(float deltaTime);
+	public abstract void update(float deltaTime);
 
-	protected void render(SpriteBatch batch)
+	public void render(SpriteBatch batch)
 	{
 		sprite.draw(batch);
 	}
@@ -55,11 +57,6 @@ public abstract class GameObject
 		collisionRectangle.setSize(width, height);
 	}
 
-	public void setBounds(float x, float y, float width, float height)
-	{
-		sprite.setBounds(x, y, width, height);
-		collisionRectangle.set(x, y, width, height);
-	}
 
 	public int getLayer()
 	{
@@ -90,12 +87,12 @@ public abstract class GameObject
 	{
 
 		@Override
-		protected void update(float deltaTime)
+		public void update(float deltaTime)
 		{
 		}
 
 		@Override
-		protected void render(SpriteBatch batch)
+		public void render(SpriteBatch batch)
 		{
 		}
 
@@ -119,10 +116,7 @@ public abstract class GameObject
 		{
 		}
 
-		@Override
-		public void setBounds(float x, float y, float width, float height)
-		{
-		}
+
 
 		@Override
 		public int getLayer()

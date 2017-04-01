@@ -9,11 +9,6 @@ public class StateManager
 {
     private Stack<State> states = new Stack<State>();
 
-    public void update()
-    {
-        usedState().update();
-    }
-
     private State usedState()
     {
         return states.peek();
