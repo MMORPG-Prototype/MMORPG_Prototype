@@ -12,9 +12,9 @@ public abstract class MovableGameObject extends GameObject
 	private float movementX = 0.0f;
 	private float movementY = 0.0f;
 
-	protected MovableGameObject(Texture lookout)
+	protected MovableGameObject(Texture lookout, long id)
     {
-		super(lookout);
+		super(lookout, id);
     }
 
 	public GameObject moveRight(CollisionMap collisionMap)

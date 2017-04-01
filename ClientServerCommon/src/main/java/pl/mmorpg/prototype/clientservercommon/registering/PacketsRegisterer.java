@@ -38,7 +38,7 @@ public class PacketsRegisterer
     public static Kryo registerAllAnnotated(Kryo destination, Class<? extends Annotation> annotationType,
             String sourcePackageName)
     {
-		Reflections reflections = new Reflections(PacketsRegisterer.class.getPackage().getName());
+		Reflections reflections = new Reflections(getUsedPackageName());
         Set<Class<?>> registerableTypes = reflections.getTypesAnnotatedWith(annotationType);
         destination = registerCollection(destination, registerableTypes);
         Set<Class<?>> registerableBaseTypes = reflections.getTypesAnnotatedWith(defaultAnnotationBase);

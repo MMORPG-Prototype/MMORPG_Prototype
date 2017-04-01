@@ -8,18 +8,21 @@ import com.badlogic.gdx.math.Rectangle;
 public abstract class GameObject
 {
 	public static final NullGameObject NULL_OBJECT = new NullGameObject();
-	private Sprite sprite;
 
 	private Rectangle collisionRectangle = new Rectangle();
-
+	private Sprite sprite;
+	private long id = -1;
 	private int layer;
 
-	public GameObject(Texture lookout)
+
+
+	public GameObject(Texture lookout, long id)
 	{
 		sprite = new Sprite(lookout);
 		sprite.setRegion(lookout);
 		collisionRectangle.width = lookout.getWidth();
 		collisionRectangle.height = lookout.getHeight();
+		this.id = id;
 	}
 
 	private GameObject()
@@ -83,6 +86,18 @@ public abstract class GameObject
 		return collisionRectangle.y;
 	}
 
+	public long getId()
+	{
+		return id;
+	}
+
+	public void setId(long id)
+	{
+		this.id = id;
+	}
+
+	public abstract String getIdentifier();
+
 	private static class NullGameObject extends GameObject
 	{
 
@@ -116,8 +131,6 @@ public abstract class GameObject
 		{
 		}
 
-
-
 		@Override
 		public int getLayer()
 		{
@@ -127,6 +140,41 @@ public abstract class GameObject
 		@Override
 		public void setLayer(int layer)
 		{
+		}
+
+		@Override
+		public Rectangle getCollisionRect()
+		{
+			return new Rectangle(-1, -1, -1, -1);
+		}
+
+		@Override
+		public float getX()
+		{
+			return -1;
+		}
+
+		@Override
+		public float getY()
+		{
+			return -1;
+		}
+
+		@Override
+		public long getId()
+		{
+			return -1;
+		}
+
+		@Override
+		public void setId(long id)
+		{
+		}
+
+		@Override
+		public String getIdentifier()
+		{
+			return "NullObject";
 		}
 
 	}

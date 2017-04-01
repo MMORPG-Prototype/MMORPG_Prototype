@@ -14,6 +14,11 @@ public class StateManager
         return states.peek();
     }
 
+	public void update(float deltaTime)
+	{
+		usedState().update(deltaTime);
+	}
+
     public void render(SpriteBatch batch)
     {
         usedState().render(batch);

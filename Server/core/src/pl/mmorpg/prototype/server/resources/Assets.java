@@ -20,7 +20,7 @@ public class Assets
 	private static AssetManager assets = new AssetManager();
 	private static BitmapFont font = new BitmapFont();
 
-	static
+	public static void loadAssets()
 	{
 		addClassTypes();
         loadAll();
@@ -36,7 +36,7 @@ public class Assets
         classTypes.put("ogg", Sound.class);
     }
 
-	public static void loadAll()
+	private static void loadAll()
     {
         FileHandle[] files = Gdx.files.internal(assetsPath).list();
         for (FileHandle file : files)

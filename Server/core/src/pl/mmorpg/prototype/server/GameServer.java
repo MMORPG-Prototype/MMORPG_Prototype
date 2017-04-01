@@ -26,6 +26,7 @@ public class GameServer extends ApplicationAdapter
 	@Override
 	public void create()
 	{
+		Assets.loadAssets();
 		states = new StateManager();
 		batch = new SpriteBatch();
 		server = initializeServer();
@@ -38,8 +39,8 @@ public class GameServer extends ApplicationAdapter
 	private Server initializeServer()
 	{
 		server = new Server();
-		Kryo kryo = server.getKryo();
-		kryo = PacketsRegisterer.registerAllAnnotated(kryo);
+		Kryo serverKryo = server.getKryo();
+		serverKryo = PacketsRegisterer.registerAllAnnotated(serverKryo);
 		return server;
 	}
 
@@ -82,4 +83,5 @@ public class GameServer extends ApplicationAdapter
 		Assets.dispose();
 		batch.dispose();
 	}
+
 }

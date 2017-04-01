@@ -7,9 +7,9 @@ public class TestObject extends MovableGameObject
 {
 	private CollisionMap collisionMap;
 
-	public TestObject(CollisionMap collisionMap)
+	public TestObject(CollisionMap collisionMap, long id)
 	{
-		super(Assets.get("ball.png"));
+		super(Assets.get("ball.png"), id);
 		this.collisionMap = collisionMap;
 		setPosition(100.0f, 100.0f);
 	}
@@ -18,6 +18,12 @@ public class TestObject extends MovableGameObject
 	@Override
 	public void update(float deltaTime)
 	{
+	}
+
+	@Override
+	public String getIdentifier()
+	{
+		return "Test Object";
 	}
 
 }

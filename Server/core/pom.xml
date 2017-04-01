@@ -21,17 +21,11 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>com.esotericsoftware</groupId>
-			<artifactId>kryonet</artifactId>
-			<version>2.22.0-RC1</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>5.2.5.Final</version>
 		</dependency>
-		
+
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -57,6 +51,11 @@
 			<version>0.9.11</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.esotericsoftware</groupId>
+			<artifactId>kryonet</artifactId>
+			<version>2.22.0-RC1</version>
+		</dependency>
 
 	</dependencies>
 </project>
