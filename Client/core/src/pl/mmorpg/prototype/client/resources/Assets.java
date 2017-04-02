@@ -3,6 +3,8 @@ package pl.mmorpg.prototype.client.resources;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -14,10 +16,15 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 
 import pl.mmorpg.prototype.client.exceptions.GameException;
+import pl.mmorpg.prototype.clientservercommon.Settings;
 
 public class Assets
 {
@@ -27,6 +34,8 @@ public class Assets
 	private static AssetManager assets = new AssetManager();
 	private static BitmapFont font = new BitmapFont();
 	private static Map<String, Skin> skins = new HashMap<>();
+	private static SpriteBatch batch = new SpriteBatch();
+	private static List<CustomStage> stages = new LinkedList<>();
 
 	static
     {
@@ -137,6 +146,8 @@ public class Assets
     {
         assets.dispose();
         font.dispose();
+		stages.clear();
+		batch.dispose();
 		for (Skin skin : skins.values())
 			skin.dispose();
     }
@@ -145,6 +156,26 @@ public class Assets
     {
         return font;
     }
+
+	public static Stage getStage()
+	{
+		for (CustomStage stage : stages)
+			if (!stage.isUsed())
+			{
+				stage.setUsed();
+				return stage;
+			}
+		CustomStage newStage = new CustomStage(new ScalingViewport(Scaling.stretch, Settings.GAME_WIDTH, Settings.GAME_HEIGHT),
+				batch);
+		newStage.setUsed();
+		stages.add(newStage);
+		return newStage;
+	}
+
+	public static SpriteBatch getBatch()
+	{
+		return batch;
+	}
 
 	private static class UnknownExtensionException extends GameException
     {

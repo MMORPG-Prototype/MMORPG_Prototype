@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
+@Entity(name = "User")
 @Table(name = "Users")
 public class User implements java.io.Serializable
 {

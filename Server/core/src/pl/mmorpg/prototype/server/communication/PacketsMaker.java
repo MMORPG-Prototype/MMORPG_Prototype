@@ -2,7 +2,9 @@ package pl.mmorpg.prototype.server.communication;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
+import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.GameObject;
 
 public class PacketsMaker
@@ -29,6 +31,14 @@ public class PacketsMaker
 		packet.x = x;
 		packet.y = y;
 		return packet;
+	}
 
+	public static UserCharacterDataPacket makeCharacterPacket(UserCharacter character)
+	{
+		UserCharacterDataPacket packet = new UserCharacterDataPacket();
+		packet.id = character.getId();
+		packet.level = character.getLevel();
+		packet.nickname = character.getNickname();
+		return packet;
 	}
 }

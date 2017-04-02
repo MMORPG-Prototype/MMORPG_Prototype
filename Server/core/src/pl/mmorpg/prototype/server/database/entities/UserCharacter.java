@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity
+@Entity(name = "UserCharacter")
 @Table(name = "User_Characters")
 public class UserCharacter implements java.io.Serializable
 {
@@ -23,6 +23,8 @@ public class UserCharacter implements java.io.Serializable
 	@Column(name = "nickname", unique = true, nullable = false)
 	private String nickname;
 
+	@Column(name = "level", nullable = false)
+	private Integer level = 1;
 
 	public Integer getId()
 	{
@@ -52,6 +54,16 @@ public class UserCharacter implements java.io.Serializable
 	public void setUser(User user)
 	{
 		this.user = user;
+	}
+
+	public Integer getLevel()
+	{
+		return level;
+	}
+
+	public void setLevel(Integer level)
+	{
+		this.level = level;
 	}
 
 }

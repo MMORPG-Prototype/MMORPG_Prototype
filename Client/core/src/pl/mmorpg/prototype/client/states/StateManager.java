@@ -5,11 +5,13 @@ import java.util.Stack;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import pl.mmorpg.prototype.client.exceptions.NoSuchStateTypeException;
+
 public class StateManager
 {
     private Stack<State> states = new Stack<State>();
 
-    private State usedState()
+	public State usedState()
     {
         return states.peek();
     }
@@ -38,6 +40,7 @@ public class StateManager
     public void pop()
     {
         states.pop();
+		usedState().reactivate();
         if (states.empty())
             Gdx.app.exit();
     }
@@ -46,5 +49,13 @@ public class StateManager
     {
         return states.empty();
     }
+
+	public <T> T find(Class<T> stateType)
+	{
+		for (State state : states)
+			if (state.getClass().equals(stateType))
+				return (T) state;
+		throw new NoSuchStateTypeException();
+	}
 
 }

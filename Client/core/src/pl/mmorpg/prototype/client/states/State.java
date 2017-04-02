@@ -7,4 +7,6 @@ public interface State
 	void render(SpriteBatch batch);
 
 	void update(float deltaTime);
+
+	void reactivate();
 }

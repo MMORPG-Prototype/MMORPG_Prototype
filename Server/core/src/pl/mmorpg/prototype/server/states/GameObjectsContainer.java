@@ -10,7 +10,9 @@ public interface GameObjectsContainer
 
 	GameObject getObject(long id);
 
-	void remove(long objectId);
+	GameObject remove(long objectId);
+
+	boolean has(long objectId);
 
 	Map<Long, GameObject> getGameObjects();
 }

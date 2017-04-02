@@ -4,6 +4,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.KeyHandler;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveDownPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveLeftPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveRightPacket;
@@ -12,10 +13,12 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
 public class PlayInputHandler extends InputProcessorAdapter
 {
 	private Client client;
+	private UserCharacterDataPacket character;
 
-	public PlayInputHandler(Client client)
+	public PlayInputHandler(Client client, UserCharacterDataPacket character)
 	{
 		this.client = client;
+		this.character = character;
 	}
 
 	public class WKeyHandler implements KeyHandler
@@ -24,7 +27,7 @@ public class PlayInputHandler extends InputProcessorAdapter
 		public void handle()
 		{
 			MoveUpPacket packet = new MoveUpPacket();
-			packet.id = client.getID();
+			packet.id = character.id;
 			client.sendTCP(packet);
 		}
 	}
@@ -35,7 +38,7 @@ public class PlayInputHandler extends InputProcessorAdapter
 		public void handle()
 		{
 			MoveLeftPacket packet = new MoveLeftPacket();
-			packet.id = client.getID();
+			packet.id = character.id;
 			client.sendTCP(packet);
 		}
 	}
@@ -46,7 +49,7 @@ public class PlayInputHandler extends InputProcessorAdapter
 		public void handle()
 		{
 			MoveDownPacket packet = new MoveDownPacket();
-			packet.id = client.getID();
+			packet.id = character.id;
 			client.sendTCP(packet);
 		}
 	}
@@ -57,7 +60,7 @@ public class PlayInputHandler extends InputProcessorAdapter
 		public void handle()
 		{
 			MoveRightPacket packet = new MoveRightPacket();
-			packet.id = client.getID();
+			packet.id = character.id;
 			client.sendTCP(packet);
 		}
 	}

@@ -48,9 +48,14 @@ public class ConnectionState implements State
 	public void update(float deltaTime)
 	{
 		if (client.isConnected())
-			states.pop();
+			states.set(new AuthenticationState(client, states));
 		else if (!connectThread.isAlive())
 			states.set(new SettingsChoosingState(client, states));
+	}
+
+	@Override
+	public void reactivate()
+	{
 	}
 
 }

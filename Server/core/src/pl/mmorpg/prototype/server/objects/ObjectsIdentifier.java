@@ -12,7 +12,7 @@ public class ObjectsIdentifier
     
     static
     {
-		identifiers.put(Player.class, ObjectsIdentifiers.PLAYER);
+		identifiers.put(PlayerCharacter.class, ObjectsIdentifiers.PLAYER);
     }
     
     public static String getObjectIdentifier(Class<?> type)

@@ -43,10 +43,11 @@ public class PlayState extends State implements GameObjectsContainer
 	}
 
 	@Override
-	public void remove(long objectId)
+	public GameObject remove(long objectId)
 	{
 		GameObject object = gameObjects.remove(objectId);
 		collisionMap.remove(object);
+		return object;
 	}
 
 	@Override
@@ -64,6 +65,12 @@ public class PlayState extends State implements GameObjectsContainer
 	public GameObject getObject(long id)
 	{
 		return gameObjects.get(id);
+	}
+
+	@Override
+	public boolean has(long objectId)
+	{
+		return gameObjects.containsKey(objectId);
 	}
 
 }

@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.input.dialogs;
+package pl.mmorpg.prototype.client.states.dialogs;
 
 
 import com.badlogic.gdx.Gdx;
@@ -10,8 +10,6 @@ import pl.mmorpg.prototype.client.states.SettingsChoosingState;
 
 public class AskForIpDialog extends Dialog
 {
-	private final static Integer OK = 0;
-	private final static Integer CANCEL = 1;
 	private TextField ipField;
 	private SettingsChoosingState linkedState;
 
@@ -26,8 +24,8 @@ public class AskForIpDialog extends Dialog
 				this.hide();
 			return true;
 		});
-		this.button("Ok", OK);
-		button("Cancel", CANCEL);
+		this.button("Ok", DialogResults.OK);
+		button("Cancel", DialogResults.CANCEL);
 		text("Server ip: ");
 		this.getContentTable().add(ipField);
 	}
@@ -35,7 +33,7 @@ public class AskForIpDialog extends Dialog
 	@Override
 	protected void result(Object object)
 	{
-		if(object.equals(OK))
+		if (object.equals(DialogResults.OK))
 			transferToConnectionState();
 		else
 			Gdx.app.exit();

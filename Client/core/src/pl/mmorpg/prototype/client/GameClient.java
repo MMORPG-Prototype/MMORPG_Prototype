@@ -19,24 +19,26 @@ public class GameClient extends ApplicationAdapter
 	private Client client;
 	private StateManager states;
 	private PlayState playState;
+	private ClientListener clientListener;
 
 	@Override
 	public void create()
 	{
-		playState = new PlayState(states);
-		client = initizlizeClient();
-		batch = new SpriteBatch();
+		batch = Assets.getBatch();
 		states = new StateManager();
+		client = new Client();
+		playState = new PlayState(states, client);
+		client = initizlizeClient();
 		states.push(playState);
 		states.push(new SettingsChoosingState(client, states));
 	}
 
 	private Client initizlizeClient()
 	{
-		client = new Client();
 		Kryo kryo = client.getKryo();
 		kryo = PacketsRegisterer.registerAllAnnotated(kryo);
-		client.addListener(new ClientListener(client, playState));
+		clientListener = new ClientListener(client, playState, states);
+		client.addListener(clientListener);
 		client.start();
 		return client;
 	}
@@ -44,12 +46,16 @@ public class GameClient extends ApplicationAdapter
 	@Override
 	public void render()
 	{
-		states.update(Gdx.graphics.getDeltaTime());
+		update();
 		Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
 		states.render(batch);
-		batch.end();
+	}
+
+	private void update()
+	{
+		states.update(Gdx.graphics.getDeltaTime());
+		clientListener.tryHandlingUnhandledPackets();
 	}
 
 	@Override

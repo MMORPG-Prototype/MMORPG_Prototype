@@ -3,9 +3,8 @@ package pl.mmorpg.prototype.clientservercommon.packets;
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
-public class ObjectRemovePacket
+public class ObjectRemovePacket extends GameObjectTargetPacket
 {
-	public long id;
 
 	public ObjectRemovePacket()
 	{
