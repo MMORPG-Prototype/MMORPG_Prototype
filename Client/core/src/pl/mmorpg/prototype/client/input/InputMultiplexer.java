@@ -5,16 +5,16 @@ import java.util.List;
 
 import com.badlogic.gdx.InputProcessor;
 
-public class MyInputMultiplexer implements InputProcessor
+public class InputMultiplexer implements InputProcessor
 {
 
 	private List<InputProcessor> processors = new LinkedList<>();
 
-	public MyInputMultiplexer()
+	public InputMultiplexer()
 	{
 	}
 
-	public MyInputMultiplexer(InputProcessor... processors)
+	public InputMultiplexer(InputProcessor... processors)
 	{
 		for (int i = 0; i < processors.length; i++)
 			this.processors.add(processors[i]);
