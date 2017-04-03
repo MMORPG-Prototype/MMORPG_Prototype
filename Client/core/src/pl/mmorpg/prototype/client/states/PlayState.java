@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.states;
 
+import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +16,12 @@ import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.exceptions.NotImplementedException;
 import pl.mmorpg.prototype.client.input.DialogManipulator;
-import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.InputMultiplexer;
+import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.NullInputHandler;
 import pl.mmorpg.prototype.client.input.PlayInputContinuousHandler;
 import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
+import pl.mmorpg.prototype.client.items.SmallHealthPotion;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -54,6 +56,7 @@ public class PlayState implements State, GameObjectsContainer
 		this.states = states;
 		inputMultiplexer = new InputMultiplexer();
 		lastActiveDialog = inventoryDialog;
+		inventoryDialog.put(new SmallHealthPotion(), new Point(0, 0));
 	}
 
 	public void initialize(UserCharacterDataPacket character)

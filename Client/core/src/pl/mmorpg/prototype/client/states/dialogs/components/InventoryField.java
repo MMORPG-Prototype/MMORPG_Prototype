@@ -24,8 +24,8 @@ public class InventoryField extends Button implements ItemContainer
 		drawable = new SpriteDrawable(sprite);
 		image = new Image(drawable);
 		add(image);
-		drawable.setMinWidth(20);
-		drawable.setMinHeight(20);
+		drawable.setMinWidth(24);
+		drawable.setMinHeight(24);
 	}
 
 	@Override
@@ -62,7 +62,5 @@ public class InventoryField extends Button implements ItemContainer
 	public void setTexture(Texture texture)
 	{
 		sprite.setTexture(texture);
-		setWidth(texture.getWidth());
-		setHeight(texture.getHeight());
 	}
 }

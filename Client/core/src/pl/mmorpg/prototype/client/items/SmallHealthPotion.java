@@ -6,18 +6,16 @@ import pl.mmorpg.prototype.client.resources.Assets;
 
 public class SmallHealthPotion extends Potion
 {
-	private GameCharacter character;
-
-	public SmallHealthPotion(GameCharacter character)
+	public SmallHealthPotion()
 	{
-		super(Assets.get(Assets.Textures.Items.SMALL_HEALTH_POTION), character);
-		this.character = character;
+		super(Assets.get(Assets.Textures.Items.SMALL_HEALTH_POTION));
 	}
 
 	@Override
-	public void use()
+	public void use(GameCharacter character)
 	{
 		throw new NotImplementedException();
 	}
+
 
 }
