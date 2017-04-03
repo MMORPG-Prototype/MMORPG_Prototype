@@ -11,4 +11,5 @@ public interface ItemContainer
 
 	Item getItem();
 
+	void removeItem();
 }

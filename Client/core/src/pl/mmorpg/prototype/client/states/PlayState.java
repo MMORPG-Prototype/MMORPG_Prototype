@@ -21,7 +21,9 @@ import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.NullInputHandler;
 import pl.mmorpg.prototype.client.input.PlayInputContinuousHandler;
 import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
+import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.SmallHealthPotion;
+import pl.mmorpg.prototype.client.items.SmallManaPotion;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -29,6 +31,7 @@ import pl.mmorpg.prototype.client.states.dialogs.CustomDialogs;
 import pl.mmorpg.prototype.client.states.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.states.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.states.dialogs.StatisticsDialog;
+import pl.mmorpg.prototype.client.states.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
@@ -46,6 +49,8 @@ public class PlayState implements State, GameObjectsContainer
 	private final InventoryDialog inventoryDialog = new InventoryDialog(this);
 	private StatisticsDialog statisticsDialog;
 	private final DialogManipulator dialogs = new DialogManipulator();
+	
+	private Item mouseHoldingItem = null;
 
 	private Dialog lastActiveDialog;
 
@@ -57,6 +62,7 @@ public class PlayState implements State, GameObjectsContainer
 		inputMultiplexer = new InputMultiplexer();
 		lastActiveDialog = inventoryDialog;
 		inventoryDialog.put(new SmallHealthPotion(), new Point(0, 0));
+		inventoryDialog.put(new SmallManaPotion(), new Point(0, 2));
 	}
 
 	public void initialize(UserCharacterDataPacket character)
@@ -94,8 +100,11 @@ public class PlayState implements State, GameObjectsContainer
 			object.render(batch);
 
 		batch.end();
-		stage.act();
 		stage.draw();
+		batch.begin();
+		if (mouseHoldingItem != null)
+			mouseHoldingItem.render(batch);
+		batch.end();
 	}
 
 	@Override
@@ -202,6 +211,26 @@ public class PlayState implements State, GameObjectsContainer
 	public void userWantsToChangeCharacter()
 	{
 		throw new NotImplementedException();
+	}
+
+	public void inventoryButtonClicked(InventoryField inventoryField)
+	{
+		if(mouseHoldingItem == null)
+		{
+			mouseHoldingItem = inventoryField.getItem();
+			inventoryField.removeItem();
+		}
+		else if (!inventoryField.hasItem())
+		{
+			inventoryField.put(mouseHoldingItem);
+			mouseHoldingItem = null;
+		} else
+		{
+			Item newMouseItem = inventoryField.getItem();
+			inventoryField.put(mouseHoldingItem);
+			mouseHoldingItem = newMouseItem;
+		}
+
 	}
 
 }

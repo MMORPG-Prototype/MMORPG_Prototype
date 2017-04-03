@@ -193,6 +193,7 @@ public class Assets
 		{
 			public static final String ITEM_FOLDER = "Items/";
 			public static final String SMALL_HEALTH_POTION = ITEM_FOLDER + "SmallHealthPotion.png";
+			public static final String SMALL_MANA_POTION = ITEM_FOLDER + "SmallManaPotion.png";
 		}
 	}
 }
