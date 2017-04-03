@@ -39,6 +39,10 @@ public class PacketsMaker
 		packet.id = character.getId();
 		packet.level = character.getLevel();
 		packet.nickname = character.getNickname();
+		packet.experience = character.getExperience();
+		packet.strength = character.getStrength();
+		packet.magic = character.getMagic();
+		packet.dexitirity = character.getDexitirity();
 		return packet;
 	}
 }
