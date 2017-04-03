@@ -2,24 +2,62 @@ package pl.mmorpg.prototype.client.items;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
-public abstract class Item
+public abstract class Item extends Actor
 {
-	private Texture texture;
+	protected static final float WIDTH_WHEN_DRAGGED = 32;
+	protected static final float HEIGHT_WHEN_DRAGGED = 32;
+	protected static final float WIDTH_INVENTORY = 24;
+	protected static final float HEIGHT_INVENTORY = 24;
+
+
+	private final Sprite sprite;
+	private final SpriteDrawable drawable;
 
 	public Item(Texture texture)
 	{
-		this.texture = texture;
+		sprite = new Sprite(texture);
+		drawable = new SpriteDrawable(sprite);
+		drawable.setMinWidth(WIDTH_INVENTORY);
+		drawable.setMinHeight(HEIGHT_INVENTORY);
 	}
 
 	public Texture getTexture()
 	{
-		return texture;
+		return sprite.getTexture();
 	}
 
-	public void render(SpriteBatch batch)
+
+	public void renderWhenDragged(SpriteBatch batch)
 	{
-		batch.draw(texture, Gdx.input.getX() - 16, Gdx.graphics.getHeight() - Gdx.input.getY() - 16, 32, 32);
+		batch.draw(sprite.getTexture(), getMouseX() - WIDTH_WHEN_DRAGGED / 2, getMouseY() - HEIGHT_WHEN_DRAGGED / 2,
+				WIDTH_WHEN_DRAGGED, HEIGHT_WHEN_DRAGGED);
+	}
+
+	protected float getMouseX()
+	{
+		return Gdx.input.getX();
+	}
+
+	protected float getMouseY()
+	{
+		return Gdx.graphics.getHeight() - Gdx.input.getY();
+	}
+
+	@Override
+	public void draw(Batch batch, float parentAlpha)
+	{
+		batch.draw(sprite.getTexture(), getX() - WIDTH_INVENTORY / 2, getY() - HEIGHT_INVENTORY / 2, WIDTH_INVENTORY,
+				HEIGHT_INVENTORY);
+	}
+
+	public SpriteDrawable getDrawable()
+	{
+		return drawable;
 	}
 }

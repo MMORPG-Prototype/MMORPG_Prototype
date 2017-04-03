@@ -103,7 +103,7 @@ public class PlayState implements State, GameObjectsContainer
 		stage.draw();
 		batch.begin();
 		if (mouseHoldingItem != null)
-			mouseHoldingItem.render(batch);
+			mouseHoldingItem.renderWhenDragged(batch);
 		batch.end();
 	}
 
@@ -213,22 +213,22 @@ public class PlayState implements State, GameObjectsContainer
 		throw new NotImplementedException();
 	}
 
-	public void inventoryButtonClicked(InventoryField inventoryField)
+	public void inventoryFieldClicked(InventoryField inventoryField)
 	{
-		if(mouseHoldingItem == null)
+		if (mouseHoldingItem == null && inventoryField.hasItem())
 		{
 			mouseHoldingItem = inventoryField.getItem();
 			inventoryField.removeItem();
 		}
-		else if (!inventoryField.hasItem())
-		{
-			inventoryField.put(mouseHoldingItem);
-			mouseHoldingItem = null;
-		} else
+		else if (mouseHoldingItem != null && inventoryField.hasItem())
 		{
 			Item newMouseItem = inventoryField.getItem();
 			inventoryField.put(mouseHoldingItem);
 			mouseHoldingItem = newMouseItem;
+		} else if (mouseHoldingItem != null && !inventoryField.hasItem())
+		{
+			inventoryField.put(mouseHoldingItem);
+			mouseHoldingItem = null;
 		}
 
 	}

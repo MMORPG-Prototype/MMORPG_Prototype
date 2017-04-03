@@ -65,7 +65,7 @@ public class InventoryDialog extends CustomDialog
 
 	public void buttonClicked(Point cellPosition)
 	{
-		linkedState.inventoryButtonClicked(inventoryFields.get(cellPosition));
+		linkedState.inventoryFieldClicked(inventoryFields.get(cellPosition));
 	}
 
 	public void put(Item item, Point position)

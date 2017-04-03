@@ -14,19 +14,19 @@ public class InventoryField extends Button implements ItemContainer
 {
 	private static final Texture NULL_TEXTURE = Assets.get("nullTexture.png");
 
-	private final Sprite sprite;
-	private final SpriteDrawable drawable;
-	private final Image image;
-	private Item item = null;
+	private SpriteDrawable drawable;
+	private final Image nullImage;
 
+	private Item item = null;
 
 	public InventoryField()
 	{
 		super(Settings.DEFAULT_SKIN);
-		sprite = new Sprite(NULL_TEXTURE);
-		drawable = new SpriteDrawable(sprite);
-		image = new Image(drawable);
-		add(image);
+		Sprite nullSprite = new Sprite(NULL_TEXTURE);
+		drawable = new SpriteDrawable(nullSprite);
+
+		nullImage = new Image(drawable);
+		add(nullImage);
 		drawable.setMinWidth(24);
 		drawable.setMinHeight(24);
 	}
@@ -46,9 +46,14 @@ public class InventoryField extends Button implements ItemContainer
 	@Override
 	public void put(Item item)
 	{
+		nullImage.remove();
+		if (this.item != null)
+			this.item.remove();
 		this.item = item;
-		setTexture(item.getTexture());
+		add(item);
+		drawable = item.getDrawable();
 	}
+
 
 	@Override
 	public boolean hasItem()
@@ -62,15 +67,13 @@ public class InventoryField extends Button implements ItemContainer
 		return item;
 	}
 
-	public void setTexture(Texture texture)
-	{
-		sprite.setTexture(texture);
-	}
 
 	@Override
 	public void removeItem()
 	{
+		if (item != null)
+			item.remove();
 		item = null;
-		sprite.setTexture(NULL_TEXTURE);
+		add(nullImage);
 	}
 }
