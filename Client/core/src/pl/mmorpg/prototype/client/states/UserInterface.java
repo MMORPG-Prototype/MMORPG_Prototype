@@ -41,7 +41,8 @@ public class UserInterface
 		inventoryDialog = new InventoryDialog(this);
 		statisticsDialog = new StatisticsDialog(character);
 		lastActiveDialog = inventoryDialog;
-
+		mapWithKeys();
+		showDialogs();
 	}
 
 	public void draw(SpriteBatch batch)

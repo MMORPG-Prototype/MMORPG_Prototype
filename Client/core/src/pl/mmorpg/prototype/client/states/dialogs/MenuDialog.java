@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.client.states.dialogs;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -9,9 +10,8 @@ import pl.mmorpg.prototype.client.states.UserInterface;
 import pl.mmorpg.prototype.client.states.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 
-public class MenuDialog extends CustomDialog
+public class MenuDialog extends Dialog
 {
-
 	private UserInterface linkedInterface;
 
 	public MenuDialog(UserInterface linkedInterface)
@@ -75,12 +75,6 @@ public class MenuDialog extends CustomDialog
 		getContentTable().add(disconnectButton);
 		getContentTable().row();
 		pack();
-	}
-
-	@Override
-	public CustomDialogs getIdentifier()
-	{
-		return CustomDialogs.MENU;
 	}
 
 }

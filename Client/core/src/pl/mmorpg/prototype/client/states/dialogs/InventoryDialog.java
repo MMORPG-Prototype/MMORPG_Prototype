@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -16,7 +17,7 @@ import pl.mmorpg.prototype.client.states.UserInterface;
 import pl.mmorpg.prototype.client.states.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 
-public class InventoryDialog extends CustomDialog
+public class InventoryDialog extends Dialog
 {
 
 	private Map<Point, InventoryField> inventoryFields = new HashMap<>();
@@ -58,12 +59,6 @@ public class InventoryDialog extends CustomDialog
 		});
 
 		return button;
-	}
-
-	@Override
-	public CustomDialogs getIdentifier()
-	{
-		return CustomDialogs.INVENTORY;
 	}
 
 	public void buttonClicked(Point cellPosition)

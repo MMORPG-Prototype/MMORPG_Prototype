@@ -1,9 +1,11 @@
 package pl.mmorpg.prototype.client.states.dialogs;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
-public class StatisticsDialog extends CustomDialog
+public class StatisticsDialog extends Dialog
 {
 	private UserCharacterDataPacket character;
 
@@ -31,10 +33,5 @@ public class StatisticsDialog extends CustomDialog
 		getContentTable().row();
 	}
 
-	@Override
-	public CustomDialogs getIdentifier()
-	{
-		return CustomDialogs.STATISTICS;
-	}
 
 }

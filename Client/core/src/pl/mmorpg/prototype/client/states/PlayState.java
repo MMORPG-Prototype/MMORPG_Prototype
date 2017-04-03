@@ -48,8 +48,6 @@ public class PlayState implements State, GameObjectsContainer
 		inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs()));
 		inputMultiplexer.addProcessor(userInterface.getStage());
 		inputMultiplexer.addProcessor(inputHandler);
-		userInterface.mapWithKeys();
-		userInterface.showDialogs();
 	}
 
 
