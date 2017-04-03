@@ -9,10 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchInventoryFieldInPosition;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.states.helpers.Settings;
 
 public class InventoryDialog extends CustomDialog
 {
@@ -80,6 +82,17 @@ public class InventoryDialog extends CustomDialog
 	{
 		InventoryField field = inventoryFields.get(position);
 		return field.getItem();
+	}
+
+	public void addItem(Item item)
+	{
+		for(InventoryField field : inventoryFields.values())
+			if(!field.hasItem())
+			{
+				field.put(item);
+				return;
+			}
+		throw new NoFreeFieldException();
 	}
 
 }

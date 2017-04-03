@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import pl.mmorpg.prototype.client.states.AuthenticationState;
+import pl.mmorpg.prototype.client.states.helpers.Settings;
 
 public class AuthenticationDialog extends Dialog
 {

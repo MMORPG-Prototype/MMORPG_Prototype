@@ -60,4 +60,6 @@ public abstract class Item extends Actor
 	{
 		return drawable;
 	}
+
+	public abstract String getIdentifier();
 }

@@ -1,6 +1,5 @@
 package pl.mmorpg.prototype.client.states;
 
-import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +21,7 @@ import pl.mmorpg.prototype.client.input.NullInputHandler;
 import pl.mmorpg.prototype.client.input.PlayInputContinuousHandler;
 import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
 import pl.mmorpg.prototype.client.items.Item;
-import pl.mmorpg.prototype.client.items.SmallHealthPotion;
-import pl.mmorpg.prototype.client.items.SmallManaPotion;
+import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -32,7 +30,9 @@ import pl.mmorpg.prototype.client.states.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.states.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.states.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.states.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.states.helpers.InventoryManager;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class PlayState implements State, GameObjectsContainer
@@ -61,8 +61,6 @@ public class PlayState implements State, GameObjectsContainer
 		this.states = states;
 		inputMultiplexer = new InputMultiplexer();
 		lastActiveDialog = inventoryDialog;
-		inventoryDialog.put(new SmallHealthPotion(), new Point(0, 0));
-		inventoryDialog.put(new SmallManaPotion(), new Point(0, 2));
 	}
 
 	public void initialize(UserCharacterDataPacket character)
@@ -215,22 +213,12 @@ public class PlayState implements State, GameObjectsContainer
 
 	public void inventoryFieldClicked(InventoryField inventoryField)
 	{
-		if (mouseHoldingItem == null && inventoryField.hasItem())
-		{
-			mouseHoldingItem = inventoryField.getItem();
-			inventoryField.removeItem();
-		}
-		else if (mouseHoldingItem != null && inventoryField.hasItem())
-		{
-			Item newMouseItem = inventoryField.getItem();
-			inventoryField.put(mouseHoldingItem);
-			mouseHoldingItem = newMouseItem;
-		} else if (mouseHoldingItem != null && !inventoryField.hasItem())
-		{
-			inventoryField.put(mouseHoldingItem);
-			mouseHoldingItem = null;
-		}
-
+		mouseHoldingItem = InventoryManager.inventoryFieldClicked(mouseHoldingItem, inventoryField);
 	}
 
+	public void newItemPacketReceived(CharacterItemDataPacket itemData)
+	{
+		Item newItem = ItemFactory.produceItem(itemData);
+		inventoryDialog.addItem(newItem);
+	}
 }

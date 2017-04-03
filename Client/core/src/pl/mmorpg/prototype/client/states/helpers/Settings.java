@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.states.dialogs;
+package pl.mmorpg.prototype.client.states.helpers;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 

@@ -21,6 +21,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.GameObjectTargetPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 
@@ -110,6 +111,10 @@ public class ClientListener extends Listener
 			UserCharacterDataPacket[] characterPackets = (UserCharacterDataPacket[]) object;
 			ChoosingCharacterState registerationState = (ChoosingCharacterState) states.usedState();
 			registerationState.userCharactersDataReceived(characterPackets);
+		}
+		else if (object instanceof CharacterItemDataPacket)
+		{
+			playState.newItemPacketReceived((CharacterItemDataPacket) object);
 		}
 	}
 

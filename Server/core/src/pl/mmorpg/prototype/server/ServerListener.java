@@ -21,11 +21,13 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveLeftPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveRightPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.managers.CharacterItemTableManager;
 import pl.mmorpg.prototype.server.database.managers.UserCharacterTableManager;
-import pl.mmorpg.prototype.server.database.managers.UserTableManager;
 import pl.mmorpg.prototype.server.helpers.Authenticator;
+import pl.mmorpg.prototype.server.helpers.Registerator;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
@@ -156,26 +158,10 @@ public class ServerListener extends Listener
 		server.sendToTCP(connection.getID(), replyPacket);
 	}
 
-	private void handleRegisterationPacket(Connection connection, RegisterationPacket packet)
+	private void handleRegisterationPacket(Connection connection, RegisterationPacket registerationPacket)
 	{
-		RegisterationReplyPacket replyPacket = new RegisterationReplyPacket();
-
-		if (packet.username.length() == 0)
-			replyPacket.errorMessage = "Username field cannot be empty";
-		else if (packet.password.length() == 0)
-			replyPacket.errorMessage = "Password cannot be empty";
-		else if (!packet.password.equals(packet.passwordRepeat))
-			replyPacket.errorMessage = "Passwords are not the same!";
-		else if (UserTableManager.hasUser(packet.getUsername()))
-			replyPacket.errorMessage = "User '" + packet.getUsername() + "' already exists!";
-		else
-		{
-			replyPacket.isRegistered = true;
-			User user = new User();
-			user.setUsername(packet.getUsername());
-			user.setPassword(packet.getPassword());
-			UserTableManager.addUser(user);
-		}
+		Registerator registerator = new Registerator();
+		RegisterationReplyPacket replyPacket = registerator.tryToRegister(registerationPacket);
 		server.sendToTCP(connection.getID(), replyPacket);
 	}
 
@@ -204,6 +190,13 @@ public class ServerListener extends Listener
 		playState.add(newPlayer);
 		server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
 		repositionNewlyAddedCharacter(newPlayer.getId());
+		sendItemsDataToClient(userCharacterId, clientId);
+	}
+
+	private void sendItemsDataToClient(int userCharacterId, int clientId)
+	{
+		List<CharacterItem> characterItems = CharacterItemTableManager.getCharacterItems(userCharacterId);
+		characterItems.forEach((item) -> server.sendToTCP(clientId, PacketsMaker.makeItemPacket(item)));
 	}
 
 	private UserCharacter getCharacter(int clientId)

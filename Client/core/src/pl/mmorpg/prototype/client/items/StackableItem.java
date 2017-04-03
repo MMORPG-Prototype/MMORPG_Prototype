@@ -7,12 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import pl.mmorpg.prototype.client.resources.Assets;
 
-public abstract class ItemGroup extends Item
+public abstract class StackableItem extends Item
 {
 	private Integer count = 0;
 	private final BitmapFont font = Assets.getFont();
 
-	public ItemGroup(Texture texture)
+	public StackableItem(Texture texture)
 	{
 		super(texture);
 	}

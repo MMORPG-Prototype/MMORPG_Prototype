@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.states.dialogs;
 
+import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class StatisticsDialog extends CustomDialog

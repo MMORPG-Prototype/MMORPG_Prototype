@@ -17,5 +17,10 @@ public class SmallHealthPotion extends Potion
 		throw new NotImplementedException();
 	}
 
+	@Override
+	public String getIdentifier()
+	{
+		return ItemIdentifier.getObjectIdentifier(SmallHealthPotion.class);
+	}
 
 }

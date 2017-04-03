@@ -1,10 +1,13 @@
 package pl.mmorpg.prototype.client.states.dialogs;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.states.PlayState;
+import pl.mmorpg.prototype.client.states.dialogs.components.CloseButton;
+import pl.mmorpg.prototype.client.states.helpers.Settings;
 
 public class MenuDialog extends CustomDialog
 {
@@ -14,6 +17,9 @@ public class MenuDialog extends CustomDialog
 	{
 		super("Menu", Settings.DEFAULT_SKIN);
 		this.linkedState = linkedState;
+
+		Button closeButton = new CloseButton(this);
+		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 
 		TextButton inventoryButton = new TextButton("Inventory", Settings.DEFAULT_SKIN);
 

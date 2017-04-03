@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import pl.mmorpg.prototype.client.states.SettingsChoosingState;
+import pl.mmorpg.prototype.client.states.helpers.Settings;
 
 public class AskForIpDialog extends Dialog
 {

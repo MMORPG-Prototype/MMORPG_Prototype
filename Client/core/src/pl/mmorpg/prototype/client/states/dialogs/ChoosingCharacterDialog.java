@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import pl.mmorpg.prototype.client.states.ChoosingCharacterState;
+import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class ChoosingCharacterDialog extends Dialog

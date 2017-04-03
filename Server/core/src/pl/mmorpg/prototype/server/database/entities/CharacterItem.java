@@ -2,13 +2,17 @@ package pl.mmorpg.prototype.server.database.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity
+import pl.mmorpg.prototype.clientservercommon.ItemTypes;
+
+@Entity(name = "CharacterItem")
 @Table(name = "Character_Items")
 public class CharacterItem
 {
@@ -17,8 +21,9 @@ public class CharacterItem
 	@Column(name = "id")
 	private Integer id;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "type", nullable = false)
-	private String type;
+	private ItemTypes type;
 
 	@Column(name = "name", nullable = false)
 	private String name;
@@ -31,7 +36,7 @@ public class CharacterItem
 		return id;
 	}
 
-	public String getType()
+	public ItemTypes getType()
 	{
 		return type;
 	}
@@ -46,7 +51,7 @@ public class CharacterItem
 		this.id = id;
 	}
 
-	public void setType(String type)
+	public void setType(ItemTypes type)
 	{
 		this.type = type;
 	}

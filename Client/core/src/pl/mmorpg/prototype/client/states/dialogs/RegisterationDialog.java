@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import pl.mmorpg.prototype.client.states.RegisterationState;
+import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
 
 public class RegisterationDialog extends Dialog
