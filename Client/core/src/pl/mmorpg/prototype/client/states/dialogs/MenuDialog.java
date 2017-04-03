@@ -5,18 +5,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import pl.mmorpg.prototype.client.states.PlayState;
+import pl.mmorpg.prototype.client.states.UserInterface;
 import pl.mmorpg.prototype.client.states.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 
 public class MenuDialog extends CustomDialog
 {
-	private PlayState linkedState;
 
-	public MenuDialog(PlayState linkedState)
+	private UserInterface linkedInterface;
+
+	public MenuDialog(UserInterface linkedInterface)
 	{
 		super("Menu", Settings.DEFAULT_SKIN);
-		this.linkedState = linkedState;
+		this.linkedInterface = linkedInterface;
 
 		Button closeButton = new CloseButton(this);
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
@@ -28,7 +29,7 @@ public class MenuDialog extends CustomDialog
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				linkedState.showOrHideDialog(InventoryDialog.class);
+				linkedInterface.showOrHideDialog(InventoryDialog.class);
 			}
 		});
 
@@ -39,7 +40,7 @@ public class MenuDialog extends CustomDialog
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				linkedState.userWantsToChangeCharacter();
+				linkedInterface.userWantsToChangeCharacter();
 			}
 		});
 
@@ -50,7 +51,7 @@ public class MenuDialog extends CustomDialog
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				linkedState.showOrHideDialog(StatisticsDialog.class);
+				linkedInterface.showOrHideDialog(StatisticsDialog.class);
 			}
 		});
 
@@ -61,7 +62,7 @@ public class MenuDialog extends CustomDialog
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				linkedState.userWantsToDisconnect();
+				linkedInterface.userWantsToDisconnect();
 			}
 		});
 

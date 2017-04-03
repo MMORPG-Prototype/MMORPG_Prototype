@@ -12,20 +12,21 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchInventoryFieldInPosition;
 import pl.mmorpg.prototype.client.items.Item;
-import pl.mmorpg.prototype.client.states.PlayState;
+import pl.mmorpg.prototype.client.states.UserInterface;
 import pl.mmorpg.prototype.client.states.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 
 public class InventoryDialog extends CustomDialog
 {
-	private PlayState linkedState;
 
 	private Map<Point, InventoryField> inventoryFields = new HashMap<>();
+	private UserInterface linkedInterface;
 
-	public InventoryDialog(PlayState linkedState)
+	public InventoryDialog(UserInterface linkedInterface)
 	{
 		super("Inventory", Settings.DEFAULT_SKIN);
-		this.linkedState = linkedState;
+		this.linkedInterface = linkedInterface;
+
 		VerticalGroup v = new VerticalGroup().space(0).pad(0).fill();
 		for (int i = 0; i < 5; i++)
 		{
@@ -67,7 +68,7 @@ public class InventoryDialog extends CustomDialog
 
 	public void buttonClicked(Point cellPosition)
 	{
-		linkedState.inventoryFieldClicked(inventoryFields.get(cellPosition));
+		linkedInterface.inventoryFieldClicked(inventoryFields.get(cellPosition));
 	}
 
 	public void put(Item item, Point position)
