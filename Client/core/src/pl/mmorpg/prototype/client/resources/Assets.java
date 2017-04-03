@@ -185,4 +185,14 @@ public class Assets
         }
     }
 
+	public static class Textures
+	{
+		public final static String MAIN_CHAR = "MainChar.png";
+
+		public static class Items
+		{
+			public static final String ITEM_FOLDER = "Items/";
+			public static final String SMALL_HEALTH_POTION = ITEM_FOLDER + "SmallManaPotion.png";
+		}
+	}
 }

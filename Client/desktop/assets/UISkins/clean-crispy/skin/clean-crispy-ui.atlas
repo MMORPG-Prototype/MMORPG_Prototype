@@ -6,11 +6,11 @@ filter: Linear,Linear
 repeat: none
 button
   rotate: false
-  xy: 267, 473
-  size: 38, 38
+  xy: 269, 475
+  size: 32, 32
   split: 8, 10, 9, 10
-  pad: 8, 10, 4, 6
-  orig: 38, 38
+  pad: 2, 2, 2, 2
+  orig: 32, 32
   offset: 0, 0
   index: -1
 button-arcade
@@ -96,29 +96,29 @@ button-minimize-pressed
   index: -1
 button-over
   rotate: false
-  xy: 307, 473
-  size: 38, 38
+  xy: 309, 475
+  size: 32, 32
   split: 8, 10, 9, 10
-  pad: 8, 10, 4, 6
-  orig: 38, 38
+  pad: 2, 2, 2, 2
+  orig: 32, 32
   offset: 0, 0
   index: -1
 button-pressed
   rotate: false
-  xy: 347, 473
-  size: 38, 38
+  xy: 349, 475
+  size: 32, 32
   split: 8, 10, 9, 10
-  pad: 8, 10, 4, 6
-  orig: 38, 38
+  pad: 2, 2, 2, 2
+  orig: 32, 32
   offset: 0, 0
   index: -1
 button-pressed-over
   rotate: false
-  xy: 387, 473
-  size: 38, 38
+  xy: 389, 475
+  size: 32, 32
   split: 8, 10, 9, 10
-  pad: 8, 10, 4, 6
-  orig: 38, 38
+  pad: 2, 2, 2, 2
+  orig: 32, 32
   offset: 0, 0
   index: -1
 checkbox
