@@ -1,20 +1,15 @@
 package pl.mmorpg.prototype.client.states;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.exceptions.NotImplementedException;
-import pl.mmorpg.prototype.client.input.DialogManipulator;
 import pl.mmorpg.prototype.client.input.InputMultiplexer;
 import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.NullInputHandler;
@@ -25,10 +20,6 @@ import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.resources.Assets;
-import pl.mmorpg.prototype.client.states.dialogs.CustomDialogs;
-import pl.mmorpg.prototype.client.states.dialogs.InventoryDialog;
-import pl.mmorpg.prototype.client.states.dialogs.MenuDialog;
-import pl.mmorpg.prototype.client.states.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.states.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.client.states.helpers.InventoryManager;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
@@ -45,14 +36,10 @@ public class PlayState implements State, GameObjectsContainer
 	private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
 	private InputProcessorAdapter inputHandler;
 	private InputMultiplexer inputMultiplexer;
-	private final MenuDialog menuDialog = new MenuDialog(this);
-	private final InventoryDialog inventoryDialog = new InventoryDialog(this);
-	private StatisticsDialog statisticsDialog;
-	private final DialogManipulator dialogs = new DialogManipulator();
-	
+	private UserInterface userInterface;
+
 	private Item mouseHoldingItem = null;
 
-	private Dialog lastActiveDialog;
 
 	public PlayState(StateManager states, Client client)
 	{
@@ -60,7 +47,6 @@ public class PlayState implements State, GameObjectsContainer
 		inputHandler = new NullInputHandler();
 		this.states = states;
 		inputMultiplexer = new InputMultiplexer();
-		lastActiveDialog = inventoryDialog;
 	}
 
 	public void initialize(UserCharacterDataPacket character)
@@ -68,26 +54,19 @@ public class PlayState implements State, GameObjectsContainer
 		player = new Player(character.id);
 		gameObjects.put((long) character.id, player);
 		inputHandler = new PlayInputContinuousHandler(client, character);
-		statisticsDialog = new StatisticsDialog(character);
-		inputMultiplexer.addProcessor(new PlayInputSingleHandle(dialogs));
+		userInterface = new UserInterface(this, character);
+		inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs()));
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(inputHandler);
-		mapDialogs();
+		userInterface.mapWithKeys();
 		showDialogs();
-	}
-
-	private void mapDialogs()
-	{
-		dialogs.map(Keys.M, menuDialog);
-		dialogs.map(Keys.I, inventoryDialog);
-		dialogs.map(Keys.C, statisticsDialog);
 	}
 
 	private void showDialogs()
 	{
-		stage.addActor(menuDialog);
-		inventoryDialog.show(stage);
-		statisticsDialog.show(stage);
+		stage.addActor(userInterface.menuDialog);
+		userInterface.inventoryDialog.show(stage);
+		userInterface.statisticsDialog.show(stage);
 	}
 
 	@Override
@@ -110,44 +89,9 @@ public class PlayState implements State, GameObjectsContainer
 	{
 		stage.act();
 		inputHandler.process();
-		manageDialogZIndexes();
+		userInterface.update();
 	}
 
-	private void manageDialogZIndexes()
-	{
-		List<Dialog> mouseHoveringDialogs = getDialogsOnMousePosition();
-		if (!mouseHoveringDialogs.isEmpty() && !containsLastMouseHoveringDialog(mouseHoveringDialogs))
-		{
-			lastActiveDialog = mouseHoveringDialogs.iterator().next();
-			lastActiveDialog.toFront();
-		}
-
-	}
-
-	private boolean containsLastMouseHoveringDialog(List<Dialog> mouseHoveringDialogs)
-	{
-		for (Dialog dialog : mouseHoveringDialogs)
-			if (dialog == lastActiveDialog)
-				return true;
-		return false;
-	}
-
-	private List<Dialog> getDialogsOnMousePosition()
-	{
-		List<Dialog> mouseHoveringDialogs = new LinkedList<>();
-		for (Dialog dialog : dialogs.getAll())
-			if (mouseHovers(dialog))
-				mouseHoveringDialogs.add(dialog);
-		return mouseHoveringDialogs;
-	}
-
-	private boolean mouseHovers(Actor actor)
-	{
-		float mouseX = Gdx.input.getX();
-		float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
-		return mouseX >= actor.getX() && mouseX <= actor.getRight() && mouseY >= actor.getY()
-				&& mouseY <= actor.getTop();
-	}
 
 	@Override
 	public void add(GameObject object)
@@ -191,7 +135,7 @@ public class PlayState implements State, GameObjectsContainer
 	{
 		inputHandler = new NullInputHandler();
 		gameObjects.clear();
-		dialogs.clear();
+		userInterface.clear();
 		stage.clear();
 		inputMultiplexer.clear();
 	}
@@ -201,9 +145,9 @@ public class PlayState implements State, GameObjectsContainer
 		return stage;
 	}
 
-	public void showOrHideDialog(CustomDialogs dialogType)
+	public void showOrHideDialog(Class<? extends Table> dialogType)
 	{
-		dialogs.showOrHide(dialogType);
+		userInterface.showOrHide(dialogType);
 	}
 
 	public void userWantsToChangeCharacter()
@@ -219,6 +163,6 @@ public class PlayState implements State, GameObjectsContainer
 	public void newItemPacketReceived(CharacterItemDataPacket itemData)
 	{
 		Item newItem = ItemFactory.produceItem(itemData);
-		inventoryDialog.addItem(newItem);
+		userInterface.inventoryDialog.addItem(newItem);
 	}
 }

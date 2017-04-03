@@ -4,26 +4,26 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+
 import pl.mmorpg.prototype.client.exceptions.CannotFindSpecifiedDialogTypeException;
-import pl.mmorpg.prototype.client.states.dialogs.CustomDialog;
-import pl.mmorpg.prototype.client.states.dialogs.CustomDialogs;
 
 public class DialogManipulator
 {
-	private Map<Integer, CustomDialog> dialogs = new ConcurrentHashMap<>();
+	private Map<Integer, Table> dialogs = new ConcurrentHashMap<>();
 
-	public void map(Integer key, CustomDialog dialog)
+	public void map(Integer key, Table dialog)
 	{
 		dialogs.put(key, dialog);
 	}
 
 	public void showOrHide(Integer key)
 	{
-		CustomDialog dialogTarget = dialogs.get(key);
+		Table dialogTarget = dialogs.get(key);
 		showOrHide(dialogTarget);
 	}
 
-	private void showOrHide(CustomDialog dialogTarget)
+	private void showOrHide(Table dialogTarget)
 	{
 		if (dialogTarget.isVisible())
 			dialogTarget.setVisible(false);
@@ -34,7 +34,7 @@ public class DialogManipulator
 		}
 	}
 
-	public Collection<CustomDialog> getAll()
+	public Collection<Table> getAll()
 	{
 		return dialogs.values();
 	}
@@ -44,17 +44,17 @@ public class DialogManipulator
 		return dialogs.containsKey(key);
 	}
 
-	private CustomDialog searchForDialog(CustomDialogs dialogType)
+	private Table searchForDialog(Class<? extends Table> clazz)
 	{
-		for (CustomDialog dialog : dialogs.values())
-			if (dialog.getIdentifier().equals(dialogType))
+		for (Table dialog : dialogs.values())
+			if (dialog.getClass().equals(clazz))
 				return dialog;
 		throw new CannotFindSpecifiedDialogTypeException();
 	}
 
-	public void showOrHide(CustomDialogs dialogType)
+	public void showOrHide(Class<? extends Table> clazz)
 	{
-		CustomDialog dialog = searchForDialog(dialogType);
+		Table dialog = searchForDialog(clazz);
 		showOrHide(dialog);
 	}
 

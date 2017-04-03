@@ -28,7 +28,7 @@ public class MenuDialog extends CustomDialog
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				linkedState.showOrHideDialog(CustomDialogs.INVENTORY);
+				linkedState.showOrHideDialog(InventoryDialog.class);
 			}
 		});
 
@@ -50,7 +50,7 @@ public class MenuDialog extends CustomDialog
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				linkedState.showOrHideDialog(CustomDialogs.STATISTICS);
+				linkedState.showOrHideDialog(StatisticsDialog.class);
 			}
 		});
 
