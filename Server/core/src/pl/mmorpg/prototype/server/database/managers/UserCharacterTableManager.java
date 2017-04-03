@@ -13,14 +13,8 @@ public class UserCharacterTableManager
 {
 	public static List<UserCharacter> getUserCharacters(User user)
 	{
-		Session session = HibernateUtil.openSession();
-		Query<UserCharacter> countUsersQuery = session
-				.createQuery("from " + "UserCharacter"
-						+ " as userChar where userChar.user.id = :userId",
-						UserCharacter.class)
-				.setParameter("userId", user.getId());
-		List<UserCharacter> users = countUsersQuery.getResultList();
-		session.close();
+		List<UserCharacter> users = TableManagerHelper.getListOfDataElements("UserCharacter",
+				"UserCharacter.user.id = " + user.getId(), UserCharacter.class);
 		return users;
 	}
 
@@ -33,11 +27,11 @@ public class UserCharacterTableManager
 	public static UserCharacter getUserCharacter(int id)
 	{
 		Session session = HibernateUtil.openSession();
-		Query<UserCharacter> countUsersQuery = session
-				.createQuery("from " + "UserCharacter" + " as userChar where userChar.id = :id", UserCharacter.class)
+		Query<UserCharacter> getUserCharacterQuery = session
+				.createQuery("from " + "UserCharacter" + " as character where character.id = :id", UserCharacter.class)
 				.setParameter("id", id);
-		UserCharacter user = countUsersQuery.getSingleResult();
+		UserCharacter charcter = getUserCharacterQuery.getSingleResult();
 		session.close();
-		return user;
+		return charcter;
 	}
 }

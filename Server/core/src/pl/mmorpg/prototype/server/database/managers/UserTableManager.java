@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.server.database.managers;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -13,7 +15,7 @@ public class UserTableManager
 	{
 		Session session = HibernateUtil.openSession();
 		Query<User> getUserQuery = session
-				.createQuery("from " + User.class.getName() + " where username = :username", User.class)
+				.createQuery("from User as user where user.username = :username", User.class)
 				.setParameter("username", username);
 		User user = getUserQuery.getSingleResult();
 		session.close();
@@ -22,14 +24,14 @@ public class UserTableManager
 
 	public static boolean hasUser(String username)
 	{
-		Session session = HibernateUtil.openSession();
-		Query<Long> countUsersQuery = session
-				.createQuery("select count(user) from " + User.class.getName() + " user where username = :username",
-						Long.class)
-				.setParameter("username", username);
-		Long userCount = countUsersQuery.getSingleResult();
-		session.close();
-		return userCount > 0;
+		try
+		{
+			getUser(username);
+			return true;
+		} catch (NoResultException e)
+		{
+			return false;
+		}
 	}
 
 	public static void addUser(User user)
