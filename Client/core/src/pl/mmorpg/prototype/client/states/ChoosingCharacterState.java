@@ -7,7 +7,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.communication.UserInfo;
 import pl.mmorpg.prototype.client.resources.Assets;
-import pl.mmorpg.prototype.client.states.dialogs.ChoosingCharacterDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ChoosingCharacterDialog;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 

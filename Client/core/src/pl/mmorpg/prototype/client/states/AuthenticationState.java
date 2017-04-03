@@ -7,7 +7,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.communication.UserInfo;
 import pl.mmorpg.prototype.client.resources.Assets;
-import pl.mmorpg.prototype.client.states.dialogs.AuthenticationDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.AuthenticationDialog;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticatonReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;

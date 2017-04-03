@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.resources.Assets;
-import pl.mmorpg.prototype.client.states.dialogs.AskForIpDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.AskForIpDialog;
 
 public class SettingsChoosingState implements State
 {

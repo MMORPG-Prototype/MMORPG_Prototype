@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.states.dialogs;
+package pl.mmorpg.prototype.client.userinterface.dialogs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;

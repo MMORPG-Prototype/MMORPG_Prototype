@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.states.dialogs;
+package pl.mmorpg.prototype.client.userinterface.dialogs;
 
 public enum DialogResults
 {

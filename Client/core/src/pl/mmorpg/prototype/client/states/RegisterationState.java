@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.esotericsoftware.kryonet.Client;
 
-import pl.mmorpg.prototype.client.states.dialogs.RegisterationDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.RegisterationDialog;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
 

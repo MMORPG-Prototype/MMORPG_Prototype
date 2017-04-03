@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.states.dialogs.components;
+package pl.mmorpg.prototype.client.userinterface.dialogs;
 
 import pl.mmorpg.prototype.client.items.Item;
 

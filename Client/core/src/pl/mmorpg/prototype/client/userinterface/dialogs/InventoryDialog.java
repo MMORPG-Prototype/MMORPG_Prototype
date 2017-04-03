@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.states.dialogs;
+package pl.mmorpg.prototype.client.userinterface.dialogs;
 
 import java.awt.Point;
 import java.util.HashMap;
@@ -13,9 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchInventoryFieldInPosition;
 import pl.mmorpg.prototype.client.items.Item;
-import pl.mmorpg.prototype.client.states.UserInterface;
-import pl.mmorpg.prototype.client.states.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
+import pl.mmorpg.prototype.client.userinterface.UserInterface;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 
 public class InventoryDialog extends Dialog
 {

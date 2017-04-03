@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.client.states.helpers;
 
 import pl.mmorpg.prototype.client.items.Item;
-import pl.mmorpg.prototype.client.states.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 
 public class InventoryManager
 {

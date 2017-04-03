@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.states;
+package pl.mmorpg.prototype.client.states.helpers;
 
 import java.util.Map;
 

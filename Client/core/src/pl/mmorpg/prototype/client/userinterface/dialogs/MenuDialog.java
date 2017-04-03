@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.states.dialogs;
+package pl.mmorpg.prototype.client.userinterface.dialogs;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -6,9 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import pl.mmorpg.prototype.client.states.UserInterface;
-import pl.mmorpg.prototype.client.states.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
+import pl.mmorpg.prototype.client.userinterface.UserInterface;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.StatisticsDialog;
 
 public class MenuDialog extends Dialog
 {

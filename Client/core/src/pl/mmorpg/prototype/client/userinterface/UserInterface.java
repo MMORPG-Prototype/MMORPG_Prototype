@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.states;
+package pl.mmorpg.prototype.client.userinterface;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,11 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import pl.mmorpg.prototype.client.input.DialogManipulator;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
-import pl.mmorpg.prototype.client.states.dialogs.InventoryDialog;
-import pl.mmorpg.prototype.client.states.dialogs.MenuDialog;
-import pl.mmorpg.prototype.client.states.dialogs.StatisticsDialog;
-import pl.mmorpg.prototype.client.states.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.helpers.InventoryManager;
+import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.StatisticsDialog;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class UserInterface
