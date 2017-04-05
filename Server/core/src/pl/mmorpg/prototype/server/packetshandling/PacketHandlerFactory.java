@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.server.packetshandling;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
@@ -27,7 +28,7 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class PacketHandlerFactory
 {
-	private Map<Class<?>, PacketHandler<?>> packetHandlers = new HashMap<>();
+	private Map<Class<?>, PacketHandler> packetHandlers = new HashMap<>();
 
 	public PacketHandlerFactory(Map<Integer, UserInfo> loggedUsersKeyUserId,
 			Map<Integer, User> authenticatedClientsKeyClientId, Server server, PlayState playState)
@@ -46,11 +47,14 @@ public class PacketHandlerFactory
 		packetHandlers.put(MoveRightPacket.class, new MoveRightPacketHandler(server, playState));
 		packetHandlers.put(MoveUpPacket.class, new MoveUpPacketHandler(server, playState));
 		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(server, playState));
+		
+		//Ignore framework packets
+		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
 	}
 
-	public PacketHandler<?> produce(Object object)
+	public PacketHandler produce(Object object)
 	{
-		PacketHandler<?> packetHandler = packetHandlers.get(object.getClass());
+		PacketHandler packetHandler = packetHandlers.get(object.getClass());
 		if (packetHandler == null)
 			throw new UnknownPacketTypeException(object);
 		return packetHandler;

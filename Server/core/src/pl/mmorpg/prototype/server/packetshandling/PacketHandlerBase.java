@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.server.packetshandling;
 
 import com.esotericsoftware.kryonet.Connection;
 
-public abstract class PacketHandlerBase<T> implements PacketHandler<T>
+public abstract class PacketHandlerBase<T> implements PacketHandler
 {
 	@Override
 	public void handle(Object object, Connection connection)

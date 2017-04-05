@@ -42,7 +42,7 @@ public class ServerListener extends Listener
 		if (authenticatedClientsKeyClientId.containsKey(connection.getID()))
 		{
 			LogoutPacket logoutPacket = new LogoutPacket();
-			PacketHandler<?> packetHandler = packetHandlersFactory.produce(logoutPacket);
+			PacketHandler packetHandler = packetHandlersFactory.produce(logoutPacket);
 			packetHandler.handle(logoutPacket, connection);
 		}
 
@@ -54,7 +54,7 @@ public class ServerListener extends Listener
 	@Override
 	public void received(Connection connection, Object object)
 	{
-		PacketHandler<?> packetHandler = packetHandlersFactory.produce(object);
+		PacketHandler packetHandler = packetHandlersFactory.produce(object);
 		packetHandler.handle(object, connection);
 	
 		Log.info("Packet received, client id: " + connection.getID() + ", packet: " + object);
