@@ -22,49 +22,14 @@ public class MenuDialog extends Dialog
 		Button closeButton = new CloseButton(this);
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 
-		TextButton inventoryButton = new TextButton("Inventory", Settings.DEFAULT_SKIN);
-
-		inventoryButton.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				linkedInterface.showOrHideDialog(InventoryDialog.class);
-			}
-		});
-
-		TextButton characterChangeButton = new TextButton("Change character", Settings.DEFAULT_SKIN);
-
-		characterChangeButton.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				linkedInterface.userWantsToChangeCharacter();
-			}
-		});
-
-		TextButton statisticsButton = new TextButton("Statistics", Settings.DEFAULT_SKIN);
-
-		statisticsButton.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				linkedInterface.showOrHideDialog(StatisticsDialog.class);
-			}
-		});
-
-		TextButton disconnectButton = new TextButton("Disconnect", Settings.DEFAULT_SKIN);
-
-		disconnectButton.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				linkedInterface.userWantsToDisconnect();
-			}
-		});
+		TextButton inventoryButton = createButton("Inventory",
+				() -> linkedInterface.showOrHideDialog(InventoryDialog.class));
+		TextButton characterChangeButton = createButton("Change character",
+				() -> linkedInterface.userWantsToChangeCharacter());
+		TextButton statisticsButton = createButton("Statistics",
+				() -> linkedInterface.showOrHideDialog(StatisticsDialog.class));
+		TextButton disconnectButton = createButton("Disconnect",
+				() -> linkedInterface.userWantsToDisconnect());
 
 		getContentTable().add(inventoryButton);
 		getContentTable().row();
@@ -75,6 +40,21 @@ public class MenuDialog extends Dialog
 		getContentTable().add(disconnectButton);
 		getContentTable().row();
 		pack();
+	}
+
+	private TextButton createButton(String label, Runnable onClickAction)
+	{
+		TextButton inventoryButton = new TextButton(label, Settings.DEFAULT_SKIN);
+
+		inventoryButton.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
+			{
+				onClickAction.run();
+			}
+		});
+		return inventoryButton;
 	}
 
 }

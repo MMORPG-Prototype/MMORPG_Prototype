@@ -42,6 +42,7 @@ public class ChoosingCharacterDialog extends Dialog
 			addCharacterPosition(character);
 		
 		TextButton button = new TextButton("Ok", getSkin());
+
 		button(button, DialogResults.OK);
 		button("Cancel", DialogResults.CANCEL);
 		button("Create new character", DialogResults.NEW_CHARACTER);

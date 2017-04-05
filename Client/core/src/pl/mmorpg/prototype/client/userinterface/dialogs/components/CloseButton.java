@@ -2,14 +2,14 @@ package pl.mmorpg.prototype.client.userinterface.dialogs.components;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 
 public class CloseButton extends Button
 {
-	public CloseButton(Dialog dialogToClose)
+	public CloseButton(Table dialogToClose)
 	{
 		super(Settings.DEFAULT_SKIN, "close");
 
