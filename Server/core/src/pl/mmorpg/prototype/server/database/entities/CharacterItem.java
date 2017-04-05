@@ -10,10 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Data;
 import pl.mmorpg.prototype.clientservercommon.ItemTypes;
 
 @Entity(name = "CharacterItem")
 @Table(name = "Character_Items")
+@Data
 public class CharacterItem
 {
 	@Id
@@ -30,44 +32,4 @@ public class CharacterItem
 
 	@ManyToOne
 	private UserCharacter character;
-
-	public Integer getId()
-	{
-		return id;
-	}
-
-	public ItemTypes getType()
-	{
-		return type;
-	}
-
-	public UserCharacter getCharacter()
-	{
-		return character;
-	}
-
-	public void setId(Integer id)
-	{
-		this.id = id;
-	}
-
-	public void setType(ItemTypes type)
-	{
-		this.type = type;
-	}
-
-	public void setCharacter(UserCharacter character)
-	{
-		this.character = character;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
-	}
 }

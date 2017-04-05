@@ -8,8 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Data;
+
 @Entity(name = "UserCharacter")
 @Table(name = "User_Characters")
+@Data
 public class UserCharacter implements java.io.Serializable
 {
 	@ManyToOne
@@ -38,6 +41,10 @@ public class UserCharacter implements java.io.Serializable
 	@Column(name = "dexitirity", nullable = false)
 	private Integer dexitirity = 5;
 
+	@Column(name = "gold", nullable = false)
+	private Integer gold = 0;
+
+	// Getters and setters
 	public Integer getId()
 	{
 		return id;
@@ -116,6 +123,16 @@ public class UserCharacter implements java.io.Serializable
 	public void setDexitirity(Integer dexitirity)
 	{
 		this.dexitirity = dexitirity;
+	}
+
+	public Integer getGold()
+	{
+		return gold;
+	}
+
+	public void setGold(Integer gold)
+	{
+		this.gold = gold;
 	}
 
 }

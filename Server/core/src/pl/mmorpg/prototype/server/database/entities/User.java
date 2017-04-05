@@ -7,8 +7,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.Data;
+
 @Entity(name = "User")
 @Table(name = "Users")
+@Data
 public class User implements java.io.Serializable
 {
 
@@ -22,34 +25,4 @@ public class User implements java.io.Serializable
 
 	@Column(name = "password", nullable = false)
 	private String password;
-
-	public Integer getId()
-	{
-		return id;
-	}
-
-	public String getUsername()
-	{
-		return username;
-	}
-
-	public String getPassword()
-	{
-		return password;
-	}
-
-	public void setId(Integer id)
-	{
-		this.id = id;
-	}
-
-	public void setUsername(String username)
-	{
-		this.username = username;
-	}
-
-	public void setPassword(String password)
-	{
-		this.password = password;
-	}
 }

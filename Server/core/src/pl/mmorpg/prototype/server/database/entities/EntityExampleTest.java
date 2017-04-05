@@ -7,8 +7,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.Data;
+
 @Entity
 @Table(name = "EntityExampleTests")
+@Data
 public class EntityExampleTest
 {
 	@Id
@@ -18,24 +21,4 @@ public class EntityExampleTest
 
 	@Column(name = "data")
 	private String data;
-
-	public Integer getId()
-	{
-		return id;
-	}
-
-	public String getData()
-	{
-		return data;
-	}
-
-	public void setId(Integer id)
-	{
-		this.id = id;
-	}
-
-	public void setData(String data)
-	{
-		this.data = data;
-	}
 }
