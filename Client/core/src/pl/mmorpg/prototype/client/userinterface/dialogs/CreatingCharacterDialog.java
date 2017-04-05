@@ -1,6 +1,8 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs;
 
+
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import pl.mmorpg.prototype.client.states.ChoosingCharacterState;
@@ -10,6 +12,7 @@ public class CreatingCharacterDialog extends Dialog
 {
 	private TextField nicknameField = new TextField("Nickname", getSkin());
 	private ChoosingCharacterState linkedState;
+	private Label errorMessage = new Label("", getSkin());
 	
 	public CreatingCharacterDialog(ChoosingCharacterState linkedState)
 	{
@@ -18,7 +21,11 @@ public class CreatingCharacterDialog extends Dialog
 		
 		text("Nickname");
 		getContentTable().add(nicknameField);
+		getContentTable().row();
+		getContentTable().add(errorMessage);
+		getContentTable().row();
 		button("Ok", DialogResults.OK);
+		button("Cancel", DialogResults.CANCEL);
 	}
 	
 	@Override
@@ -28,6 +35,11 @@ public class CreatingCharacterDialog extends Dialog
 			linkedState.userSubmitedCharacterCreation(nicknameField.getText());
 		else
 			linkedState.userCancelledCharacterCreation();
+	}
+	
+	public void setErrorMessage(String errorMessage)
+	{
+		this.errorMessage.setText(errorMessage);		
 	}
 
 }

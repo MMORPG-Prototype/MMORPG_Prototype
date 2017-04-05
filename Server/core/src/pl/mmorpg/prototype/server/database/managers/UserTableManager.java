@@ -38,4 +38,16 @@ public class UserTableManager
 	{
 		HibernateUtil.makeOperation((session) -> session.save(user));
 	}
+
+	public static User getUser(int userId)
+	{
+		Session session = HibernateUtil.openSession();
+		Query<User> getUserQuery = session
+				.createQuery("from User as user where user.id = :userId", User.class)
+				.setParameter("userId", userId);
+		User user = getUserQuery.getSingleResult();
+		session.close();
+		return user;
+		
+	}
 }

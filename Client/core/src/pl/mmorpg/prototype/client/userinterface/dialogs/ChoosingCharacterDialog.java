@@ -1,5 +1,8 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -15,14 +18,15 @@ public class ChoosingCharacterDialog extends Dialog
 {
 	private ChoosingCharacterState linkedState;
 	private ButtonGroup<CheckBox> checkBoxes = new ButtonGroup<>();
-	private UserCharacterDataPacket[] characters;
+	private List<UserCharacterDataPacket> characters;
 	private Label messageForUser;
 
 	public ChoosingCharacterDialog(ChoosingCharacterState linkedState, UserCharacterDataPacket[] characters)
 	{
 		super("Choose character", Settings.DEFAULT_SKIN);
 		this.linkedState = linkedState;
-		this.characters = characters;
+		
+		this.characters = new ArrayList<>(characters.length + 2);	
 
 		messageForUser = new Label("", getSkin());
 		messageForUser.setColor(1, 0, 0 , 1);
@@ -34,21 +38,26 @@ public class ChoosingCharacterDialog extends Dialog
 		getContentTable().row();
 		getContentTable().add(messageForUser).center();
 		getContentTable().row();
+		
 		for (UserCharacterDataPacket character : characters)
-		{
-			text(character.getNickname());
-			text(character.getLevel().toString());
-			CheckBox checkBox = new CheckBox("", Settings.DEFAULT_SKIN);
-			checkBox.setName(character.getNickname());
-			checkBoxes.add(checkBox);
-			getContentTable().add(checkBox);
-			getContentTable().row();
-		}
+			addCharacterPosition(character);
 		
 		TextButton button = new TextButton("Ok", getSkin());
 		button(button, DialogResults.OK);
 		button("Cancel", DialogResults.CANCEL);
 		button("Create new character", DialogResults.NEW_CHARACTER);
+		getContentTable().row();
+	}
+
+	private void addCharacterPosition(UserCharacterDataPacket character)
+	{
+		characters.add(character);
+		text(character.getNickname());
+		text(character.getLevel().toString());
+		CheckBox checkBox = new CheckBox("", Settings.DEFAULT_SKIN);
+		checkBox.setName(character.getNickname());
+		checkBoxes.add(checkBox);
+		getContentTable().add(checkBox);
 		getContentTable().row();
 	}
 
@@ -59,7 +68,7 @@ public class ChoosingCharacterDialog extends Dialog
 		{
 			int checkedIndex = checkBoxes.getCheckedIndex();
 			if(checkedIndex != -1)		
-				linkedState.characterChoosen(characters[checkedIndex]);
+				linkedState.characterChoosen(characters.get(checkedIndex));
 			else
 			{
 				messageForUser.setText("Choose character, or create one");
@@ -70,6 +79,16 @@ public class ChoosingCharacterDialog extends Dialog
 			linkedState.userWantsToCreateCharacter();
 		else
 			Gdx.app.exit();
+	}
+
+	public void add(UserCharacterDataPacket character)
+	{
+		addCharacterPosition(character);	
+	}
+	
+	public void clearErrorMessage()
+	{
+		messageForUser.setText("");
 	}
 
 }

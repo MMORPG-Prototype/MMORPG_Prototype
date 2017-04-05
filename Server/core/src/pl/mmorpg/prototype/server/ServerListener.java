@@ -11,6 +11,8 @@ import com.esotericsoftware.minlog.Log;
 
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticatonReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
@@ -27,6 +29,7 @@ import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.managers.CharacterItemTableManager;
 import pl.mmorpg.prototype.server.database.managers.UserCharacterTableManager;
 import pl.mmorpg.prototype.server.helpers.Authenticator;
+import pl.mmorpg.prototype.server.helpers.CharacterCreator;
 import pl.mmorpg.prototype.server.helpers.Registerator;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
@@ -106,7 +109,13 @@ public class ServerListener extends Listener
 		{
 			UserCharacterDataPacket packet = (UserCharacterDataPacket) object;
 			userChoosenCharcter(packet.getId(), connection.getID());
-		} else if (object instanceof MoveRightPacket)
+		} 
+		else if (object instanceof CharacterCreationPacket)
+		{
+			CharacterCreationPacket packet = (CharacterCreationPacket) object;
+			handleCharacterCreationPacket(connection, packet);
+		}
+		else if (object instanceof MoveRightPacket)
 		{
 			MoveRightPacket packet = (MoveRightPacket) object;
 			MovableGameObject operationTarget = (MovableGameObject) playState.getObject(packet.id);
@@ -140,6 +149,13 @@ public class ServerListener extends Listener
 
 		Log.info("Packet received, client id: " + connection.getID() + ", packet: " + object);
 		super.received(connection, object);
+	}
+
+	private void handleCharacterCreationPacket(Connection connection, CharacterCreationPacket packet)
+	{
+		User user = authenticatedClientsKeyClientId.get(connection.getID());
+		CharacterCreationReplyPacket replyPacket = CharacterCreator.tryCreatingCharacter(packet, user.getId());
+		server.sendToAllTCP(replyPacket);
 	}
 
 	private void handleAuthenticationPacket(Connection connection, AuthenticationPacket packet)

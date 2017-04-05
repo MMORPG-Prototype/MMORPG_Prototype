@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -16,6 +17,7 @@ import lombok.Data;
 public class UserCharacter implements java.io.Serializable
 {
 	@ManyToOne
+	@JoinColumn(nullable = false)
 	private User user;
 
 	@Id
@@ -44,95 +46,5 @@ public class UserCharacter implements java.io.Serializable
 	@Column(name = "gold", nullable = false)
 	private Integer gold = 0;
 
-	// Getters and setters
-	public Integer getId()
-	{
-		return id;
-	}
-
-	public String getNickname()
-	{
-		return nickname;
-	}
-
-	public void setId(Integer id)
-	{
-		this.id = id;
-	}
-
-	public void setNickname(String nickname)
-	{
-		this.nickname = nickname;
-	}
-
-	public User getUser()
-	{
-		return user;
-	}
-
-	public void setUser(User user)
-	{
-		this.user = user;
-	}
-
-	public Integer getLevel()
-	{
-		return level;
-	}
-
-	public void setLevel(Integer level)
-	{
-		this.level = level;
-	}
-
-	public Integer getExperience()
-	{
-		return experience;
-	}
-
-	public Integer getStrength()
-	{
-		return strength;
-	}
-
-	public Integer getMagic()
-	{
-		return magic;
-	}
-
-	public Integer getDexitirity()
-	{
-		return dexitirity;
-	}
-
-	public void setExperience(Integer experience)
-	{
-		this.experience = experience;
-	}
-
-	public void setStrength(Integer strength)
-	{
-		this.strength = strength;
-	}
-
-	public void setMagic(Integer magic)
-	{
-		this.magic = magic;
-	}
-
-	public void setDexitirity(Integer dexitirity)
-	{
-		this.dexitirity = dexitirity;
-	}
-
-	public Integer getGold()
-	{
-		return gold;
-	}
-
-	public void setGold(Integer gold)
-	{
-		this.gold = gold;
-	}
 
 }

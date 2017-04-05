@@ -10,6 +10,7 @@ import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChoosingCharacterDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.CreatingCharacterDialog;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
@@ -69,9 +70,19 @@ public class ChoosingCharacterState implements State
 		creatingDialog.show(stage);		
 	}
 
-	public void userCharacterCreationReplyReceived(CharacterCreationReplyPacket packet)
+	public void userCharacterCreationReplyReceived(CharacterCreationReplyPacket creationPacket)
 	{
-		
+		if(creationPacket.isCreated())
+		{
+			choosingDialog.add(creationPacket.getCharacter());
+			choosingDialog.clearErrorMessage();
+			choosingDialog.show(stage);
+		}
+		else
+		{
+			creatingDialog.setErrorMessage(creationPacket.getErrorMessage());
+			creatingDialog.show(stage);
+		}
 	}
 	
 	public void userSubmitedCharacterCreation(String nickname)

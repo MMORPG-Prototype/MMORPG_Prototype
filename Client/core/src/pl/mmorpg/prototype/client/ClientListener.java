@@ -17,6 +17,7 @@ import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.RegisterationState;
 import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticatonReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GameObjectTargetPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
@@ -109,12 +110,18 @@ public class ClientListener extends Listener
 		else if (object instanceof UserCharacterDataPacket[])
 		{
 			UserCharacterDataPacket[] characterPackets = (UserCharacterDataPacket[]) object;
-			ChoosingCharacterState registerationState = (ChoosingCharacterState) states.usedState();
-			registerationState.userCharactersDataReceived(characterPackets);
+			ChoosingCharacterState choosingCharState = (ChoosingCharacterState) states.usedState();
+			choosingCharState.userCharactersDataReceived(characterPackets);
 		}
 		else if (object instanceof CharacterItemDataPacket)
 		{
 			playState.newItemPacketReceived((CharacterItemDataPacket) object);
+		}
+		else if(object instanceof CharacterCreationReplyPacket)
+		{
+			CharacterCreationReplyPacket characterPacket = (CharacterCreationReplyPacket) object;
+			ChoosingCharacterState choosingCharState = (ChoosingCharacterState) states.usedState();
+			choosingCharState.userCharacterCreationReplyReceived(characterPacket);
 		}
 	}
 

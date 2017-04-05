@@ -7,5 +7,6 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 @Data
 public class CharacterCreationPacket
 {
+	private String username;
 	private String nickname;
 }
