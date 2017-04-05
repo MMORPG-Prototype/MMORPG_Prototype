@@ -15,6 +15,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -71,22 +72,25 @@ public class ServerListener extends Listener
 	public void disconnected(Connection connection)
 	{
 		if (authenticatedClientsKeyClientId.containsKey(connection.getID()))
-		{
-			User user = authenticatedClientsKeyClientId.remove(connection.getID());
-			UserCharacter userCharacter = loggedUsersKeyUserId.remove(user.getId()).userCharacter;
-			if (userCharacter != null)
-			{
-				int characterId = userCharacter.getId();
-				if (playState.has(characterId))
-				{
-					playState.remove(characterId);
-					server.sendToAllTCP(PacketsMaker.makeRemovalPacket(characterId));
-				}
-			}
-		}
+			userLoggedOut(connection);
 
 		Log.info("User disconnected, id: " + connection.getID());
 		super.disconnected(connection);
+	}
+
+	private void userLoggedOut(Connection connection)
+	{
+		User user = authenticatedClientsKeyClientId.remove(connection.getID());
+		UserCharacter userCharacter = loggedUsersKeyUserId.remove(user.getId()).userCharacter;
+		if (userCharacter != null)
+		{
+			int characterId = userCharacter.getId();
+			if (playState.has(characterId))
+			{
+				playState.remove(characterId);
+				server.sendToAllTCP(PacketsMaker.makeRemovalPacket(characterId));
+			}
+		}
 	}
 
 	@Override
@@ -146,10 +150,14 @@ public class ServerListener extends Listener
 					operationTarget.getY()));
 		} else if (object instanceof DisconnectPacket)
 			connection.close();
+		else if(object instanceof LogoutPacket)
+			userLoggedOut(connection);
 
 		Log.info("Packet received, client id: " + connection.getID() + ", packet: " + object);
 		super.received(connection, object);
 	}
+
+
 
 	private void handleCharacterCreationPacket(Connection connection, CharacterCreationPacket packet)
 	{
@@ -214,7 +222,7 @@ public class ServerListener extends Listener
 		List<CharacterItem> characterItems = CharacterItemTableManager.getCharacterItems(userCharacterId);
 		characterItems.forEach((item) -> server.sendToTCP(clientId, PacketsMaker.makeItemPacket(item)));
 	}
-
+	
 	private UserCharacter getCharacter(int clientId)
 	{
 		User user = authenticatedClientsKeyClientId.get(clientId);

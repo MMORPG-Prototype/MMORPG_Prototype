@@ -3,7 +3,6 @@ package pl.mmorpg.prototype.client.userinterface.dialogs;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -78,7 +77,7 @@ public class ChoosingCharacterDialog extends Dialog
 		else if(object.equals(DialogResults.NEW_CHARACTER))
 			linkedState.userWantsToCreateCharacter();
 		else
-			Gdx.app.exit();
+			linkedState.userCancelledChoosing();
 	}
 
 	public void add(UserCharacterDataPacket character)

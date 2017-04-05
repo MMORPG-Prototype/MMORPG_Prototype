@@ -12,6 +12,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.CreatingCharacterDialog;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class ChoosingCharacterState implements State
@@ -96,6 +97,12 @@ public class ChoosingCharacterState implements State
 	{
 		creatingDialog.hide();
 		choosingDialog.show(stage);		
+	}
+
+	public void userCancelledChoosing()
+	{
+		client.sendTCP(new LogoutPacket());
+		states.set(new AuthenticationState(client, states));
 	}
 
 }
