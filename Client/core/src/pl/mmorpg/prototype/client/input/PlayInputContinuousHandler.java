@@ -25,7 +25,7 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
 		public void handle()
 		{
 			MoveUpPacket packet = new MoveUpPacket();
-			packet.id = character.id;
+			packet.id = character.getId();
 			client.sendTCP(packet);
 		}
 	}
@@ -36,7 +36,7 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
 		public void handle()
 		{
 			MoveLeftPacket packet = new MoveLeftPacket();
-			packet.id = character.id;
+			packet.id = character.getId();
 			client.sendTCP(packet);
 		}
 	}
@@ -47,7 +47,7 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
 		public void handle()
 		{
 			MoveDownPacket packet = new MoveDownPacket();
-			packet.id = character.id;
+			packet.id = character.getId();
 			client.sendTCP(packet);
 		}
 	}
@@ -58,7 +58,7 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
 		public void handle()
 		{
 			MoveRightPacket packet = new MoveRightPacket();
-			packet.id = character.id;
+			packet.id = character.getId();
 			client.sendTCP(packet);
 		}
 	}

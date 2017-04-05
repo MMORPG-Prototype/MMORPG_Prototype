@@ -1,8 +1,10 @@
-package pl.mmorpg.prototype.client.userinterface.dialogs.components;
+package pl.mmorpg.prototype.client.userinterface.dialogs;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import pl.mmorpg.prototype.client.states.helpers.Settings;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class StatisticsDialog extends Dialog
@@ -13,23 +15,27 @@ public class StatisticsDialog extends Dialog
 	{
 		super("Statistics", Settings.DEFAULT_SKIN);
 		this.character = character;
+
+		Button closeButton = new CloseButton(this);
+		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
+
 		text("Nickname: ").left();
-		text(character.nickname).right();
+		text(character.getNickname()).right();
 		getContentTable().row();
 		text("Level: ").left();
-		text(character.level.toString()).right();
+		text(character.getLevel().toString()).right();
 		getContentTable().row();
 		text("Experience: ").left();
-		text(character.experience.toString()).right();
+		text(character.getExperience().toString()).right();
 		getContentTable().row();
 		text("Strength: ").left();
-		text(character.strength.toString()).right();
+		text(character.getStrength().toString()).right();
 		getContentTable().row();
 		text("Magic: ").left();
-		text(character.magic.toString()).right();
+		text(character.getMagic().toString()).right();
 		getContentTable().row();
 		text("Dexitirity: ").left();
-		text(character.dexitirity.toString()).right();
+		text(character.getDexitirity().toString()).right();
 		getContentTable().row();
 	}
 

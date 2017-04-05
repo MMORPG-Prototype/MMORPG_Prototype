@@ -1,13 +1,8 @@
 package pl.mmorpg.prototype.client.userinterface;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
@@ -18,20 +13,21 @@ import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.helpers.InventoryManager;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.StatisticsDialog;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class UserInterface
 {
 	private final Stage stage = Assets.getStage();
-	public final MenuDialog menuDialog;
-	public final InventoryDialog inventoryDialog;
-	public final StatisticsDialog statisticsDialog;
+	private final MenuDialog menuDialog;
+	private final InventoryDialog inventoryDialog;
+	private final StatisticsDialog statisticsDialog;
+	private final ShortcutBarDialog standardBarDialog;
 	private final DialogManipulator dialogs = new DialogManipulator();
 
 	private Item mouseHoldingItem = null;
-	private Table lastActiveDialog;
 
 	private PlayState linkedState;
 
@@ -41,9 +37,15 @@ public class UserInterface
 		menuDialog = new MenuDialog(this);
 		inventoryDialog = new InventoryDialog(this);
 		statisticsDialog = new StatisticsDialog(character);
-		lastActiveDialog = inventoryDialog;
-		mapWithKeys();
+		standardBarDialog = new ShortcutBarDialog();
+		mapDialogsWithKeys();
+		addOtherDialogs();
 		showDialogs();
+	}
+
+	private void addOtherDialogs()
+	{
+		dialogs.add(standardBarDialog);
 	}
 
 	public void draw(SpriteBatch batch)
@@ -58,51 +60,16 @@ public class UserInterface
 	public void update()
 	{
 		stage.act();
-		manageDialogZIndexes();
+		dialogs.manageZIndexes();
 	}
 
-	private void manageDialogZIndexes()
-	{
-		List<Table> mouseHoveringDialogs = getDialogsOnMousePosition();
-		if (!mouseHoveringDialogs.isEmpty() && !containsLastMouseHoveringDialog(mouseHoveringDialogs))
-		{
-			lastActiveDialog = mouseHoveringDialogs.iterator().next();
-			lastActiveDialog.toFront();
-		}
-	}
-
-	private List<Table> getDialogsOnMousePosition()
-	{
-		List<Table> mouseHoveringDialogs = new LinkedList<>();
-		for (Table dialog : dialogs.getAll())
-			if (mouseHovers(dialog))
-				mouseHoveringDialogs.add(dialog);
-		return mouseHoveringDialogs;
-	}
-
-	private boolean mouseHovers(Actor actor)
-	{
-		float mouseX = Gdx.input.getX();
-		float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
-		return mouseX >= actor.getX() && mouseX <= actor.getRight() && mouseY >= actor.getY()
-				&& mouseY <= actor.getTop();
-	}
-
-
-	private boolean containsLastMouseHoveringDialog(List<Table> mouseHoveringDialogs)
-	{
-		for (Table dialog : mouseHoveringDialogs)
-			if (dialog == lastActiveDialog)
-				return true;
-		return false;
-	}
-
+	
 	public DialogManipulator getDialogs()
 	{
 		return dialogs;
 	}
 
-	public void mapWithKeys()
+	public void mapDialogsWithKeys()
 	{
 		dialogs.map(Keys.M, menuDialog);
 		dialogs.map(Keys.I, inventoryDialog);
@@ -122,6 +89,7 @@ public class UserInterface
 
 	public void showDialogs()
 	{
+		stage.addActor(standardBarDialog);
 		stage.addActor(menuDialog);
 		inventoryDialog.show(stage);
 		statisticsDialog.show(stage);
@@ -150,5 +118,10 @@ public class UserInterface
 	public void userWantsToChangeCharacter()
 	{
 		linkedState.userWantsToChangeCharacter();
+	}
+
+	public void addItemToInventory(Item newItem)
+	{
+		inventoryDialog.addItem(newItem);
 	}
 }

@@ -8,11 +8,11 @@ public class ItemFactory
 {
 	public static Item produceItem(CharacterItemDataPacket itemData)
 	{
-		if (itemData.name.equalsIgnoreCase(ItemIdentifiers.SMALL_HEALTH_POTION))
+		if (itemData.getName().equalsIgnoreCase(ItemIdentifiers.SMALL_HEALTH_POTION))
 			return new SmallHealthPotion();
-		else if (itemData.name.equalsIgnoreCase(ItemIdentifiers.SMALL_MANA_POTION))
+		else if (itemData.getName().equalsIgnoreCase(ItemIdentifiers.SMALL_MANA_POTION))
 			return new SmallManaPotion();
 
-		throw new UnknownItemIdentifierException(itemData.name);
+		throw new UnknownItemIdentifierException(itemData.getName());
 	}
 }

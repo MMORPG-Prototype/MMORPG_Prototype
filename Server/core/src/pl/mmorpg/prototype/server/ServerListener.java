@@ -105,7 +105,7 @@ public class ServerListener extends Listener
 		} else if (object instanceof UserCharacterDataPacket)
 		{
 			UserCharacterDataPacket packet = (UserCharacterDataPacket) object;
-			userChoosenCharcter(packet.id, connection.getID());
+			userChoosenCharcter(packet.getId(), connection.getID());
 		} else if (object instanceof MoveRightPacket)
 		{
 			MoveRightPacket packet = (MoveRightPacket) object;

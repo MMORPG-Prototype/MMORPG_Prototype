@@ -8,13 +8,16 @@ import com.esotericsoftware.kryonet.Client;
 import pl.mmorpg.prototype.client.communication.UserInfo;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChoosingCharacterDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.CreatingCharacterDialog;
+import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class ChoosingCharacterState implements State
 {
 	private Stage stage = Assets.getStage();
-	private ChoosingCharacterDialog dialog;
+	private ChoosingCharacterDialog choosingDialog;
+	private CreatingCharacterDialog creatingDialog;
 	private Client client;
 	private StateManager states;
 
@@ -22,6 +25,7 @@ public class ChoosingCharacterState implements State
 	{
 		this.client = client;
 		this.states = states;
+		creatingDialog = new CreatingCharacterDialog(this);
 		GetUserCharactersPacket getUserCharactersPacket = new GetUserCharactersPacket();
 		getUserCharactersPacket.username = UserInfo.username;
 		client.sendTCP(getUserCharactersPacket);
@@ -46,8 +50,8 @@ public class ChoosingCharacterState implements State
 
 	public void userCharactersDataReceived(UserCharacterDataPacket[] userCharacters)
 	{
-		dialog = new ChoosingCharacterDialog(this, userCharacters);
-		dialog.show(stage);
+		choosingDialog = new ChoosingCharacterDialog(this, userCharacters);
+		choosingDialog.show(stage);
 		Gdx.input.setInputProcessor(stage);
 	}
 
@@ -57,6 +61,30 @@ public class ChoosingCharacterState implements State
 		states.find(PlayState.class).initialize(userCharacterDataPacket);
 		client.sendTCP(userCharacterDataPacket);
 		states.pop();
+	}
+
+	public void userWantsToCreateCharacter()
+	{
+		choosingDialog.hide();
+		creatingDialog.show(stage);		
+	}
+
+	public void userCharacterCreationReplyReceived(CharacterCreationReplyPacket packet)
+	{
+		
+	}
+	
+	public void userSubmitedCharacterCreation(String nickname)
+	{
+		CharacterCreationPacket packet = new CharacterCreationPacket();
+		packet.setNickname(nickname);
+		client.sendTCP(packet);
+	}
+
+	public void userCancelledCharacterCreation()
+	{
+		creatingDialog.hide();
+		choosingDialog.show(stage);		
 	}
 
 }

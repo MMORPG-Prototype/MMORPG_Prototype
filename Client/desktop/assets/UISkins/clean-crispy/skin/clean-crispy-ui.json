@@ -227,6 +227,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 		name: window-main
 		color: color
 	}
+	window-qwe-c: {
+		name: window-qwe
+		color: color
+	}
 	color: {
 		name: white
 		color: color
@@ -353,6 +357,11 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
+		font: font
+		fontColor: color
+	}
+	secondary: {
+		background: window-qwe-c
 		font: font
 		fontColor: color
 	}
@@ -491,6 +500,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	}
 	main: {
 		background: window-main-c
+		titleFont: font
+		titleFontColor: color
+	}
+	secondary: {
+		background: window-qwe-c
 		titleFont: font
 		titleFontColor: color
 	}

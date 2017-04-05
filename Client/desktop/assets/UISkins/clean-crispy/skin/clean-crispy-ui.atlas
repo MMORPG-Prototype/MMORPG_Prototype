@@ -510,3 +510,13 @@ window-main
   orig: 15, 58
   offset: 0, 0
   index: -1
+window-qwe
+ rotate: false
+  xy: 92, 1
+  size: 54, 52
+  split: 1, 1, 21, 16
+  pad: -1, -1, 23, 1
+  orig: 15, 58
+  offset: 0, 0
+  index: -1
+ 

@@ -43,8 +43,8 @@ public class PlayState implements State, GameObjectsContainer
 
 	public void initialize(UserCharacterDataPacket character)
 	{
-		player = new Player(character.id);
-		gameObjects.put((long) character.id, player);
+		player = new Player(character.getId());
+		gameObjects.put((long) character.getId(), player);
 		inputHandler = new PlayInputContinuousHandler(client, character);
 		userInterface = new UserInterface(this, character);
 		inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs()));
@@ -126,6 +126,6 @@ public class PlayState implements State, GameObjectsContainer
 	public void newItemPacketReceived(CharacterItemDataPacket itemData)
 	{
 		Item newItem = ItemFactory.produceItem(itemData);
-		userInterface.inventoryDialog.addItem(newItem);
+		userInterface.addItemToInventory(newItem);
 	}
 }

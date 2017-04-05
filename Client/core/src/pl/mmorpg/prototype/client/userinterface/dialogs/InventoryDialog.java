@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
@@ -15,6 +16,7 @@ import pl.mmorpg.prototype.client.exceptions.NoSuchInventoryFieldInPosition;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 
 public class InventoryDialog extends Dialog
@@ -27,6 +29,9 @@ public class InventoryDialog extends Dialog
 	{
 		super("Inventory", Settings.DEFAULT_SKIN);
 		this.linkedInterface = linkedInterface;
+		
+		Button closeButton = new CloseButton(this);
+		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 
 		VerticalGroup v = new VerticalGroup().space(0).pad(0).fill();
 		for (int i = 0; i < 5; i++)

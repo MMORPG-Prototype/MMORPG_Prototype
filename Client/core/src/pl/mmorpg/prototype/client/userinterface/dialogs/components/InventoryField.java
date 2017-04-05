@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ItemContainer;
 
 public class InventoryField extends Button implements ItemContainer
 {

@@ -1,19 +1,21 @@
-package pl.mmorpg.prototype.client.userinterface.dialogs.components;
+package pl.mmorpg.prototype.client.userinterface.dialogs;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 
-public class StandardBarDialog extends Table
+public class ShortcutBarDialog extends Dialog
 {
-	public StandardBarDialog()
+	public ShortcutBarDialog()
 	{
-		super(Settings.DEFAULT_SKIN);
+		super("", Settings.DEFAULT_SKIN, "secondary");
 
-		Button menuButton = new Button(this.getSkin());
-		add(menuButton);
+		button("Menu").right().bottom();
 
-		pack();
+		this.setX(900);
+		this.setWidth(500);
+		this.setHeight(50);
+		setMovable(false);
+
 	}
 }
