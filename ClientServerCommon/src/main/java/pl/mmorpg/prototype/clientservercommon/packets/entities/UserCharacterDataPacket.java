@@ -1,15 +1,18 @@
 package pl.mmorpg.prototype.clientservercommon.packets.entities;
 
+import lombok.Data;
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
+@Data
 public class UserCharacterDataPacket
 {
-	public Integer id;
-	public Integer level;
-	public String nickname;
-	public Integer experience;
-	public Integer strength;
-	public Integer magic;
-	public Integer dexitirity;
+	private Integer id;
+	private Integer level;
+	private Integer gold;
+	private String nickname;
+	private Integer experience;
+	private Integer strength;
+	private Integer magic;
+	private Integer dexitirity;
 }
