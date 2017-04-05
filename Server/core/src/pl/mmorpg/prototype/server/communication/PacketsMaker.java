@@ -38,23 +38,24 @@ public class PacketsMaker
 	public static UserCharacterDataPacket makeCharacterPacket(UserCharacter character)
 	{
 		UserCharacterDataPacket packet = new UserCharacterDataPacket();
-		packet.id = character.getId();
-		packet.level = character.getLevel();
-		packet.nickname = character.getNickname();
-		packet.experience = character.getExperience();
-		packet.strength = character.getStrength();
-		packet.magic = character.getMagic();
-		packet.dexitirity = character.getDexitirity();
+		packet.setId			(character.getId());
+		packet.setLevel			(character.getLevel());
+		packet.setNickname		(character.getNickname());
+		packet.setExperience	(character.getExperience());
+		packet.setStrength		(character.getStrength());
+		packet.setMagic			(character.getMagic());
+		packet.setDexitirity	(character.getDexitirity());
+		packet.setGold			(character.getGold());
 		return packet;
 	}
 
 	public static CharacterItemDataPacket makeItemPacket(CharacterItem item)
 	{
 		CharacterItemDataPacket packet = new CharacterItemDataPacket();
-		packet.id = item.getId();
-		packet.characterId = item.getCharacter().getId();
-		packet.name = item.getName();
-		packet.type = item.getType().toString();
+		packet.setId			(item.getId());
+		packet.setCharacterId	(item.getCharacter().getId());
+		packet.setName			(item.getName());
+		packet.setType			(item.getType().toString());
 		return packet;
 	}
 }
