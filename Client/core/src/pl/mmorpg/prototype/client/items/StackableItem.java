@@ -41,6 +41,7 @@ public abstract class StackableItem extends Item
 	public void renderWhenDragged(SpriteBatch batch)
 	{
 		super.renderWhenDragged(batch);
+		font.getData().setScale(1.0f);
 		font.draw(batch, count.toString(), getMouseX() + 6, getMouseY() - 2);
 	}
 
@@ -48,6 +49,7 @@ public abstract class StackableItem extends Item
 	public void draw(Batch batch, float parentAlpha)
 	{
 		super.draw(batch, parentAlpha);
+		font.getData().setScale(1.0f);
 		font.draw(batch, count.toString(), getX() + 4, getY() - 2);
 	}
 }

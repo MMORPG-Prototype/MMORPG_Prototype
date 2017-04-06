@@ -6,13 +6,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import pl.mmorpg.prototype.client.exceptions.NotImplementedException;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.helpers.InventoryManager;
+import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
@@ -25,6 +28,8 @@ public class UserInterface
 	private final InventoryDialog inventoryDialog;
 	private final StatisticsDialog statisticsDialog;
 	private final ShortcutBarPane standardBarDialog;
+	private final HitPointManaPointPane hpMpDialog;
+	private final QuickAccessDialog quickAccessDialog;
 	private final ActorManipulator dialogs = new ActorManipulator();
 
 	private Item mouseHoldingItem = null;
@@ -35,9 +40,11 @@ public class UserInterface
 	{
 		this.linkedState = linkedState;
 		menuDialog = new MenuDialog(this);
-		inventoryDialog = new InventoryDialog(this);
+		inventoryDialog = new InventoryDialog(this, character.getGold());
 		statisticsDialog = new StatisticsDialog(character);
 		standardBarDialog = new ShortcutBarPane(this);
+		hpMpDialog = new HitPointManaPointPane(character);
+		quickAccessDialog = new QuickAccessDialog(this);
 		mapDialogsWithKeys();
 		addOtherDialogs();
 		showDialogs();
@@ -46,14 +53,18 @@ public class UserInterface
 	private void addOtherDialogs()
 	{
 		dialogs.add(standardBarDialog);
+		dialogs.add(hpMpDialog);
+		dialogs.add(quickAccessDialog);
 	}
 	
 	public void showDialogs()
 	{
+		stage.addActor(quickAccessDialog);
+		stage.addActor(hpMpDialog);
 		stage.addActor(standardBarDialog);
 		stage.addActor(menuDialog);
-		inventoryDialog.show(stage);
-		statisticsDialog.show(stage);
+		stage.addActor(inventoryDialog);
+		stage.addActor(statisticsDialog);
 	}
 
 	public void draw(SpriteBatch batch)
@@ -118,5 +129,10 @@ public class UserInterface
 	public void addItemToInventory(Item newItem)
 	{
 		inventoryDialog.addItem(newItem);
+	}
+
+	public void quickAccesButtonClicked(int cellPosition)
+	{
+		throw new NotImplementedException();		
 	}
 }
