@@ -15,7 +15,6 @@ public abstract class GameObject
 	private int layer;
 
 
-
 	public GameObject(Texture lookout, long id)
 	{
 		sprite = new Sprite(lookout);
@@ -96,7 +95,10 @@ public abstract class GameObject
 		this.id = id;
 	}
 
-	public abstract String getIdentifier();
+	public String getIdentifier()
+	{
+		return ObjectsIdentifier.getObjectIdentifier(getClass());
+	}
 
 	private static class NullGameObject extends GameObject
 	{

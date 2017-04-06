@@ -13,6 +13,7 @@ public class ObjectsIdentifier
     static
     {
 		identifiers.put(Player.class, ObjectsIdentifiers.PLAYER);
+		identifiers.put(GreenGrass.class, ObjectsIdentifiers.GREEN_GRASS);
     }
     
     public static String getObjectIdentifier(Class<?> type)

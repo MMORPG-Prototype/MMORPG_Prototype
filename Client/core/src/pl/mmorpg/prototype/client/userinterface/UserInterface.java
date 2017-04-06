@@ -6,14 +6,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import pl.mmorpg.prototype.client.input.DialogManipulator;
+import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.helpers.InventoryManager;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -24,8 +24,8 @@ public class UserInterface
 	private final MenuDialog menuDialog;
 	private final InventoryDialog inventoryDialog;
 	private final StatisticsDialog statisticsDialog;
-	private final ShortcutBarDialog standardBarDialog;
-	private final DialogManipulator dialogs = new DialogManipulator();
+	private final ShortcutBarPane standardBarDialog;
+	private final ActorManipulator dialogs = new ActorManipulator();
 
 	private Item mouseHoldingItem = null;
 
@@ -37,7 +37,7 @@ public class UserInterface
 		menuDialog = new MenuDialog(this);
 		inventoryDialog = new InventoryDialog(this);
 		statisticsDialog = new StatisticsDialog(character);
-		standardBarDialog = new ShortcutBarDialog();
+		standardBarDialog = new ShortcutBarPane(this);
 		mapDialogsWithKeys();
 		addOtherDialogs();
 		showDialogs();
@@ -46,6 +46,14 @@ public class UserInterface
 	private void addOtherDialogs()
 	{
 		dialogs.add(standardBarDialog);
+	}
+	
+	public void showDialogs()
+	{
+		stage.addActor(standardBarDialog);
+		stage.addActor(menuDialog);
+		inventoryDialog.show(stage);
+		statisticsDialog.show(stage);
 	}
 
 	public void draw(SpriteBatch batch)
@@ -64,7 +72,7 @@ public class UserInterface
 	}
 
 	
-	public DialogManipulator getDialogs()
+	public ActorManipulator getDialogs()
 	{
 		return dialogs;
 	}
@@ -80,19 +88,6 @@ public class UserInterface
 	{
 		stage.clear();
 		dialogs.clear();
-	}
-
-	public void showOrHide(Class<? extends Table> dialogType)
-	{
-		dialogs.showOrHide(dialogType);
-	}
-
-	public void showDialogs()
-	{
-		stage.addActor(standardBarDialog);
-		stage.addActor(menuDialog);
-		inventoryDialog.show(stage);
-		statisticsDialog.show(stage);
 	}
 
 	public InputProcessor getStage()

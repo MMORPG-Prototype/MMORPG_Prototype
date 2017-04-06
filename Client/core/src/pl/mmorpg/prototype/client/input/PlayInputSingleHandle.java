@@ -2,9 +2,9 @@ package pl.mmorpg.prototype.client.input;
 
 public class PlayInputSingleHandle extends InputProcessorAdapter
 {
-	private DialogManipulator dialogManipulator;
+	private ActorManipulator dialogManipulator;
 
-	public PlayInputSingleHandle(DialogManipulator dialogManipulator)
+	public PlayInputSingleHandle(ActorManipulator dialogManipulator)
 	{
 		this.dialogManipulator = dialogManipulator;
 	}

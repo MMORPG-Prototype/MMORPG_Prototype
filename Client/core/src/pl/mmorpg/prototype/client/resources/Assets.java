@@ -17,6 +17,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -39,6 +41,7 @@ public class Assets
 
 	static
     {
+		assets.setLoader(TiledMap.class, new TmxMapLoader());
 		addClassTypes();
 		addIgnoredExtendsions();
 		loadSkins(assetsPath);
@@ -53,6 +56,7 @@ public class Assets
         classTypes.put("gif", Texture.class);
         classTypes.put("mp3", Music.class);
         classTypes.put("ogg", Sound.class);
+        classTypes.put("tmx", TiledMap.class);
     }
 
 
@@ -188,12 +192,17 @@ public class Assets
 	public static class Textures
 	{
 		public final static String MAIN_CHAR = "MainChar.png";
-
 		public static class Items
 		{
 			public static final String ITEM_FOLDER = "Items/";
 			public static final String SMALL_HEALTH_POTION = ITEM_FOLDER + "SmallHealthPotion.png";
 			public static final String SMALL_MANA_POTION = ITEM_FOLDER + "SmallManaPotion.png";
+		}
+		
+		public static class Map
+		{
+			public static final String MAP_FOLDER = "MAP/";
+			public static final String GREEN_GRASS = MAP_FOLDER + "greenGrass0.png";
 		}
 	}
 }

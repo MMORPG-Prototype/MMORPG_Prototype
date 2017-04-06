@@ -57,6 +57,14 @@ public class CollisionMap
 				collisionMap[i][j] = object;
 
 	}
+	
+	public void unsafeInsert(Rectangle rectangle)
+	{
+		IntegerRectangle collision = new IntegerRectangle(rectangle);
+		for (int i = collision.x; i <= collision.x + collision.width; i++)
+			for (int j = collision.y; j <= collision.y + collision.height; j++)
+				collisionMap[i][j] = nullObject;
+	}
 
 	public void remove(GameObject object)
 	{

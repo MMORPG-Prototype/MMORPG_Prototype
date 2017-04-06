@@ -25,9 +25,4 @@ public class PlayerCharacter extends MovableGameObject
 	{
 		return ObjectsIdentifiers.PLAYER;
 	}
-
-	public UserCharacter getUserCharacter()
-	{
-		return userCharacter;
-	}
 }

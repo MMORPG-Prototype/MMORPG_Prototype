@@ -1,7 +1,6 @@
 package pl.mmorpg.prototype.client.objects;
 
 import pl.mmorpg.prototype.client.resources.Assets;
-import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 
 public class Player extends GameObject
 {
@@ -14,11 +13,4 @@ public class Player extends GameObject
 	public void update(float deltaTime)
 	{
 	}
-
-	@Override
-	public String getIdentifier()
-	{
-		return ObjectsIdentifiers.PLAYER;
-	}
-
 }

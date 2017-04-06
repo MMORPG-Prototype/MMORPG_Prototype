@@ -10,23 +10,22 @@ import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import pl.mmorpg.prototype.client.exceptions.CannotFindSpecifiedDialogTypeException;
 
-public class DialogManipulator
+public class ActorManipulator
 {
-	private Map<Integer, Table> mappedDialogs = new ConcurrentHashMap<>();
-	private List<Table> dialogs = new LinkedList<>();
-	private Table lastActiveDialog;
+	private Map<Integer, Actor> mappedDialogs = new ConcurrentHashMap<>();
+	private List<Actor> dialogs = new LinkedList<>();
+	private Actor lastActiveDialog;
 
-	public void map(Integer key, Table dialog)
+	public void map(Integer key, Actor dialog)
 	{
 		mappedDialogs.put(key, dialog);
 		lastActiveDialog = dialog;
 	}
 
-	public void add(Table dialog)
+	public void add(Actor dialog)
 	{
 		dialogs.add(dialog);
 		lastActiveDialog = dialog;
@@ -34,11 +33,11 @@ public class DialogManipulator
 
 	public void showOrHide(Integer key)
 	{
-		Table dialogTarget = mappedDialogs.get(key);
+		Actor dialogTarget = mappedDialogs.get(key);
 		showOrHide(dialogTarget);
 	}
 
-	private void showOrHide(Table dialogTarget)
+	private void showOrHide(Actor dialogTarget)
 	{
 		if (dialogTarget.isVisible())
 			dialogTarget.setVisible(false);
@@ -49,7 +48,7 @@ public class DialogManipulator
 		}
 	}
 
-	public Collection<Table> getAllMapped()
+	public Collection<Actor> getAllMapped()
 	{
 		return mappedDialogs.values();
 	}
@@ -59,7 +58,7 @@ public class DialogManipulator
 		return mappedDialogs.containsKey(key);
 	}
 
-	private Table searchForDialog(Class<? extends Table> clazz)
+	private Actor searchForDialog(Class<? extends Actor> clazz)
 	{
 		return Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
 				.filter((d) -> d.getClass().equals(clazz))
@@ -67,9 +66,9 @@ public class DialogManipulator
 				.orElseThrow(CannotFindSpecifiedDialogTypeException::new);
 	}
 
-	public void showOrHide(Class<? extends Table> clazz)
+	public void showOrHide(Class<? extends Actor> clazz)
 	{
-		Table dialog = searchForDialog(clazz);
+		Actor dialog = searchForDialog(clazz);
 		showOrHide(dialog);
 	}
 
@@ -81,17 +80,22 @@ public class DialogManipulator
 
 	public void manageZIndexes()
 	{
-		List<Table> mouseHoveringDialogs = getDialogsOnMousePosition();
-		if (!mouseHoveringDialogs.isEmpty() && !containsLastMouseHoveringDialog(mouseHoveringDialogs))
+		List<Actor> mouseHoveringDialogs = getDialogsOnMousePosition();
+		if (!mouseHoveringDialogs.isEmpty())
 		{
-			lastActiveDialog = mouseHoveringDialogs.iterator().next();
-			lastActiveDialog.toFront();
+			if(!containsLastMouseHoveringDialog(mouseHoveringDialogs))
+			{
+				lastActiveDialog = mouseHoveringDialogs.iterator().next();
+				lastActiveDialog.toFront();
+			}
+			else
+				lastActiveDialog.toFront();
 		}
 	}
 
-	private List<Table> getDialogsOnMousePosition()
+	private List<Actor> getDialogsOnMousePosition()
 	{
-		List<Table> mouseHoveringDialogs =
+		List<Actor> mouseHoveringDialogs =
 				Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
 				.filter((d) -> mouseHovers(d))
 				.collect(Collectors.toList());
@@ -106,9 +110,9 @@ public class DialogManipulator
 				&& mouseY <= actor.getTop();
 	}
 
-	private boolean containsLastMouseHoveringDialog(List<Table> mouseHoveringDialogs)
+	private boolean containsLastMouseHoveringDialog(List<Actor> mouseHoveringDialogs)
 	{
-		for (Table dialog : mouseHoveringDialogs)
+		for (Actor dialog : mouseHoveringDialogs)
 			if (dialog == lastActiveDialog)
 				return true;
 		return false;

@@ -20,10 +20,4 @@ public class TestObject extends MovableGameObject
 	{
 	}
 
-	@Override
-	public String getIdentifier()
-	{
-		return "Test Object";
-	}
-
 }

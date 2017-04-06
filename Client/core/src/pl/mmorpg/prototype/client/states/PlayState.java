@@ -4,7 +4,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.exceptions.NotImplementedException;
@@ -17,6 +21,7 @@ import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.Player;
+import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
@@ -32,13 +37,21 @@ public class PlayState implements State, GameObjectsContainer
 	private InputProcessorAdapter inputHandler;
 	private InputMultiplexer inputMultiplexer;
 	private UserInterface userInterface;
+	private TiledMapRenderer mapRenderer;
 
+	private OrthographicCamera camera = new OrthographicCamera(1400, 700);
+	
 	public PlayState(StateManager states, Client client)
 	{
 		this.client = client;
 		inputHandler = new NullInputHandler();
 		this.states = states;
 		inputMultiplexer = new InputMultiplexer();
+		camera.setToOrtho(false);
+		
+		TiledMap map = Assets.get("Map/tiled.tmx");
+		mapRenderer = new OrthogonalTiledMapRenderer(map);
+		mapRenderer.setView(camera);
 	}
 
 	public void initialize(UserCharacterDataPacket character)
@@ -56,17 +69,21 @@ public class PlayState implements State, GameObjectsContainer
 	@Override
 	public void render(SpriteBatch batch)
 	{
+		batch.setProjectionMatrix(camera.combined);
+		mapRenderer.render(new int[]{0});
 		batch.begin();
 		for (GameObject object : gameObjects.values())
 			object.render(batch);
 
 		batch.end();
+		mapRenderer.render(new int[]{1,2,3,4});
 		userInterface.draw(batch);
 	}
 
 	@Override
 	public void update(float deltaTime)
 	{
+		camera.update();
 		inputHandler.process();
 		userInterface.update();
 	}

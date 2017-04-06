@@ -28,7 +28,7 @@ public class GameServer extends ApplicationAdapter
 	{
 		Assets.loadAssets();
 		states = new StateManager();
-		batch = new SpriteBatch();
+		batch = Assets.getBatch();
 		server = initializeServer();
 		playState = new PlayState(server, states);
 		server.addListener(new ServerListener(server, playState));
