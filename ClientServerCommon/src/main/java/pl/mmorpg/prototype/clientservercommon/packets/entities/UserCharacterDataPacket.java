@@ -9,6 +9,8 @@ public class UserCharacterDataPacket
 {
 	private Integer id;
 	private Integer level;
+	private Integer hitPoints;
+	private Integer manaPoints;
 	private Integer gold;
 	private String nickname;
 	private Integer experience;

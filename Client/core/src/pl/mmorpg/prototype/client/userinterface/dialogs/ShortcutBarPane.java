@@ -11,8 +11,8 @@ public class ShortcutBarPane extends ScrollPane
 	{
 		super(new ShortcutBarDialog(likedInterface), Settings.DEFAULT_SKIN);
 
-		this.setX(900);
-		this.setWidth(500);
+		this.setX(950);
+		this.setWidth(450);
 		this.setHeight(50);
 	}
 	

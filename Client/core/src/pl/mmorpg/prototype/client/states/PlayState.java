@@ -11,7 +11,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.esotericsoftware.kryonet.Client;
 
-import pl.mmorpg.prototype.client.exceptions.NotImplementedException;
 import pl.mmorpg.prototype.client.input.InputMultiplexer;
 import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.NullInputHandler;
@@ -24,6 +23,7 @@ import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
+import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -137,7 +137,9 @@ public class PlayState implements State, GameObjectsContainer
 
 	public void userWantsToChangeCharacter()
 	{
-		throw new NotImplementedException();
+		client.sendTCP(new CharacterChangePacket());
+		states.push(new ChoosingCharacterState(client, states));
+		reset();
 	}
 
 	public void newItemPacketReceived(CharacterItemDataPacket itemData)

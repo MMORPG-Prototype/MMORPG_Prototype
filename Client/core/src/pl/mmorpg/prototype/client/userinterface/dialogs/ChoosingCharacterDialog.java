@@ -34,7 +34,7 @@ public class ChoosingCharacterDialog extends Dialog
 		text("Username");
 		text("Level");
 		text("Choose");
-		getContentTable().row();
+		row();
 		getContentTable().add(messageForUser).center();
 		getContentTable().row();
 		

@@ -40,6 +40,8 @@ public class PacketsMaker
 		UserCharacterDataPacket packet = new UserCharacterDataPacket();
 		packet.setId			(character.getId());
 		packet.setLevel			(character.getLevel());
+		packet.setHitPoints		(character.getHitPoints());
+		packet.setManaPoints	(character.getManaPoints());		
 		packet.setNickname		(character.getNickname());
 		packet.setExperience	(character.getExperience());
 		packet.setStrength		(character.getStrength());

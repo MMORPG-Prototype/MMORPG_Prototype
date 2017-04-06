@@ -18,37 +18,46 @@ import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLabel;
 
 public class InventoryDialog extends Dialog
 {
+	private final Map<Point, InventoryField> inventoryFields = new HashMap<>();
+	private final UserInterface linkedInterface;
+	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
 
-	private Map<Point, InventoryField> inventoryFields = new HashMap<>();
-	private UserInterface linkedInterface;
-
-	public InventoryDialog(UserInterface linkedInterface)
+	public InventoryDialog(UserInterface linkedInterface, Integer linkedFieldGold)
 	{
 		super("Inventory", Settings.DEFAULT_SKIN);
 		this.linkedInterface = linkedInterface;
-		
 		Button closeButton = new CloseButton(this);
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 
-		VerticalGroup v = new VerticalGroup().space(0).pad(0).fill();
+		VerticalGroup buttons = new VerticalGroup().space(0).pad(0).fill();
 		for (int i = 0; i < 5; i++)
 		{
-			HorizontalGroup g = new HorizontalGroup().space(0).pad(0).fill();
+			HorizontalGroup buttonRow = new HorizontalGroup().space(0).pad(0).fill();
 			for (int j = 0; j < 5; j++)
 			{
 				Point cellPosition = new Point(i, j);
 				InventoryField button = createButton(cellPosition);
 				inventoryFields.put(cellPosition, button);
-				g.addActor(button);
+				buttonRow.addActor(button);
 			}
-			v.addActor(g);
+			buttons.addActor(buttonRow);
 		}
-		v.padBottom(8);
-		add(v);
-		row();
+		buttons.padBottom(8);
+		this.getContentTable().add(buttons);
+		this.getContentTable().row();
+		this.getContentTable().row();
+		goldLabel.setValue(linkedFieldGold);
+		goldLabel.update();
+		this.getContentTable().add(goldLabel).left();
+		this.getContentTable().row();
+		
+		this.setX(1230);
+		this.setY(280);
+		this.pack();
 	}
 
 	private InventoryField createButton(Point cellPosition)
@@ -94,6 +103,22 @@ public class InventoryDialog extends Dialog
 				return;
 			}
 		throw new NoFreeFieldException();
+	}
+	
+	public void updateGoldValue()
+	{
+		goldLabel.update();
+	}
+	
+	@Override
+	public void setVisible(boolean visible)
+	{
+		if(visible)
+		{
+			this.setX(1230);
+			this.setY(280);
+		}
+		super.setVisible(visible);
 	}
 
 }

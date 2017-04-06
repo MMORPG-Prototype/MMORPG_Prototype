@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -28,8 +29,7 @@ public class MenuDialog extends Dialog
 				() -> linkedInterface.userWantsToChangeCharacter());
 		TextButton statisticsButton = createButton("Statistics",
 				() -> linkedInterface.showOrHideDialog(StatisticsDialog.class));
-		TextButton disconnectButton = createButton("Disconnect",
-				() -> linkedInterface.userWantsToDisconnect());
+		TextButton disconnectButton = createButton("Disconnect", () -> linkedInterface.userWantsToDisconnect());
 
 		getContentTable().add(inventoryButton);
 		getContentTable().row();
@@ -39,6 +39,8 @@ public class MenuDialog extends Dialog
 		getContentTable().row();
 		getContentTable().add(disconnectButton);
 		getContentTable().row();
+
+		centerPosition();
 		pack();
 	}
 
@@ -55,6 +57,20 @@ public class MenuDialog extends Dialog
 			}
 		});
 		return inventoryButton;
+	}
+	
+	@Override
+	public void setVisible(boolean visible)
+	{
+		if(visible)
+			centerPosition();
+		super.setVisible(visible);
+	}
+
+	private void centerPosition()
+	{
+		setPosition(Math.round((Gdx.graphics.getWidth() - getWidth()) / 2),
+				Math.round((Gdx.graphics.getHeight() - getHeight()) / 2));	
 	}
 
 }

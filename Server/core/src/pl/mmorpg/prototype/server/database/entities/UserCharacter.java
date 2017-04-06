@@ -24,6 +24,12 @@ public class UserCharacter implements java.io.Serializable
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
+	
+	@Column(name = "hit_points", nullable = false)
+	private Integer hitPoints = 100;
+	
+	@Column(name = "mana_points")
+	private Integer manaPoints = 100;
 
 	@Column(name = "nickname", unique = true, nullable = false)
 	private String nickname;
@@ -44,7 +50,7 @@ public class UserCharacter implements java.io.Serializable
 	private Integer dexitirity = 5;
 
 	@Column(name = "gold", nullable = false)
-	private Integer gold = 0;
+	private Integer gold = 100;
 
 
 }
