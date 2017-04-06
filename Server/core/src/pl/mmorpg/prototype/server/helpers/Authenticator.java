@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.persistence.NoResultException;
 
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.AuthenticatonReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.managers.UserTableManager;
@@ -16,7 +16,7 @@ public class Authenticator
 	private Map<Integer, UserInfo> authenticatedUsers;
 	private AuthenticationPacket packet;
 
-	private AuthenticatonReplyPacket replyPacket;
+	private AuthenticationReplyPacket replyPacket;
 	private User authenticatedUser;
 
 	public Authenticator(Map<Integer, UserInfo> authenticatedUsers, AuthenticationPacket packet)
@@ -26,9 +26,9 @@ public class Authenticator
 	}
 
 
-	public AuthenticatonReplyPacket tryAuthenticating()
+	public AuthenticationReplyPacket tryAuthenticating()
 	{
-		replyPacket = new AuthenticatonReplyPacket();
+		replyPacket = new AuthenticationReplyPacket();
 		User user = null;
 		try
 		{
@@ -68,7 +68,7 @@ public class Authenticator
 		return authenticatedUser;
 	}
 
-	public AuthenticatonReplyPacket getReplyPacket()
+	public AuthenticationReplyPacket getReplyPacket()
 	{
 		return replyPacket;
 	}

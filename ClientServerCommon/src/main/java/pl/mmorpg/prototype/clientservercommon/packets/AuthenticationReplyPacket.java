@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.clientservercommon.packets;
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
-public class AuthenticatonReplyPacket
+public class AuthenticationReplyPacket
 {
 	public int userId;
 	public boolean isAuthenticated = false;

@@ -6,7 +6,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.AuthenticatonReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.helpers.Authenticator;
@@ -39,7 +39,7 @@ public class AuthenticationPacketHandler extends PacketHandlerBase<Authenticatio
 			loggedUsersKeyUserId.put(user.getId(), userInfo);
 			authenticatedClientsKeyClientId.put(connection.getID(), user);
 		}
-		AuthenticatonReplyPacket replyPacket = authenticator.getReplyPacket();
+		AuthenticationReplyPacket replyPacket = authenticator.getReplyPacket();
 		server.sendToTCP(connection.getID(), replyPacket);
 	}
 }

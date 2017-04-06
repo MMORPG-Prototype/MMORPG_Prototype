@@ -9,7 +9,7 @@ import pl.mmorpg.prototype.client.communication.UserInfo;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.userinterface.dialogs.AuthenticationDialog;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.AuthenticatonReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 
 public class AuthenticationState implements State
@@ -48,7 +48,7 @@ public class AuthenticationState implements State
 		stage.act();
 	}
 
-	public void authenticationReplyReceived(AuthenticatonReplyPacket replyPacket)
+	public void authenticationReplyReceived(AuthenticationReplyPacket replyPacket)
 	{
 		if(replyPacket.isAuthenticated)
 		{
