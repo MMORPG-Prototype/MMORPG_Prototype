@@ -18,70 +18,70 @@ import pl.mmorpg.prototype.server.states.StateManager;
 
 public class GameServer extends ApplicationAdapter
 {
-	private SpriteBatch batch;
-	private StateManager states;
-	private Server server;
-	private PlayState playState;
+    private SpriteBatch batch;
+    private StateManager states;
+    private Server server;
+    private PlayState playState;
 
-	@Override
-	public void create()
-	{
-		Assets.loadAssets();
-		states = new StateManager();
-		batch = Assets.getBatch();
-		server = initializeServer();
-		playState = new PlayState(server, states);
-		server.addListener(new ServerListener(server, playState));
-		bindServer();
-		states.push(playState);
-	}
+    @Override
+    public void create()
+    {
+        Assets.loadAssets();
+        states = new StateManager();
+        batch = Assets.getBatch();
+        server = initializeServer();
+        playState = new PlayState(server, states);
+        server.addListener(new ServerListener(server, playState));
+        bindServer();
+        states.push(playState);
+    }
 
-	private Server initializeServer()
-	{
-		server = new Server();
-		Kryo serverKryo = server.getKryo();
-		serverKryo = PacketsRegisterer.registerAllAnnotated(serverKryo);
-		return server;
-	}
+    private Server initializeServer()
+    {
+        server = new Server();
+        Kryo serverKryo = server.getKryo();
+        serverKryo = PacketsRegisterer.registerAllAnnotated(serverKryo);
+        return server;
+    }
 
-	private void bindServer()
-	{
-		server.start();
-		try
-		{
-			server.bind(Settings.TCP_PORT, Settings.UDP_PORT);
-		} catch (IOException e)
-		{
-			throw new CannotBindServerException(e.getMessage());
-		}
-	}
+    private void bindServer()
+    {
+        server.start();
+        try
+        {
+            server.bind(Settings.TCP_PORT, Settings.UDP_PORT);
+        } catch (IOException e)
+        {
+            throw new CannotBindServerException(e.getMessage());
+        }
+    }
 
-	@Override
-	public void render()
-	{
-		update();
-		clearScreen();
-		batch.begin();
-		states.render(batch);
-		batch.end();
-	}
+    @Override
+    public void render()
+    {
+        update();
+        clearScreen();
+        batch.begin();
+        states.render(batch);
+        batch.end();
+    }
 
-	private void update()
-	{
-		states.update(Gdx.graphics.getDeltaTime());
-	}
+    private void update()
+    {
+        states.update(Gdx.graphics.getDeltaTime());
+    }
 
-	private void clearScreen()
-	{
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	}
+    private void clearScreen()
+    {
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
 
-	@Override
-	public void dispose()
-	{
-		Assets.dispose();
-		batch.dispose();
-	}
+    @Override
+    public void dispose()
+    {
+        Assets.dispose();
+        batch.dispose();
+    }
 
 }

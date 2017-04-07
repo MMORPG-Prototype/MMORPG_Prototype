@@ -8,11 +8,11 @@ import pl.mmorpg.prototype.clientservercommon.Settings;
 
 public class ClientLauncher
 {
-	public static void main(String[] arg)
-	{
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = Settings.GAME_WIDTH;
-		config.height = Settings.GAME_HEIGHT;
-		new LwjglApplication(new GameClient(), config);
-	}
+    public static void main(String[] arg)
+    {
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.width = Settings.GAME_WIDTH;
+        config.height = Settings.GAME_HEIGHT;
+        new LwjglApplication(new GameClient(), config);
+    }
 }

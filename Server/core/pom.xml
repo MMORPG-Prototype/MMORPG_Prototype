@@ -63,5 +63,14 @@
 			<version>2.22.0-RC1</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.badlogicgames.gdx/gdx -->
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx</artifactId>
+			<version>1.9.6</version>
+		</dependency>
+
+		
+
 	</dependencies>
 </project>
