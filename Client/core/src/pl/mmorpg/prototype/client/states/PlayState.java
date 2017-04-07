@@ -30,121 +30,121 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterData
 
 public class PlayState implements State, GameObjectsContainer
 {
-	private Client client;
-	private StateManager states;
-	private Player player;
-	private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
-	private InputProcessorAdapter inputHandler;
-	private InputMultiplexer inputMultiplexer;
-	private UserInterface userInterface;
-	private TiledMapRenderer mapRenderer;
+    private Client client;
+    private StateManager states;
+    private Player player;
+    private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
+    private InputProcessorAdapter inputHandler;
+    private InputMultiplexer inputMultiplexer;
+    private UserInterface userInterface;
+    private TiledMapRenderer mapRenderer;
 
-	private OrthographicCamera camera = new OrthographicCamera(1400, 700);
-	
-	public PlayState(StateManager states, Client client)
-	{
-		this.client = client;
-		inputHandler = new NullInputHandler();
-		this.states = states;
-		inputMultiplexer = new InputMultiplexer();
-		camera.setToOrtho(false);
-		
-		TiledMap map = Assets.get("Map/tiled.tmx");
-		mapRenderer = new OrthogonalTiledMapRenderer(map);
-		mapRenderer.setView(camera);
-	}
+    private OrthographicCamera camera = new OrthographicCamera(1400, 700);
 
-	public void initialize(UserCharacterDataPacket character)
-	{
-		player = new Player(character.getId());
-		gameObjects.put((long) character.getId(), player);
-		inputHandler = new PlayInputContinuousHandler(client, character);
-		userInterface = new UserInterface(this, character);
-		inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs()));
-		inputMultiplexer.addProcessor(userInterface.getStage());
-		inputMultiplexer.addProcessor(inputHandler);
-	}
+    public PlayState(StateManager states, Client client)
+    {
+        this.client = client;
+        inputHandler = new NullInputHandler();
+        this.states = states;
+        inputMultiplexer = new InputMultiplexer();
+        camera.setToOrtho(false);
 
+        TiledMap map = Assets.get("Map/tiled.tmx");
+        mapRenderer = new OrthogonalTiledMapRenderer(map);
+        mapRenderer.setView(camera);
+    }
 
-	@Override
-	public void render(SpriteBatch batch)
-	{
-		batch.setProjectionMatrix(camera.combined);
-		mapRenderer.render(new int[]{0});
-		batch.begin();
-		for (GameObject object : gameObjects.values())
-			object.render(batch);
+    public void initialize(UserCharacterDataPacket character)
+    {
+        player = new Player(character.getId());
+        gameObjects.put((long) character.getId(), player);
+        inputHandler = new PlayInputContinuousHandler(client, character);
+        userInterface = new UserInterface(this, character);
+        inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs()));
+        inputMultiplexer.addProcessor(userInterface.getStage());
+        inputMultiplexer.addProcessor(inputHandler);
+    }
 
-		batch.end();
-		mapRenderer.render(new int[]{1,2,3,4});
-		userInterface.draw(batch);
-	}
+    @Override
+    public void render(SpriteBatch batch)
+    {
+        batch.setProjectionMatrix(camera.combined);
+        mapRenderer.render(new int[] { 0 });
+        batch.begin();
+        for (GameObject object : gameObjects.values())
+            object.render(batch);
 
-	@Override
-	public void update(float deltaTime)
-	{
-		camera.update();
-		inputHandler.process();
-		userInterface.update();
-	}
+        batch.end();
+        mapRenderer.render(new int[] { 1, 2, 3, 4 });
+        userInterface.draw(batch);
+    }
 
+    @Override
+    public void update(float deltaTime)
+    {   
+        for (GameObject object : gameObjects.values())
+            object.update(deltaTime);
+        camera.update();
+        inputHandler.process();
+        userInterface.update();
+    }
 
-	@Override
-	public void add(GameObject object)
-	{
-		gameObjects.put(object.getId(), object);
-	}
+    @Override
+    public void add(GameObject object)
+    {
+        gameObjects.put(object.getId(), object);
+    }
 
-	@Override
-	public void removeObject(long id)
-	{
-		gameObjects.remove(id);
-	}
+    @Override
+    public void removeObject(long id)
+    {
+        gameObjects.remove(id);
+    }
 
-	@Override
-	public Map<Long, GameObject> getGameObjects()
-	{
-		return gameObjects;
-	}
+    @Override
+    public Map<Long, GameObject> getGameObjects()
+    {
+        return gameObjects;
+    }
 
-	@Override
-	public GameObject getObject(long id)
-	{
-		return gameObjects.get(id);
-	}
+    @Override
+    public GameObject getObject(long id)
+    {
+        return gameObjects.get(id);
+    }
 
-	@Override
-	public void reactivate()
-	{
-		Gdx.input.setInputProcessor(inputMultiplexer);
-	}
+    @Override
+    public void reactivate()
+    {
+        Gdx.input.setInputProcessor(inputMultiplexer);
+    }
 
-	public void userWantsToDisconnect()
-	{
-		client.sendTCP(new DisconnectPacket());
-		reset();
-		states.push(new SettingsChoosingState(client, states));
+    public void userWantsToDisconnect()
+    {
+        client.sendTCP(new DisconnectPacket());
+        reset();
+        states.push(new SettingsChoosingState(client, states));
 
-	}
+    }
 
-	private void reset()
-	{
-		inputHandler = new NullInputHandler();
-		gameObjects.clear();
-		userInterface.clear();
-		inputMultiplexer.clear();
-	}
+    private void reset()
+    {
+        inputHandler = new NullInputHandler();
+        gameObjects.clear();
+        userInterface.clear();
+        inputMultiplexer.clear();
+    }
 
-	public void userWantsToChangeCharacter()
-	{
-		client.sendTCP(new CharacterChangePacket());
-		states.push(new ChoosingCharacterState(client, states));
-		reset();
-	}
+    public void userWantsToChangeCharacter()
+    {
+        client.sendTCP(new CharacterChangePacket());
+        states.push(new ChoosingCharacterState(client, states));
+        reset();
+    }
 
-	public void newItemPacketReceived(CharacterItemDataPacket itemData)
-	{
-		Item newItem = ItemFactory.produceItem(itemData);
-		userInterface.addItemToInventory(newItem);
-	}
+    public void newItemPacketReceived(CharacterItemDataPacket itemData)
+    {
+        Item newItem = ItemFactory.produceItem(itemData);
+        userInterface.addItemToInventory(newItem);
+    }
 }
