@@ -27,8 +27,8 @@ public class InventoryField extends Button implements ItemContainer
 
 		nullImage = new Image(drawable);
 		add(nullImage);
-		drawable.setMinWidth(24);
-		drawable.setMinHeight(24);
+		drawable.setMinWidth(32);
+		drawable.setMinHeight(32);
 	}
 
 	@Override
@@ -50,6 +50,7 @@ public class InventoryField extends Button implements ItemContainer
 		if (this.item != null)
 			this.item.remove();
 		this.item = item;
+		
 		add(item);
 		drawable = item.getDrawable();
 	}

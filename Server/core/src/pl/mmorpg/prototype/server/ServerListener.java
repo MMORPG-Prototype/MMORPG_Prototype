@@ -46,18 +46,18 @@ public class ServerListener extends Listener
 		}
 
 		Log.info("User disconnected, id: " + connection.getID());
-		super.disconnected(connection);
 	}
 	
 
 	@Override
 	public void received(Connection connection, Object object)
 	{
-		PacketHandler packetHandler = packetHandlersFactory.produce(object);
+		PacketHandler packetHandler = packetHandlersFactory.produce(object);	
 		packetHandler.handle(object, connection);
 	
+		
+		
 		Log.info("Packet received, client id: " + connection.getID() + ", packet: " + object);
-		super.received(connection, object);
 	}
 	
 

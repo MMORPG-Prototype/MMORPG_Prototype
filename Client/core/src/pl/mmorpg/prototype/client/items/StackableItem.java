@@ -50,6 +50,6 @@ public abstract class StackableItem extends Item
 	{
 		super.draw(batch, parentAlpha);
 		font.getData().setScale(1.0f);
-		font.draw(batch, count.toString(), getX() + 4, getY() - 2);
+		font.draw(batch, count.toString(), getX() + 22, getY() + 12);
 	}
 }

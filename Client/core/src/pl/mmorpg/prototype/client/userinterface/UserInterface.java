@@ -12,6 +12,7 @@ import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.helpers.InventoryManager;
+import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
@@ -30,6 +31,7 @@ public class UserInterface
 	private final ShortcutBarPane standardBarDialog;
 	private final HitPointManaPointPane hpMpDialog;
 	private final QuickAccessDialog quickAccessDialog;
+	private final EquipmentDialog equipmentDialog;
 	private final ActorManipulator dialogs = new ActorManipulator();
 
 	private Item mouseHoldingItem = null;
@@ -45,6 +47,8 @@ public class UserInterface
 		standardBarDialog = new ShortcutBarPane(this);
 		hpMpDialog = new HitPointManaPointPane(character);
 		quickAccessDialog = new QuickAccessDialog(this);
+		equipmentDialog = new EquipmentDialog();
+		
 		mapDialogsWithKeys();
 		addOtherDialogs();
 		showDialogs();
@@ -65,6 +69,7 @@ public class UserInterface
 		stage.addActor(menuDialog);
 		stage.addActor(inventoryDialog);
 		stage.addActor(statisticsDialog);
+		stage.addActor(equipmentDialog);
 	}
 
 	public void draw(SpriteBatch batch)
@@ -90,6 +95,7 @@ public class UserInterface
 
 	public void mapDialogsWithKeys()
 	{
+		dialogs.map(Keys.E, equipmentDialog);
 		dialogs.map(Keys.M, menuDialog);
 		dialogs.map(Keys.I, inventoryDialog);
 		dialogs.map(Keys.C, statisticsDialog);

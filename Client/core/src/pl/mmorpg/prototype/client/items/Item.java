@@ -10,10 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 public abstract class Item extends Actor
 {
-	protected static final float WIDTH_WHEN_DRAGGED = 32;
-	protected static final float HEIGHT_WHEN_DRAGGED = 32;
-	protected static final float WIDTH_INVENTORY = 24;
-	protected static final float HEIGHT_INVENTORY = 24;
+	protected static final float WIDTH_WHEN_DRAGGED = 36;
+	protected static final float HEIGHT_WHEN_DRAGGED = 36;
+	protected static final float WIDTH_INVENTORY = 32;
+	protected static final float HEIGHT_INVENTORY = 32;
 
 
 	private final Sprite sprite;
@@ -23,6 +23,8 @@ public abstract class Item extends Actor
 	{
 		sprite = new Sprite(texture);
 		drawable = new SpriteDrawable(sprite);
+		setWidth(WIDTH_INVENTORY);;
+		setHeight(HEIGHT_INVENTORY);
 		drawable.setMinWidth(WIDTH_INVENTORY);
 		drawable.setMinHeight(HEIGHT_INVENTORY);
 	}
@@ -52,7 +54,7 @@ public abstract class Item extends Actor
 	@Override
 	public void draw(Batch batch, float parentAlpha)
 	{
-		batch.draw(sprite.getTexture(), getX() - WIDTH_INVENTORY / 2, getY() - HEIGHT_INVENTORY / 2, WIDTH_INVENTORY,
+		batch.draw(sprite.getTexture(), getX(), getY(), WIDTH_INVENTORY,
 				HEIGHT_INVENTORY);
 	}
 
