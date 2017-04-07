@@ -69,7 +69,7 @@ public abstract class MovableGameObject extends GameObject
     {
 		GameObject collision = collisionMap.tryToRepositionCollisionGoingRight(moveValue, this);
 		if (collision == null)
-			setX(getX() + moveValue);
+			setX(getX() + moveValue*collisionMap.getScale());
         return collision;
     }
 
@@ -87,7 +87,7 @@ public abstract class MovableGameObject extends GameObject
     {
 		GameObject collision = collisionMap.tryToRepositionCollisionGoingLeft(moveValue, this);
 		if (collision == null)
-			setX(getX() - moveValue);
+			setX(getX() - moveValue*collisionMap.getScale());
 		return collision;
     }
 
@@ -105,7 +105,7 @@ public abstract class MovableGameObject extends GameObject
     {
 		GameObject collision = collisionMap.tryToRepositionCollisionGoingUp(moveValue, this);
 		if (collision == null)
-			setY(getY() + moveValue);
+			setY(getY() + moveValue*collisionMap.getScale());
 		return collision;
     }
 
@@ -123,7 +123,7 @@ public abstract class MovableGameObject extends GameObject
     {
 		GameObject collision = collisionMap.tryToRepositionCollisionGoingDown(moveValue, this);
 		if (collision == null)
-			setY(getY() - moveValue);
+			setY(getY() - moveValue*collisionMap.getScale());
 		return collision;
     }
 

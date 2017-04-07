@@ -13,9 +13,16 @@ public class CollisionMap
 {
     private GameObject nullObject = GameObject.NULL_OBJECT;
     private GameObject[][] collisionMap;
+    private int scale;
 
     public CollisionMap(int width, int height)
     {
+        this(width, height, 1);
+    }
+    
+    public CollisionMap(int width, int height, int scale)
+    {
+        this.scale = scale;
         collisionMap = createCollisionMap(width, height);
         collisionMap = placeNullObjectOnBorder(collisionMap);
     }
@@ -47,10 +54,20 @@ public class CollisionMap
         }
         return collisionMap;
     }
+    
+    public void setScale(int scale)
+    {
+        this.scale = scale;
+    }
+    
+    public int getScale()
+    {
+        return scale;
+    }
 
     public void insert(GameObject object)
     {
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
         for (int i = collision.x; i <= collision.x + collision.width; i++)
             for (int j = collision.y; j <= collision.y + collision.height; j++)
@@ -60,7 +77,7 @@ public class CollisionMap
 
     public void unsafeInsert(Rectangle rectangle)
     {
-        IntegerRectangle collision = new IntegerRectangle(rectangle);
+        IntegerRectangle collision = new IntegerRectangle(rectangle, scale);
         for (int i = collision.x; i <= collision.x + collision.width; i++)
             for (int j = collision.y; j <= collision.y + collision.height; j++)
                 collisionMap[i][j] = nullObject;
@@ -68,7 +85,7 @@ public class CollisionMap
 
     public void remove(GameObject object)
     {
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
         for (int i = collision.x; i <= collision.x + collision.width; i++)
             for (int j = collision.y; j <= collision.y + collision.height; j++)
@@ -78,7 +95,7 @@ public class CollisionMap
     public GameObject tryToRepositionCollisionGoingLeft(int moveValue, MovableGameObject object)
     {
         GameObject possibleCollision = checkForSpaceGoingLeft(moveValue,
-                new IntegerRectangle(object.getCollisionRect()));
+                new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
             repositionCollisionGoingLeft(moveValue, object);
         return possibleCollision;
@@ -87,7 +104,7 @@ public class CollisionMap
     public GameObject tryToRepositionCollisionGoingRight(int moveValue, MovableGameObject object)
     {
         GameObject possibleCollision = checkForSpaceGoingRight(moveValue,
-                new IntegerRectangle(object.getCollisionRect()));
+                new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
             repositionCollisionGoingRight(moveValue, object);
         return possibleCollision;
@@ -96,7 +113,7 @@ public class CollisionMap
     public GameObject tryToRepositionCollisionGoingDown(int moveValue, MovableGameObject object)
     {
         GameObject possibleCollision = checkForSpaceGoingDown(moveValue,
-                new IntegerRectangle(object.getCollisionRect()));
+                new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
             repositionCollisionGoingDown(moveValue, object);
         return possibleCollision;
@@ -104,7 +121,7 @@ public class CollisionMap
 
     public GameObject tryToRepositionCollisionGoingUp(int moveValue, MovableGameObject object)
     {
-        GameObject possibleCollision = checkForSpaceGoingUp(moveValue, new IntegerRectangle(object.getCollisionRect()));
+        GameObject possibleCollision = checkForSpaceGoingUp(moveValue, new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
             repositionCollisionGoingUp(moveValue, object);
         return possibleCollision;
@@ -148,7 +165,7 @@ public class CollisionMap
 
     private void repositionCollisionGoingLeft(int moveValue, GameObject object)
     {
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
         for (int i = collision.y; i <= collision.getUpperBound(); i++)
             for (int j = collision.x - moveValue; j < collision.x; j++)
@@ -161,7 +178,7 @@ public class CollisionMap
 
     private void repositionCollisionGoingRight(int moveValue, GameObject object)
     {
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
         for (int i = collision.y; i <= collision.getUpperBound(); i++)
             for (int j = collision.getRightBound() + 1; j <= collision.getRightBound() + moveValue; j++)
@@ -174,7 +191,7 @@ public class CollisionMap
 
     private void repositionCollisionGoingDown(int moveValue, GameObject object)
     {
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
         for (int i = collision.y - 1; i >= collision.y - moveValue; i--)
             for (int j = collision.x; j <= collision.getRightBound(); j++)
@@ -187,7 +204,7 @@ public class CollisionMap
 
     private void repositionCollisionGoingUp(int moveValue, GameObject object)
     {
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
         for (int i = collision.y + collision.height + 1; i <= collision.y + collision.height + moveValue; i++)
             for (int j = collision.x; j <= collision.getRightBound(); j++)
@@ -218,7 +235,7 @@ public class CollisionMap
 
     public GameObject isColliding(Rectangle rectangle)
     {
-        IntegerRectangle collision = new IntegerRectangle(rectangle);
+        IntegerRectangle collision = new IntegerRectangle(rectangle, scale);
 
         for (int i = collision.x; i < collision.x + collision.width; i++)
             for (int j = collision.y; j < collision.y + collision.height; j++)
