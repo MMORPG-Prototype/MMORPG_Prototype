@@ -24,7 +24,7 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
         @Override
         public void handle()
         {
-            if(player.isPictureInSamePosition())
+            if(player.isNearTarget())
             {
                 MoveUpPacket packet = new MoveUpPacket();
                 packet.id = player.getId();
@@ -38,7 +38,7 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
         @Override
         public void handle()
         {
-            if(player.isPictureInSamePosition())
+            if(player.isNearTarget())
             {
                 MoveLeftPacket packet = new MoveLeftPacket();
                 packet.id = player.getId();
@@ -52,7 +52,7 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
         @Override
         public void handle()
         {
-            if(player.isPictureInSamePosition())
+            if(player.isNearTarget())
             {
                 MoveDownPacket packet = new MoveDownPacket();
                 packet.id = player.getId();
@@ -66,7 +66,7 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
         @Override
         public void handle()
         {
-            if(player.isPictureInSamePosition())
+            if(player.isNearTarget())
             {
                 MoveRightPacket packet = new MoveRightPacket();
                 packet.id = player.getId();

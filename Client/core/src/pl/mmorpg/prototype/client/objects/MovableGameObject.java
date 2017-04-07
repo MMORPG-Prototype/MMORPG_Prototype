@@ -7,6 +7,7 @@ public abstract class MovableGameObject extends GameObject
     private float stepSpeed = 100.0f;
     private float targetX = 100.0f;
     private float targetY = 100.0f;
+    private float lastDeltaTime;
 
     public MovableGameObject(Texture lookout, long id)
     {
@@ -18,6 +19,7 @@ public abstract class MovableGameObject extends GameObject
     @Override
     public void update(float deltaTime)
     {
+        lastDeltaTime = deltaTime;
         repositionX(deltaTime);
         repositionY(deltaTime);
     }
@@ -65,8 +67,11 @@ public abstract class MovableGameObject extends GameObject
         targetY = y;
     }
     
-    public boolean isPictureInSamePosition()
+    public boolean isNearTarget()
     {
-        return getX() == targetX && getY() == targetY;
+        float stepValue = stepSpeed*lastDeltaTime;
+        float deltaY = targetY - getY();
+        float deltaX = targetX - getX();
+        return Math.abs(deltaY) <= stepValue && Math.abs(deltaX) <= stepValue;
     }
 }
