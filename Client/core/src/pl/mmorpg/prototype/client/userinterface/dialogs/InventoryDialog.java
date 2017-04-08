@@ -28,6 +28,7 @@ public class InventoryDialog extends Dialog
 	private int currentPageIndex = 0;
 	private final List<InventoryPage> inventoryPages = new ArrayList<>(numberOfPages);
 	private final VerticalGroup currentPageButtons = new VerticalGroup();
+	private final List<InventoryTextField> switchPageButtons = new ArrayList<>(numberOfPages);
 	private final UserInterface linkedInterface;
 	private InventoryField lastFieldWithItemClicked = null;
 	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
@@ -52,7 +53,9 @@ public class InventoryDialog extends Dialog
 		{
 			InventoryTextField switchButton = createSwitchButton(i);
 			switchButtons.addActor(switchButton);
+			switchPageButtons.add(switchButton);
 		}
+		switchPageButtons.get(0).setColor(0.5f, 0.5f, 0.5f, 1);
 
 		this.getContentTable().add(switchButtons);
 		this.getContentTable().row();
@@ -93,6 +96,10 @@ public class InventoryDialog extends Dialog
 
 	private void switchButtonClicked(int pageIndex)
 	{
+		for(InventoryTextField button : switchPageButtons)
+			button.setColor(1, 1, 1, 1);
+		
+		switchPageButtons.get(pageIndex).setColor(0.5f, 0.5f, 0.5f, 1);
 		currentPageButtons.clear();
 		currentPageButtons.addActor(inventoryPages.get(pageIndex));
 		currentPageIndex = pageIndex;
