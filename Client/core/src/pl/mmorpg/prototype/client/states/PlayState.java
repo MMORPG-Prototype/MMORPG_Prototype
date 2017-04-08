@@ -61,7 +61,7 @@ public class PlayState implements State, GameObjectsContainer
         gameObjects.put((long) character.getId(), player);
         inputHandler = new PlayInputContinuousHandler(client, player);
         userInterface = new UserInterface(this, character);
-        inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs()));
+        inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs(), player));
         inputMultiplexer.addProcessor(userInterface.getStage());
         inputMultiplexer.addProcessor(inputHandler);
     }

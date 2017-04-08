@@ -2,24 +2,23 @@ package pl.mmorpg.prototype.client.userinterface.dialogs;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchInventoryFieldInPosition;
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryPage;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryTextField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLabel;
 
@@ -27,10 +26,10 @@ public class InventoryDialog extends Dialog
 {
 	private static final int numberOfPages = 5;
 	private int currentPageIndex = 0;
-	private final List<Map<Point, InventoryField>> inventoryFields = new ArrayList<>(numberOfPages);
-	private final List<VerticalGroup> rawButtons = new ArrayList<>(numberOfPages);
+	private final List<InventoryPage> inventoryPages = new ArrayList<>(numberOfPages);
 	private final VerticalGroup currentPageButtons = new VerticalGroup();
 	private final UserInterface linkedInterface;
+	private InventoryField lastFieldWithItemClicked = null;
 	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
 
 	public InventoryDialog(UserInterface linkedInterface, Integer linkedFieldGold)
@@ -38,32 +37,14 @@ public class InventoryDialog extends Dialog
 		super("Inventory", Settings.DEFAULT_SKIN);
 		this.linkedInterface = linkedInterface;
 
-		for (int i = 0; i < numberOfPages; i++)
-			inventoryFields.add(new HashMap<>());
-
 		Button closeButton = new CloseButton(this);
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 
-		for (int k = 0; k < numberOfPages; k++)
-		{
-			VerticalGroup buttons = new VerticalGroup().space(0).pad(0).padRight(5).fill();
-			for (int i = 0; i < 5; i++)
-			{
-				HorizontalGroup buttonRow = new HorizontalGroup().space(0).pad(0).fill();
-				for (int j = 0; j < 5; j++)
-				{
-					Point cellPosition = new Point(i, j);
-					InventoryField button = createButton(cellPosition);
-					inventoryFields.get(k).put(cellPosition, button);
-					buttonRow.addActor(button);
-				}
-				buttons.addActor(buttonRow);
-			}
-			buttons.padBottom(8);
-			rawButtons.add(buttons);
-		}
-		
-		currentPageButtons.addActor(rawButtons.get(0));
+		for (int i = 0; i < numberOfPages; i++)
+			inventoryPages.add(new InventoryPage(this));
+		currentPageButtons.addActor(inventoryPages.get(0));
+		addActor(currentPageButtons);
+
 		this.getContentTable().add(currentPageButtons);
 		VerticalGroup switchButtons = new VerticalGroup().space(0).pad(0).top().padTop(-8).fill();
 
@@ -85,24 +66,11 @@ public class InventoryDialog extends Dialog
 		this.pack();
 	}
 
-	private InventoryField createButton(Point cellPosition)
-	{
-		InventoryField button = new InventoryField();
-		button.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				buttonClicked(cellPosition);
-			}
-		});
-
-		return button;
-	}
-
 	private InventoryTextField createSwitchButton(int pageIndex)
 	{
 		InventoryTextField switchButton = new InventoryTextField(String.valueOf(pageIndex));
+		switchButton.setTextShiftX(-4);
+		switchButton.setTextShiftY(6);
 		switchButton.addListener(new ClickListener()
 		{
 
@@ -112,43 +80,44 @@ public class InventoryDialog extends Dialog
 				switchButtonClicked(pageIndex);
 			}
 
-			
 		});
 		return switchButton;
 	}
 
-	private void buttonClicked(Point cellPosition)
+	public void buttonClicked(InventoryField field)
 	{
-		linkedInterface.inventoryFieldClicked(inventoryFields.get(currentPageIndex).get(cellPosition));
+		if(field.hasItem())
+			lastFieldWithItemClicked = field;
+		linkedInterface.inventoryFieldClicked(field);
 	}
-	
+
 	private void switchButtonClicked(int pageIndex)
 	{
 		currentPageButtons.clear();
-		currentPageButtons.addActor(rawButtons.get(pageIndex));
+		currentPageButtons.addActor(inventoryPages.get(pageIndex));
 		currentPageIndex = pageIndex;
 	}
 
 	public void put(Item item, Point position)
 	{
-		InventoryField field = inventoryFields.get(currentPageIndex).get(position);
+		InventoryField field = inventoryPages.get(currentPageIndex).getField(position);
 		if (field == null)
 			throw new NoSuchInventoryFieldInPosition(position);
-		field.put(item);
+		field.put(new ItemReference(item));
 	}
 
 	public Item getItem(Point position)
 	{
-		InventoryField field = inventoryFields.get(currentPageIndex).get(position);
+		InventoryField field = inventoryPages.get(currentPageIndex).getField(position);
 		return field.getItem();
 	}
 
 	public void addItem(Item item)
 	{
-		for (InventoryField field : inventoryFields.get(currentPageIndex).values())
+		for (InventoryField field : inventoryPages.get(currentPageIndex).getAllFields())
 			if (!field.hasItem())
 			{
-				field.put(item);
+				field.put(new ItemReference(item));
 				return;
 			}
 		throw new NoFreeFieldException();
@@ -168,6 +137,18 @@ public class InventoryDialog extends Dialog
 			this.setY(43);
 		}
 		super.setVisible(visible);
+	}
+
+	public InventoryField getLastFieldWithItemClicked()
+	{
+		return lastFieldWithItemClicked;		
+	}
+
+	public void removeIfHas(Item item)
+	{
+		for(InventoryPage inventoryPage : inventoryPages)
+			if(inventoryPage.removeIfHas(item))
+				return;	
 	}
 
 }

@@ -4,18 +4,22 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import pl.mmorpg.prototype.client.exceptions.CannotUseThisItemException;
+import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemUseable;
+import pl.mmorpg.prototype.client.objects.GameCharacter;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.TextInventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryTextField;
 
 public class QuickAccessDialog extends Dialog
 {
-	private Map<Integer, Button> quickAccessButtons = new TreeMap<>();
+	private Map<Integer, InventoryField> quickAccessButtons = new TreeMap<>();
 	private UserInterface linkedState;
 
 	public QuickAccessDialog(UserInterface linkedInterface)
@@ -26,7 +30,7 @@ public class QuickAccessDialog extends Dialog
 		HorizontalGroup buttons = new HorizontalGroup().padBottom(8).space(4).padTop(0).fill();
 		for (int i = 0; i < 12; i++)
 		{
-			TextInventoryField button = createButton(i);
+			InventoryField button = createField(i);
 			quickAccessButtons.put(i, button);
 			buttons.addActor(button);
 		}
@@ -38,22 +42,35 @@ public class QuickAccessDialog extends Dialog
 		this.setMovable(false);
 	}
 
-	private TextInventoryField createButton(int cellPosition)
+	private InventoryField createField(int cellPosition)
 	{
-		TextInventoryField inventoryField = new TextInventoryField("F" + String.valueOf(cellPosition));
+		InventoryTextField inventoryField = new InventoryTextField("F" + String.valueOf(cellPosition + 1));
+		inventoryField.setTextShiftX(-16);
+		inventoryField.setTextShiftY(-4);
 		inventoryField.addListener(new ClickListener()
 		{
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				buttonClicked(cellPosition);
+				fieldClicked(cellPosition);
 			}
 		});
 		return inventoryField;
 	}
-	
-	private void buttonClicked(int cellPosition)
+
+	private void fieldClicked(int cellPosition)
 	{
-		linkedState.quickAccesButtonClicked(cellPosition);
+		linkedState.quickAccesButtonClicked(quickAccessButtons.get(cellPosition));
+	}
+
+	public void useButtonItem(int cellPosition, GameCharacter character)
+	{
+		Item item = quickAccessButtons.get(cellPosition).getItem();
+		if (item == null)
+			return;
+		if (!(item instanceof ItemUseable))
+			throw new CannotUseThisItemException(item);
+
+		((ItemUseable) item).use(character);
 	}
 }

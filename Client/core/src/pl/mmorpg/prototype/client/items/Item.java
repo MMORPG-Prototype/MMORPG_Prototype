@@ -14,8 +14,7 @@ public abstract class Item extends Actor
 	protected static final float HEIGHT_WHEN_DRAGGED = 36;
 	protected static final float WIDTH_INVENTORY = 32;
 	protected static final float HEIGHT_INVENTORY = 32;
-
-
+	
 	private final Sprite sprite;
 	private final SpriteDrawable drawable;
 
@@ -54,14 +53,25 @@ public abstract class Item extends Actor
 	@Override
 	public void draw(Batch batch, float parentAlpha)
 	{
-		batch.draw(sprite.getTexture(), getX(), getY(), WIDTH_INVENTORY,
-				HEIGHT_INVENTORY);
+		draw(batch, getX(), getY());
 	}
 
 	public SpriteDrawable getDrawable()
 	{
 		return drawable;
 	}
+	
+	public void setTexture(Texture texture)
+	{
+		sprite.setTexture(texture);
+	}
 
 	public abstract String getIdentifier();
+
+	public void draw(Batch batch, float x, float y)
+	{
+		batch.draw(sprite.getTexture(), x, y, WIDTH_INVENTORY,
+				HEIGHT_INVENTORY);	
+	}
+
 }

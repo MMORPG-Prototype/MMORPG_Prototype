@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.client.items;
 
+import com.esotericsoftware.minlog.Log;
+
 import pl.mmorpg.prototype.client.objects.GameCharacter;
 import pl.mmorpg.prototype.client.resources.Assets;
 
@@ -14,7 +16,7 @@ public class SmallManaPotion extends Potion
 	@Override
 	public void use(GameCharacter character)
 	{
-
+		Log.info("Mana potion used");
 	}
 
 	@Override

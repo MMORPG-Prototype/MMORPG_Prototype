@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 
@@ -17,7 +18,7 @@ public class InventoryField extends Button implements ItemContainer
 	private SpriteDrawable drawable;
 	private final Image nullImage;
 
-	private Item item = null;
+	private ItemReference itemReference = null;
 
 	public InventoryField()
 	{
@@ -44,12 +45,12 @@ public class InventoryField extends Button implements ItemContainer
 	}
 
 	@Override
-	public void put(Item item)
+	public void put(ItemReference item)
 	{
-		nullImage.remove();
-		if (this.item != null)
-			this.item.remove();
-		this.item = item;
+		this.removeActor(nullImage);
+		if (this.itemReference != null)
+			this.removeActor(this.itemReference);
+		this.itemReference = item;
 		
 		add(item);
 		drawable = item.getDrawable();
@@ -59,22 +60,24 @@ public class InventoryField extends Button implements ItemContainer
 	@Override
 	public boolean hasItem()
 	{
-		return item != null;
+		return itemReference != null;
 	}
 
 	@Override
 	public Item getItem()
 	{
-		return item;
+		if(itemReference == null)
+			return null;
+		return itemReference.getItem();
 	}
 
 
 	@Override
 	public void removeItem()
 	{
-		if (item != null)
-			item.remove();
-		item = null;
+		if (itemReference != null)
+			this.removeActor(itemReference);
+		itemReference = null;
 		add(nullImage);
 	}
 }

@@ -6,12 +6,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import pl.mmorpg.prototype.client.exceptions.NotImplementedException;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
-import pl.mmorpg.prototype.client.states.helpers.InventoryManager;
+import pl.mmorpg.prototype.client.states.helpers.UserInterfaceManager;
 import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
@@ -34,7 +33,7 @@ public class UserInterface
 	private final EquipmentDialog equipmentDialog;
 	private final ActorManipulator dialogs = new ActorManipulator();
 
-	private Item mouseHoldingItem = null;
+	private MousePointerToItem mousePointerToItem = new MousePointerToItem();
 
 	private PlayState linkedState;
 
@@ -76,8 +75,8 @@ public class UserInterface
 	{
 		stage.draw();
 		batch.begin();
-		if (mouseHoldingItem != null)
-			mouseHoldingItem.renderWhenDragged(batch);
+		if (mousePointerToItem.item != null)
+			mousePointerToItem.item.renderWhenDragged(batch);
 		batch.end();
 	}
 
@@ -114,7 +113,8 @@ public class UserInterface
 
 	public void inventoryFieldClicked(InventoryField inventoryField)
 	{
-		mouseHoldingItem = InventoryManager.inventoryFieldClicked(mouseHoldingItem, inventoryField);
+		mousePointerToItem = UserInterfaceManager.inventoryFieldClicked
+				(mousePointerToItem, inventoryField, inventoryDialog);
 	}
 
 	public void userWantsToDisconnect()
@@ -137,8 +137,9 @@ public class UserInterface
 		inventoryDialog.addItem(newItem);
 	}
 
-	public void quickAccesButtonClicked(int cellPosition)
+	public void quickAccesButtonClicked(InventoryField field)
 	{
-		throw new NotImplementedException();		
+		InventoryField lastFieldClicked = inventoryDialog.getLastFieldWithItemClicked();
+		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field, lastFieldClicked);			
 	}
 }

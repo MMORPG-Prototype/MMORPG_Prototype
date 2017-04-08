@@ -58,7 +58,7 @@ public class ActorManipulator
 		return mappedDialogs.containsKey(key);
 	}
 
-	private Actor searchForDialog(Class<? extends Actor> clazz)
+	public Actor searchForDialog(Class<? extends Actor> clazz)
 	{
 		return Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
 				.filter((d) -> d.getClass().equals(clazz))

@@ -44,12 +44,12 @@ public abstract class StackableItem extends Item
 		font.getData().setScale(1.0f);
 		font.draw(batch, count.toString(), getMouseX() + 6, getMouseY() - 2);
 	}
-
+	
 	@Override
-	public void draw(Batch batch, float parentAlpha)
+	public void draw(Batch batch, float x, float y)
 	{
-		super.draw(batch, parentAlpha);
+		super.draw(batch, x, y);
 		font.getData().setScale(1.0f);
-		font.draw(batch, count.toString(), getX() + 22, getY() + 12);
+		font.draw(batch, count.toString(), x + 22, y + 12);
 	}
 }

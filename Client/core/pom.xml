@@ -31,12 +31,18 @@
 			<artifactId>reflections-maven</artifactId>
 			<version>0.9.8</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>uk.com.robust-it</groupId>
+			<artifactId>cloning</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
 			<version>1.9.6</version>
 		</dependency>
-		
+
 	</dependencies>
 </project>
