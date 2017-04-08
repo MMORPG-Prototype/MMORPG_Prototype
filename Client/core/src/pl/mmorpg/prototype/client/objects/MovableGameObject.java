@@ -24,6 +24,11 @@ public abstract class MovableGameObject extends GameObject
     @Override
     public void update(float deltaTime)
     {
+    	if(lastDeltaTime == 0.0f)
+    	{
+    		super.setX(targetX);
+    		super.setY(targetY);
+    	}
         lastDeltaTime = deltaTime;
         repositionX(deltaTime);
         repositionY(deltaTime);
