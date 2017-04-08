@@ -9,7 +9,7 @@ import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
 import pl.mmorpg.prototype.server.states.PlayState;
 
-public abstract class MovePacketHandler extends PacketHandlerBase<GameObjectTargetPacket>
+public abstract class MovePacketHandler extends PacketHandlerBase<GameObjectTargetPacket> implements MoveAction
 {
 	private PlayState playState;
 	private Server server;
@@ -19,20 +19,17 @@ public abstract class MovePacketHandler extends PacketHandlerBase<GameObjectTarg
 	{
 		this.server = server;
 		this.playState = playState;
-		moveAction = getMoveAction();
 	}
 	
 	@Override
 	public void handle(Connection connection, GameObjectTargetPacket packet)
 	{
 		MovableGameObject operationTarget = (MovableGameObject) playState.getObject(packet.id);
-		moveAction.perform(operationTarget, playState.getCollisionMap());
+		this.perform(operationTarget, playState.getCollisionMap());
 		server.sendToAllTCP(
-				PacketsMaker.makeRepositionPacket(packet.id, operationTarget.getX(), operationTarget.getY()));
-		
+				PacketsMaker.makeRepositionPacket(packet.id, operationTarget.getX(), operationTarget.getY()));	
 	}
 	
-	protected abstract MoveAction getMoveAction();
 	
 	
 

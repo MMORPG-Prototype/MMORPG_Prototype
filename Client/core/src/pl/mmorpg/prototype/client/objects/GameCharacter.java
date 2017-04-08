@@ -8,4 +8,5 @@ public abstract class GameCharacter extends MovableGameObject
     {
         super(lookout, id);
     }
+
 }

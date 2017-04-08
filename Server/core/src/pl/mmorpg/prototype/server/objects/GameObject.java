@@ -84,6 +84,16 @@ public abstract class GameObject
 	{
 		return collisionRectangle.y;
 	}
+	
+	public float getWidth()
+	{
+		return collisionRectangle.getWidth();
+	}
+	
+	public float getHeight()
+	{
+		return collisionRectangle.getHeight();
+	}
 
 	public long getId()
 	{
@@ -178,6 +188,5 @@ public abstract class GameObject
 		{
 			return "NullObject";
 		}
-
 	}
 }

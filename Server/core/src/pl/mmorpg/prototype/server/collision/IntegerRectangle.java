@@ -16,10 +16,11 @@ public class IntegerRectangle
 
     public IntegerRectangle(Rectangle rectangle, int scale)
     {
-        this.x = (int) rectangle.x / scale;
-        this.y = (int) rectangle.y / scale;
-        this.width = (int) rectangle.width / scale;
-        this.height = (int) rectangle.height / scale;
+        this.x = (int) rectangle.x;
+        this.y = (int) rectangle.y;
+        this.width = (int) rectangle.width;
+        this.height = (int) rectangle.height;
+        scale(scale);
     }
 
     public IntegerRectangle(int x, int y, int width, int height)
@@ -29,10 +30,11 @@ public class IntegerRectangle
 
     public IntegerRectangle(int x, int y, int width, int height, int scale)
     {
-        this.x = x / scale;
-        this.y = y / scale;
-        this.width = width / scale;
-        this.height = height / scale;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        scale(scale);
     }
 
     public int getRightBound()
@@ -83,6 +85,14 @@ public class IntegerRectangle
     public void setHeight(int height)
     {
         this.height = height;
+    }
+    
+    public void scale(int scale)
+    {
+    	this.x /= scale;
+        this.y /= scale;
+        this.width /= scale;
+        this.height /= scale;
     }
 
 }

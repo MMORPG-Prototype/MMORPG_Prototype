@@ -12,7 +12,6 @@ public class PlayerCharacter extends MovableGameObject
 	{
 		super(Assets.get("MainChar.png"), userCharacter.getId());
 		this.userCharacter = userCharacter;
-		setPosition(100, 100);
 	}
 
 	@Override

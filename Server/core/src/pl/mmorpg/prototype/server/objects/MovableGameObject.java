@@ -7,7 +7,7 @@ import pl.mmorpg.prototype.server.collision.CollisionMap;
 
 public abstract class MovableGameObject extends GameObject
 {
-    private float moveSpeed = 100.0f;
+    private float moveSpeed = 150.0f;
     private float movementX = 0.0f;
     private float movementY = 0.0f;
 
@@ -23,8 +23,11 @@ public abstract class MovableGameObject extends GameObject
         movementX -= (int) movementX;
         GameObject collision = moveRight(collisionMap, collisionMoveValue);
         if (collision != null)
-            while (moveRight(collisionMap, 1) == null)
-                ;
+        {
+        	while (moveRight(collisionMap, 1) == null)
+        		;
+        }
+                
         return collision;
     }
 
@@ -35,8 +38,11 @@ public abstract class MovableGameObject extends GameObject
         movementX -= (int) movementX;
         GameObject collision = moveLeft(collisionMap, collisionMoveValue);
         if (collision != null)
-            while (moveLeft(collisionMap, 1) == null)
-                ;
+        {
+        	while (moveLeft(collisionMap, 1) == null)
+        		;
+        }
+                
         return collision;
     }
 
@@ -47,8 +53,11 @@ public abstract class MovableGameObject extends GameObject
         movementY -= (int) movementY;
         GameObject collision = moveDown(collisionMap, collisionMoveValue);
         if (collision != null)
-            while (moveDown(collisionMap, 1) == null)
-                ;
+        {
+        	while (moveDown(collisionMap, 1) == null)
+        		;
+        }
+                
         return collision;
     }
 
@@ -59,8 +68,12 @@ public abstract class MovableGameObject extends GameObject
         movementY -= (int) movementY;
         GameObject collision = moveUp(collisionMap, collisionMoveValue);
         if (collision != null)
-            while (moveUp(collisionMap, 1) == null)
-                ;
+        {
+        	while (moveUp(collisionMap, 1) == null)
+        		;
+        }
+        		
+                
         return collision;
     }
 

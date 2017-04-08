@@ -56,7 +56,6 @@ public class ServerListener extends Listener
 		packetHandler.handle(object, connection);
 	
 		
-		
 		Log.info("Packet received, client id: " + connection.getID() + ", packet: " + object);
 	}
 	

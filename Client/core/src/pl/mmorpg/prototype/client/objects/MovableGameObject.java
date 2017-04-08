@@ -2,12 +2,17 @@ package pl.mmorpg.prototype.client.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import pl.mmorpg.prototype.clientservercommon.packets.movement.Directions;
+
 public abstract class MovableGameObject extends GameObject
 {
+	private static float stopMovingTimeBound = 0.2f;
+	private float stopMovingTime = 0.0f;
     private float stepSpeed = 100.0f;
     private float targetX = 100.0f;
     private float targetY = 100.0f;
     private float lastDeltaTime;
+    private int lastMoveDirection = Directions.NONE;
 
     public MovableGameObject(Texture lookout, long id)
     {
@@ -22,7 +27,18 @@ public abstract class MovableGameObject extends GameObject
         lastDeltaTime = deltaTime;
         repositionX(deltaTime);
         repositionY(deltaTime);
+        handleMovementStop(deltaTime);
     }
+
+	private void handleMovementStop(float deltaTime)
+	{
+		stopMovingTime += deltaTime;
+        if(stopMovingTime > stopMovingTimeBound)
+        {
+        	stopMovingTime = 0.0f;
+        	lastMoveDirection = Directions.NONE;
+        }
+	}
 
     private void repositionX(float deltaTime)
     {
@@ -51,21 +67,35 @@ public abstract class MovableGameObject extends GameObject
     @Override
     public void setX(float x)
     {
+    	if(x > getX())
+    		lastMoveDirection = Directions.RIGHT;
+    	else if(x < getX())
+    		lastMoveDirection = Directions.LEFT;
         targetX = x;
     }
 
     @Override
     public void setY(float y)
     {
+    	if(y > getY())
+    		lastMoveDirection = Directions.UP;
+    	else if (y < getY())
+    		lastMoveDirection = Directions.DOWN;
         targetY = y;
     }
 
     @Override
     public void setPosition(float x, float y)
     {
-        targetX = x;
-        targetY = y;
+        setX(x);
+        setY(y);
     }
+   
+    
+    public int getLastMoveDirection()
+    {
+    	return lastMoveDirection;
+    }   
     
     public boolean isNearTarget()
     {

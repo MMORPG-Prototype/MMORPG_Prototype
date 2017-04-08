@@ -41,13 +41,11 @@ public class EquipmentDialog extends Dialog
 		content.add(bootsField).pad(padding);
 		content.add().pad(padding);
 		
-		this.getContentTable().add(content).fill();
-		debugAll();
-		content.setFillParent(true);
-		setX(700);
-		setWidth(260);
-		setHeight(350);
-		pack();
+		this.getContentTable().add(content).center().padLeft(-10).fill();
+		setX(1147);
+		setY(285);
+		setWidth(253);
+		setHeight(310);
 	}
 
 }

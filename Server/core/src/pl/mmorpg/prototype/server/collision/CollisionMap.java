@@ -75,12 +75,13 @@ public class CollisionMap
 
     }
 
-    public void unsafeInsert(Rectangle rectangle)
+    public void undefinedObjectInsert(Rectangle rectangle)
     {
+        MapCollisionUnknownObject unknownObject = new MapCollisionUnknownObject(rectangle);
         IntegerRectangle collision = new IntegerRectangle(rectangle, scale);
         for (int i = collision.x; i <= collision.x + collision.width; i++)
             for (int j = collision.y; j <= collision.y + collision.height; j++)
-                collisionMap[i][j] = nullObject;
+                collisionMap[i][j] = unknownObject;
     }
 
     public void remove(GameObject object)

@@ -2,6 +2,9 @@ package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import com.esotericsoftware.kryonet.Server;
 
+import pl.mmorpg.prototype.clientservercommon.packets.movement.Directions;
+import pl.mmorpg.prototype.server.collision.CollisionMap;
+import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class MoveRightPacketHandler extends MovePacketHandler
@@ -13,9 +16,15 @@ public class MoveRightPacketHandler extends MovePacketHandler
 	}
 
 	@Override
-	protected MoveAction getMoveAction()
+	public void perform(MovableGameObject operationTarget, CollisionMap collisionMap)
 	{
-		return (gameObject, collisionMap) -> gameObject.moveRight(collisionMap);
+		operationTarget.moveRight(collisionMap);
+	}
+
+	@Override
+	public int getMoveDirection()
+	{
+		return Directions.RIGHT;
 	}
 
 }

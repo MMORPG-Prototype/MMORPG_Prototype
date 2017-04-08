@@ -35,6 +35,8 @@ public class PacketsMaker
 		return packet;
 	}
 
+
+
 	public static UserCharacterDataPacket makeCharacterPacket(UserCharacter character)
 	{
 		UserCharacterDataPacket packet = new UserCharacterDataPacket();

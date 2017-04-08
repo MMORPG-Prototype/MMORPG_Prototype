@@ -33,12 +33,12 @@ public class PlayState extends State implements GameObjectsContainer
         this.states = states;
         camera.setToOrtho(false);
 
-        collisionMap.setScale(2);
+        collisionMap.setScale(3);
         
         TiledMap map = Assets.get("Map/tiled.tmx");
         MapObjects objects = map.getLayers().get("Warstwa Obiektu 1").getObjects();
         Array<RectangleMapObject> byType = objects.getByType(RectangleMapObject.class);
-        byType.forEach((rectangle) -> collisionMap.unsafeInsert(rectangle.getRectangle()));
+        byType.forEach((rectangle) -> collisionMap.undefinedObjectInsert(rectangle.getRectangle()));
 
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         mapRenderer.setView(camera);
@@ -47,11 +47,10 @@ public class PlayState extends State implements GameObjectsContainer
     @Override
     public void render(SpriteBatch batch)
     {
-        mapRenderer.render(new int[] { 0 });
+        //mapRenderer.render(new int[] { 0, 1, 2, 3, 4 });
         for (GameObject object : gameObjects.values())
             object.render(batch);
 
-        mapRenderer.render(new int[] { 1, 2, 3, 4 });
     }
 
     @Override
