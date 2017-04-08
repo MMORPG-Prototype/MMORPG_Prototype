@@ -25,6 +25,7 @@ public class PlayInputSingleHandle extends InputProcessorAdapter
 			dialogManipulator.showOrHide(keycode);
 		else if(keycode >= Keys.F1 && keycode <= Keys.F12)
 			quickAccesDialog.useButtonItem(keycode - Keys.F1, player);
+				
 		return false;
 	}
 

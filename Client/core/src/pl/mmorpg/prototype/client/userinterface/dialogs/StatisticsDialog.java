@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.client.userinterface.dialogs;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import pl.mmorpg.prototype.client.states.helpers.CharacterStatsCalculator;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
@@ -11,6 +12,13 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterData
 public class StatisticsDialog extends Dialog
 {
 	private UserCharacterDataPacket character;
+	private Label levelValueLabel;
+	private Label experienceValueLabel;
+	private Label maxHitPointsValueLabel;
+	private Label maxManaPointsValueLabel;
+	private Label strengthValueLabel;
+	private Label magicValueLabel;
+	private Label dexitirityValueLabel;
 
 	public StatisticsDialog(UserCharacterDataPacket character)
 	{
@@ -24,25 +32,32 @@ public class StatisticsDialog extends Dialog
 		text(character.getNickname()).right();
 		getContentTable().row();
 		text("Level: ").left();
-		text(character.getLevel().toString()).right();
+		levelValueLabel = new Label(character.getLevel().toString(), getSkin());
+		text(levelValueLabel).right();
 		getContentTable().row();
 		text("Experience: ").left();
-		text(character.getExperience().toString()).right();
+		experienceValueLabel = new Label(character.getExperience().toString(), getSkin());
+		text(experienceValueLabel).right();
 		getContentTable().row();
 		text("Max hit points: ").left();
-		text(CharacterStatsCalculator.getMaxHP(character).toString()).right();
+		maxHitPointsValueLabel = new Label(CharacterStatsCalculator.getMaxHP(character).toString(), getSkin());
+		text(maxHitPointsValueLabel).right();
 		getContentTable().row();
 		text("Max mana points: ").left();
-		text(CharacterStatsCalculator.getMaxMP(character).toString()).right();
+		maxManaPointsValueLabel = new Label(CharacterStatsCalculator.getMaxMP(character).toString(), getSkin());
+		text(maxManaPointsValueLabel).right();
 		getContentTable().row();
 		text("Strength: ").left();
-		text(character.getStrength().toString()).right();
+		strengthValueLabel = new Label(character.getStrength().toString(), getSkin());
+		text(strengthValueLabel).right();
 		getContentTable().row();
 		text("Magic: ").left();
-		text(character.getMagic().toString()).right();
+		magicValueLabel = new Label(character.getMagic().toString(), getSkin());
+		text(magicValueLabel).right();
 		getContentTable().row();
 		text("Dexitirity: ").left();
-		text(character.getDexitirity().toString()).right();
+		dexitirityValueLabel = new Label(character.getDexitirity().toString(), getSkin());
+		text(dexitirityValueLabel).right();
 		getContentTable().row();
 
 		this.setX(0);
@@ -50,9 +65,15 @@ public class StatisticsDialog extends Dialog
 		pack();
 	}
 	
-	void updateStatistics()
+	public void updateStatistics()
 	{
-		
+		levelValueLabel.setText(character.getLevel().toString());
+		experienceValueLabel.setText(character.getExperience().toString());
+		maxHitPointsValueLabel.setText(CharacterStatsCalculator.getMaxHP(character).toString());
+		maxManaPointsValueLabel.setText(CharacterStatsCalculator.getMaxMP(character).toString());
+		strengthValueLabel.setText(character.getStrength().toString());
+		magicValueLabel.setText(character.getMagic().toString());
+		dexitirityValueLabel.setText(character.getDexitirity().toString());	
 	}
 
 	

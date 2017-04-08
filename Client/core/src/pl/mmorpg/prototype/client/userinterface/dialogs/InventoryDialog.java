@@ -71,7 +71,7 @@ public class InventoryDialog extends Dialog
 
 	private InventoryTextField createSwitchButton(int pageIndex)
 	{
-		InventoryTextField switchButton = new InventoryTextField(String.valueOf(pageIndex));
+		InventoryTextField switchButton = new InventoryTextField(String.valueOf(pageIndex + 1));
 		switchButton.setTextShiftX(-4);
 		switchButton.setTextShiftY(6);
 		switchButton.addListener(new ClickListener()

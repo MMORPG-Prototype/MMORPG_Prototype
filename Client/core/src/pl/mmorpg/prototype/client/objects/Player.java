@@ -81,4 +81,9 @@ public class Player extends GameCharacter
     {
         this.data = characterData;
     }
+    
+    public UserCharacterDataPacket getData()
+    {
+    	return data;
+    }
 }

@@ -14,6 +14,7 @@ import pl.mmorpg.prototype.client.states.helpers.UserInterfaceManager;
 import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.LevelUpDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
@@ -31,6 +32,7 @@ public class UserInterface
 	private final HitPointManaPointPane hpMpDialog;
 	private final QuickAccessDialog quickAccessDialog;
 	private final EquipmentDialog equipmentDialog;
+	private LevelUpDialog levelUpDialog;
 	private final ActorManipulator dialogs = new ActorManipulator();
 
 	private MousePointerToItem mousePointerToItem = new MousePointerToItem();
@@ -47,7 +49,7 @@ public class UserInterface
 		hpMpDialog = new HitPointManaPointPane(character);
 		quickAccessDialog = new QuickAccessDialog(this);
 		equipmentDialog = new EquipmentDialog();
-		
+		levelUpDialog = new LevelUpDialog(this, character);
 		mapDialogsWithKeys();
 		addOtherDialogs();
 		showDialogs();
@@ -58,10 +60,12 @@ public class UserInterface
 		dialogs.add(standardBarDialog);
 		dialogs.add(hpMpDialog);
 		dialogs.add(quickAccessDialog);
+		dialogs.add(levelUpDialog);
 	}
 	
 	public void showDialogs()
 	{
+		stage.addActor(levelUpDialog);
 		stage.addActor(quickAccessDialog);
 		stage.addActor(hpMpDialog);
 		stage.addActor(standardBarDialog);
@@ -141,5 +145,10 @@ public class UserInterface
 	{
 		InventoryField lastFieldClicked = inventoryDialog.getLastFieldWithItemClicked();
 		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field, lastFieldClicked);			
+	}
+
+	public void userDistributedStatPoints()
+	{
+		statisticsDialog.updateStatistics();
 	}
 }
