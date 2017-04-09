@@ -1,14 +1,13 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.ButtonCreator;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
 
 public class MenuDialog extends Dialog
@@ -23,41 +22,22 @@ public class MenuDialog extends Dialog
 		Button closeButton = new CloseButton(this);
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 
-		TextButton inventoryButton = createButton("Inventory",
-				() -> linkedInterface.showOrHideDialog(InventoryDialog.class));
-		TextButton characterChangeButton = createButton("Change character",
+		TextButton characterChangeButton = ButtonCreator.createTextButton("Change character",
 				() -> linkedInterface.userWantsToChangeCharacter());
-		TextButton statisticsButton = createButton("Statistics",
-				() -> linkedInterface.showOrHideDialog(StatisticsDialog.class));
-		TextButton disconnectButton = createButton("Disconnect", () -> linkedInterface.userWantsToDisconnect());
+		TextButton disconnectButton = ButtonCreator.createTextButton("Disconnect", () -> linkedInterface.userWantsToDisconnect());
+		TextButton exitButton = ButtonCreator.createTextButton("Exit", () -> Gdx.app.exit());
 
-		getContentTable().add(inventoryButton);
-		getContentTable().row();
 		getContentTable().add(characterChangeButton);
 		getContentTable().row();
-		getContentTable().add(statisticsButton);
-		getContentTable().row();
 		getContentTable().add(disconnectButton);
+		getContentTable().row();
+		getContentTable().add(exitButton);
 		getContentTable().row();
 
 		centerPosition();
 		pack();
 	}
 
-	private TextButton createButton(String label, Runnable onClickAction)
-	{
-		TextButton inventoryButton = new TextButton(label, Settings.DEFAULT_SKIN);
-
-		inventoryButton.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				onClickAction.run();
-			}
-		});
-		return inventoryButton;
-	}
 	
 	@Override
 	public void setVisible(boolean visible)

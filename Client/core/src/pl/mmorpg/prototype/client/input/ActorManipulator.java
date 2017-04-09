@@ -47,6 +47,12 @@ public class ActorManipulator
 			dialogTarget.toFront();
 		}
 	}
+	
+	public void hideKeyMappedDialogs()
+	{
+		for(Actor dialog : mappedDialogs.values())
+			dialog.setVisible(false);
+	}
 
 	public Collection<Actor> getAllMapped()
 	{

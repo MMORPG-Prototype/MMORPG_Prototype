@@ -1,12 +1,11 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs;
 
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.ButtonCreator;
 
 public class ShortcutBarDialog extends Dialog
 {
@@ -14,16 +13,22 @@ public class ShortcutBarDialog extends Dialog
 	{
 		super("", Settings.DEFAULT_SKIN);
 
-		TextButton menuButton = new TextButton("Menu", getSkin());
-		add(menuButton).right().bottom();
+		TextButton menuButton = ButtonCreator.createTextButton("Menu", 
+				() -> linkedInterface.showOrHideDialog(MenuDialog.class));
+		TextButton inventoryButton = ButtonCreator.createTextButton("Inventory", 
+				() -> linkedInterface.showOrHideDialog(InventoryDialog.class));;
+		TextButton statisticsButton = ButtonCreator.createTextButton("Statistics", 
+				() -> linkedInterface.showOrHideDialog(StatisticsDialog.class));
+		TextButton chatButton = ButtonCreator.createTextButton("Chat", 
+				() -> linkedInterface.showOrHideDialog(ChatDialog.class));
+		TextButton equipmentButton = ButtonCreator.createTextButton("Equipment", 
+				() -> linkedInterface.showOrHideDialog(EquipmentDialog.class));
+		
 
-		menuButton.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				linkedInterface.showOrHideDialog(MenuDialog.class);
-			}
-		});
+		add(chatButton).right().bottom();
+		add(statisticsButton).right().bottom();
+		add(inventoryButton).right().bottom();
+		add(equipmentButton).right().bottom();
+		add(menuButton).right().bottom();
 	}
 }

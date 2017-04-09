@@ -54,6 +54,7 @@ public class UserInterface
 		mapDialogsWithKeys();
 		addOtherDialogs();
 		showDialogs();
+		dialogs.hideKeyMappedDialogs();
 	}
 
 	private void addOtherDialogs()
