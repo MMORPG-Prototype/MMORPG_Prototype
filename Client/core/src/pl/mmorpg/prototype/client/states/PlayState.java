@@ -11,6 +11,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.esotericsoftware.kryonet.Client;
 
+import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.input.InputMultiplexer;
 import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.NullInputHandler;
@@ -24,6 +25,7 @@ import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -148,4 +150,15 @@ public class PlayState implements State, GameObjectsContainer
         Item newItem = ItemFactory.produceItem(itemData);
         userInterface.addItemToInventory(newItem);
     }
+
+	public void userWantsToSendMessage(String message)
+	{
+		ChatMessagePacket packet = PacketsMaker.makeChatMessagePacket(message);
+		client.sendTCP(packet);
+	}
+
+	public void chatMessagePacketReceived(ChatMessagePacket packet)
+	{
+		userInterface.addMessageToChat(packet);		
+	}
 }

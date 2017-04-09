@@ -11,15 +11,16 @@ import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.helpers.UserInterfaceManager;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.LevelUpDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class UserInterface
@@ -32,7 +33,7 @@ public class UserInterface
 	private final HitPointManaPointPane hpMpDialog;
 	private final QuickAccessDialog quickAccessDialog;
 	private final EquipmentDialog equipmentDialog;
-	private LevelUpDialog levelUpDialog;
+	private final ChatDialog chatDialog;
 	private final ActorManipulator dialogs = new ActorManipulator();
 
 	private MousePointerToItem mousePointerToItem = new MousePointerToItem();
@@ -49,7 +50,7 @@ public class UserInterface
 		hpMpDialog = new HitPointManaPointPane(character);
 		quickAccessDialog = new QuickAccessDialog(this);
 		equipmentDialog = new EquipmentDialog();
-		levelUpDialog = new LevelUpDialog(this, character);
+		chatDialog = new ChatDialog(this);
 		mapDialogsWithKeys();
 		addOtherDialogs();
 		showDialogs();
@@ -60,12 +61,11 @@ public class UserInterface
 		dialogs.add(standardBarDialog);
 		dialogs.add(hpMpDialog);
 		dialogs.add(quickAccessDialog);
-		dialogs.add(levelUpDialog);
 	}
 	
 	public void showDialogs()
 	{
-		stage.addActor(levelUpDialog);
+		stage.addActor(chatDialog);
 		stage.addActor(quickAccessDialog);
 		stage.addActor(hpMpDialog);
 		stage.addActor(standardBarDialog);
@@ -98,6 +98,7 @@ public class UserInterface
 
 	public void mapDialogsWithKeys()
 	{
+		dialogs.map(Keys.T, chatDialog);
 		dialogs.map(Keys.E, equipmentDialog);
 		dialogs.map(Keys.M, menuDialog);
 		dialogs.map(Keys.I, inventoryDialog);
@@ -150,5 +151,16 @@ public class UserInterface
 	public void userDistributedStatPoints()
 	{
 		statisticsDialog.updateStatistics();
+	}
+
+	public void userWantsToSendMessage(String message)
+	{
+		linkedState.userWantsToSendMessage(message);
+	}
+
+	public void addMessageToChat(ChatMessagePacket packet)
+	{
+		chatDialog.addMessage(packet);
+		
 	}
 }

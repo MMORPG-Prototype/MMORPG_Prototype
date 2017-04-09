@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.communication;
 
+import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 
@@ -19,4 +20,11 @@ public class PacketsMaker
         packet.y = y;
         return packet;
     }
+
+	public static ChatMessagePacket makeChatMessagePacket(String message)
+	{
+		ChatMessagePacket packet = new ChatMessagePacket();
+		packet.setMessage(message);
+		return packet;
+	}
 }

@@ -97,7 +97,7 @@ public class ActorManipulator
 	{
 		List<Actor> mouseHoveringDialogs =
 				Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
-				.filter((d) -> mouseHovers(d))
+				.filter((d) -> d.isVisible() && mouseHovers(d))
 				.collect(Collectors.toList());
 		return mouseHoveringDialogs;
 	}

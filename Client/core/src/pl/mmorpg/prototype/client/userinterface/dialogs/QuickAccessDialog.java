@@ -38,7 +38,7 @@ public class QuickAccessDialog extends Dialog
 		row();
 		pack();
 		this.setHeight(80);
-		this.setX(400);
+		this.setX(430);
 		this.setMovable(false);
 	}
 
