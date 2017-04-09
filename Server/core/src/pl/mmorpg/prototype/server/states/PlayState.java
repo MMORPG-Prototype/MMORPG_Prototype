@@ -1,8 +1,10 @@
 package pl.mmorpg.prototype.server.states;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObjects;
@@ -13,17 +15,22 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Server;
 
+import pl.mmorpg.prototype.clientservercommon.IdSupplier;
 import pl.mmorpg.prototype.server.collision.CollisionMap;
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.GameObject;
+import pl.mmorpg.prototype.server.objects.monsters.Dragon;
 import pl.mmorpg.prototype.server.resources.Assets;
 
-public class PlayState extends State implements GameObjectsContainer
+public class PlayState extends State implements GameObjectsContainer, PacketsSender
 {
     private Server server;
     private StateManager states;
     private CollisionMap collisionMap = new CollisionMap(1500, 800);
     private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
     private TiledMapRenderer mapRenderer;
+    private ServerInputHandler inputHandler = new ServerInputHandler(this);
 
     private OrthographicCamera camera = new OrthographicCamera(1400, 700);
 
@@ -42,13 +49,25 @@ public class PlayState extends State implements GameObjectsContainer
 
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         mapRenderer.setView(camera);
+        
+        Gdx.input.setInputProcessor(inputHandler);
+    }
+    
+    public void addDragon()
+    {
+    	Dragon dragon = new Dragon(IdSupplier.getId(), collisionMap, this);
+        dragon.setPosition(400, 400);
+        collisionMap.insert(dragon);
+        add(dragon);
+        server.sendToAllTCP(PacketsMaker.makeCreationPacket(dragon));
     }
 
     @Override
     public void render(SpriteBatch batch)
     {
         //mapRenderer.render(new int[] { 0, 1, 2, 3, 4 });
-        for (GameObject object : gameObjects.values())
+        Collection<GameObject> toRender = gameObjects.values();
+		for (GameObject object : toRender)
             object.render(batch);
 
     }
@@ -97,5 +116,11 @@ public class PlayState extends State implements GameObjectsContainer
     {
         return gameObjects.containsKey(objectId);
     }
+
+	@Override
+	public void send(Object packet)
+	{
+		server.sendToAllTCP(packet);		
+	}
 
 }

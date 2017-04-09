@@ -6,34 +6,34 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public abstract class GameObject extends Sprite
 {
-    private long id;
-    
-    public GameObject(Texture lookout, long id)
-    {
-        super(lookout);
-        super.setRegion(lookout);
-        this.setId(id);
-    }
+	private long id;
 
-    public void render(SpriteBatch batch)
-    {
-        draw(batch);
-    }
+	public GameObject(Texture lookout, long id)
+	{
+		super(lookout);
+		super.setRegion(lookout);
+		this.setId(id);
+	}
 
-    public abstract void update(float deltaTime);
+	public void render(SpriteBatch batch)
+	{
+		draw(batch);
+	}
 
-    public long getId()
-    {
-        return id;
-    }
+	public abstract void update(float deltaTime);
 
-    public void setId(long id)
-    {
-        this.id = id;
-    }
+	public long getId()
+	{
+		return id;
+	}
 
-    public String getIdentifier()
-    {
-        return ObjectsIdentifier.getObjectIdentifier(getClass());
-    }
+	public void setId(long id)
+	{
+		this.id = id;
+	}
+
+	public String getIdentifier()
+	{
+		return ObjectsIdentifier.getObjectIdentifier(getClass());
+	}
 }

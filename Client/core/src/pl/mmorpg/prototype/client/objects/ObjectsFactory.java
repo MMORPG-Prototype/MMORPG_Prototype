@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.client.objects;
 
 import pl.mmorpg.prototype.client.exceptions.GameException;
+import pl.mmorpg.prototype.client.objects.monsters.Dragon;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 
 public class ObjectsFactory
@@ -14,15 +15,16 @@ public class ObjectsFactory
 	public static GameObject produce(String identifier, long id, float x, float y)
     {
 		GameObject object = null;
-        if(identifier.compareTo(ObjectsIdentifier.getObjectIdentifier(Player.class)) == 0)
+        if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(Player.class)))
 			object = new Player(id);
-
-		if (object != null)
-		{
-			object.setPosition(x, y);
-			return object;
-		}
-		throw new ObjectIdentifierNotFoundException(identifier);
+        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(Dragon.class)))
+        	object = new Dragon(id);
+        else
+    		throw new ObjectIdentifierNotFoundException(identifier);
+        	
+        	
+		object.setPosition(x, y);
+		return object;
     }
     
     private static class ObjectIdentifierNotFoundException extends GameException

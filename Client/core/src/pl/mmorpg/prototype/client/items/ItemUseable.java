@@ -1,9 +1,9 @@
 package pl.mmorpg.prototype.client.items;
 
-import pl.mmorpg.prototype.client.objects.GameCharacter;
+import pl.mmorpg.prototype.client.objects.WalkingGameObject;
 
 @FunctionalInterface
 public interface ItemUseable
 {
-	void use(GameCharacter character);
+	void use(WalkingGameObject character);
 }

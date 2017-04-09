@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pl.mmorpg.prototype.client.exceptions.CannotUseThisItemException;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemUseable;
-import pl.mmorpg.prototype.client.objects.GameCharacter;
+import pl.mmorpg.prototype.client.objects.WalkingGameObject;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
@@ -63,7 +63,7 @@ public class QuickAccessDialog extends Dialog
 		linkedState.quickAccesButtonClicked(quickAccessButtons.get(cellPosition));
 	}
 
-	public void useButtonItem(int cellPosition, GameCharacter character)
+	public void useButtonItem(int cellPosition, WalkingGameObject character)
 	{
 		Item item = quickAccessButtons.get(cellPosition).getItem();
 		if (item == null)

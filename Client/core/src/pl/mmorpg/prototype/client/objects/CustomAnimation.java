@@ -7,8 +7,7 @@ public class CustomAnimation<T> extends Animation<T>
 {
 	private float stateTime = 0.0f;
 	
-	public CustomAnimation(float frameDuration, Array<? extends T> keyFrames,
-			com.badlogic.gdx.graphics.g2d.Animation.PlayMode playMode)
+	public CustomAnimation(float frameDuration, Array<? extends T> keyFrames, PlayMode playMode)
 	{
 		super(frameDuration, keyFrames, playMode);
 	}

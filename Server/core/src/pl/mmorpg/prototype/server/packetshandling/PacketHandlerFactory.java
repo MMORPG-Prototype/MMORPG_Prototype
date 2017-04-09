@@ -48,10 +48,10 @@ public class PacketHandlerFactory
 		packetHandlers.put(RegisterationPacket.class, new RegisterationPacketHandler(server));
 		packetHandlers.put(UserCharacterDataPacket.class,
 				new UserCharacterDataPacketHandler(loggedUsersKeyUserId, server, playState));
-		packetHandlers.put(MoveLeftPacket.class, new MoveLeftPacketHandler(server, playState));
-		packetHandlers.put(MoveRightPacket.class, new MoveRightPacketHandler(server, playState));
-		packetHandlers.put(MoveUpPacket.class, new MoveUpPacketHandler(server, playState));
-		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(server, playState));
+		packetHandlers.put(MoveLeftPacket.class, new MoveLeftPacketHandler(playState));
+		packetHandlers.put(MoveRightPacket.class, new MoveRightPacketHandler(playState));
+		packetHandlers.put(MoveUpPacket.class, new MoveUpPacketHandler(playState));
+		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(playState));
 		packetHandlers.put(ChatMessagePacket.class,
 				new ChatMessagePacketHandler(server, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
 

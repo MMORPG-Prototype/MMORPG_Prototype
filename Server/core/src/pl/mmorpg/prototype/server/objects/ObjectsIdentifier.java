@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
+import pl.mmorpg.prototype.server.objects.monsters.Dragon;
 
 public class ObjectsIdentifier
 {
@@ -13,6 +14,7 @@ public class ObjectsIdentifier
     static
     {
 		identifiers.put(PlayerCharacter.class, ObjectsIdentifiers.PLAYER);
+		identifiers.put(Dragon.class, ObjectsIdentifiers.DRAGON);
     }
     
     public static String getObjectIdentifier(Class<?> type)

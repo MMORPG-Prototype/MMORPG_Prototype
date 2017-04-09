@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.client.items;
 
 import pl.mmorpg.prototype.client.exceptions.NotImplementedException;
-import pl.mmorpg.prototype.client.objects.GameCharacter;
+import pl.mmorpg.prototype.client.objects.WalkingGameObject;
 import pl.mmorpg.prototype.client.resources.Assets;
 
 public class SmallHealthPotion extends Potion
@@ -12,7 +12,7 @@ public class SmallHealthPotion extends Potion
 	}
 
 	@Override
-	public void use(GameCharacter character)
+	public void use(WalkingGameObject character)
 	{
 		throw new NotImplementedException();
 	}

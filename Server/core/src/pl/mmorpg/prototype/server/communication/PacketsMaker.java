@@ -26,6 +26,11 @@ public class PacketsMaker
 		return new ObjectRemovePacket(id);
 	}
 
+	public static ObjectRepositionPacket makeRepositionPacket(GameObject gameObject)
+	{
+		return makeRepositionPacket(gameObject.getId(), gameObject.getX(), gameObject.getY());
+	}
+	
 	public static ObjectRepositionPacket makeRepositionPacket(long id, float x, float y)
 	{
 		ObjectRepositionPacket packet = new ObjectRepositionPacket();
