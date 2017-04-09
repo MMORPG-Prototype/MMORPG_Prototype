@@ -9,8 +9,10 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
+import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 
 public class ChatMessagePacketHandler extends PacketHandlerBase<ChatMessagePacket>
 {
@@ -39,22 +41,28 @@ public class ChatMessagePacketHandler extends PacketHandlerBase<ChatMessagePacke
 		{
 			throw new RuntimeException(e);
 		}
+		ChatMessageReplyPacket newPacket = new ChatMessageReplyPacket();
 		String nickname = getUserCharacterNickname(connection.getID());
-		packet.setNickname(nickname);
+		newPacket.setMessage(packet.getMessage());
+		newPacket.setNickname(nickname);
+		UserCharacter character;
 		for(Connection client : connections)		
-			if(isUserInGame(client.getID()))
-				server.sendToTCP(client.getID(), packet);
+			if((character = getUserCharacter(client.getID())) != null)
+			{
+				newPacket.setSourceCharacterId(character.getId());
+				server.sendToTCP(client.getID(), newPacket);
+			}
 	}
 
-	private boolean isUserInGame(int clientId)
+	private UserCharacter getUserCharacter(int clientId)
 	{
 		if(!authenticatedClientsKeyClientId.containsKey(clientId))
-			return false;
+			return null;
 		User user = authenticatedClientsKeyClientId.get(clientId);
 		Integer userId = user.getId();
 		if(!loggedUsersKeyUserId.containsKey(userId))
-			return false;
-		return true;
+			return null;
+		return loggedUsersKeyUserId.get(userId).userCharacter;
 	}
 
 	private String getUserCharacterNickname(int clientId)

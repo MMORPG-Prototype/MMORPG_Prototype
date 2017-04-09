@@ -1,7 +1,10 @@
 package pl.mmorpg.prototype.client.states;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,13 +23,16 @@ import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.objects.GameObject;
+import pl.mmorpg.prototype.client.objects.GameWorldLabel;
 import pl.mmorpg.prototype.client.objects.NullPlayer;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
+import pl.mmorpg.prototype.client.userinterface.GraphicGameObject;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -37,6 +43,7 @@ public class PlayState implements State, GameObjectsContainer
     private StateManager states;
     private Player player;
     private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
+    private List<GraphicGameObject> clientGraphics = new LinkedList<>();
     private InputProcessorAdapter inputHandler;
     private InputMultiplexer inputMultiplexer;
     private UserInterface userInterface;
@@ -78,6 +85,8 @@ public class PlayState implements State, GameObjectsContainer
         batch.begin();
         for (GameObject object : gameObjects.values())
             object.render(batch);
+        for(GraphicGameObject object : clientGraphics)
+        	object.render(batch);
 
         batch.end();
         mapRenderer.render(new int[] { 1, 2, 3, 4 });
@@ -89,6 +98,11 @@ public class PlayState implements State, GameObjectsContainer
     {   
         for (GameObject object : gameObjects.values())
             object.update(deltaTime);
+        for (GraphicGameObject object : clientGraphics)
+            object.update(deltaTime);
+        clientGraphics = clientGraphics.stream()
+        		.filter(object -> object.isAlive())
+        		.collect(Collectors.toList());
 
         camera.viewportWidth = 900;
         camera.viewportHeight = 500;
@@ -163,8 +177,11 @@ public class PlayState implements State, GameObjectsContainer
 		client.sendTCP(packet);
 	}
 
-	public void chatMessagePacketReceived(ChatMessagePacket packet)
+	public void chatMessagePacketReceived(ChatMessageReplyPacket packet)
 	{
-		userInterface.addMessageToChat(packet);		
+		userInterface.addMessageToDialogChat(packet);	
+		GameObject source = gameObjects.get(packet.sourceCharacterId);
+		GameWorldLabel message = new GameWorldLabel(packet.getMessage(), source);
+		clientGraphics.add(message);
 	}
 }

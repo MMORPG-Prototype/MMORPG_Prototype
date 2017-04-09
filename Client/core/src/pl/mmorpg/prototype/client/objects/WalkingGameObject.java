@@ -16,7 +16,7 @@ public abstract class WalkingGameObject extends MovableGameObject
 	private final CustomAnimation<TextureRegion> moveRightAnimation;
 	private final CustomAnimation<TextureRegion> moveUpAnimation;
 	private TextureRegion textureToDraw;
-	private float animationFrameDuration = 0.2f;
+	private float animationFrameDuration = 0.16f;
 
 	public WalkingGameObject(Texture textureSheet, int sheetStartX, int sheetStartY, long id)
 	{

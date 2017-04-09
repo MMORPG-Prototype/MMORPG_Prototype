@@ -25,10 +25,10 @@ public class ShortcutBarDialog extends Dialog
 				() -> linkedInterface.showOrHideDialog(EquipmentDialog.class));
 		
 
-		add(chatButton).right().bottom();
-		add(statisticsButton).right().bottom();
-		add(inventoryButton).right().bottom();
-		add(equipmentButton).right().bottom();
-		add(menuButton).right().bottom();
+		add(chatButton).bottom().right();
+		add(statisticsButton).bottom().right();
+		add(inventoryButton).bottom().right();
+		add(equipmentButton).bottom().right();
+		add(menuButton).bottom().right();
 	}
 }

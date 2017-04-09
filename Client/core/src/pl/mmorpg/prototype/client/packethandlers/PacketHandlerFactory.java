@@ -10,7 +10,7 @@ import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
@@ -32,9 +32,9 @@ public class PacketHandlerFactory
 		packetHandlers.put(ObjectRepositionPacket.class, new ObjectRepositionPacketHandler(playState));
 		packetHandlers.put(RegisterationReplyPacket.class, new RegisterationReplyPacketHandler(states));
 		packetHandlers.put(UserCharacterDataPacket[].class, new UserCharacterDataArrayPacketHandler(states));
-		packetHandlers.put(ChatMessagePacket.class, new ChatMessagePacketHandler(playState));
-		
-		//Ignore frameowrk keepAliveMessage
+		packetHandlers.put(ChatMessageReplyPacket.class, new ChatMessageReplyPacketHandler(playState));
+
+		// Ignore frameowrk keepAliveMessage
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
 	}
 

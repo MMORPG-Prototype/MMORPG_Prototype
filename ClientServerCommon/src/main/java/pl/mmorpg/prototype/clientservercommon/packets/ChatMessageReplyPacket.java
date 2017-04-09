@@ -5,7 +5,9 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
 @Data
-public class ChatMessagePacket
+public class ChatMessageReplyPacket
 {
-	private String message;
+	public String message;
+	public String nickname;
+	public long sourceCharacterId;
 }

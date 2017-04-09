@@ -2,7 +2,7 @@ package pl.mmorpg.prototype.client.userinterface.dialogs.components;
 
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 
-import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 
 public class ChatPane extends ScrollPane
 {
@@ -16,7 +16,7 @@ public class ChatPane extends ScrollPane
 		setTransform(true);
 	}
 
-	public void addMessage(ChatMessagePacket packet)
+	public void addMessage(ChatMessageReplyPacket packet)
 	{
 		chatList.addMessage(packet.getNickname(), packet.getMessage());
 		setScrollPercentY(110.0f);

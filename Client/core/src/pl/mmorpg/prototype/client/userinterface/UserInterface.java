@@ -20,7 +20,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
-import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class UserInterface
@@ -159,9 +159,10 @@ public class UserInterface
 		linkedState.userWantsToSendMessage(message);
 	}
 
-	public void addMessageToChat(ChatMessagePacket packet)
+	public void addMessageToDialogChat(ChatMessageReplyPacket packet)
 	{
 		chatDialog.addMessage(packet);
-		
 	}
+
+
 }

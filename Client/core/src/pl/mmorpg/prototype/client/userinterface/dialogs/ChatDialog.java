@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Align;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ChatPane;
-import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 
 public class ChatDialog extends Dialog
 {
@@ -63,7 +63,7 @@ public class ChatDialog extends Dialog
 			
 	}
 
-	public void addMessage(ChatMessagePacket packet)
+	public void addMessage(ChatMessageReplyPacket packet)
 	{
 		chatPane.addMessage(packet);		
 	};
