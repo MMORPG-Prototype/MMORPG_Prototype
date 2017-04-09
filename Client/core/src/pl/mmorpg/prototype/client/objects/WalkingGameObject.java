@@ -81,6 +81,18 @@ public abstract class WalkingGameObject extends MovableGameObject
 	{
 		batch.draw(textureToDraw, getX(), getY());
 	}
+	
+	@Override
+	public float getWidth()
+	{
+		return textureToDraw.getRegionWidth();
+	}
+	
+	@Override
+	public float getHeight()
+	{
+		return textureToDraw.getRegionHeight();
+	}
 
 	public void useAnimation(CustomAnimation<TextureRegion> animation, float deltaTime)
 	{

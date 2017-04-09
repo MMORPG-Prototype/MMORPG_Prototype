@@ -21,6 +21,7 @@ import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.monsters.Dragon;
+import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.resources.Assets;
 
 public class PlayState extends State implements GameObjectsContainer, PacketsSender
@@ -122,5 +123,12 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	{
 		server.sendToAllTCP(packet);		
 	}
+
+	public void objectTargeted(Monster source, Monster target)
+	{
+		source.targetMonster(target);	
+	}
+
+
 
 }

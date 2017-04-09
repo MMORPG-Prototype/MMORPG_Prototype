@@ -47,22 +47,12 @@ public class ChatMessagePacketHandler extends PacketHandlerBase<ChatMessagePacke
 		newPacket.setNickname(nickname);
 		UserCharacter character;
 		for(Connection client : connections)		
-			if((character = getUserCharacter(client.getID())) != null)
+			if((character = PacketHandlingHelper.getUserCharacterByConnectionId
+			(connection.getID(), loggedUsersKeyUserId, authenticatedClientsKeyClientId)) != null)
 			{
 				newPacket.setSourceCharacterId(character.getId());
 				server.sendToTCP(client.getID(), newPacket);
 			}
-	}
-
-	private UserCharacter getUserCharacter(int clientId)
-	{
-		if(!authenticatedClientsKeyClientId.containsKey(clientId))
-			return null;
-		User user = authenticatedClientsKeyClientId.get(clientId);
-		Integer userId = user.getId();
-		if(!loggedUsersKeyUserId.containsKey(userId))
-			return null;
-		return loggedUsersKeyUserId.get(userId).userCharacter;
 	}
 
 	private String getUserCharacterNickname(int clientId)

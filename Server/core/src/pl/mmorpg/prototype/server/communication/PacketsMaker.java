@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.server.communication;
 
+import pl.mmorpg.prototype.clientservercommon.packets.CharacterMonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -21,7 +22,7 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static ObjectRemovePacket makeRemovalPacket(int id)
+	public static ObjectRemovePacket makeRemovalPacket(long id)
 	{
 		return new ObjectRemovePacket(id);
 	}
@@ -65,6 +66,15 @@ public class PacketsMaker
 		packet.setCharacterId	(item.getCharacter().getId());
 		packet.setName			(item.getName());
 		packet.setType			(item.getType().toString());
+		return packet;
+	}
+
+	public static CharacterMonsterTargetingReplyPacket makeTargetingReplyPacket(GameObject target)
+	{
+		if(target == null) 
+			throw new NullPointerException("Target cannot be null");
+		CharacterMonsterTargetingReplyPacket packet = new CharacterMonsterTargetingReplyPacket();
+		packet.monsterId = target.getId();
 		return packet;
 	}
 }

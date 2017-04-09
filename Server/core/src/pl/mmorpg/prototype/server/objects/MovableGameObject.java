@@ -12,7 +12,7 @@ public abstract class MovableGameObject extends GameObject
 	private float moveSpeed = 150.0f;
 	private float movementX = 0.0f;
 	private float movementY = 0.0f;
-	private float packetSendingInterval = 0.1f;
+	private float packetSendingInterval = 0.15f;
 	private float currentPacketSendingTime = 0.0f;
 	private PacketsSender packetsSender;
 

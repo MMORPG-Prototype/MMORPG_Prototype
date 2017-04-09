@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.states.helpers;
+package pl.mmorpg.prototype.clientservercommon;
 
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 

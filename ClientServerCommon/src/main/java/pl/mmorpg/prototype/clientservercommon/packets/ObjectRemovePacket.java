@@ -10,7 +10,7 @@ public class ObjectRemovePacket extends GameObjectTargetPacket
 	{
 	}
 
-	public ObjectRemovePacket(int id)
+	public ObjectRemovePacket(long id)
 	{
 		this.id = id;
 	}

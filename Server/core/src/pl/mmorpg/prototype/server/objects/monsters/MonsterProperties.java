@@ -8,6 +8,8 @@ public class MonsterProperties
 	public int experienceGain;
 	public int attackRange;
 	public int attackPower;
+	public float attackSpeed;
+	public int defense;
 	public int maxHp;
 	public int maxMp;
 	public int hp;
@@ -41,6 +43,18 @@ public class MonsterProperties
 		public Builder attackPower(int attackPower)
 		{
 			monsterProperties.attackPower = attackPower;
+			return this;
+		}
+		
+		public Builder attackSpeed(float attackSpeed)
+		{
+			monsterProperties.attackSpeed = attackSpeed;
+			return this;
+		}
+		
+		public Builder defense(int defense)
+		{
+			monsterProperties.defense = defense;
 			return this;
 		}
 

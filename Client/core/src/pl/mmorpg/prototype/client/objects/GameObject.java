@@ -31,7 +31,7 @@ public abstract class GameObject extends Sprite
 	{
 		this.id = id;
 	}
-
+	
 	public String getIdentifier()
 	{
 		return ObjectsIdentifier.getObjectIdentifier(getClass());

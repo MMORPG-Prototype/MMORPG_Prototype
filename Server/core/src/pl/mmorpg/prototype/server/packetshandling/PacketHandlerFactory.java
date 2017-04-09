@@ -9,6 +9,7 @@ import com.esotericsoftware.kryonet.Server;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.CharacterMonsterTargetingPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
@@ -54,6 +55,8 @@ public class PacketHandlerFactory
 		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(playState));
 		packetHandlers.put(ChatMessagePacket.class,
 				new ChatMessagePacketHandler(server, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
+		packetHandlers.put(CharacterMonsterTargetingPacket.class, 
+				new CharacterMonsterTargetingPacketHandler(playState, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

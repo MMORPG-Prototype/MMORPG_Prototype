@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 
-import pl.mmorpg.prototype.client.states.helpers.CharacterStatsCalculator;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
+import pl.mmorpg.prototype.clientservercommon.CharacterStatsCalculator;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class HitPointManaPointDialog extends Dialog

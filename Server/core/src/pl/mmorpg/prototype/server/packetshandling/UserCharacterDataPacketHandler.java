@@ -44,7 +44,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 		info.userCharacter = character;
 
 		sendCurrentGameObjectsInfo(clientId);
-		PlayerCharacter newPlayer = new PlayerCharacter(character, (packet) -> server.sendToAllTCP(packet));
+		PlayerCharacter newPlayer = new PlayerCharacter(character, playState);
 		playState.add(newPlayer);
 		server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
 		repositionNewlyAddedCharacter(newPlayer);

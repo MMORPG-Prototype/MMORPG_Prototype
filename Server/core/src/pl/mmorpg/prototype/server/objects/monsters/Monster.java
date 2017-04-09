@@ -1,53 +1,71 @@
 package pl.mmorpg.prototype.server.objects.monsters;
 
-import java.util.Random;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import pl.mmorpg.prototype.clientservercommon.packets.movement.Directions;
-import pl.mmorpg.prototype.server.collision.CollisionMap;
-import pl.mmorpg.prototype.server.communication.PacketsSender;
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.resources.Assets;
+import pl.mmorpg.prototype.server.states.PlayState;
 
 public abstract class Monster extends MovableGameObject
 {
 	private static final BitmapFont font = Assets.getFont();
-	private static final Random random = new Random();
-	private int currentDirectionMoving = Directions.NONE;
-	private final float minDirectionMovementChangeTime = 1.0f;
-	private final float maxDirectionMovementChangeTime = 2.0f;
-	private float currentDirectionMovementTime = 0.0f;
-	private float randomizedDirectionTime = 0.0f;
-	private CollisionMap collisionMap;
-	private final MonsterProperties properties;
+	protected final MonsterProperties properties;
+	private Monster targetedMonster = null;
+	private float hitTime = 1000.0f;
+	protected PlayState linkedState;
+	
+	private List<Monster> targetedBy = new LinkedList<>();
 
-	public Monster(Texture lookout, long id, CollisionMap collisionMap, PacketsSender packetsSender)
+	public Monster(Texture lookout, long id, PlayState playState, MonsterProperties properties)
 	{
-		super(lookout, id, packetsSender);
-		this.collisionMap = collisionMap;
-		randomizeDirectionOfMovementAndTime();
-		setMoveSpeed(20.0f);
-		properties = getMonsterProperies();
+		super(lookout, id, playState);
+		linkedState = playState;
 		font.setColor(new Color(1,0,0,1));
+		this.properties = properties;
 	}
 
-	private float getRandomTime(float min, float max)
-	{
-		return random.nextFloat() * (max - min) + min;
-	}
+	
 
 	@Override
 	public void update(float deltaTime)
 	{
-		currentDirectionMovementTime += deltaTime;
-		if (currentDirectionMovementTime >= randomizedDirectionTime)
-			movementSwitch();
-		handleMovement();
 		super.update(deltaTime);
+		if(isTargetingAnotherMonster())
+			attackHandle(deltaTime);	
+	}
+	
+	private boolean isTargetingAnotherMonster()
+	{
+		return targetedMonster != null;
+	}
+
+	
+	private void attackHandle(float deltaTime)
+	{
+		hitTime += deltaTime;
+		if(hitTime >= properties.getAttackSpeed())
+		{
+			hitTime = 0.0f;
+			normalAttack(targetedMonster);
+		}
+	}
+
+	private void normalAttack(Monster target)
+	{
+		int damage = DamageCalculator.getDamage(this, target);
+		target.properties.hp -= damage;
+		if(target.properties.hp <= 0)
+		{
+			this.killed(target);
+			target.die(this);
+		}
 	}
 	
 	@Override
@@ -56,45 +74,36 @@ public abstract class Monster extends MovableGameObject
 		super.render(batch);
 		font.draw(batch, String.valueOf(properties.hp), getX() + 3, getY() + 40);
 	}
-
-	private void movementSwitch()
+	
+	
+	public void targetMonster(Monster target)
 	{
-		if(currentDirectionMoving == Directions.NONE)
-		{
-			currentDirectionMovementTime = 0.0f;
-			randomizeDirectionOfMovementAndTime();
-		}
-		else
-		{
-			currentDirectionMoving = Directions.NONE;
-			randomizeTimeOfMovement();
-		}
+		targetedMonster = target;
+		target.isTargetedBy(this);
 	}
 	
-	private void randomizeDirectionOfMovementAndTime()
+	private void isTargetedBy(Monster source)
 	{
-		currentDirectionMoving = random.nextInt(4) + 1;
-		randomizeTimeOfMovement();
+		targetedBy.add(source);
 	}
 	
-	private void randomizeTimeOfMovement()
+	
+	
+	private void die(Monster source)
 	{
-		randomizedDirectionTime = getRandomTime(minDirectionMovementChangeTime, maxDirectionMovementChangeTime);
-	}
-
-	private void handleMovement()
-	{
-		if (currentDirectionMoving == Directions.LEFT)
-			moveLeft(collisionMap);
-		else if (currentDirectionMoving == Directions.RIGHT)
-			moveRight(collisionMap);
-		else if (currentDirectionMoving == Directions.DOWN)
-			moveDown(collisionMap);
-		else if (currentDirectionMoving == Directions.UP)
-			moveUp(collisionMap);
-
+		linkedState.remove(getId());
+		linkedState.send(PacketsMaker.makeRemovalPacket(getId()));
 	}
 	
-	public abstract MonsterProperties getMonsterProperies();
+	protected void killed(Monster target)
+	{
+		targetedMonster = null;
+		System.out.println(this + " killed " + target);
+	}
+	
+	public MonsterProperties getProperites()
+	{
+		return properties;
+	}
 
 }

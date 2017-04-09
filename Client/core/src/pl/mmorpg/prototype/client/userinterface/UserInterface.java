@@ -3,8 +3,10 @@ package pl.mmorpg.prototype.client.userinterface;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
@@ -55,6 +57,16 @@ public class UserInterface
 		addOtherDialogs();
 		showDialogs();
 		dialogs.hideKeyMappedDialogs();
+		stage.addListener(new ClickListener()
+		{
+
+			@Override
+			public void clicked(InputEvent event, float x, float y)
+			{
+				if(!dialogs.hasDialogOnPosition(x,y))
+					linkedState.userClickedOnGameBoard(x, y);
+			}
+		});
 	}
 
 	private void addOtherDialogs()
@@ -63,7 +75,7 @@ public class UserInterface
 		dialogs.add(hpMpDialog);
 		dialogs.add(quickAccessDialog);
 	}
-	
+
 	public void showDialogs()
 	{
 		stage.addActor(chatDialog);
@@ -91,7 +103,6 @@ public class UserInterface
 		dialogs.manageZIndexes();
 	}
 
-	
 	public ActorManipulator getDialogs()
 	{
 		return dialogs;
@@ -119,8 +130,8 @@ public class UserInterface
 
 	public void inventoryFieldClicked(InventoryField inventoryField)
 	{
-		mousePointerToItem = UserInterfaceManager.inventoryFieldClicked
-				(mousePointerToItem, inventoryField, inventoryDialog);
+		mousePointerToItem = UserInterfaceManager.inventoryFieldClicked(mousePointerToItem, inventoryField,
+				inventoryDialog);
 	}
 
 	public void userWantsToDisconnect()
@@ -146,7 +157,7 @@ public class UserInterface
 	public void quickAccesButtonClicked(InventoryField field)
 	{
 		InventoryField lastFieldClicked = inventoryDialog.getLastFieldWithItemClicked();
-		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field, lastFieldClicked);			
+		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field, lastFieldClicked);
 	}
 
 	public void userDistributedStatPoints()
@@ -163,6 +174,5 @@ public class UserInterface
 	{
 		chatDialog.addMessage(packet);
 	}
-
 
 }

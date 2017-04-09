@@ -12,12 +12,10 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
 
 public class MenuDialog extends Dialog
 {
-	private UserInterface linkedInterface;
 
 	public MenuDialog(UserInterface linkedInterface)
 	{
 		super("Menu", Settings.DEFAULT_SKIN);
-		this.linkedInterface = linkedInterface;
 
 		Button closeButton = new CloseButton(this);
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();

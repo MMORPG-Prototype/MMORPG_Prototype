@@ -10,7 +10,6 @@ import pl.mmorpg.prototype.server.states.PlayState;
 public abstract class MovePacketHandler extends PacketHandlerBase<GameObjectTargetPacket> implements MoveAction
 {
 	private PlayState playState;
-	private MoveAction moveAction;
 
 	public MovePacketHandler(PlayState playState)
 	{

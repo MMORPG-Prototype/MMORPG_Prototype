@@ -123,4 +123,12 @@ public class ActorManipulator
 				return true;
 		return false;
 	}
+
+	public boolean hasDialogOnPosition(float x, float y)
+	{
+		return Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
+				.filter((d) -> d.isVisible() && mouseHovers(d)).
+				findAny().
+				isPresent();
+	}
 }
