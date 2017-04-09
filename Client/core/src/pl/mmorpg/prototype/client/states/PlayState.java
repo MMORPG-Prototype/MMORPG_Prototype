@@ -20,6 +20,7 @@ import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.objects.GameObject;
+import pl.mmorpg.prototype.client.objects.NullPlayer;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
@@ -41,18 +42,19 @@ public class PlayState implements State, GameObjectsContainer
     private UserInterface userInterface;
     private TiledMapRenderer mapRenderer;
 
-    private OrthographicCamera camera = new OrthographicCamera(1400, 700);
+    private OrthographicCamera camera = new OrthographicCamera(900, 500);
 
     public PlayState(StateManager states, Client client)
     {
         this.client = client;
         inputHandler = new NullInputHandler();
+        player = new NullPlayer();
         this.states = states;
         inputMultiplexer = new InputMultiplexer();
         camera.setToOrtho(false);
 
         TiledMap map = Assets.get("Map/tiled.tmx");
-        mapRenderer = new OrthogonalTiledMapRenderer(map);
+        mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
         mapRenderer.setView(camera);
     }
 
@@ -87,6 +89,10 @@ public class PlayState implements State, GameObjectsContainer
     {   
         for (GameObject object : gameObjects.values())
             object.update(deltaTime);
+
+        camera.viewportWidth = 900;
+        camera.viewportHeight = 500;
+        camera.position.set(player.getX() - player.getWidth() / 2, player.getY() - player.getHeight() / 2, 0);
         camera.update();
         inputHandler.process();
         userInterface.update();
