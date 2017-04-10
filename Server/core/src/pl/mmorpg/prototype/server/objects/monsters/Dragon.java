@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.server.objects.monsters;
 
-import pl.mmorpg.prototype.clientservercommon.monsterproperties.DragonPropertiesBuilder;
-import pl.mmorpg.prototype.clientservercommon.monsterproperties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.DragonPropertiesBuilder;
+import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
 import pl.mmorpg.prototype.server.collision.CollisionMap;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;

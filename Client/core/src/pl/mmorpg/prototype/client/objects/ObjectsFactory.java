@@ -7,12 +7,12 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 public class ObjectsFactory
 {
 
-	public static GameObject produce(ObjectCreationPacket packet)
+	public  GameObject produce(ObjectCreationPacket packet)
 	{
 		return produce(packet.identifier, packet.id, packet.x, packet.y);
 	}
 
-	public static GameObject produce(String identifier, long id, float x, float y)
+	public  GameObject produce(String identifier, long id, float x, float y)
     {
 		GameObject object = null;
         if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(Player.class)))

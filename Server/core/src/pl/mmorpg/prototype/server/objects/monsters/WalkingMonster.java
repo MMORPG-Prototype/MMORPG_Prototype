@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import pl.mmorpg.prototype.clientservercommon.monsterproperties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.Directions;
 import pl.mmorpg.prototype.server.collision.CollisionMap;
 import pl.mmorpg.prototype.server.states.PlayState;

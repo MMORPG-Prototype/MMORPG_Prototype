@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.server.communication;
 
+import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -10,6 +11,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTarge
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.GameObject;
+import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
 public class PacketsMaker
 {
@@ -22,6 +24,18 @@ public class PacketsMaker
 		packet.y = object.getY();
 		return packet;
 	}
+	
+	public static MonsterCreationPacket makeCreationPacket(Monster monster)
+	{
+		MonsterCreationPacket packet = new MonsterCreationPacket();
+		packet.id = monster.getId();
+		packet.identifier = monster.getIdentifier();
+		packet.x = monster.getX();
+		packet.y = monster.getY();
+		packet.properties = monster.getProperites();
+		return packet;
+	}
+
 
 	public static ObjectRemovePacket makeRemovalPacket(long id)
 	{

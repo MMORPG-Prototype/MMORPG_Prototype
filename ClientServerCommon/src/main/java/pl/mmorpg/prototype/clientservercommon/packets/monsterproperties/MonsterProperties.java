@@ -1,8 +1,8 @@
-package pl.mmorpg.prototype.clientservercommon.monsterproperties;
+package pl.mmorpg.prototype.clientservercommon.packets.monsterproperties;
 
-import lombok.Data;
+import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
-@Data
+@Registerable
 public class MonsterProperties
 {
 	public int experienceGain;

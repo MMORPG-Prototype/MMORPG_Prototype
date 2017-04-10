@@ -5,7 +5,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterDamag
 
 public class MonsterDamagePacketHandler extends PacketHandlerBase<MonsterDamagePacket>
 {
-	
 	private PlayState playState;
 
 	public MonsterDamagePacketHandler(PlayState playState)

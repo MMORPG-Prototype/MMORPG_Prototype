@@ -11,6 +11,7 @@ import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
@@ -38,6 +39,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(MonsterTargetingReplyPacket.class,
 				new CharacterMonsterTargetingReplyPacketHandler(playState));
 		packetHandlers.put(MonsterDamagePacket.class, new MonsterDamagePacketHandler(playState));
+		packetHandlers.put(MonsterCreationPacket.class, new MonsterCreationPacketHandler(playState));
 
 		// Ignore frameowrk keepAliveMessage
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

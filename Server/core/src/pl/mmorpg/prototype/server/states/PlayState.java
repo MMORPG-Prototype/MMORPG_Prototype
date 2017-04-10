@@ -20,6 +20,7 @@ import pl.mmorpg.prototype.server.collision.CollisionMap;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.GameObject;
+import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Dragon;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.resources.Assets;
@@ -129,6 +130,11 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		source.targetMonster(target);	
 	}
 
+	public void playerKilled(PlayerCharacter playerCharacter, Monster target)
+	{
+		// TODO not implemented yet
+		
+	}
 
 
 }

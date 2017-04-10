@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import pl.mmorpg.prototype.client.objects.CustomAnimation;
 import pl.mmorpg.prototype.client.objects.graphic.HealthBar;
-import pl.mmorpg.prototype.clientservercommon.monsterproperties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
 
 public abstract class HealthBarMonster extends Monster
 {
@@ -15,7 +15,7 @@ public abstract class HealthBarMonster extends Monster
 	public HealthBarMonster(Texture textureSheet, int sheetStartX, int sheetStartY, long id, MonsterProperties monster)
 	{
 		super(textureSheet, sheetStartX, sheetStartY, id, monster);
-		healthBar = new HealthBar(monster.getMaxHp(), this);
+		healthBar = new HealthBar(monster.maxHp, this);
 	}
 
 	public HealthBarMonster(long id, CustomAnimation<TextureRegion> moveLeftAnimation,
@@ -23,14 +23,14 @@ public abstract class HealthBarMonster extends Monster
 			CustomAnimation<TextureRegion> moveUpAnimation, MonsterProperties monster)
 	{
 		super(id, moveLeftAnimation, moveRightAnimation, moveDownAnimation, moveUpAnimation, monster);
-		healthBar = new HealthBar(monster.getMaxHp(), this);
+		healthBar = new HealthBar(monster.maxHp, this);
 	}
 	
 	@Override
 	public void update(float deltaTime)
 	{
 		healthBar.updatePosition();
-		healthBar.updateBar(properties.getHp());
+		healthBar.updateBar(properties.hp);
 		super.update(deltaTime);
 	}
 	

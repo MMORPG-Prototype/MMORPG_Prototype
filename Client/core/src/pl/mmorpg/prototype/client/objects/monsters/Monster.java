@@ -3,14 +3,13 @@ package pl.mmorpg.prototype.client.objects.monsters;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import pl.mmorpg.prototype.client.objects.AttackingGameObject;
 import pl.mmorpg.prototype.client.objects.CustomAnimation;
-import pl.mmorpg.prototype.client.objects.WalkingGameObject;
-import pl.mmorpg.prototype.clientservercommon.monsterproperties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
 
-public abstract class Monster extends WalkingGameObject
+public abstract class Monster extends AttackingGameObject
 {
-
-	protected final MonsterProperties properties;
+	protected  MonsterProperties properties;
 
 	protected Monster(Texture textureSheet, int sheetStartX, int sheetStartY, long id, MonsterProperties properties)
 	{
@@ -34,6 +33,11 @@ public abstract class Monster extends WalkingGameObject
 	public void gotHitBy(int damage)
 	{
 		properties.hp -= damage;	
+	}
+
+	public void setProperties(MonsterProperties properties)
+	{
+		this.properties = properties;		
 	}
 
 }

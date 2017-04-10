@@ -8,6 +8,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 public class ObjectCreationPacketHandler extends PacketHandlerBase<ObjectCreationPacket>
 {
 	private PlayState playState;
+	private static ObjectsFactory objectsFactory = new ObjectsFactory();
 
 	public ObjectCreationPacketHandler(PlayState playState)
 	{
@@ -17,7 +18,7 @@ public class ObjectCreationPacketHandler extends PacketHandlerBase<ObjectCreatio
 	@Override
 	public void handlePacket(ObjectCreationPacket packet)
 	{
-		GameObject newObject = ObjectsFactory.produce(packet);
+		GameObject newObject = objectsFactory.produce(packet);
 		playState.add(newObject);
 	}
 

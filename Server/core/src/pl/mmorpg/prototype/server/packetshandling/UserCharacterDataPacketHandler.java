@@ -15,6 +15,7 @@ import pl.mmorpg.prototype.server.database.managers.CharacterItemTableManager;
 import pl.mmorpg.prototype.server.database.managers.UserCharacterTableManager;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharacterDataPacket>
@@ -63,7 +64,12 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 	{
 		Map<Long, GameObject> gameObjects = playState.getGameObjects();
 		for (GameObject object : gameObjects.values())
-			server.sendToTCP(id, PacketsMaker.makeCreationPacket(object));
+		{
+			if(object instanceof Monster)				
+				server.sendToTCP(id, PacketsMaker.makeCreationPacket((Monster)object));
+			else
+				server.sendToTCP(id, PacketsMaker.makeCreationPacket(object));
+		}
 	}
 	
 	private void sendItemsDataToClient(int userCharacterId, int clientId)

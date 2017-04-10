@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.clientservercommon.monsterproperties;
+package pl.mmorpg.prototype.clientservercommon.packets.monsterproperties;
 
 import pl.mmorpg.prototype.clientservercommon.CharacterStatsCalculator;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;

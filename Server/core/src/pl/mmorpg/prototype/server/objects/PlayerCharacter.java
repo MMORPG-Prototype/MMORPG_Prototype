@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.server.objects;
 
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
-import pl.mmorpg.prototype.clientservercommon.monsterproperties.PlayerPropertiesBuilder;
+import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.PlayerPropertiesBuilder;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -24,5 +24,13 @@ public class PlayerCharacter extends Monster
 	public String getIdentifier()
 	{
 		return ObjectsIdentifiers.PLAYER;
+	}
+	
+	@Override
+	protected void killed(Monster target)
+	{
+		linkedState.playerKilled(this, target);
+		userCharacter.setExperience(userCharacter.getExperience() + target.getProperites().experienceGain);
+		super.killed(target);
 	}
 }

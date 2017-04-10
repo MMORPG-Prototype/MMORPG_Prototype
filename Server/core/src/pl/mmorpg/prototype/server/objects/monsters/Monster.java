@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import pl.mmorpg.prototype.clientservercommon.monsterproperties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.resources.Assets;
@@ -21,6 +21,8 @@ public abstract class Monster extends MovableGameObject
 	private Monster targetedMonster = null;
 	private float hitTime = 1000.0f;
 	protected PlayState linkedState;
+	
+	private boolean isAlive = true;
 	
 	private List<Monster> targetedBy = new LinkedList<>();
 
@@ -39,12 +41,23 @@ public abstract class Monster extends MovableGameObject
 	{
 		super.update(deltaTime);
 		if(isTargetingAnotherMonster())
-			attackHandle(deltaTime);	
-	}
+		{
+			if(targetIsAlive())
+				attackHandle(deltaTime);
+			else
+				targetedMonster = null;
+		}
 	
+	}
+
 	private boolean isTargetingAnotherMonster()
 	{
 		return targetedMonster != null;
+	}
+	
+	private boolean targetIsAlive()
+	{
+		return targetedMonster.isAlive;
 	}
 
 	
@@ -61,8 +74,8 @@ public abstract class Monster extends MovableGameObject
 
 	private boolean canAttackTarget()
 	{
-		return hitTime >= properties.getAttackSpeed() && 
-				distance(targetedMonster) <= properties.getAttackRange();
+		return hitTime >= properties.attackSpeed && 
+				distance(targetedMonster) <= properties.attackRange;
 	}
 
 	private double distance(Monster targetedMonster)
@@ -115,12 +128,12 @@ public abstract class Monster extends MovableGameObject
 	{
 		linkedState.remove(getId());
 		linkedState.send(PacketsMaker.makeRemovalPacket(getId()));
+		isAlive = false;
 	}
 	
 	protected void killed(Monster target)
 	{
 		targetedMonster = null;
-		System.out.println(this + " killed " + target);
 	}
 	
 	public MonsterProperties getProperites()
