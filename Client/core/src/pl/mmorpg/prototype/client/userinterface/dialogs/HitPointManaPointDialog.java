@@ -10,27 +10,18 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterData
 
 public class HitPointManaPointDialog extends Dialog
 {
-	private final Integer linkedValueManaPoints;
-	private final Integer linkedValueHitPoints;
 	private final ProgressBar hitPoints;
 	private final ProgressBar manaPoints;
+	private UserCharacterDataPacket linkedData;
 
 	public HitPointManaPointDialog(UserCharacterDataPacket character)
 	{
-		this(character.getHitPoints(), character.getManaPoints(), 
-				CharacterStatsCalculator.getMaxHP(character),
-				CharacterStatsCalculator.getMaxMP(character),
-				character.getNickname());
-	}
 
-	public HitPointManaPointDialog(Integer linkedValueHitPoints, Integer linkedValueManaPoints, int maxHP, int maxMP, String characterName)
-	{
-		super(characterName, Settings.DEFAULT_SKIN);
-		this.linkedValueHitPoints = linkedValueHitPoints;
-		this.linkedValueManaPoints = linkedValueManaPoints;
-		hitPoints = new ProgressBar(0, maxHP, 1.0f, false, Settings.DEFAULT_SKIN);
+		super(character.getNickname(), Settings.DEFAULT_SKIN);
+		this.linkedData = character;
+		hitPoints = new ProgressBar(0, CharacterStatsCalculator.getMaxHP(character), 1.0f, false, Settings.DEFAULT_SKIN);
 		hitPoints.setColor(new Color(1.0f, 0.2f, 0.2f, 0.9f));
-		manaPoints = new ProgressBar(0, maxMP, 1.0f, false, Settings.DEFAULT_SKIN);
+		manaPoints = new ProgressBar(0, CharacterStatsCalculator.getMaxMP(character), 1.0f, false, Settings.DEFAULT_SKIN);
 		manaPoints.setColor(new Color(0.2f, 0.2f, 1.0f, 0.9f));
 		
 		this.getContentTable().row();
@@ -44,8 +35,8 @@ public class HitPointManaPointDialog extends Dialog
 
 	public void update()
 	{
-		hitPoints.setValue(linkedValueHitPoints);
-		manaPoints.setValue(linkedValueManaPoints);
+		hitPoints.setValue(linkedData.getHitPoints());
+		manaPoints.setValue(linkedData.getManaPoints());
 	}
 	
 

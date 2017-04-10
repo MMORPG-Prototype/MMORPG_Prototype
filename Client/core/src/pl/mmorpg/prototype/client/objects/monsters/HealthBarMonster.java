@@ -10,7 +10,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterP
 
 public abstract class HealthBarMonster extends Monster
 {
-	private final HealthBar healthBar;
+	private HealthBar healthBar;
 
 	public HealthBarMonster(Texture textureSheet, int sheetStartX, int sheetStartY, long id, MonsterProperties monster)
 	{
@@ -24,8 +24,8 @@ public abstract class HealthBarMonster extends Monster
 	{
 		super(id, moveLeftAnimation, moveRightAnimation, moveDownAnimation, moveUpAnimation, monster);
 		healthBar = new HealthBar(monster.maxHp, this);
-	}
 	
+	}
 	@Override
 	public void update(float deltaTime)
 	{
@@ -39,6 +39,11 @@ public abstract class HealthBarMonster extends Monster
 	{
 		healthBar.render(batch);
 		super.render(batch);
+	}
+	
+	protected void recreateHealthBar()
+	{
+		healthBar = new HealthBar(getProperties().maxHp, this);
 	}
 
 }

@@ -179,7 +179,7 @@ public class UserInterface
 	{
 		statisticsDialog.updateStatistics();
 	}
-
+ 
 	public void updateHitPointManaPointDialog()
 	{
 		hpMpDialog.updateValues();		

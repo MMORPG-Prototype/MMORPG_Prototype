@@ -17,24 +17,12 @@ public class HitPointManaPointPane extends ScrollPane
 		initiazlize();
 	} 
 	
-	public HitPointManaPointPane(Integer linkedValueHitPoints, Integer linkedValueManaPoints, int maxHP, int maxMP, String characterName)
-	{
-		super(createDialog(linkedValueHitPoints, linkedValueManaPoints, maxHP, maxMP, characterName));
-		dialog = dialogInitializer;
-		initiazlize();
-	}
-	
 	private static HitPointManaPointDialog createDialog(UserCharacterDataPacket character)
 	{
 		dialogInitializer = new HitPointManaPointDialog(character);
 		return dialogInitializer;
 	}
 	
-	private static HitPointManaPointDialog createDialog(Integer linkedValueHitPoints, Integer linkedValueManaPoints, int maxHP, int maxMP, String characterName)
-	{
-		dialogInitializer = new HitPointManaPointDialog(linkedValueHitPoints, linkedValueManaPoints, maxHP, maxMP, characterName);
-		return dialogInitializer;
-	}
 
 	private void initiazlize()
 	{
@@ -47,7 +35,6 @@ public class HitPointManaPointPane extends ScrollPane
 	public void updateValues()
 	{
 		dialog.update();
-		
 	}
 
 }

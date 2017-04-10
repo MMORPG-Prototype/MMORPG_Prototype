@@ -3,13 +3,13 @@ package pl.mmorpg.prototype.client.objects;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import pl.mmorpg.prototype.client.objects.monsters.Monster;
+import pl.mmorpg.prototype.client.objects.monsters.HealthBarMonster;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.PlayerPropertiesBuilder;
 
-public class Player extends Monster
+public class Player extends HealthBarMonster
 {
     private UserCharacterDataPacket data;
     private Texture lockOnTexture = Assets.get("target.png");
@@ -24,6 +24,7 @@ public class Player extends Monster
     {
         this.data = characterData;
         setProperties(new PlayerPropertiesBuilder(characterData).build());
+        recreateHealthBar();
     }
     
     @Override
