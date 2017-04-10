@@ -6,6 +6,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
@@ -98,6 +99,14 @@ public class PacketsMaker
 		MonsterDamagePacket packet = new MonsterDamagePacket();
 		packet.setTargetId(id);
 		packet.setDamage(damage);
+		return packet;
+	}
+
+	public static ExperienceGainPacket makeExperienceGainPacket(long id, int experienceGain)
+	{
+		ExperienceGainPacket packet = new ExperienceGainPacket();
+		packet.setTargetId(id);
+		packet.setExperience(experienceGain);
 		return packet;
 	}
 }

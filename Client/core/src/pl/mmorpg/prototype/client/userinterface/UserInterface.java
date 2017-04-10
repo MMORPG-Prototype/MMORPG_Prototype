@@ -175,4 +175,9 @@ public class UserInterface
 		chatDialog.addMessage(packet);
 	}
 
+	public void updateStatsDialog()
+	{
+		statisticsDialog.updateStatistics();
+	}
+
 }

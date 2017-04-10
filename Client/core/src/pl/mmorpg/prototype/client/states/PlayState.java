@@ -26,6 +26,7 @@ import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.NullPlayer;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.objects.graphic.BloodAnimation;
+import pl.mmorpg.prototype.client.objects.graphic.ExperienceGainLabel;
 import pl.mmorpg.prototype.client.objects.graphic.GameWorldLabel;
 import pl.mmorpg.prototype.client.objects.graphic.GraphicGameObject;
 import pl.mmorpg.prototype.client.objects.graphic.MonsterDamageLabel;
@@ -40,6 +41,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 
@@ -215,5 +217,14 @@ public class PlayState implements State, GameObjectsContainer
 		GraphicGameObject bloodAnimation = new BloodAnimation(attackTarget);
 		clientGraphics.add(damageNumber);
 		clientGraphics.add(bloodAnimation);
+	}
+
+	public void experienceGainPacketReceived(ExperienceGainPacket packet)
+	{
+		Player target = (Player)gameObjects.get(packet.getTargetId());
+		GraphicGameObject experienceGainLabel = new ExperienceGainLabel(String.valueOf(packet.getExperience()), target);
+		clientGraphics.add(experienceGainLabel);
+		target.addExperience(packet.getExperience());
+		userInterface.updateStatsDialog();
 	}
 }

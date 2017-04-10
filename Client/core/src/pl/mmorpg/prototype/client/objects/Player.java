@@ -41,6 +41,11 @@ public class Player extends Monster
     {
     	return data;
     }
+    
+    public void addExperience(int experienceGain)
+    {
+    	data.setExperience(data.getExperience() + experienceGain);
+    }
 
 
 }

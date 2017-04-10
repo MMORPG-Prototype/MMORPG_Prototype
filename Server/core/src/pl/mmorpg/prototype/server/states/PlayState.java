@@ -132,8 +132,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 
 	public void playerKilled(PlayerCharacter playerCharacter, Monster target)
 	{
-		// TODO not implemented yet
-		
+		server.sendToAllTCP(PacketsMaker.makeExperienceGainPacket(playerCharacter.getId(), target.getProperites().experienceGain));
 	}
 
 
