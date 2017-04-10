@@ -18,9 +18,9 @@ public class CustomStage extends Stage
 		return isUsed;
 	}
 
-	public void setUsed()
+	public void setUsed(boolean used)
 	{
-		isUsed = true;
+		isUsed = used;
 	}
 
 	@Override

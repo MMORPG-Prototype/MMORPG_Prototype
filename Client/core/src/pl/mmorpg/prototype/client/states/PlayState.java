@@ -1,9 +1,9 @@
 package pl.mmorpg.prototype.client.states;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
@@ -51,7 +51,7 @@ public class PlayState implements State, GameObjectsContainer
 	private StateManager states;
 	private Player player;
 	private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
-	private List<GraphicGameObject> clientGraphics = new LinkedList<>();
+	private Collection<GraphicGameObject> clientGraphics = new ConcurrentLinkedDeque<>();
 	private InputProcessorAdapter inputHandler;
 	private InputMultiplexer inputMultiplexer;
 	private UserInterface userInterface;
@@ -129,8 +129,16 @@ public class PlayState implements State, GameObjectsContainer
 	public void removeObject(long id)
 	{
 		GameObject object = gameObjects.remove(id);
-		if(player.hasLockedOnTarget(object))
+		if(object == player)
+			playerHasDied();
+		else if(player.hasLockedOnTarget(object))
 			player.releaseTarget();
+	}
+
+	private void playerHasDied()
+	{
+		this.userWantsToChangeCharacter();
+		
 	}
 
 	@Override

@@ -33,7 +33,8 @@ public class CharacterChangePacketHandler extends PacketHandlerBase<CharacterCha
 		int userId = authenticatedClientsKeyClientId.get(connection.getID()).getId();
 		UserInfo userInfo = loggedUsersKeyUserId.get(userId);
 		Integer characterId = userInfo.userCharacter.getId();
-		playState.remove(characterId);
+		if(playState.has(characterId))
+			playState.remove(characterId);
 		userInfo.userCharacter = null;
 		server.sendToAllExceptTCP(connection.getID(), PacketsMaker.makeRemovalPacket(characterId));
 	}

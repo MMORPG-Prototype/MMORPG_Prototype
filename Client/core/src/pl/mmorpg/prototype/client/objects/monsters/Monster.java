@@ -9,7 +9,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterP
 
 public abstract class Monster extends AttackingGameObject
 {
-	protected  MonsterProperties properties;
+	protected MonsterProperties properties;
 
 	protected Monster(Texture textureSheet, int sheetStartX, int sheetStartY, long id, MonsterProperties properties)
 	{

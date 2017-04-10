@@ -18,8 +18,10 @@ public abstract class WalkingMonster extends Monster
 	private float currentDirectionMovementTime = 0.0f;
 	private float randomizedDirectionTime = 0.0f;
 	private CollisionMap collisionMap;
-	
-	public WalkingMonster(Texture lookout, long id, MonsterProperties properties, CollisionMap collisionMap, PlayState playState)
+	private boolean isMovingRandomly = true;
+
+	public WalkingMonster(Texture lookout, long id, MonsterProperties properties, CollisionMap collisionMap,
+			PlayState playState)
 	{
 		super(lookout, id, playState, properties);
 		this.collisionMap = collisionMap;
@@ -35,49 +37,62 @@ public abstract class WalkingMonster extends Monster
 	@Override
 	public void update(float deltaTime)
 	{
-		currentDirectionMovementTime += deltaTime;
-		if (currentDirectionMovementTime >= randomizedDirectionTime)
-			movementSwitch();
-		handleMovement();
+		if (isMovingRandomly)
+		{
+			currentDirectionMovementTime += deltaTime;
+			if (currentDirectionMovementTime >= randomizedDirectionTime)
+				movementSwitch();
+		}
+		handleMovement(deltaTime);
+
 		super.update(deltaTime);
 	}
-	
+
 	private void movementSwitch()
 	{
-		if(currentDirectionMoving == Directions.NONE)
+		if (currentDirectionMoving == Directions.NONE)
 		{
 			currentDirectionMovementTime = 0.0f;
 			randomizeDirectionOfMovementAndTime();
-		}
-		else
+		} else
 		{
 			currentDirectionMoving = Directions.NONE;
 			randomizeTimeOfMovement();
 		}
 	}
-	
+
 	private void randomizeDirectionOfMovementAndTime()
 	{
 		currentDirectionMoving = random.nextInt(4) + 1;
 		randomizeTimeOfMovement();
 	}
-	
+
 	private void randomizeTimeOfMovement()
 	{
 		randomizedDirectionTime = getRandomTime(minDirectionMovementChangeTime, maxDirectionMovementChangeTime);
 	}
 
-	private void handleMovement()
+	private void handleMovement(float deltaTime)
 	{
 		if (currentDirectionMoving == Directions.LEFT)
-			moveLeft(collisionMap);
+			moveLeft(collisionMap, deltaTime);
 		else if (currentDirectionMoving == Directions.RIGHT)
-			moveRight(collisionMap);
+			moveRight(collisionMap, deltaTime);
 		else if (currentDirectionMoving == Directions.DOWN)
-			moveDown(collisionMap);
+			moveDown(collisionMap, deltaTime);
 		else if (currentDirectionMoving == Directions.UP)
-			moveUp(collisionMap);
+			moveUp(collisionMap, deltaTime);
+	}
+	
+	protected void setDirectionMoving(int direction)
+	{
+		this.currentDirectionMoving = direction;
+	}
 
+	protected void setMovingRandomly(boolean isMovingRandomly)
+	{
+		currentDirectionMoving = Directions.NONE;
+		this.isMovingRandomly = isMovingRandomly;
 	}
 
 }

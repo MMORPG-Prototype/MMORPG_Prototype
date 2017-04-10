@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
+import com.badlogic.gdx.Gdx;
+
 import pl.mmorpg.prototype.clientservercommon.packets.movement.Directions;
 import pl.mmorpg.prototype.server.collision.CollisionMap;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
@@ -16,7 +18,7 @@ public class MoveUpPacketHandler extends MovePacketHandler
 	@Override
 	public void perform(MovableGameObject operationTarget, CollisionMap collisionMap)
 	{
-		operationTarget.moveUp(collisionMap);		
+		operationTarget.moveUp(collisionMap, Gdx.graphics.getDeltaTime());		
 	}
 
 	@Override

@@ -28,9 +28,9 @@ public abstract class MovableGameObject extends GameObject
 		currentPacketSendingTime += deltaTime;
 	}
 
-	public GameObject moveRight(CollisionMap collisionMap)
+	public GameObject moveRight(CollisionMap collisionMap, float deltaTime)
 	{
-		movementX += getMoveSpeed() * Gdx.graphics.getDeltaTime();
+		movementX += getMoveSpeed() * deltaTime;
 		int collisionMoveValue = (int) movementX;
 		movementX -= (int) movementX;
 		GameObject collision = moveRight(collisionMap, collisionMoveValue);
@@ -53,9 +53,9 @@ public abstract class MovableGameObject extends GameObject
 		}
 	}
 
-	public GameObject moveLeft(CollisionMap collisionMap)
+	public GameObject moveLeft(CollisionMap collisionMap, float deltaTime)
 	{
-		movementX -= getMoveSpeed() * Gdx.graphics.getDeltaTime();
+		movementX -= getMoveSpeed() * deltaTime;
 		int collisionMoveValue = (int) -movementX;
 		movementX -= (int) movementX;
 		GameObject collision = moveLeft(collisionMap, collisionMoveValue);
@@ -70,9 +70,9 @@ public abstract class MovableGameObject extends GameObject
 		return collision;
 	}
 
-	public GameObject moveDown(CollisionMap collisionMap)
+	public GameObject moveDown(CollisionMap collisionMap, float deltaTime)
 	{
-		movementY -= getMoveSpeed() * Gdx.graphics.getDeltaTime();
+		movementY -= getMoveSpeed() * deltaTime;
 		int collisionMoveValue = (int) -movementY;
 		movementY -= (int) movementY;
 		GameObject collision = moveDown(collisionMap, collisionMoveValue);
@@ -87,9 +87,9 @@ public abstract class MovableGameObject extends GameObject
 		return collision;
 	}
 
-	public GameObject moveUp(CollisionMap collisionMap)
+	public GameObject moveUp(CollisionMap collisionMap, float deltaTime)
 	{
-		movementY += getMoveSpeed() * Gdx.graphics.getDeltaTime();
+		movementY += getMoveSpeed() * deltaTime;
 		int collisionMoveValue = (int) movementY;
 		movementY -= (int) movementY;
 		GameObject collision = moveUp(collisionMap, collisionMoveValue);

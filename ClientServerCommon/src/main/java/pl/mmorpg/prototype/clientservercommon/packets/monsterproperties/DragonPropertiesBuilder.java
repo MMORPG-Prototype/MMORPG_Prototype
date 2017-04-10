@@ -6,7 +6,7 @@ public class DragonPropertiesBuilder extends MonsterProperties.Builder
 	public MonsterProperties build()
 	{
 		attackPower(10);
-		attackRange(30);
+		attackRange(40);
 		defense(2);
 		experienceGain(100);
 		maxHp(100);

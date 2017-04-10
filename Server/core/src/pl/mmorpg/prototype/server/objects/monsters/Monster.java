@@ -50,7 +50,7 @@ public abstract class Monster extends MovableGameObject
 	
 	}
 
-	private boolean isTargetingAnotherMonster()
+	protected boolean isTargetingAnotherMonster()
 	{
 		return targetedMonster != null;
 	}
@@ -116,6 +116,11 @@ public abstract class Monster extends MovableGameObject
 	{
 		targetedMonster = target;
 		target.isTargetedBy(this);
+	}
+	
+	protected Monster getTargetedMonster()
+	{
+		return targetedMonster;
 	}
 	
 	private void isTargetedBy(Monster source)

@@ -41,12 +41,24 @@ public class Assets
 
 	static
     {
+		loadSeveralStages();
 		assets.setLoader(TiledMap.class, new TmxMapLoader());
 		addClassTypes();
 		addIgnoredExtendsions();
 		loadSkins(assetsPath);
 		loadOthers();
     }
+	
+	private static void loadSeveralStages()
+	{
+		for(int i=0; i<7; i++)
+		{
+			CustomStage stage = createStage();
+			stage.setUsed(false);
+			stages.add(stage);
+		}
+	}
+
 
 	private static void addClassTypes()
     {
@@ -59,6 +71,8 @@ public class Assets
         classTypes.put("tmx", TiledMap.class);
     }
 
+
+	
 
 	private static void addIgnoredExtendsions()
 	{
@@ -166,14 +180,20 @@ public class Assets
 		for (CustomStage stage : stages)
 			if (!stage.isUsed())
 			{
-				stage.setUsed();
+				stage.setUsed(true);
 				return stage;
 			}
-		CustomStage newStage = new CustomStage(new ScalingViewport(Scaling.stretch, Settings.GAME_WIDTH, Settings.GAME_HEIGHT),
-				batch);
-		newStage.setUsed();
+		CustomStage newStage = createStage();
+		newStage.setUsed(true);
 		stages.add(newStage);
 		return newStage;
+	}
+
+
+	private static CustomStage createStage()
+	{
+		return new CustomStage(new ScalingViewport(Scaling.stretch, Settings.GAME_WIDTH, Settings.GAME_HEIGHT),
+				batch);
 	}
 
 	public static SpriteBatch getBatch()
