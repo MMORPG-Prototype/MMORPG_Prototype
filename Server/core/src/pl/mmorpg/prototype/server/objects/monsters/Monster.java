@@ -86,8 +86,7 @@ public abstract class Monster extends MovableGameObject
 	{
 		targetedBy.add(source);
 	}
-	
-	
+
 	
 	private void die(Monster source)
 	{

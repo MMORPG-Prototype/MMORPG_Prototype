@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.esotericsoftware.kryonet.Connection;
 
-import pl.mmorpg.prototype.clientservercommon.packets.CharacterMonsterTargetingPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.User;
@@ -13,7 +13,7 @@ import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.states.PlayState;
 
-public class CharacterMonsterTargetingPacketHandler extends PacketHandlerBase<CharacterMonsterTargetingPacket>
+public class CharacterMonsterTargetingPacketHandler extends PacketHandlerBase<MonsterTargetingPacket>
 {
 	private PlayState playState;
 	private Map<Integer, UserInfo> loggedUsersKeyUserId;
@@ -29,7 +29,7 @@ public class CharacterMonsterTargetingPacketHandler extends PacketHandlerBase<Ch
 	} 
 	
 	@Override
-	public void handle(Connection connection, CharacterMonsterTargetingPacket packet)
+	public void handle(Connection connection, MonsterTargetingPacket packet)
 	{
 		GameObject target = playState.getCollisionMap().get(packet.gameX, packet.gameY);
 		if(target != null && target instanceof Monster)

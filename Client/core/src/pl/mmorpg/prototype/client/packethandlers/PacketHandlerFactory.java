@@ -10,7 +10,6 @@ import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.CharacterMonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
@@ -18,6 +17,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 
 public class PacketHandlerFactory
 {
@@ -34,7 +34,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(RegisterationReplyPacket.class, new RegisterationReplyPacketHandler(states));
 		packetHandlers.put(UserCharacterDataPacket[].class, new UserCharacterDataArrayPacketHandler(states));
 		packetHandlers.put(ChatMessageReplyPacket.class, new ChatMessageReplyPacketHandler(playState));
-		packetHandlers.put(CharacterMonsterTargetingReplyPacket.class,
+		packetHandlers.put(MonsterTargetingReplyPacket.class,
 				new CharacterMonsterTargetingReplyPacketHandler(playState));
 
 		// Ignore frameowrk keepAliveMessage

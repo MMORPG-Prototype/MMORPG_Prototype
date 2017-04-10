@@ -1,11 +1,11 @@
 package pl.mmorpg.prototype.server.communication;
 
-import pl.mmorpg.prototype.clientservercommon.packets.CharacterMonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.GameObject;
@@ -69,11 +69,11 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static CharacterMonsterTargetingReplyPacket makeTargetingReplyPacket(GameObject target)
+	public static MonsterTargetingReplyPacket makeTargetingReplyPacket(GameObject target)
 	{
 		if(target == null) 
 			throw new NullPointerException("Target cannot be null");
-		CharacterMonsterTargetingReplyPacket packet = new CharacterMonsterTargetingReplyPacket();
+		MonsterTargetingReplyPacket packet = new MonsterTargetingReplyPacket();
 		packet.monsterId = target.getId();
 		return packet;
 	}

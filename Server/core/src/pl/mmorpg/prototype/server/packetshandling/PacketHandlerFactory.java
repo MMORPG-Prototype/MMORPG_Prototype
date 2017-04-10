@@ -9,7 +9,6 @@ import com.esotericsoftware.kryonet.Server;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.CharacterMonsterTargetingPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
@@ -20,6 +19,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveDownPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveLeftPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveRightPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
@@ -55,7 +55,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(playState));
 		packetHandlers.put(ChatMessagePacket.class,
 				new ChatMessagePacketHandler(server, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
-		packetHandlers.put(CharacterMonsterTargetingPacket.class, 
+		packetHandlers.put(MonsterTargetingPacket.class, 
 				new CharacterMonsterTargetingPacketHandler(playState, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
 
 		// Ignore framework packets

@@ -32,12 +32,12 @@ import pl.mmorpg.prototype.client.userinterface.GraphicGameObject;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.CharacterMonsterTargetingPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 
 public class PlayState implements State, GameObjectsContainer
 {
@@ -190,7 +190,7 @@ public class PlayState implements State, GameObjectsContainer
 	{
 		float gameBoardX = player.getX() - camera.viewportWidth / 2 + x * camera.viewportWidth / Settings.GAME_WIDTH;
 		float gameBoardY = player.getY() - camera.viewportHeight / 2 + y * camera.viewportHeight / Settings.GAME_HEIGHT;
-		CharacterMonsterTargetingPacket packet = PacketsMaker.makeTargetingPacket(gameBoardX, gameBoardY);
+		MonsterTargetingPacket packet = PacketsMaker.makeTargetingPacket(gameBoardX, gameBoardY);
 		client.sendTCP(packet);
 	}
 

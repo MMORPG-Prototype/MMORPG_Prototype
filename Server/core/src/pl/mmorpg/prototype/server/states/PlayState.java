@@ -41,7 +41,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         this.states = states;
         camera.setToOrtho(false);
 
-        collisionMap.setScale(3);
+        collisionMap.setScale(1);
         
         TiledMap map = Assets.get("Map/tiled.tmx");
         MapObjects objects = map.getLayers().get("Warstwa Obiektu 1").getObjects();
