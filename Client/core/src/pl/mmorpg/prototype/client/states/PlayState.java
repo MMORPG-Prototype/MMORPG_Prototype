@@ -23,12 +23,15 @@ import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.objects.GameObject;
-import pl.mmorpg.prototype.client.objects.GameWorldLabel;
 import pl.mmorpg.prototype.client.objects.NullPlayer;
 import pl.mmorpg.prototype.client.objects.Player;
+import pl.mmorpg.prototype.client.objects.graphic.BloodAnimation;
+import pl.mmorpg.prototype.client.objects.graphic.GameWorldLabel;
+import pl.mmorpg.prototype.client.objects.graphic.GraphicGameObject;
+import pl.mmorpg.prototype.client.objects.graphic.MonsterDamageLabel;
+import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
-import pl.mmorpg.prototype.client.userinterface.GraphicGameObject;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
@@ -37,6 +40,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 
 public class PlayState implements State, GameObjectsContainer
@@ -122,7 +126,9 @@ public class PlayState implements State, GameObjectsContainer
 	@Override
 	public void removeObject(long id)
 	{
-		gameObjects.remove(id);
+		GameObject object = gameObjects.remove(id);
+		if(player.hasLockedOnTarget(object))
+			player.releaseTarget();
 	}
 
 	@Override
@@ -199,5 +205,15 @@ public class PlayState implements State, GameObjectsContainer
 		GameObject target = gameObjects.get(monsterId);
 		player.lockOnTarget(target);
 		System.out.println("Monster targeted " + gameObjects.get(monsterId));
+	}
+
+	public void monsterDamagePacketReceived(MonsterDamagePacket packet)
+	{
+		Monster attackTarget = (Monster)gameObjects.get(packet.getTargetId());
+		attackTarget.gotHitBy(packet.getDamage());
+		GraphicGameObject damageNumber = new MonsterDamageLabel(packet.getDamage(), attackTarget);
+		GraphicGameObject bloodAnimation = new BloodAnimation(attackTarget);
+		clientGraphics.add(damageNumber);
+		clientGraphics.add(bloodAnimation);
 	}
 }

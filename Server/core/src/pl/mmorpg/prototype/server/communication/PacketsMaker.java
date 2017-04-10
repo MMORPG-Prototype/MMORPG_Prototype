@@ -5,6 +5,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
@@ -75,6 +76,14 @@ public class PacketsMaker
 			throw new NullPointerException("Target cannot be null");
 		MonsterTargetingReplyPacket packet = new MonsterTargetingReplyPacket();
 		packet.monsterId = target.getId();
+		return packet;
+	}
+
+	public static MonsterDamagePacket makeDamagePacket(long id, int damage)
+	{
+		MonsterDamagePacket packet = new MonsterDamagePacket();
+		packet.setTargetId(id);
+		packet.setDamage(damage);
 		return packet;
 	}
 }

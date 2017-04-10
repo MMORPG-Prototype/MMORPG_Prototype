@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.server.objects.monsters;
+package pl.mmorpg.prototype.clientservercommon.monsterproperties;
 
 import lombok.Data;
 

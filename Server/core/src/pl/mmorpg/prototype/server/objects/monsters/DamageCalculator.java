@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.server.objects.monsters;
 
+import pl.mmorpg.prototype.clientservercommon.monsterproperties.MonsterProperties;
+
 public class DamageCalculator
 {
 	public static int getDamage(Monster source, Monster target)

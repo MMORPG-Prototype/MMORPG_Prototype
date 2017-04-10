@@ -29,9 +29,19 @@ public abstract class AttackingGameObject extends WalkingGameObject
 		return attackTarget != null;
 	}
 	
+	public boolean hasLockedOnTarget(GameObject target)
+	{
+		return attackTarget == target;
+	}
+	
 	public GameObject getTarget()
 	{
 		return attackTarget;
+	}
+	
+	public void releaseTarget()
+	{
+		attackTarget = null;
 	}
 
 }

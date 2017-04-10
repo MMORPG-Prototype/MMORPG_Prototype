@@ -1,10 +1,10 @@
-package pl.mmorpg.prototype.client.userinterface;
+package pl.mmorpg.prototype.client.objects.graphic;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public abstract class GraphicGameObject 
 {
-	protected boolean isAlive = true;
+	private boolean isAlive = true;
 	protected float x;
 	protected float y;
 
@@ -13,7 +13,13 @@ public abstract class GraphicGameObject
 		return isAlive;
 	}
 	
-	public abstract void update(float deltaTime);
+	public void update(float deltaTime)
+	{
+		if(shouldDelete())
+			isAlive = false;
+	}
 	
 	public abstract void render(SpriteBatch batch);
+	
+	public abstract boolean shouldDelete();
 }

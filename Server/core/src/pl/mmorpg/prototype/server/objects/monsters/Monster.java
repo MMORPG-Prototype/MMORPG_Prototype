@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import pl.mmorpg.prototype.clientservercommon.monsterproperties.MonsterProperties;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.resources.Assets;
@@ -50,17 +51,39 @@ public abstract class Monster extends MovableGameObject
 	private void attackHandle(float deltaTime)
 	{
 		hitTime += deltaTime;
-		if(hitTime >= properties.getAttackSpeed())
+		if(canAttackTarget())
 		{
 			hitTime = 0.0f;
 			normalAttack(targetedMonster);
 		}
 	}
 
+
+	private boolean canAttackTarget()
+	{
+		return hitTime >= properties.getAttackSpeed() && 
+				distance(targetedMonster) <= properties.getAttackRange();
+	}
+
+	private double distance(Monster targetedMonster)
+	{
+		float selfCenterX = getX() + getWidth()/2;
+		float targetCenterX = targetedMonster.getX() + targetedMonster.getWidth()/2;
+		float deltaX = targetCenterX - selfCenterX;
+		float selfCenterY = getY() + getHeight()/2;
+		float targetCenterY = targetedMonster.getY() + targetedMonster.getHeight()/2;
+		float deltaY = targetCenterY - selfCenterY;
+		double distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+		return distance;
+	}
+
+
+
 	private void normalAttack(Monster target)
 	{
 		int damage = DamageCalculator.getDamage(this, target);
 		target.properties.hp -= damage;
+		linkedState.send(PacketsMaker.makeDamagePacket(target.getId(), damage));
 		if(target.properties.hp <= 0)
 		{
 			this.killed(target);

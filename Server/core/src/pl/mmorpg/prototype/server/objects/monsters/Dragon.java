@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.server.objects.monsters;
 
+import pl.mmorpg.prototype.clientservercommon.monsterproperties.DragonPropertiesBuilder;
+import pl.mmorpg.prototype.clientservercommon.monsterproperties.MonsterProperties;
 import pl.mmorpg.prototype.server.collision.CollisionMap;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
@@ -21,15 +23,7 @@ public class Dragon extends WalkingMonster
 
 	public static MonsterProperties getDragonProperies()
 	{
-		return new MonsterProperties.Builder()
-				.attackPower(10)
-				.attackRange(30)
-				.defense(2)
-				.experienceGain(100)
-				.maxHp(100)
-				.maxMp(0)
-				.attackSpeed(2.0f)
-				.build();
+		return new DragonPropertiesBuilder().build();
 	}
 
 }
