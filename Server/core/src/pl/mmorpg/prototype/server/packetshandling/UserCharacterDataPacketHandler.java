@@ -65,7 +65,10 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 		Map<Long, GameObject> gameObjects = playState.getGameObjects();
 		for (GameObject object : gameObjects.values())
 		{
-			if(object instanceof Monster)				
+			
+			if(object instanceof PlayerCharacter)
+				server.sendToTCP(id, PacketsMaker.makeCreationPacket((PlayerCharacter)object));
+			else if(object instanceof Monster)				
 				server.sendToTCP(id, PacketsMaker.makeCreationPacket((Monster)object));
 			else
 				server.sendToTCP(id, PacketsMaker.makeCreationPacket(object));

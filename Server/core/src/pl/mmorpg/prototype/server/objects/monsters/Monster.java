@@ -22,8 +22,6 @@ public abstract class Monster extends MovableGameObject
 	private float hitTime = 1000.0f;
 	protected PlayState linkedState;
 	
-	private boolean isAlive = true;
-	
 	private List<Monster> targetedBy = new LinkedList<>();
 
 	public Monster(Texture lookout, long id, PlayState playState, MonsterProperties properties)
@@ -41,12 +39,7 @@ public abstract class Monster extends MovableGameObject
 	{
 		super.update(deltaTime);
 		if(isTargetingAnotherMonster())
-		{
-			if(targetIsAlive())
-				attackHandle(deltaTime);
-			else
-				targetedMonster = null;
-		}
+			attackHandle(deltaTime);
 	
 	}
 
@@ -55,11 +48,6 @@ public abstract class Monster extends MovableGameObject
 		return targetedMonster != null;
 	}
 	
-	private boolean targetIsAlive()
-	{
-		return targetedMonster.isAlive;
-	}
-
 	
 	private void attackHandle(float deltaTime)
 	{
@@ -133,7 +121,8 @@ public abstract class Monster extends MovableGameObject
 	{
 		linkedState.remove(getId());
 		linkedState.send(PacketsMaker.makeRemovalPacket(getId()));
-		isAlive = false;
+		for(Monster targetedBY : targetedBy)
+			targetedBY.targetedMonster = null;
 	}
 	
 	protected void killed(Monster target)

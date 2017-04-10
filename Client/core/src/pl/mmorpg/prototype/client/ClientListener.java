@@ -2,7 +2,7 @@ package pl.mmorpg.prototype.client;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -15,7 +15,7 @@ import pl.mmorpg.prototype.client.states.StateManager;
 
 public class ClientListener extends Listener
 {
-	private final Collection<PacketInfo> unhandledPackets = new LinkedList<>();
+	private final Collection<PacketInfo> unhandledPackets = new ConcurrentLinkedQueue<>();
 	private final PacketHandlerFactory packetHandlersFactory;
 
 	public ClientListener(final PlayState playState, final StateManager states)

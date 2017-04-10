@@ -7,16 +7,33 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterData
 
 public class HitPointManaPointPane extends ScrollPane
 {
+	private static HitPointManaPointDialog dialogInitializer;
+	private final HitPointManaPointDialog dialog;
+	
 	public HitPointManaPointPane(UserCharacterDataPacket character)
 	{
-		super(new HitPointManaPointDialog(character));
+		super(createDialog(character));
+		dialog = dialogInitializer;
 		initiazlize();
 	} 
 	
 	public HitPointManaPointPane(Integer linkedValueHitPoints, Integer linkedValueManaPoints, int maxHP, int maxMP, String characterName)
 	{
-		super(new HitPointManaPointDialog(linkedValueHitPoints, linkedValueManaPoints, maxHP, maxMP, characterName));
+		super(createDialog(linkedValueHitPoints, linkedValueManaPoints, maxHP, maxMP, characterName));
+		dialog = dialogInitializer;
 		initiazlize();
+	}
+	
+	private static HitPointManaPointDialog createDialog(UserCharacterDataPacket character)
+	{
+		dialogInitializer = new HitPointManaPointDialog(character);
+		return dialogInitializer;
+	}
+	
+	private static HitPointManaPointDialog createDialog(Integer linkedValueHitPoints, Integer linkedValueManaPoints, int maxHP, int maxMP, String characterName)
+	{
+		dialogInitializer = new HitPointManaPointDialog(linkedValueHitPoints, linkedValueManaPoints, maxHP, maxMP, characterName);
+		return dialogInitializer;
 	}
 
 	private void initiazlize()
@@ -25,6 +42,12 @@ public class HitPointManaPointPane extends ScrollPane
 		this.setWidth(200);
 		this.setX(0);
 		this.setY(Gdx.graphics.getHeight() - this.getHeight());
+	}
+
+	public void updateValues()
+	{
+		dialog.update();
+		
 	}
 
 }

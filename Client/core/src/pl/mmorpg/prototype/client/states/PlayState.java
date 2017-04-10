@@ -56,6 +56,7 @@ public class PlayState implements State, GameObjectsContainer
 	private InputMultiplexer inputMultiplexer;
 	private UserInterface userInterface;
 	private TiledMapRenderer mapRenderer;
+	private boolean isInitalized = false;
 
 	private OrthographicCamera camera = new OrthographicCamera(900, 500);
 
@@ -84,6 +85,13 @@ public class PlayState implements State, GameObjectsContainer
 		inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs(), player));
 		inputMultiplexer.addProcessor(userInterface.getStage());
 		inputMultiplexer.addProcessor(inputHandler);
+		isInitalized = true;
+	}
+	
+
+	public boolean isInitialized()
+	{
+		return isInitalized;
 	}
 
 	@Override
@@ -169,6 +177,7 @@ public class PlayState implements State, GameObjectsContainer
 
 	private void reset()
 	{
+		isInitalized = false;
 		inputHandler = new NullInputHandler();
 		gameObjects.clear();
 		userInterface.clear();
@@ -217,6 +226,12 @@ public class PlayState implements State, GameObjectsContainer
 		System.out.println("Monster targeted " + gameObjects.get(monsterId));
 	}
 
+	
+	public boolean has(long targetId)
+	{
+		return gameObjects.get(targetId) != null;
+	}
+	
 	public void monsterDamagePacketReceived(MonsterDamagePacket packet)
 	{
 		Monster attackTarget = (Monster)gameObjects.get(packet.getTargetId());
@@ -225,6 +240,9 @@ public class PlayState implements State, GameObjectsContainer
 		GraphicGameObject bloodAnimation = new BloodAnimation(attackTarget);
 		clientGraphics.add(damageNumber);
 		clientGraphics.add(bloodAnimation);
+		
+		if(attackTarget == player)
+			userInterface.updateHitPointManaPointDialog();
 	}
 
 	public void experienceGainPacketReceived(ExperienceGainPacket packet)
@@ -232,7 +250,11 @@ public class PlayState implements State, GameObjectsContainer
 		Player target = (Player)gameObjects.get(packet.getTargetId());
 		GraphicGameObject experienceGainLabel = new ExperienceGainLabel(String.valueOf(packet.getExperience()), target);
 		clientGraphics.add(experienceGainLabel);
-		target.addExperience(packet.getExperience());
-		userInterface.updateStatsDialog();
+		if(target == player)
+		{
+			target.addExperience(packet.getExperience());
+			userInterface.updateStatsDialog();
+		}	
 	}
+
 }

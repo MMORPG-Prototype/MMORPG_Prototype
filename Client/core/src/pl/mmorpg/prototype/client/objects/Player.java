@@ -47,5 +47,12 @@ public class Player extends Monster
     	data.setExperience(data.getExperience() + experienceGain);
     }
 
+	@Override
+	public void gotHitBy(int damage)
+	{
+		data.setHitPoints(data.getHitPoints() - damage);
+		super.gotHitBy(damage);
+	}
+
 
 }

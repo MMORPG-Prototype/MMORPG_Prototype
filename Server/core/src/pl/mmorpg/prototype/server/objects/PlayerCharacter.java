@@ -33,4 +33,9 @@ public class PlayerCharacter extends Monster
 		userCharacter.setExperience(userCharacter.getExperience() + target.getProperites().experienceGain);
 		super.killed(target);
 	}
+	
+	public UserCharacter getUserCharacterData()
+	{
+		return userCharacter;
+	}
 }

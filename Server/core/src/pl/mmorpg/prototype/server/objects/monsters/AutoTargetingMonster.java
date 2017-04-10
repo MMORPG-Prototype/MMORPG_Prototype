@@ -25,6 +25,7 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 	{
 		if(!isTargetingAnotherMonster())
 		{
+			setMovingRandomly(true);
 			Monster monster = tryToFindTarget();
 			if(monster != null)
 			{
@@ -33,7 +34,10 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 			}
 		}
 		else
+		{
 			chaseTarget(deltaTime);
+			setMovingRandomly(false);
+		}
 		super.update(deltaTime);
 	}
 	

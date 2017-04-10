@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.server.communication;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
@@ -12,6 +13,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTarge
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.GameObject;
+import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
 public class PacketsMaker
@@ -34,6 +36,18 @@ public class PacketsMaker
 		packet.x = monster.getX();
 		packet.y = monster.getY();
 		packet.properties = monster.getProperites();
+		return packet;
+	}
+	
+	public static PlayerCreationPacket makeCreationPacket(PlayerCharacter player)
+	{
+		PlayerCreationPacket packet = new PlayerCreationPacket();
+		packet.id = player.getId();
+		packet.identifier = player.getIdentifier();
+		packet.x = player.getX();
+		packet.y = player.getY();
+		packet.properties = player.getProperites();
+		packet.data = PacketsMaker.makeCharacterPacket(player.getUserCharacterData());
 		return packet;
 	}
 

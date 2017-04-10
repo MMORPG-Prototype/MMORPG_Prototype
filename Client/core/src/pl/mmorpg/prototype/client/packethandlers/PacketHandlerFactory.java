@@ -14,6 +14,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -42,6 +43,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(MonsterDamagePacket.class, new MonsterDamagePacketHandler(playState));
 		packetHandlers.put(MonsterCreationPacket.class, new MonsterCreationPacketHandler(playState));
 		packetHandlers.put(ExperienceGainPacket.class, new ExperienceGainPacketHandler(playState));
+		packetHandlers.put(PlayerCreationPacket.class, new PlayerCreationPacketHandler(playState));
 
 		// Ignore frameowrk keepAliveMessage
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

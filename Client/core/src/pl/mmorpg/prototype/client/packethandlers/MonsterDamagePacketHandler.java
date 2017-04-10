@@ -17,5 +17,11 @@ public class MonsterDamagePacketHandler extends PacketHandlerBase<MonsterDamageP
 	{
 		playState.monsterDamagePacketReceived(packet);
 	}
+	
+	@Override
+	public boolean canBeHandled(Object packet)
+	{
+		return playState.isInitialized() && playState.has(((MonsterDamagePacket)packet).getTargetId());
+	}
 
 }

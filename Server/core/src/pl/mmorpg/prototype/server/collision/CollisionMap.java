@@ -247,6 +247,8 @@ public class CollisionMap
 
 	public GameObject get(int gameX, int gameY)
 	{
+		if(gameX / scale >= collisionMap.length || gameY / scale >= collisionMap[0].length)
+			return null;
 		return collisionMap[gameX / scale][gameY / scale];
 	}
 

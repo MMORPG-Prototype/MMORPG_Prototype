@@ -17,5 +17,11 @@ public class ExperienceGainPacketHandler extends PacketHandlerBase<ExperienceGai
 	{
 		playState.experienceGainPacketReceived(packet);
 	}
+	
+	@Override
+	public boolean canBeHandled(Object packet)
+	{
+		return playState.isInitialized() && playState.has(((ExperienceGainPacket)packet).getTargetId());
+	}
 
 }
