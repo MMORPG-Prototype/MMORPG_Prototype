@@ -30,6 +30,8 @@ import pl.mmorpg.prototype.client.objects.graphic.BloodAnimation;
 import pl.mmorpg.prototype.client.objects.graphic.ExperienceGainLabel;
 import pl.mmorpg.prototype.client.objects.graphic.GameWorldLabel;
 import pl.mmorpg.prototype.client.objects.graphic.GraphicGameObject;
+import pl.mmorpg.prototype.client.objects.graphic.HealLabel;
+import pl.mmorpg.prototype.client.objects.graphic.ManaReplenishLabel;
 import pl.mmorpg.prototype.client.objects.graphic.MonsterDamageLabel;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -277,16 +279,28 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
 	{
 		Monster target = (Monster)gameObjects.get(packet.getMonsterTargetId());
 		target.getProperties().hp -= packet.getHpChange();
+		HealLabel healLabel = new HealLabel(String.valueOf(packet.getHpChange()), target);
+		clientGraphics.add(healLabel);
 		if(target == player)
+		{
+			UserCharacterDataPacket data = player.getData();
+			data.setHitPoints(data.getHitPoints() + packet.getHpChange());
 			userInterface.updateHpMpDialog();
+		}
 	}
 	
 	public void mpChangeByItemUsagePacketReceived(MpChangeByItemUsagePacket packet)
 	{
 		Monster target = (Monster)gameObjects.get(packet.getMonsterTargetId());
 		target.getProperties().mp -= packet.getMpChange();
+		ManaReplenishLabel manaReplenishLabel = new ManaReplenishLabel(String.valueOf(packet.getMpChange()), target);
+		clientGraphics.add(manaReplenishLabel);
 		if(target == player)
+		{
+			UserCharacterDataPacket data = player.getData();
+			data.setHitPoints(data.getHitPoints() + packet.getMpChange());
 			userInterface.updateHpMpDialog();
+		}
 	}
 	
 
