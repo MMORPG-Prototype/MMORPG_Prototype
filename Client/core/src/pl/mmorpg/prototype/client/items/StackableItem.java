@@ -9,13 +9,19 @@ import pl.mmorpg.prototype.client.resources.Assets;
 
 public abstract class StackableItem extends Item
 {
-    private Integer count = 0;
+    private Integer count = 1;
     private final BitmapFont font = Assets.getFont();
 
     public StackableItem(Texture texture, long id)
     {
         super(texture, id);
     }
+    
+	public StackableItem(Texture texture, long id, int itemCount)
+	{
+		this(texture, id);
+		count = itemCount;
+	}
 
     public void addItem()
     {

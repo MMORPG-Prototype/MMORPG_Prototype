@@ -8,4 +8,9 @@ public abstract class Potion extends StackableItem implements ItemUseable
     {
         super(texture, id);
     }
+    
+    public Potion(Texture texture, long id, int itemCount)
+	{
+		super(texture, id, itemCount);
+	}
 }

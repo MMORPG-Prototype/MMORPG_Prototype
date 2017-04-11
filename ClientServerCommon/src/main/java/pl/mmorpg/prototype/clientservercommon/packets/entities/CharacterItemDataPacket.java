@@ -9,4 +9,5 @@ public class CharacterItemDataPacket
 {
     private long id;
     private String identifier;
+    private int count;
 }

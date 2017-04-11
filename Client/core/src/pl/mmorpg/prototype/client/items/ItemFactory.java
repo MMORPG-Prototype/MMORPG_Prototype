@@ -10,9 +10,9 @@ public class ItemFactory
     {
         String identifier = itemData.getIdentifier();
 		if (identifier.equalsIgnoreCase(ItemIdentifiers.SMALL_HP_POTION.toString()))
-            return new SmallHealthPotion(itemData.getId());
+            return new SmallHealthPotion(itemData.getId(), itemData.getCount());
         else if (identifier.equalsIgnoreCase(ItemIdentifiers.SMALL_MP_POTION.toString()))
-            return new SmallManaPotion(itemData.getId());
+            return new SmallManaPotion(itemData.getId(), itemData.getCount());
 
         throw new UnknownItemIdentifierException(identifier);
     }

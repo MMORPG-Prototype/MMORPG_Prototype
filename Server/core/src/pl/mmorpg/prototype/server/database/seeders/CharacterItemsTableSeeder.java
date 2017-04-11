@@ -19,13 +19,13 @@ public class CharacterItemsTableSeeder extends TableSeeder
     public Collection<Object> getRecords()
     {
         Collection<Object> records = new LinkedList<>();
-        records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_HP_POTION));
-        records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_MP_POTION));
-        records.add(createCharacterItem("SmykChar", ItemIdentifiers.SMALL_MP_POTION));
+        records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_HP_POTION, 5));
+        records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_MP_POTION, 1));
+        records.add(createCharacterItem("SmykChar", ItemIdentifiers.SMALL_MP_POTION, 7));
         return records;
     }
 
-    private CharacterItem createCharacterItem(String characterName, ItemIdentifiers identifier)
+    private CharacterItem createCharacterItem(String characterName, ItemIdentifiers identifier, int count)
     {
         Session session = HibernateUtil.openSession();
         Transaction tx = session.beginTransaction();
@@ -37,6 +37,7 @@ public class CharacterItemsTableSeeder extends TableSeeder
         CharacterItem item = new CharacterItem();
         item.setCharacter(character);
         item.setIdentifier(identifier);
+        item.setCount(count);
         tx.commit();
         session.close();
         return item;

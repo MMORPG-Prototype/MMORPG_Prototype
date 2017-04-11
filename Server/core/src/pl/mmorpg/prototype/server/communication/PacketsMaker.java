@@ -15,6 +15,7 @@ import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.Item;
+import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
 public class PacketsMaker
@@ -94,8 +95,19 @@ public class PacketsMaker
         CharacterItemDataPacket packet = new CharacterItemDataPacket();
         packet.setId(id);
         packet.setIdentifier(item.getIdentifier().toString());
+        packet.setCount(item.getCount());
         return packet;
     }
+    
+    public static CharacterItemDataPacket makeItemPacket(Item item)
+	{
+		CharacterItemDataPacket packet = new CharacterItemDataPacket();
+        packet.setId(item.getId());
+        packet.setIdentifier(item.getIdentifier().toString());
+        if(item instanceof StackableItem)
+        	packet.setCount(((StackableItem) item).getCount());
+        return packet;
+	}
 
     public static MonsterTargetingReplyPacket makeTargetingReplyPacket(GameObject target)
     {
@@ -105,6 +117,7 @@ public class PacketsMaker
         packet.monsterId = target.getId();
         return packet;
     }
+  
 
     public static MonsterDamagePacket makeDamagePacket(long id, int damage)
     {
@@ -122,11 +135,4 @@ public class PacketsMaker
         return packet;
     }
 
-	public static CharacterItemDataPacket makeItemPacket(Item item)
-	{
-		CharacterItemDataPacket packet = new CharacterItemDataPacket();
-        packet.setId(item.getId());
-        packet.setIdentifier(item.getIdentifier().toString());;
-        return packet;
-	}
 }

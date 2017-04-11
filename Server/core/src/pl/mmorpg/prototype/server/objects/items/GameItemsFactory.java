@@ -11,9 +11,9 @@ public class GameItemsFactory
     {
         ItemIdentifiers itemIdentifier = item.getIdentifier();
         if(itemIdentifier.equals(ItemIdentifiers.SMALL_HP_POTION))
-            return new SmallHpPotion(gameId);
+            return new SmallHpPotion(gameId, item.getCount());
         else if(itemIdentifier.equals(ItemIdentifiers.SMALL_MP_POTION))
-            return new SmallMpPotion(gameId);
+            return new SmallMpPotion(gameId, item.getCount());
         
         throw new UnknownItemTypeException(itemIdentifier);
     }
