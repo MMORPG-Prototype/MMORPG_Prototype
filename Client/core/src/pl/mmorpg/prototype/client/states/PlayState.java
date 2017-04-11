@@ -278,7 +278,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
 	public void hpChangeByItemUsagePacketReceived(HpChangeByItemUsagePacket packet)
 	{
 		Monster target = (Monster)gameObjects.get(packet.getMonsterTargetId());
-		target.getProperties().hp -= packet.getHpChange();
+		target.getProperties().hp += packet.getHpChange();
 		HealLabel healLabel = new HealLabel(String.valueOf(packet.getHpChange()), target);
 		clientGraphics.add(healLabel);
 		if(target == player)
