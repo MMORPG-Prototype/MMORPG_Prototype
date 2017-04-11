@@ -39,6 +39,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
@@ -87,7 +88,6 @@ public class PlayState implements State, GameObjectsContainer
 		inputMultiplexer.addProcessor(inputHandler);
 		isInitalized = true;
 	}
-	
 
 	public boolean isInitialized()
 	{
@@ -137,16 +137,16 @@ public class PlayState implements State, GameObjectsContainer
 	public void removeObject(long id)
 	{
 		GameObject object = gameObjects.remove(id);
-		if(object == player)
+		if (object == player)
 			playerHasDied();
-		else if(player.hasLockedOnTarget(object))
+		else if (player.hasLockedOnTarget(object))
 			player.releaseTarget();
 	}
 
 	private void playerHasDied()
 	{
 		this.userWantsToChangeCharacter();
-		
+
 	}
 
 	@Override
@@ -191,6 +191,13 @@ public class PlayState implements State, GameObjectsContainer
 		reset();
 	}
 
+	public void userWantsToLogOut()
+	{
+		client.sendTCP(new LogoutPacket());
+		states.push(new AuthenticationState(client, states));
+		reset();
+	}
+
 	public void newItemPacketReceived(CharacterItemDataPacket itemData)
 	{
 		Item newItem = ItemFactory.produceItem(itemData);
@@ -226,35 +233,34 @@ public class PlayState implements State, GameObjectsContainer
 		System.out.println("Monster targeted " + gameObjects.get(monsterId));
 	}
 
-	
 	public boolean has(long targetId)
 	{
 		return gameObjects.get(targetId) != null;
 	}
-	
+
 	public void monsterDamagePacketReceived(MonsterDamagePacket packet)
 	{
-		Monster attackTarget = (Monster)gameObjects.get(packet.getTargetId());
+		Monster attackTarget = (Monster) gameObjects.get(packet.getTargetId());
 		attackTarget.gotHitBy(packet.getDamage());
 		GraphicGameObject damageNumber = new MonsterDamageLabel(packet.getDamage(), attackTarget);
 		GraphicGameObject bloodAnimation = new BloodAnimation(attackTarget);
 		clientGraphics.add(damageNumber);
 		clientGraphics.add(bloodAnimation);
-		
-		if(attackTarget == player)
+
+		if (attackTarget == player)
 			userInterface.updateHitPointManaPointDialog();
 	}
 
 	public void experienceGainPacketReceived(ExperienceGainPacket packet)
 	{
-		Player target = (Player)gameObjects.get(packet.getTargetId());
+		Player target = (Player) gameObjects.get(packet.getTargetId());
 		GraphicGameObject experienceGainLabel = new ExperienceGainLabel(String.valueOf(packet.getExperience()), target);
 		clientGraphics.add(experienceGainLabel);
-		if(target == player)
+		if (target == player)
 		{
 			target.addExperience(packet.getExperience());
 			userInterface.updateStatsDialog();
-		}	
+		}
 	}
 
 }

@@ -185,4 +185,9 @@ public class UserInterface
 		hpMpDialog.updateValues();		
 	}
 
+	public void userWantsToLogOut()
+	{
+		linkedState.userWantsToLogOut();
+	}
+
 }
