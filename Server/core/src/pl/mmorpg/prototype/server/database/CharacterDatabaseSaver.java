@@ -9,6 +9,7 @@ import pl.mmorpg.prototype.server.database.managers.CharacterItemTableManager;
 import pl.mmorpg.prototype.server.database.managers.UserCharacterTableManager;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.Item;
+import pl.mmorpg.prototype.server.objects.items.StackableItem;
 
 public class CharacterDatabaseSaver
 {
@@ -27,6 +28,8 @@ public class CharacterDatabaseSaver
 		UserCharacter character = UserCharacterTableManager.getUserCharacter(ownerId);
 		characterItem.setCharacter(character);
 		characterItem.setIdentifier(item.getIdentifier());
+		if(item instanceof StackableItem)
+			characterItem.setCount(((StackableItem) item).getCount());
 		return characterItem;
 	}
 	
