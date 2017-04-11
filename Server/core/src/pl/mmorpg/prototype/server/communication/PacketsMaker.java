@@ -14,6 +14,7 @@ import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
 public class PacketsMaker
@@ -83,16 +84,16 @@ public class PacketsMaker
         packet.setMagic(character.getMagic());
         packet.setDexitirity(character.getDexitirity());
         packet.setGold(character.getGold());
+        packet.setStartingX(character.getLastLocationX());
+        packet.setStartingY(character.getLastLocationY());
         return packet;
     }
 
-    public static CharacterItemDataPacket makeItemPacket(CharacterItem item)
+    public static CharacterItemDataPacket makeItemPacket(CharacterItem item, long id)
     {
         CharacterItemDataPacket packet = new CharacterItemDataPacket();
-        packet.setId(item.getId());
-        packet.setCharacterId(item.getCharacter().getId());
-        packet.setName(item.getName());
-        packet.setType(item.getType().toString());
+        packet.setId(id);
+        packet.setIdentifier(item.getIdentifier().toString());
         return packet;
     }
 
@@ -120,4 +121,12 @@ public class PacketsMaker
         packet.setExperience(experienceGain);
         return packet;
     }
+
+	public static CharacterItemDataPacket makeItemPacket(Item item)
+	{
+		CharacterItemDataPacket packet = new CharacterItemDataPacket();
+        packet.setId(item.getId());
+        packet.setIdentifier(item.getIdentifier().toString());;
+        return packet;
+	}
 }

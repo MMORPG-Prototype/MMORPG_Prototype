@@ -3,19 +3,19 @@ package pl.mmorpg.prototype.server.objects.items;
 import java.util.HashMap;
 import java.util.Map;
 
-import pl.mmorpg.prototype.clientservercommon.ItemTypes;
+import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 
 public class ItemIdentifier
 {
-    private static Map<Class<?>, ItemTypes> identifiers = new HashMap<>();
+    private static Map<Class<?>, ItemIdentifiers> identifiers = new HashMap<>();
     
     static
     {
-        identifiers.put(SmallHpPotion.class, ItemTypes.SMALL_HP_POTION);
-        identifiers.put(SmallMpPotion.class, ItemTypes.SMALL_MP_POTION);
+        identifiers.put(SmallHpPotion.class, ItemIdentifiers.SMALL_HP_POTION);
+        identifiers.put(SmallMpPotion.class, ItemIdentifiers.SMALL_MP_POTION);
     }
 
-    public static ItemTypes getIdentifier(Class<? extends Item> clazz)
+    public static ItemIdentifiers getIdentifier(Class<? extends Item> clazz)
     {
         return identifiers.get(clazz);
     }

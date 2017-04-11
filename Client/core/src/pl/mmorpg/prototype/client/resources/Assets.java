@@ -152,6 +152,8 @@ public class Assets
 		{
 			asset = (T) skins.get(assetsPath + '/' + fileName);
 		}
+		if(asset == null)
+			throw new UnloadedAssetException(fileName);
 		return asset;
     }
 
@@ -208,6 +210,14 @@ public class Assets
 			super("Extension " + extension + " is not recognized");
         }
     }
+	
+	private static class UnloadedAssetException extends GameException
+	{
+		public UnloadedAssetException(String fileName)
+        {
+			super("Unloaded resource: " + fileName);
+        }
+	}
 
 	public static class Textures
 	{

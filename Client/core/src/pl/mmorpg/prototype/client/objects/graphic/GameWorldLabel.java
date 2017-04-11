@@ -12,12 +12,10 @@ public class GameWorldLabel extends GraphicGameObject
 	protected BitmapFont font = Assets.getFont();
 	private float currentLivingTime = 0.0f;
 	private final String message;
-	private GameObject source;
 
 	public GameWorldLabel(String message, GameObject source)
 	{
 		this.message = message;
-		this.source = source;
 		x = source.getX();
 		y = source.getY() + 40;
 	}

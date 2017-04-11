@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.server.objects.items;
 
-import pl.mmorpg.prototype.clientservercommon.ItemTypes;
+import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 
 public abstract class Item
 {
@@ -16,7 +16,7 @@ public abstract class Item
         return id;
     }
     
-    public ItemTypes getIdentifier()
+    public ItemIdentifiers getIdentifier()
     {
         return ItemIdentifier.getIdentifier(getClass());
     }

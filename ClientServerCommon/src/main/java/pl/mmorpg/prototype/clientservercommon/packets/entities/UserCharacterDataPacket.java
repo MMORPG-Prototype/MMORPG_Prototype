@@ -17,4 +17,6 @@ public class UserCharacterDataPacket
 	private Integer strength;
 	private Integer magic;
 	private Integer dexitirity;
+	private Integer startingX;
+	private Integer startingY;
 }

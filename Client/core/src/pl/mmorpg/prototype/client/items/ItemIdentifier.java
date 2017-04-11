@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.items;
 import java.util.HashMap;
 import java.util.Map;
 
-import pl.mmorpg.prototype.clientservercommon.ItemTypes;
+import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 
 public class ItemIdentifier
 {
@@ -11,8 +11,8 @@ public class ItemIdentifier
 
     static
     {
-        identifiers.put(SmallHealthPotion.class, ItemTypes.SMALL_HP_POTION.toString());
-        identifiers.put(SmallManaPotion.class, ItemTypes.SMALL_MP_POTION.toString());
+        identifiers.put(SmallHealthPotion.class, ItemIdentifiers.SMALL_HP_POTION.toString());
+        identifiers.put(SmallManaPotion.class, ItemIdentifiers.SMALL_MP_POTION.toString());
     }
 
     public static String getObjectIdentifier(Class<?> type)

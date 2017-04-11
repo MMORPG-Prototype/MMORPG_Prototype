@@ -16,16 +16,12 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class ServerListener extends Listener
 {
-    private final Server server;
-    private final PlayState playState;
     private final Map<Integer, UserInfo> loggedUsersKeyUserId = new ConcurrentHashMap<>();
     private final Map<Integer, User> authenticatedClientsKeyClientId = new ConcurrentHashMap<>();
     private final PacketHandlerFactory packetHandlersFactory;
 
     public ServerListener(Server server, PlayState playState)
     {
-        this.server = server;
-        this.playState = playState;
         packetHandlersFactory = new PacketHandlerFactory(loggedUsersKeyUserId, authenticatedClientsKeyClientId, server,
                 playState);
     }

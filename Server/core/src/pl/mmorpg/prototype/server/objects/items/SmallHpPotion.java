@@ -10,13 +10,11 @@ public class SmallHpPotion extends Potion
     public SmallHpPotion(long id, int count)
     {
         super(id, count);
-        // 
     }
 
     public SmallHpPotion(long id)
     {
         super(id);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

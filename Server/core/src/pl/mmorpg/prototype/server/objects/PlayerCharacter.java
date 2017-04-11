@@ -1,19 +1,14 @@
 package pl.mmorpg.prototype.server.objects;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.hibernate.stat.internal.ConcurrentStatisticsImpl;
-
-import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.PlayerPropertiesBuilder;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.exceptions.CannotUseThisItemException;
 import pl.mmorpg.prototype.server.exceptions.CharacterDoesntHaveItemException;
-import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.Useable;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -35,12 +30,6 @@ public class PlayerCharacter extends Monster
     }
 
     @Override
-    public String getIdentifier()
-    {
-        return ObjectsIdentifiers.PLAYER;
-    }
-
-    @Override
     protected void killed(Monster target)
     {
         linkedState.playerKilled(this, target);
@@ -52,11 +41,10 @@ public class PlayerCharacter extends Monster
     {
         return userCharacter;
     }
-    
-    public void addItem(CharacterItem item, long gameId)
+
+    public void addItem(Item item)
     {
-        Item gameItem = GameItemsFactory.produce(item, gameId);
-        items.put(gameItem.getId(), gameItem);
+    	items.put(item.getId(), item);
     }
     
     public void useItem(long id)
@@ -68,4 +56,9 @@ public class PlayerCharacter extends Monster
             throw new CannotUseThisItemException(characterItem);
         ((Useable)characterItem).use(this);
     }
+
+	public Collection<Item> getItems()
+	{
+		return items.values();		
+	}
 }

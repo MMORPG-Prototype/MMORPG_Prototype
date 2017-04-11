@@ -1,6 +1,5 @@
 package pl.mmorpg.prototype.server.objects.items;
 
-import org.hibernate.cfg.NotYetImplementedException;
 
 import pl.mmorpg.prototype.server.exceptions.OutOfStockExcpetion;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;

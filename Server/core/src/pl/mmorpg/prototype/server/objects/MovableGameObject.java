@@ -112,32 +112,12 @@ public abstract class MovableGameObject extends GameObject
 		return collision;
 	}
 
-	private void fixPositionOnCollisionAfterMovingRight(GameObject collision)
-	{
-		moveLeft();
-		/*
-		 * if (collision.getY() > getY()) setY(getY() - getMoveSpeed() *
-		 * Gdx.graphics.getDeltaTime() / 6.0f); else setY(getY() +
-		 * getMoveSpeed() * Gdx.graphics.getDeltaTime() / 6.0f);
-		 */
-	}
-
 	public GameObject moveLeft(CollisionMap collisionMap, int moveValue)
 	{
 		GameObject collision = collisionMap.tryToRepositionCollisionGoingLeft(moveValue, this);
 		if (collision == null)
 			setX(getX() - moveValue * collisionMap.getScale());
 		return collision;
-	}
-
-	private void fixPositionOnCollisionAfterMovingLeft(GameObject collision)
-	{
-		moveRight();
-		/*
-		 * if (collision.getY() > getY()) setY(getY() - getMoveSpeed() *
-		 * Gdx.graphics.getDeltaTime() / 6.0f); else setY(getY() +
-		 * getMoveSpeed() * Gdx.graphics.getDeltaTime() / 6.0f);
-		 */
 	}
 
 	public GameObject moveUp(CollisionMap collisionMap, int moveValue)
@@ -148,32 +128,12 @@ public abstract class MovableGameObject extends GameObject
 		return collision;
 	}
 
-	private void fixPositionOnCollisionAfterMovingUp(GameObject collision)
-	{
-		moveDown();
-		/*
-		 * if (collision.getX() > getX()) setX(getX() - getMoveSpeed() *
-		 * Gdx.graphics.getDeltaTime() / 6.0f); else setX(getX() +
-		 * getMoveSpeed() * Gdx.graphics.getDeltaTime() / 6.0f);
-		 */
-	}
-
 	public GameObject moveDown(CollisionMap collisionMap, int moveValue)
 	{
 		GameObject collision = collisionMap.tryToRepositionCollisionGoingDown(moveValue, this);
 		if (collision == null)
 			setY(getY() - moveValue * collisionMap.getScale());
 		return collision;
-	}
-
-	private void fixPositionOnCollisionAfterMovingDown(GameObject collision)
-	{
-		moveUp();
-		/*
-		 * if (collision.getX() > getX()) setX(getX() - getMoveSpeed() *
-		 * Gdx.graphics.getDeltaTime() / 6.0f); else setX(getX() +
-		 * getMoveSpeed() * Gdx.graphics.getDeltaTime() / 6.0f);
-		 */
 	}
 
 	public void moveLeft()

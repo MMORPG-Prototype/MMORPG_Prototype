@@ -219,7 +219,7 @@ public class CollisionMap
     public void render(SpriteBatch batch)
     {
         Pixmap drawable = new Pixmap(1, 1, Format.Alpha);
-        drawable.setBlending(Pixmap.Blending.None);
+        Pixmap.setBlending(Pixmap.Blending.None);
         for (int i = 0; i < collisionMap.length; i += 1)
             for (int j = 0; j < collisionMap[0].length; j += 1)
                 if (collisionMap[i][j] != null)

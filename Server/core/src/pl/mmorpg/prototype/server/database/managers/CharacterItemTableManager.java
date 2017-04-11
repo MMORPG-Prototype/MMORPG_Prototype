@@ -17,9 +17,11 @@ public class CharacterItemTableManager
     
     public static void deleteAllCharacterItems(UserCharacter character)
     {
-        HibernateUtil.makeOperation((session) -> {
-          session.createQuery("delete from CharacterItem item where item.character_id = :characterId")
-          .setParameter("characterId", character.getId());
+        HibernateUtil.makeOperation((session) -> 
+        {
+          session.createQuery("delete from CharacterItem item where item.character.id = :characterId")
+          .setParameter("characterId", character.getId())
+          .executeUpdate();
         });
     }
 

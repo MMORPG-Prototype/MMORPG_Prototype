@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
-import pl.mmorpg.prototype.clientservercommon.ItemTypes;
+import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 
 @Entity(name = "CharacterItem")
 @Table(name = "Character_Items")
@@ -24,11 +24,8 @@ public class CharacterItem
 	private Integer id;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "type", nullable = false)
-	private ItemTypes type;
-
-	@Column(name = "name", nullable = false)
-	private String name;
+	@Column(name = "identifier", nullable = false)
+	private ItemIdentifiers identifier;
 
 	@ManyToOne
 	private UserCharacter character;

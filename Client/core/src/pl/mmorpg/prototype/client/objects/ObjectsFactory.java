@@ -6,7 +6,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 
 public class ObjectsFactory
 {
-
 	public GameObject produce(ObjectCreationPacket packet)
 	{
 		return produce(packet.identifier, packet.id, packet.x, packet.y);
@@ -22,8 +21,9 @@ public class ObjectsFactory
         else
     		throw new ObjectIdentifierNotFoundException(identifier);
         	
-        	
-		object.setPosition(x, y);
+		object.setPosition(x, y); 
+		if(object instanceof MovableGameObject)
+			((MovableGameObject)object).initPosition(x, y);
 		return object;
     }
     

@@ -7,7 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import pl.mmorpg.prototype.clientservercommon.ItemTypes;
+import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.server.database.HibernateUtil;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
@@ -19,13 +19,13 @@ public class CharacterItemsTableSeeder extends TableSeeder
     public Collection<Object> getRecords()
     {
         Collection<Object> records = new LinkedList<>();
-        records.add(createCharacterItem("PankievChar", ItemTypes.SMALL_HP_POTION, "Small Health potion"));
-        records.add(createCharacterItem("PankievChar", ItemTypes.SMALL_MP_POTION, "Small mana potion"));
-        records.add(createCharacterItem("SmykChar", ItemTypes.SMALL_MP_POTION, "Small mana potion"));
+        records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_HP_POTION));
+        records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_MP_POTION));
+        records.add(createCharacterItem("SmykChar", ItemIdentifiers.SMALL_MP_POTION));
         return records;
     }
 
-    private CharacterItem createCharacterItem(String characterName, ItemTypes type, String name)
+    private CharacterItem createCharacterItem(String characterName, ItemIdentifiers identifier)
     {
         Session session = HibernateUtil.openSession();
         Transaction tx = session.beginTransaction();
@@ -36,8 +36,7 @@ public class CharacterItemsTableSeeder extends TableSeeder
         UserCharacter character = getChar.getSingleResult();
         CharacterItem item = new CharacterItem();
         item.setCharacter(character);
-        item.setType(type);
-        item.setName(name);
+        item.setIdentifier(identifier);
         tx.commit();
         session.close();
         return item;

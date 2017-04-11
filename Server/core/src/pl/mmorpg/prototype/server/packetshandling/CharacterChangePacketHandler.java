@@ -8,7 +8,9 @@ import com.esotericsoftware.kryonet.Server;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.database.CharacterDatabaseSaver;
 import pl.mmorpg.prototype.server.database.entities.User;
+import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class CharacterChangePacketHandler extends PacketHandlerBase<CharacterChangePacket>
@@ -34,7 +36,10 @@ public class CharacterChangePacketHandler extends PacketHandlerBase<CharacterCha
 		UserInfo userInfo = loggedUsersKeyUserId.get(userId);
 		Integer characterId = userInfo.userCharacter.getId();
 		if(playState.has(characterId))
-			playState.remove(characterId);
+		{
+			PlayerCharacter removedCharacter = (PlayerCharacter)playState.remove(characterId);
+			CharacterDatabaseSaver.save(removedCharacter);
+		} 
 		userInfo.userCharacter = null;
 		server.sendToAllExceptTCP(connection.getID(), PacketsMaker.makeRemovalPacket(characterId));
 	}

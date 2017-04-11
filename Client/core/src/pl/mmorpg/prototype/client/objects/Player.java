@@ -17,7 +17,6 @@ public class Player extends HealthBarMonster
     public Player(long id)
     {
         super(Assets.get("characters.png"), 0, 0, id, new MonsterProperties.Builder().build());
-        
     }
 
     public void initialize(UserCharacterDataPacket characterData)
@@ -25,6 +24,7 @@ public class Player extends HealthBarMonster
         this.data = characterData;
         setProperties(new PlayerPropertiesBuilder(characterData).build());
         recreateHealthBar();
+        initPosition(data.getStartingX(), data.getStartingY());
     }
     
     @Override

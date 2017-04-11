@@ -6,7 +6,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.Directions;
 
 public abstract class MovableGameObject extends GameObject
 {
-	private static float stopMovingTimeBound = 0.2f;
+	private final static float stopMovingTimeBound = 0.2f;
 	private float stopMovingTime = 0.0f;
     private float stepSpeed = 100.0f;
     private float targetX = 100.0f;
@@ -20,15 +20,18 @@ public abstract class MovableGameObject extends GameObject
         targetX = getX();
         targetY = getY();
     }
+    
+    public void initPosition(float x, float y)
+    {
+    	targetX = x;
+    	targetY = y;
+    	super.setX(x);
+    	super.setY(y);
+    }
 
     @Override
     public void update(float deltaTime)
     {
-    	if(lastDeltaTime == 0.0f)
-    	{
-    		super.setX(targetX);
-    		super.setY(targetY);
-    	}
         lastDeltaTime = deltaTime;
         repositionX(deltaTime);
         repositionY(deltaTime);

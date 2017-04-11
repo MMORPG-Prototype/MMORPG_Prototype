@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.clientservercommon;
 
-public enum ItemTypes 
+public enum ItemIdentifiers 
 {
     SMALL_HP_POTION,
     SMALL_MP_POTION;

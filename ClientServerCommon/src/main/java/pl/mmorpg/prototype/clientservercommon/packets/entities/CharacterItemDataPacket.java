@@ -7,8 +7,6 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 @Data
 public class CharacterItemDataPacket
 {
-    private Integer id;
-    private String name;
-    private String type;
-    private Integer characterId;
+    private long id;
+    private String identifier;
 }

@@ -1,11 +1,14 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
+import pl.mmorpg.prototype.clientservercommon.IdSupplier;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
@@ -15,6 +18,8 @@ import pl.mmorpg.prototype.server.database.managers.CharacterItemTableManager;
 import pl.mmorpg.prototype.server.database.managers.UserCharacterTableManager;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
+import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.states.PlayState;
 
@@ -47,12 +52,31 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 
         sendCurrentGameObjectsInfo(clientId);
         PlayerCharacter newPlayer = new PlayerCharacter(character, playState);
+        Collection<Item> playerItems = getPlayerItems(newPlayer);
+        playerItems.forEach((item) -> newPlayer.addItem(item));
         playState.add(newPlayer);
         server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
-        sendItemsDataToClient(userCharacterId, clientId);
+        sendItemsDataToClient(playerItems, clientId);
     }
 
-    private void sendCurrentGameObjectsInfo(int id)
+    private Collection<Item> getPlayerItems(PlayerCharacter newPlayer)
+	{
+    	List<Item> characterItems = 
+    			CharacterItemTableManager.getCharacterItems((int)newPlayer.getId())
+    			.stream()
+    			.map(dbItem -> convertToGameItem(dbItem))
+    			.collect(Collectors.toList());
+    				
+    	return characterItems;
+	}
+
+    private Item convertToGameItem(CharacterItem item)
+    {
+    	Item result = GameItemsFactory.produce(item, IdSupplier.getId());
+    	return result;
+    }
+    
+	private void sendCurrentGameObjectsInfo(int id)
     {
         Map<Long, GameObject> gameObjects = playState.getGameObjects();
         for (GameObject object : gameObjects.values())
@@ -67,9 +91,8 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
         }
     }
 
-    private void sendItemsDataToClient(int userCharacterId, int clientId)
+    private void sendItemsDataToClient(Collection<Item> playerItems, int clientId)
     {
-        List<CharacterItem> characterItems = CharacterItemTableManager.getCharacterItems(userCharacterId);
-        characterItems.forEach((item) -> server.sendToTCP(clientId, PacketsMaker.makeItemPacket(item)));
+    	playerItems.forEach((item) -> server.sendToTCP(clientId, PacketsMaker.makeItemPacket(item)));
     }
 }

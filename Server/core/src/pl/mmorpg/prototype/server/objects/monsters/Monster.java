@@ -32,8 +32,6 @@ public abstract class Monster extends MovableGameObject
 		this.properties = properties;
 	}
 
-	
-
 	@Override
 	public void update(float deltaTime)
 	{
