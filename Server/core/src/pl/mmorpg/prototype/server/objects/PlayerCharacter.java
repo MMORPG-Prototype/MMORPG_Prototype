@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.PlayerPropertiesBuilder;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.exceptions.CannotUseThisItemException;
 import pl.mmorpg.prototype.server.exceptions.CharacterDoesntHaveItemException;
@@ -47,19 +48,19 @@ public class PlayerCharacter extends Monster
     	items.put(item.getId(), item);
     }
     
-    public void useItem(long id)
+    public void useItem(long id, PacketsSender packetSender)
     {
-        useItem(id, this);
+        useItem(id, this, packetSender);
     }
     
-    public void useItem(long id, Monster target)
+    public void useItem(long id, Monster target, PacketsSender packetSender)
     {
     	Item characterItem = items.get(id);
         if(characterItem == null)
             throw new CharacterDoesntHaveItemException(id);
         if(!(characterItem instanceof Useable))
             throw new CannotUseThisItemException(characterItem);
-        ((Useable)characterItem).use(target);
+        ((Useable)characterItem).use(target, packetSender);
     }
 
 	public Collection<Item> getItems()

@@ -60,7 +60,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(MonsterTargetingPacket.class, new CharacterMonsterTargetingPacketHandler(playState,
 				loggedUsersKeyUserId, authenticatedClientsKeyClientId));
 		packetHandlers.put(ItemUsagePacket.class,
-				new ItemUsagePacketHandler(loggedUsersKeyUserId, authenticatedClientsKeyClientId, playState));
+				new ItemUsagePacketHandler(loggedUsersKeyUserId, authenticatedClientsKeyClientId, playState, server));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

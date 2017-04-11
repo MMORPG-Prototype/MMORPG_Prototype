@@ -1,6 +1,8 @@
 package pl.mmorpg.prototype.server.objects.items;
 
 
+
+import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.exceptions.OutOfStockExcpetion;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
@@ -17,17 +19,17 @@ public abstract class StackableUseableItem extends StackableItem implements Usea
     }
 
     @Override
-    public void use(Monster target)
+    public void use(Monster target, PacketsSender packetSender)
     {
         if(count > 0)
         {
             count--;
-            useItem(target);
+            useItem(target, packetSender);
         }
         else
         	throw new OutOfStockExcpetion();
     }
     
-    public abstract void useItem(Monster target);
+    public abstract void useItem(Monster target, PacketsSender packetSender);
 
 }

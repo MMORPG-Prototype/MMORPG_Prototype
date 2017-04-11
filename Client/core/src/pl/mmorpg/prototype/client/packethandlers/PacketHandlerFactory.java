@@ -11,7 +11,9 @@ import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
@@ -44,6 +46,8 @@ public class PacketHandlerFactory
 		packetHandlers.put(MonsterCreationPacket.class, new MonsterCreationPacketHandler(playState));
 		packetHandlers.put(ExperienceGainPacket.class, new ExperienceGainPacketHandler(playState));
 		packetHandlers.put(PlayerCreationPacket.class, new PlayerCreationPacketHandler(playState));
+		packetHandlers.put(HpChangeByItemUsagePacket.class, new HpChangeByItemUsagePacketHandler(playState));
+		packetHandlers.put(MpChangeByItemUsagePacket.class, new MpChangeByItemUsagePacketHandler(playState));
 
 		// Ignore frameowrk keepAliveMessage
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

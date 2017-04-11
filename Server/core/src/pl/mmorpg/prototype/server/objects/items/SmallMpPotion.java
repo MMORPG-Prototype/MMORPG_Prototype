@@ -1,6 +1,10 @@
 package pl.mmorpg.prototype.server.objects.items;
 
+
+
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
 public class SmallMpPotion extends Potion
@@ -18,12 +22,15 @@ public class SmallMpPotion extends Potion
     }
 
     @Override
-    public void useItem(Monster target)
+    public void useItem(Monster target, PacketsSender packetSender)
     {
         MonsterProperties targetProperties = target.getProperites();
-        targetProperties.mp += MANA_REPLENISH_POWER;
+        int previous = targetProperties.mp;
+        targetProperties.mp += MANA_REPLENISH_POWER; 
         if(targetProperties.mp > targetProperties.maxMp)
             targetProperties.mp = targetProperties.maxMp;
+        int delta = targetProperties.mp - previous;
+        packetSender.send(PacketsMaker.makeMpChangeByItemUsagePacket(delta, target.getId()));
 
     }
 

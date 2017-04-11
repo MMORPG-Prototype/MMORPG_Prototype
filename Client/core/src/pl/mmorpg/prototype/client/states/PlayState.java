@@ -40,7 +40,9 @@ import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
@@ -269,6 +271,24 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
 			userInterface.updateStatsDialog();
 		}
 	}
+
+	
+	public void hpChangeByItemUsagePacketReceived(HpChangeByItemUsagePacket packet)
+	{
+		Monster target = (Monster)gameObjects.get(packet.getMonsterTargetId());
+		target.getProperties().hp -= packet.getHpChange();
+		if(target == player)
+			userInterface.updateHpMpDialog();
+	}
+	
+	public void mpChangeByItemUsagePacketReceived(MpChangeByItemUsagePacket packet)
+	{
+		Monster target = (Monster)gameObjects.get(packet.getMonsterTargetId());
+		target.getProperties().mp -= packet.getMpChange();
+		if(target == player)
+			userInterface.updateHpMpDialog();
+	}
+	
 
 
 

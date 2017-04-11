@@ -1,6 +1,8 @@
 package pl.mmorpg.prototype.server.communication;
 
+import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
@@ -134,5 +136,21 @@ public class PacketsMaker
         packet.setExperience(experienceGain);
         return packet;
     }
+
+	public static HpChangeByItemUsagePacket makeHpChangeByItemUsagePacket(int delta, long targetId)
+	{
+		HpChangeByItemUsagePacket packet = new HpChangeByItemUsagePacket();
+		packet.setHpChange(delta);
+		packet.setMonsterTargetId(targetId);
+		return packet;
+	}
+
+	public static MpChangeByItemUsagePacket makeMpChangeByItemUsagePacket(int delta, long targetId)
+	{
+		MpChangeByItemUsagePacket packet = new MpChangeByItemUsagePacket();
+		packet.setMpChange(delta);
+		packet.setMonsterTargetId(targetId);
+		return packet;
+	}
 
 }
