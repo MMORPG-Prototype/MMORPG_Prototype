@@ -8,8 +8,11 @@ import com.esotericsoftware.kryonet.Server;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.database.CharacterDatabaseSaver;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.objects.GameObject;
+import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class LogoutPacketHandler extends PacketHandlerBase<LogoutPacket>
@@ -43,7 +46,8 @@ public class LogoutPacketHandler extends PacketHandlerBase<LogoutPacket>
             int characterId = userCharacter.getId();
             if (playState.has(characterId))
             {
-                playState.remove(characterId);
+                GameObject removedCharacter = playState.remove(characterId);
+            	CharacterDatabaseSaver.save((PlayerCharacter)removedCharacter);
                 server.sendToAllTCP(PacketsMaker.makeRemovalPacket(characterId));
             }
         }
