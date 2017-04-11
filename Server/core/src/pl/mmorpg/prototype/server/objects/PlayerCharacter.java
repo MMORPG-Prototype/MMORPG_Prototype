@@ -10,32 +10,33 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class PlayerCharacter extends Monster
 {
-	private UserCharacter userCharacter;
+    private UserCharacter userCharacter;
 
-	public PlayerCharacter(UserCharacter userCharacter, PlayState linkedState)
-	{
-		super(Assets.get("MainChar.png"), userCharacter.getId(), linkedState,
-				new PlayerPropertiesBuilder(PacketsMaker.makeCharacterPacket(userCharacter)).build());
-		this.userCharacter = userCharacter;
-		setPacketSendingInterval(0.0f);
-	}
+    public PlayerCharacter(UserCharacter userCharacter, PlayState linkedState)
+    {
+        super(Assets.get("MainChar.png"), userCharacter.getId(), linkedState,
+                new PlayerPropertiesBuilder(PacketsMaker.makeCharacterPacket(userCharacter)).build());
+        this.userCharacter = userCharacter;
+        setPacketSendingInterval(0.0f);
+        setPosition(userCharacter.getLastLocationX(), userCharacter.getLastLocationY());
+    }
 
-	@Override
-	public String getIdentifier()
-	{
-		return ObjectsIdentifiers.PLAYER;
-	}
-	
-	@Override
-	protected void killed(Monster target)
-	{
-		linkedState.playerKilled(this, target);
-		userCharacter.setExperience(userCharacter.getExperience() + target.getProperites().experienceGain);
-		super.killed(target);
-	}
-	
-	public UserCharacter getUserCharacterData()
-	{
-		return userCharacter;
-	}
+    @Override
+    public String getIdentifier()
+    {
+        return ObjectsIdentifiers.PLAYER;
+    }
+
+    @Override
+    protected void killed(Monster target)
+    {
+        linkedState.playerKilled(this, target);
+        userCharacter.setExperience(userCharacter.getExperience() + target.getProperites().experienceGain);
+        super.killed(target);
+    }
+
+    public UserCharacter getUserCharacterData()
+    {
+        return userCharacter;
+    }
 }

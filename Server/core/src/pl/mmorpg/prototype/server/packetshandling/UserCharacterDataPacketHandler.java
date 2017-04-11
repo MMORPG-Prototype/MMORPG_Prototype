@@ -20,64 +20,56 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharacterDataPacket>
 {
-	private Map<Integer, UserInfo> loggedUsersKeyUserId;
-	private PlayState playState;
-	private Server server;
+    private Map<Integer, UserInfo> loggedUsersKeyUserId;
+    private PlayState playState;
+    private Server server;
 
-	public UserCharacterDataPacketHandler(Map<Integer, UserInfo> loggedUsersKeyUserId, Server server, PlayState playState)
-	{
-		this.loggedUsersKeyUserId = loggedUsersKeyUserId;
-		this.server = server;
-		this.playState = playState;
-	}
-	
-	@Override
-	public void handle(Connection connection, UserCharacterDataPacket packet)
-	{
-		userChoosenCharcter(packet.getId(), connection.getID());
-	}
-	
-	private void userChoosenCharcter(int userCharacterId, int clientId)
-	{
-		UserCharacter character = UserCharacterTableManager.getUserCharacter(userCharacterId);
+    public UserCharacterDataPacketHandler(Map<Integer, UserInfo> loggedUsersKeyUserId, Server server,
+            PlayState playState)
+    {
+        this.loggedUsersKeyUserId = loggedUsersKeyUserId;
+        this.server = server;
+        this.playState = playState;
+    }
 
-		UserInfo info = loggedUsersKeyUserId.get(character.getUser().getId());
-		info.userCharacter = character;
+    @Override
+    public void handle(Connection connection, UserCharacterDataPacket packet)
+    {
+        userChoosenCharcter(packet.getId(), connection.getID());
+    }
 
-		sendCurrentGameObjectsInfo(clientId);
-		PlayerCharacter newPlayer = new PlayerCharacter(character, playState);
-		playState.add(newPlayer);
-		server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
-		repositionNewlyAddedCharacter(newPlayer);
-		sendItemsDataToClient(userCharacterId, clientId);
-	}
+    private void userChoosenCharcter(int userCharacterId, int clientId)
+    {
+        UserCharacter character = UserCharacterTableManager.getUserCharacter(userCharacterId);
 
-	private void repositionNewlyAddedCharacter(PlayerCharacter newPlayer)
-	{
-		float newX = 96.0f;
-		float newY = 96.0f;
-		newPlayer.setPosition(newX, newY);
-		server.sendToAllTCP(PacketsMaker.makeRepositionPacket(newPlayer.getId(), newX, newY));
-	}
+        UserInfo info = loggedUsersKeyUserId.get(character.getUser().getId());
+        info.userCharacter = character;
 
-	private void sendCurrentGameObjectsInfo(int id)
-	{
-		Map<Long, GameObject> gameObjects = playState.getGameObjects();
-		for (GameObject object : gameObjects.values())
-		{
-			
-			if(object instanceof PlayerCharacter)
-				server.sendToTCP(id, PacketsMaker.makeCreationPacket((PlayerCharacter)object));
-			else if(object instanceof Monster)				
-				server.sendToTCP(id, PacketsMaker.makeCreationPacket((Monster)object));
-			else
-				server.sendToTCP(id, PacketsMaker.makeCreationPacket(object));
-		}
-	}
-	
-	private void sendItemsDataToClient(int userCharacterId, int clientId)
-	{
-		List<CharacterItem> characterItems = CharacterItemTableManager.getCharacterItems(userCharacterId);
-		characterItems.forEach((item) -> server.sendToTCP(clientId, PacketsMaker.makeItemPacket(item)));
-	}
+        sendCurrentGameObjectsInfo(clientId);
+        PlayerCharacter newPlayer = new PlayerCharacter(character, playState);
+        playState.add(newPlayer);
+        server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
+        sendItemsDataToClient(userCharacterId, clientId);
+    }
+
+    private void sendCurrentGameObjectsInfo(int id)
+    {
+        Map<Long, GameObject> gameObjects = playState.getGameObjects();
+        for (GameObject object : gameObjects.values())
+        {
+
+            if (object instanceof PlayerCharacter)
+                server.sendToTCP(id, PacketsMaker.makeCreationPacket((PlayerCharacter) object));
+            else if (object instanceof Monster)
+                server.sendToTCP(id, PacketsMaker.makeCreationPacket((Monster) object));
+            else
+                server.sendToTCP(id, PacketsMaker.makeCreationPacket(object));
+        }
+    }
+
+    private void sendItemsDataToClient(int userCharacterId, int clientId)
+    {
+        List<CharacterItem> characterItems = CharacterItemTableManager.getCharacterItems(userCharacterId);
+        characterItems.forEach((item) -> server.sendToTCP(clientId, PacketsMaker.makeItemPacket(item)));
+    }
 }
