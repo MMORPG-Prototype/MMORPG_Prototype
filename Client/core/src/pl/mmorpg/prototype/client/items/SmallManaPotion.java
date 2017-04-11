@@ -8,21 +8,21 @@ import pl.mmorpg.prototype.client.resources.Assets;
 public class SmallManaPotion extends Potion
 {
 
-	public SmallManaPotion()
-	{
-		super(Assets.get(Assets.Textures.Items.SMALL_MANA_POTION));
-	}
+    public SmallManaPotion(long id)
+    {
+        super(Assets.get(Assets.Textures.Items.SMALL_MANA_POTION), id);
+    }
 
-	@Override
-	public void use(WalkingGameObject character)
-	{
-		Log.info("Mana potion used");
-	}
+    @Override
+    public void use(WalkingGameObject character)
+    {
+        Log.info("Mana potion used");
+    }
 
-	@Override
-	public String getIdentifier()
-	{
-		return ItemIdentifier.getObjectIdentifier(SmallManaPotion.class);
-	}
+    @Override
+    public String getIdentifier()
+    {
+        return ItemIdentifier.getObjectIdentifier(SmallManaPotion.class);
+    }
 
 }

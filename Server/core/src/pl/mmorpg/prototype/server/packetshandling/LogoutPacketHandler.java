@@ -14,39 +14,39 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class LogoutPacketHandler extends PacketHandlerBase<LogoutPacket>
 {
-	private Map<Integer, UserInfo> loggedUsersKeyUserId;
-	private Map<Integer, User> authenticatedClientsKeyClientId;
-	private PlayState playState;
-	private Server server;
+    private Map<Integer, UserInfo> loggedUsersKeyUserId;
+    private Map<Integer, User> authenticatedClientsKeyClientId;
+    private PlayState playState;
+    private Server server;
 
-	public LogoutPacketHandler(Map<Integer, UserInfo> loggedUsersKeyUserId,
-			Map<Integer, User> authenticatedClientsKeyClientId, Server server, PlayState playState)
-	{
-		this.loggedUsersKeyUserId = loggedUsersKeyUserId;
-		this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
-		this.server = server;
-		this.playState = playState;
-	}
+    public LogoutPacketHandler(Map<Integer, UserInfo> loggedUsersKeyUserId,
+            Map<Integer, User> authenticatedClientsKeyClientId, Server server, PlayState playState)
+    {
+        this.loggedUsersKeyUserId = loggedUsersKeyUserId;
+        this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
+        this.server = server;
+        this.playState = playState;
+    }
 
-	@Override
-	public void handle(Connection connection, LogoutPacket packet)
-	{
-		userLoggedOut(connection);
-	}
+    @Override
+    public void handle(Connection connection, LogoutPacket packet)
+    {
+        userLoggedOut(connection);
+    }
 
-	private void userLoggedOut(Connection connection)
-	{
-		User user = authenticatedClientsKeyClientId.remove(connection.getID());
-		UserCharacter userCharacter = loggedUsersKeyUserId.remove(user.getId()).userCharacter;
-		if (userCharacter != null)
-		{
-			int characterId = userCharacter.getId();
-			if (playState.has(characterId))
-			{
-				playState.remove(characterId);
-				server.sendToAllTCP(PacketsMaker.makeRemovalPacket(characterId));
-			}
-		}
-	}
+    private void userLoggedOut(Connection connection)
+    {
+        User user = authenticatedClientsKeyClientId.remove(connection.getID());
+        UserCharacter userCharacter = loggedUsersKeyUserId.remove(user.getId()).userCharacter;
+        if (userCharacter != null)
+        {
+            int characterId = userCharacter.getId();
+            if (playState.has(characterId))
+            {
+                playState.remove(characterId);
+                server.sendToAllTCP(PacketsMaker.makeRemovalPacket(characterId));
+            }
+        }
+    }
 
 }

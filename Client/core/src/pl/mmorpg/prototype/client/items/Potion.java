@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 
 public abstract class Potion extends StackableItem implements ItemUseable
 {
-	public Potion(Texture texture)
-	{
-		super(texture);
-	}
+    public Potion(Texture texture, long id)
+    {
+        super(texture, id);
+    }
 }

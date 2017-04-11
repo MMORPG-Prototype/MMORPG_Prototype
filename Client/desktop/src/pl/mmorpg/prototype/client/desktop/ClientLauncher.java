@@ -1,4 +1,4 @@
-package pl.mmorpg.protptype.client.desktop;
+package pl.mmorpg.prototype.client.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -8,7 +8,7 @@ import pl.mmorpg.prototype.clientservercommon.Settings;
 
 public class ClientLauncher
 {
-    public static void main(String[] arg)
+    public static void main(String[] args)
     {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = Settings.GAME_WIDTH;
