@@ -24,7 +24,8 @@ public abstract class StackableUseableItem extends StackableItem implements Usea
             count--;
             useItem(target);
         }
-        throw new OutOfStockExcpetion();
+        else
+        	throw new OutOfStockExcpetion();
     }
     
     public abstract void useItem(Monster target);

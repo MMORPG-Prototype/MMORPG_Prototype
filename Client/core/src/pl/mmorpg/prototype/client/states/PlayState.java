@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
+import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.InputMultiplexer;
 import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.NullInputHandler;
@@ -46,7 +47,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 
-public class PlayState implements State, GameObjectsContainer
+public class PlayState implements State, GameObjectsContainer, PacketsSender
 {
 	private Client client;
 	private StateManager states;
@@ -83,7 +84,7 @@ public class PlayState implements State, GameObjectsContainer
 		gameObjects.put((long) character.getId(), player);
 		inputHandler = new PlayInputContinuousHandler(client, player);
 		userInterface = new UserInterface(this, character);
-		inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs(), player));
+		inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs(), player, this));
 		inputMultiplexer.addProcessor(userInterface.getStage());
 		inputMultiplexer.addProcessor(inputHandler);
 		isInitalized = true;
@@ -125,6 +126,12 @@ public class PlayState implements State, GameObjectsContainer
 		camera.update();
 		inputHandler.process();
 		userInterface.update();
+	}
+	
+	@Override
+	public void send(Object packet)
+	{
+		client.sendTCP(packet);
 	}
 
 	@Override
@@ -262,5 +269,7 @@ public class PlayState implements State, GameObjectsContainer
 			userInterface.updateStatsDialog();
 		}
 	}
+
+
 
 }

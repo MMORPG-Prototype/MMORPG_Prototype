@@ -8,10 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.exceptions.CannotUseThisItemException;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemUseable;
-import pl.mmorpg.prototype.client.objects.WalkingGameObject;
+import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
@@ -63,7 +64,7 @@ public class QuickAccessDialog extends Dialog
 		linkedState.quickAccesButtonClicked(quickAccessButtons.get(cellPosition));
 	}
 
-	public void useButtonItem(int cellPosition, WalkingGameObject character)
+	public void useButtonItem(int cellPosition, Monster target, PacketsSender packetSender)
 	{
 		Item item = quickAccessButtons.get(cellPosition).getItem();
 		if (item == null)
@@ -71,6 +72,7 @@ public class QuickAccessDialog extends Dialog
 		if (!(item instanceof ItemUseable))
 			throw new CannotUseThisItemException(item);
 
-		((ItemUseable) item).use(character);
+		((ItemUseable) item).use(target, packetSender);
 	}
+	
 }

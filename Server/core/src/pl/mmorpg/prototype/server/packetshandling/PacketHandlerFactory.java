@@ -12,6 +12,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -23,6 +24,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTarge
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemUsagePacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveDownPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveLeftPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveRightPacketHandler;
@@ -55,8 +57,10 @@ public class PacketHandlerFactory
 		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(playState));
 		packetHandlers.put(ChatMessagePacket.class,
 				new ChatMessagePacketHandler(server, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
-		packetHandlers.put(MonsterTargetingPacket.class, 
-				new CharacterMonsterTargetingPacketHandler(playState, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
+		packetHandlers.put(MonsterTargetingPacket.class, new CharacterMonsterTargetingPacketHandler(playState,
+				loggedUsersKeyUserId, authenticatedClientsKeyClientId));
+		packetHandlers.put(ItemUsagePacket.class,
+				new ItemUsagePacketHandler(loggedUsersKeyUserId, authenticatedClientsKeyClientId, playState));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

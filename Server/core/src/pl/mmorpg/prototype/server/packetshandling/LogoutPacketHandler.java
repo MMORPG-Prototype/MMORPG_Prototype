@@ -39,18 +39,18 @@ public class LogoutPacketHandler extends PacketHandlerBase<LogoutPacket>
 
     private void userLoggedOut(Connection connection)
     {
-        User user = authenticatedClientsKeyClientId.remove(connection.getID());
-        UserCharacter userCharacter = loggedUsersKeyUserId.remove(user.getId()).userCharacter;
-        if (userCharacter != null)
-        {
-            int characterId = userCharacter.getId();
-            if (playState.has(characterId))
-            {
-                GameObject removedCharacter = playState.remove(characterId);
-            	CharacterDatabaseSaver.save((PlayerCharacter)removedCharacter);
-                server.sendToAllTCP(PacketsMaker.makeRemovalPacket(characterId));
-            }
-        }
+    	User user = authenticatedClientsKeyClientId.remove(connection.getID());
+    	UserCharacter userCharacter = loggedUsersKeyUserId.remove(user.getId()).userCharacter;
+    	if (userCharacter != null)
+    	{
+    		int characterId = userCharacter.getId();
+    		if (playState.has(characterId))
+    		{
+    			GameObject removedCharacter = playState.remove(characterId);
+    			CharacterDatabaseSaver.save((PlayerCharacter)removedCharacter);
+    			server.sendToAllTCP(PacketsMaker.makeRemovalPacket(characterId));
+    		}
+    	}
     }
 
 }

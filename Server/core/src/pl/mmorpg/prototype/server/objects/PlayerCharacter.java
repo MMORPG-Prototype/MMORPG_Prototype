@@ -49,12 +49,17 @@ public class PlayerCharacter extends Monster
     
     public void useItem(long id)
     {
-        Item characterItem = items.get(id);
+        useItem(id, this);
+    }
+    
+    public void useItem(long id, Monster target)
+    {
+    	Item characterItem = items.get(id);
         if(characterItem == null)
             throw new CharacterDoesntHaveItemException(id);
         if(!(characterItem instanceof Useable))
             throw new CannotUseThisItemException(characterItem);
-        ((Useable)characterItem).use(this);
+        ((Useable)characterItem).use(target);
     }
 
 	public Collection<Item> getItems()
