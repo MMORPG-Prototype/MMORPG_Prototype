@@ -16,41 +16,45 @@ import lombok.Data;
 @Data
 public class UserCharacter implements java.io.Serializable
 {
-	@ManyToOne
-	@JoinColumn(nullable = false)
-	private User user;
+    @ManyToOne 
+    @JoinColumn(nullable = false)
+    private User user;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
-	
-	@Column(name = "hit_points", nullable = false)
-	private Integer hitPoints = 100;
-	
-	@Column(name = "mana_points")
-	private Integer manaPoints = 100;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-	@Column(name = "nickname", unique = true, nullable = false)
-	private String nickname;
+    @Column(name = "hit_points", nullable = false)
+    private Integer hitPoints = 100;
 
-	@Column(name = "level", nullable = false)
-	private Integer level = 1;
+    @Column(name = "mana_points")
+    private Integer manaPoints = 100;
 
-	@Column(name = "experience", nullable = false)
-	private Integer experience = 0;
+    @Column(name = "nickname", unique = true, nullable = false)
+    private String nickname;
 
-	@Column(name = "strength", nullable = false)
-	private Integer strength = 5;
+    @Column(name = "level", nullable = false)
+    private Integer level = 1;
 
-	@Column(name = "magic", nullable = false)
-	private Integer magic = 5;
+    @Column(name = "experience", nullable = false)
+    private Integer experience = 0;
 
-	@Column(name = "dexitirity", nullable = false)
-	private Integer dexitirity = 5;
+    @Column(name = "strength", nullable = false)
+    private Integer strength = 5;
 
-	@Column(name = "gold", nullable = false)
-	private Integer gold = 100;
+    @Column(name = "magic", nullable = false)
+    private Integer magic = 5;
 
+    @Column(name = "dexitirity", nullable = false)
+    private Integer dexitirity = 5;
 
+    @Column(name = "gold", nullable = false)
+    private Integer gold = 100;
+   
+    @Column(name = "last_location_x")
+    private Integer lastLocationX = 96;
+    
+    @Column(name = "last_location_y")
+    private Integer lastLocationY = 96;
 }
