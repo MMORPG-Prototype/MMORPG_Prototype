@@ -8,7 +8,7 @@ public abstract class MovableGameObject extends GameObject
 {
 	private final static float stopMovingTimeBound = 0.2f;
 	private float stopMovingTime = 0.0f;
-    private float stepSpeed = 100.0f;
+    private float stepSpeed = 150.0f;
     private float targetX = 100.0f;
     private float targetY = 100.0f;
     private float lastDeltaTime;
