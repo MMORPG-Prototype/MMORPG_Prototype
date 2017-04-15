@@ -11,6 +11,7 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 {
     private static final int rangeOfCheckingForTarget = 200;
     private static final int checkInterval = 20;
+    private static final float stopChasingDistance = 3.0f;
     private CollisionMap<GameObject> collisionMap;
 
     protected AutoTargetingMonster(Texture lookout, long id, MonsterProperties properties,
@@ -43,15 +44,19 @@ public abstract class AutoTargetingMonster extends WalkingMonster
     private void chaseTarget(float deltaTime)
     {
         Monster target = getTargetedMonster();
-        if (target.getX() > getX())
-            moveRight(collisionMap, deltaTime);
-        else
-            moveLeft(collisionMap, deltaTime);
+        float deltaX = target.getX() - getX();
+        if(Math.abs(deltaX) > stopChasingDistance)
+            if (deltaX > 0)
+                moveRight(collisionMap, deltaTime);
+            else
+                moveLeft(collisionMap, deltaTime);
 
-        if (target.getY() > getY())
-            moveUp(collisionMap, deltaTime);
-        else
-            moveDown(collisionMap, deltaTime);
+        float deltaY = target.getY() - getY();
+        if(Math.abs(deltaY) > stopChasingDistance)
+            if (deltaY > 0)
+                moveUp(collisionMap, deltaTime);
+            else
+                moveDown(collisionMap, deltaTime);
 
     }
 

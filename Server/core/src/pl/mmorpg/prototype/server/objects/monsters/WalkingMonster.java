@@ -43,8 +43,8 @@ public abstract class WalkingMonster extends Monster
             currentDirectionMovementTime += deltaTime;
             if (currentDirectionMovementTime >= randomizedDirectionTime)
                 movementSwitch();
+            handleMovement(deltaTime);
         }
-        handleMovement(deltaTime);
 
         super.update(deltaTime);
     }
