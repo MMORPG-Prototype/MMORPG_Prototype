@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import pl.mmorpg.prototype.server.collision.CollisionMap;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
+import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
 public abstract class MovableGameObject extends GameObject
 {
+    private static final float stopChasingDistance = 3.0f;
     private float moveSpeed = 150.0f;
     private float movementX = 0.0f;
     private float movementY = 0.0f;
@@ -169,6 +171,30 @@ public abstract class MovableGameObject extends GameObject
     protected void setPacketSendingInterval(float packetSendingInterval)
     {
         this.packetSendingInterval = packetSendingInterval;
+    }
+    
+    protected void chaseTarget(float deltaTime, CollisionMap<GameObject> collisionMap, Monster target)
+    {
+        float deltaX = target.getX() - getX();
+        if(Math.abs(deltaX) > stopChasingDistance)
+            if (deltaX > 0)
+                moveRight(collisionMap, deltaTime);
+            else
+                moveLeft(collisionMap, deltaTime);
+
+        float deltaY = target.getY() - getY();
+        if(Math.abs(deltaY) > stopChasingDistance)
+            if (deltaY > 0)
+                moveUp(collisionMap, deltaTime);
+            else
+                moveDown(collisionMap, deltaTime);
+
+    }
+    
+    protected boolean isNearTarget(Monster target)
+    {
+        return Math.abs(target.getX() - getX()) > stopChasingDistance &&
+                Math.abs(target.getY() - getY()) > stopChasingDistance;
     }
 
 }

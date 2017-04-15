@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import pl.mmorpg.prototype.server.collision.CollisionObject;
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.communication.PacketsSender;
+import pl.mmorpg.prototype.server.states.GameObjectsContainer;
 
 public abstract class GameObject implements CollisionObject
 {
@@ -109,6 +112,12 @@ public abstract class GameObject implements CollisionObject
     public String getIdentifier()
     {
         return ObjectsIdentifier.getObjectIdentifier(getClass());
+    }
+    
+    public void removeItself(GameObjectsContainer linkedContainer, PacketsSender packetSender)
+    {
+        linkedContainer.remove(getId());
+        packetSender.send(PacketsMaker.makeRemovalPacket(getId()));
     }
 
     private static class NullGameObject extends GameObject

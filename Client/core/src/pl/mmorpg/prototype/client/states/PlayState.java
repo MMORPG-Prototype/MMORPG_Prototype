@@ -50,10 +50,10 @@ import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender
@@ -266,7 +266,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
         return gameObjects.get(targetId) != null;
     }
 
-    public void monsterDamagePacketReceived(MonsterDamagePacket packet)
+    public void monsterDamagePacketReceived(NormalDamagePacket packet)
     {
         Monster attackTarget = (Monster) gameObjects.get(packet.getTargetId());
         attackTarget.gotHitBy(packet.getDamage());

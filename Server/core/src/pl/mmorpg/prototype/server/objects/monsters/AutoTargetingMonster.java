@@ -35,29 +35,10 @@ public abstract class AutoTargetingMonster extends WalkingMonster
             }
         } else
         {
-            chaseTarget(deltaTime);
+            chaseTarget(deltaTime, collisionMap, getTargetedMonster());
             setMovingRandomly(false);
         }
         super.update(deltaTime);
-    }
-
-    private void chaseTarget(float deltaTime)
-    {
-        Monster target = getTargetedMonster();
-        float deltaX = target.getX() - getX();
-        if(Math.abs(deltaX) > stopChasingDistance)
-            if (deltaX > 0)
-                moveRight(collisionMap, deltaTime);
-            else
-                moveLeft(collisionMap, deltaTime);
-
-        float deltaY = target.getY() - getY();
-        if(Math.abs(deltaY) > stopChasingDistance)
-            if (deltaY > 0)
-                moveUp(collisionMap, deltaTime);
-            else
-                moveDown(collisionMap, deltaTime);
-
     }
 
     private Monster tryToFindTarget()

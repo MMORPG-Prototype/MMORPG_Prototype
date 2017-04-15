@@ -77,7 +77,7 @@ public abstract class Monster extends MovableGameObject
     {
         int damage = DamageCalculator.getDamage(this, target);
         target.properties.hp -= damage;
-        linkedState.send(PacketsMaker.makeDamagePacket(target.getId(), damage));
+        linkedState.send(PacketsMaker.makeNormalDamagePacket(target.getId(), damage));
         if (target.properties.hp <= 0)
         {
             this.killed(target);

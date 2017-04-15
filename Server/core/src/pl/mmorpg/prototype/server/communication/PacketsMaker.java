@@ -6,11 +6,12 @@ import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
@@ -120,9 +121,9 @@ public class PacketsMaker
         return packet;
     }
 
-    public static MonsterDamagePacket makeDamagePacket(long id, int damage)
+    public static NormalDamagePacket makeNormalDamagePacket(long id, int damage)
     {
-        MonsterDamagePacket packet = new MonsterDamagePacket();
+        NormalDamagePacket packet = new NormalDamagePacket();
         packet.setTargetId(id);
         packet.setDamage(damage);
         return packet;
@@ -150,6 +151,14 @@ public class PacketsMaker
         packet.setMpChange(delta);
         packet.setMonsterTargetId(targetId);
         return packet;
+    }
+
+    public static FireDamagePacket makeFireDamagePacket(long id, int spellDamage)
+    {
+        FireDamagePacket fireDamagePacket = new FireDamagePacket();
+        fireDamagePacket.setTargetId(id);
+        fireDamagePacket.setDamage(spellDamage);
+        return fireDamagePacket;
     }
 
 }

@@ -1,9 +1,9 @@
 package pl.mmorpg.prototype.client.packethandlers;
 
 import pl.mmorpg.prototype.client.states.PlayState;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterDamagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 
-public class MonsterDamagePacketHandler extends PacketHandlerBase<MonsterDamagePacket>
+public class MonsterDamagePacketHandler extends PacketHandlerBase<NormalDamagePacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class MonsterDamagePacketHandler extends PacketHandlerBase<MonsterDamageP
 	}
 	
 	@Override
-	public void handlePacket(MonsterDamagePacket packet)
+	public void handlePacket(NormalDamagePacket packet)
 	{
 		playState.monsterDamagePacketReceived(packet);
 	}
@@ -21,7 +21,7 @@ public class MonsterDamagePacketHandler extends PacketHandlerBase<MonsterDamageP
 	@Override
 	public boolean canBeHandled(Object packet)
 	{
-		return playState.isInitialized() && playState.has(((MonsterDamagePacket)packet).getTargetId());
+		return playState.isInitialized() && playState.has(((NormalDamagePacket)packet).getTargetId());
 	}
 
 }

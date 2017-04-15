@@ -18,11 +18,11 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 
 public class PacketHandlerFactory
@@ -42,7 +42,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(ChatMessageReplyPacket.class, new ChatMessageReplyPacketHandler(playState));
 		packetHandlers.put(MonsterTargetingReplyPacket.class,
 				new CharacterMonsterTargetingReplyPacketHandler(playState));
-		packetHandlers.put(MonsterDamagePacket.class, new MonsterDamagePacketHandler(playState));
+		packetHandlers.put(NormalDamagePacket.class, new MonsterDamagePacketHandler(playState));
 		packetHandlers.put(MonsterCreationPacket.class, new MonsterCreationPacketHandler(playState));
 		packetHandlers.put(ExperienceGainPacket.class, new ExperienceGainPacketHandler(playState));
 		packetHandlers.put(PlayerCreationPacket.class, new PlayerCreationPacketHandler(playState));
