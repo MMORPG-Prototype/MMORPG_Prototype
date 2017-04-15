@@ -224,7 +224,8 @@ public class CollisionMap<T extends CollisionObject>
 
     public T get(int gameX, int gameY)
     {
-        if (gameX / scale >= collisionMap.length || gameY / scale >= collisionMap[0].length)
+        if (gameX / scale >= collisionMap.length || gameY / scale >= collisionMap[0].length
+                || gameX < 0 || gameY < 0)
             return null;
         return (T)collisionMap[gameX / scale][gameY / scale];
     }
