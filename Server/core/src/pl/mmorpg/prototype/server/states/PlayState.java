@@ -30,7 +30,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 {
     private Server server;
     private StateManager states;
-    private CollisionMap<GameObject> collisionMap = new CollisionMap<>(1500, 800);
+    private CollisionMap<GameObject> collisionMap = new CollisionMap<>(1500, 800, GameObject.NULL_OBJECT);
     private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
     private TiledMapRenderer mapRenderer;
     private ServerInputHandler inputHandler = new ServerInputHandler(this);
@@ -44,7 +44,6 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         camera.setToOrtho(false);
 
         collisionMap.setScale(1);
-
         TiledMap map = Assets.get("Map/tiled.tmx");
         MapObjects objects = map.getLayers().get("Warstwa Obiektu 1").getObjects();
         Array<RectangleMapObject> byType = objects.getByType(RectangleMapObject.class);
@@ -68,7 +67,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     @Override
     public void render(SpriteBatch batch)
     {
-        collisionMap.render(batch);
+        //collisionMap.render(batch);
         // mapRenderer.render(new int[] { 0, 1, 2, 3, 4 });
                 Collection<GameObject> toRender = gameObjects.values();
         for (GameObject object : toRender)

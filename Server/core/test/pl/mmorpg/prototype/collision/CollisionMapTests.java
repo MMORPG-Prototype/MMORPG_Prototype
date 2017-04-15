@@ -53,11 +53,16 @@ public class CollisionMapTests
         int objectHeight = 20;
         CollisionMapTestObject object = new CollisionMapTestObject(25, 20, objectWidth, objectHeight);
         collisionMap.insert(object);
+        assertThereIsPlacedObject(collisionMap, object);     
+        assertNullAroundObject(collisionMap, object);
+    }
+
+    private void assertThereIsPlacedObject(CollisionMap<CollisionMapTestObject> collisionMap,
+            CollisionMapTestObject object)
+    {
         for (int i = (int) object.getX(); i <= object.getWidth() + object.getX(); i++)
             for (int j = (int) object.getY(); j <= object.getY() + object.getHeight(); j++)
                 assertEquals(collisionMap.get(i, j), object);
-        
-        assertNullAroundObject(collisionMap, object);
     }
 
     private void assertNullAroundObject(CollisionMap<CollisionMapTestObject> collisionMap,
@@ -73,6 +78,21 @@ public class CollisionMapTests
             assertEquals(collisionMap.get((int) object.getX() - 1, i), null);
             assertEquals(collisionMap.get((int)(object.getX() + object.getWidth() + 1), i), null);
         }
+    }
+    
+    @Test
+    public void successfullMovement()
+    {
+        CollisionMap<CollisionMapTestObject> collisionMap = new CollisionMap<>(100, 100);
+        int objectWidth = 20;
+        int objectHeight = 20;
+        CollisionMapTestObject object = new CollisionMapTestObject(25, 20, objectWidth, objectHeight);
+        collisionMap.insert(object);
+        int moveValue = 2;
+        collisionMap.tryToRepositionCollisionGoingRight(moveValue, object);
+        object.x += 2;
+        assertThereIsPlacedObject(collisionMap, object);
+        assertNullAroundObject(collisionMap, object);
     }
     
 }

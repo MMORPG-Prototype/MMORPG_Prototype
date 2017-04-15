@@ -1,9 +1,12 @@
 package pl.mmorpg.prototype.client.states;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
@@ -13,6 +16,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.minlog.Log;
+import com.opengamma.strata.collect.Unchecked;
 
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
@@ -57,7 +62,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
     private StateManager states;
     private Player player;
     private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
-    private Collection<GraphicGameObject> clientGraphics = new ConcurrentLinkedDeque<>();
+    private BlockingQueue<GraphicGameObject> clientGraphics = new LinkedBlockingQueue<>();
     private InputProcessorAdapter inputHandler;
     private InputMultiplexer inputMultiplexer;
     private UserInterface userInterface;
@@ -109,7 +114,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
             object.render(batch);
         for (GraphicGameObject object : clientGraphics)
             object.render(batch);
-
         batch.end();
         mapRenderer.render(new int[] { 1, 2, 3, 4 });
         userInterface.draw(batch);
@@ -119,17 +123,27 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
     public void update(float deltaTime)
     {
         for (GameObject object : gameObjects.values())
-            object.update(deltaTime);
-        for (GraphicGameObject object : clientGraphics)
-            object.update(deltaTime);
-        clientGraphics = clientGraphics.stream().filter(object -> object.isAlive()).collect(Collectors.toList());
-
+            object.update(deltaTime);      
+        
+        graphicObjectsUpdate(deltaTime);
         camera.viewportWidth = 900;
         camera.viewportHeight = 500;
         camera.position.set(player.getX() - player.getWidth() / 2, player.getY() - player.getHeight() / 2, 0);
         camera.update();
         inputHandler.process();
         userInterface.update();
+    }
+
+    private void graphicObjectsUpdate(float deltaTime)
+    {
+        Iterator<GraphicGameObject> it = clientGraphics.iterator();
+        while(it.hasNext())
+        {
+            GraphicGameObject object = it.next();
+            object.update(deltaTime);
+            if(!object.isAlive())
+                it.remove();
+        }
     }
 
     @Override
@@ -226,13 +240,16 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
         userInterface.addMessageToDialogChat(packet);
         GameObject source = gameObjects.get(packet.sourceCharacterId);
         GameWorldLabel message = new GameWorldLabel(packet.getMessage(), source);
-        clientGraphics.add(message);
+        if (clientGraphics.offer(message))
+        {
+            Log.warn("Couldn't add graphic object ");
+        }
     }
 
     public void userClickedOnGameBoard(float x, float y)
     {
-        float gameBoardX = player.getX() - camera.viewportWidth / 2 + x * camera.viewportWidth / Settings.GAME_WIDTH;
-        float gameBoardY = player.getY() - camera.viewportHeight / 2 + y * camera.viewportHeight / Settings.GAME_HEIGHT;
+        float gameBoardX = (player.getX() - camera.viewportWidth / 2 + x * camera.viewportWidth / Settings.GAME_WIDTH) - player.getWidth()/2;
+        float gameBoardY = player.getY() - camera.viewportHeight / 2 + y * camera.viewportHeight / Settings.GAME_HEIGHT - player.getHeight()/2;
         MonsterTargetingPacket packet = PacketsMaker.makeTargetingPacket(gameBoardX, gameBoardY);
         client.sendTCP(packet);
     }
@@ -257,7 +274,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
         GraphicGameObject bloodAnimation = new BloodAnimation(attackTarget);
         clientGraphics.add(damageNumber);
         clientGraphics.add(bloodAnimation);
-
         if (attackTarget == player)
             userInterface.updateHitPointManaPointDialog();
     }

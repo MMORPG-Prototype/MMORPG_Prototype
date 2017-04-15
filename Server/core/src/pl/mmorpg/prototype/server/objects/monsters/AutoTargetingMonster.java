@@ -13,8 +13,8 @@ public abstract class AutoTargetingMonster extends WalkingMonster
     private static final int checkInterval = 20;
     private CollisionMap<GameObject> collisionMap;
 
-    protected AutoTargetingMonster(Texture lookout, long id, MonsterProperties properties, CollisionMap collisionMap,
-            PlayState playState)
+    protected AutoTargetingMonster(Texture lookout, long id, MonsterProperties properties,
+            CollisionMap<GameObject> collisionMap, PlayState playState)
     {
         super(lookout, id, properties, collisionMap, playState);
         this.collisionMap = collisionMap;
@@ -59,7 +59,7 @@ public abstract class AutoTargetingMonster extends WalkingMonster
     {
         int numberOfCheckingPointPerDimension = rangeOfCheckingForTarget / checkInterval;
         int searchingStartingPointX = (int) getX() - numberOfCheckingPointPerDimension / 2;
-        int searchingStartingPointY = (int) getX() - numberOfCheckingPointPerDimension / 2;
+        int searchingStartingPointY = (int) getY() - numberOfCheckingPointPerDimension / 2;
         for (int i = 0; i < numberOfCheckingPointPerDimension; i++)
             for (int j = 0; j < numberOfCheckingPointPerDimension; j++)
             {

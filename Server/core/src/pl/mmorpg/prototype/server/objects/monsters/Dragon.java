@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.server.objects.monsters;
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.DragonPropertiesBuilder;
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
 import pl.mmorpg.prototype.server.collision.CollisionMap;
+import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
@@ -10,7 +11,7 @@ import pl.mmorpg.prototype.server.states.PlayState;
 public class Dragon extends AutoTargetingMonster
 {
 
-	public Dragon(long id, CollisionMap collisionMap, PlayState playState)
+	public Dragon(long id, CollisionMap<GameObject> collisionMap, PlayState playState)
 	{
 		super(Assets.get("monster.png"), id, getDragonProperies(), collisionMap, playState);
 	}

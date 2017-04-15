@@ -10,7 +10,9 @@ public class CollisionMap<T extends CollisionObject>
 {
     private Object[][] collisionMap;
     private int scale;
-
+    
+    
+    
     public CollisionMap(int width, int height)
     {
         this(width, height, 1);
@@ -20,6 +22,18 @@ public class CollisionMap<T extends CollisionObject>
     {
         this.scale = scale;
         collisionMap = createCollisionMap(width, height);
+    }
+    
+    public CollisionMap(int width, int height, int scale, T borderObject)
+    {
+        this(width, height, scale);
+        placeObjectOnBorder(borderObject);
+    }
+    
+    public CollisionMap(int width, int height, T borderObject)
+    {
+        this(width, height);
+        placeObjectOnBorder(borderObject);
     }
 
     private Object[][] createCollisionMap(int width, int height)
