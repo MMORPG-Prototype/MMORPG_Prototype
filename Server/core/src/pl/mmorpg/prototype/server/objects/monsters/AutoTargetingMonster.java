@@ -9,75 +9,73 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public abstract class AutoTargetingMonster extends WalkingMonster
 {
-	private static final int rangeOfCheckingForTarget = 200;
-	private static final int checkInterval = 20;
-	private CollisionMap collisionMap;
+    private static final int rangeOfCheckingForTarget = 200;
+    private static final int checkInterval = 20;
+    private CollisionMap<GameObject> collisionMap;
 
-	protected AutoTargetingMonster(Texture lookout, long id, MonsterProperties properties, CollisionMap collisionMap,
-			PlayState playState)
-	{
-		super(lookout, id, properties, collisionMap, playState);
-		this.collisionMap = collisionMap;
-	}
-	
-	@Override
-	public void update(float deltaTime)
-	{
-		if(!isTargetingAnotherMonster())
-		{
-			setMovingRandomly(true);
-			Monster monster = tryToFindTarget();
-			if(monster != null)
-			{
-				targetMonster(monster);
-				setMovingRandomly(false);
-			}
-		}
-		else
-		{
-			chaseTarget(deltaTime);
-			setMovingRandomly(false);
-		}
-		super.update(deltaTime);
-	}
-	
-	private void chaseTarget(float deltaTime)
-	{
-		Monster target = getTargetedMonster();
-		if(target.getX() > getX())
-			moveRight(collisionMap, deltaTime);
-		else
-			moveLeft(collisionMap, deltaTime);
-		
-		if(target.getY() > getY())
-			moveUp(collisionMap, deltaTime);
-		else
-			moveDown(collisionMap, deltaTime);
+    protected AutoTargetingMonster(Texture lookout, long id, MonsterProperties properties, CollisionMap collisionMap,
+            PlayState playState)
+    {
+        super(lookout, id, properties, collisionMap, playState);
+        this.collisionMap = collisionMap;
+    }
 
-	}
+    @Override
+    public void update(float deltaTime)
+    {
+        if (!isTargetingAnotherMonster())
+        {
+            setMovingRandomly(true);
+            Monster monster = tryToFindTarget();
+            if (monster != null)
+            {
+                targetMonster(monster);
+                setMovingRandomly(false);
+            }
+        } else
+        {
+            chaseTarget(deltaTime);
+            setMovingRandomly(false);
+        }
+        super.update(deltaTime);
+    }
 
-	private Monster tryToFindTarget()
-	{
-		int numberOfCheckingPointPerDimension = rangeOfCheckingForTarget/checkInterval;
-		int searchingStartingPointX = (int)getX() - numberOfCheckingPointPerDimension/2;
-		int searchingStartingPointY = (int)getX() - numberOfCheckingPointPerDimension/2;
-		for(int i=0; i<numberOfCheckingPointPerDimension; i++)
-			for(int j=0; j<numberOfCheckingPointPerDimension; j++)
-			{
-				GameObject gameObject = collisionMap.get(searchingStartingPointX + i*checkInterval, searchingStartingPointY + j*checkInterval);
-				if(canBeTargeted(gameObject))
-					return (Monster)gameObject;
-			}
-		return null;
-	}
+    private void chaseTarget(float deltaTime)
+    {
+        Monster target = getTargetedMonster();
+        if (target.getX() > getX())
+            moveRight(collisionMap, deltaTime);
+        else
+            moveLeft(collisionMap, deltaTime);
 
-	private boolean canBeTargeted(GameObject gameObject)
-	{
-		return gameObject != null 
-				&& gameObject != this 
-				&& gameObject instanceof Monster 
-				&& shouldTargetOn((Monster)gameObject);
-	}
+        if (target.getY() > getY())
+            moveUp(collisionMap, deltaTime);
+        else
+            moveDown(collisionMap, deltaTime);
 
-	protected abstract boolean shouldTargetOn(Monster monster);
+    }
+
+    private Monster tryToFindTarget()
+    {
+        int numberOfCheckingPointPerDimension = rangeOfCheckingForTarget / checkInterval;
+        int searchingStartingPointX = (int) getX() - numberOfCheckingPointPerDimension / 2;
+        int searchingStartingPointY = (int) getX() - numberOfCheckingPointPerDimension / 2;
+        for (int i = 0; i < numberOfCheckingPointPerDimension; i++)
+            for (int j = 0; j < numberOfCheckingPointPerDimension; j++)
+            {
+                GameObject gameObject = collisionMap.get(searchingStartingPointX + i * checkInterval,
+                        searchingStartingPointY + j * checkInterval);
+                if (canBeTargeted(gameObject))
+                    return (Monster) gameObject;
+            }
+        return null;
+    }
+
+    private boolean canBeTargeted(GameObject gameObject)
+    {
+        return gameObject != null && gameObject != this && gameObject instanceof Monster
+                && shouldTargetOn((Monster) gameObject);
+    }
+
+    protected abstract boolean shouldTargetOn(Monster monster);
 }

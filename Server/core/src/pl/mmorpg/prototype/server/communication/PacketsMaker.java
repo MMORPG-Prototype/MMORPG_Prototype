@@ -100,16 +100,16 @@ public class PacketsMaker
         packet.setCount(item.getCount());
         return packet;
     }
-    
+
     public static CharacterItemDataPacket makeItemPacket(Item item)
-	{
-		CharacterItemDataPacket packet = new CharacterItemDataPacket();
+    {
+        CharacterItemDataPacket packet = new CharacterItemDataPacket();
         packet.setId(item.getId());
         packet.setIdentifier(item.getIdentifier().toString());
-        if(item instanceof StackableItem)
-        	packet.setCount(((StackableItem) item).getCount());
+        if (item instanceof StackableItem)
+            packet.setCount(((StackableItem) item).getCount());
         return packet;
-	}
+    }
 
     public static MonsterTargetingReplyPacket makeTargetingReplyPacket(GameObject target)
     {
@@ -119,7 +119,6 @@ public class PacketsMaker
         packet.monsterId = target.getId();
         return packet;
     }
-  
 
     public static MonsterDamagePacket makeDamagePacket(long id, int damage)
     {
@@ -137,20 +136,20 @@ public class PacketsMaker
         return packet;
     }
 
-	public static HpChangeByItemUsagePacket makeHpChangeByItemUsagePacket(int delta, long targetId)
-	{
-		HpChangeByItemUsagePacket packet = new HpChangeByItemUsagePacket();
-		packet.setHpChange(delta);
-		packet.setMonsterTargetId(targetId);
-		return packet;
-	}
+    public static HpChangeByItemUsagePacket makeHpChangeByItemUsagePacket(int delta, long targetId)
+    {
+        HpChangeByItemUsagePacket packet = new HpChangeByItemUsagePacket();
+        packet.setHpChange(delta);
+        packet.setMonsterTargetId(targetId);
+        return packet;
+    }
 
-	public static MpChangeByItemUsagePacket makeMpChangeByItemUsagePacket(int delta, long targetId)
-	{
-		MpChangeByItemUsagePacket packet = new MpChangeByItemUsagePacket();
-		packet.setMpChange(delta);
-		packet.setMonsterTargetId(targetId);
-		return packet;
-	}
+    public static MpChangeByItemUsagePacket makeMpChangeByItemUsagePacket(int delta, long targetId)
+    {
+        MpChangeByItemUsagePacket packet = new MpChangeByItemUsagePacket();
+        packet.setMpChange(delta);
+        packet.setMonsterTargetId(targetId);
+        return packet;
+    }
 
 }

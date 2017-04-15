@@ -1,71 +1,65 @@
 package pl.mmorpg.prototype.server.collision;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-import pl.mmorpg.prototype.server.objects.GameObject;
-import pl.mmorpg.prototype.server.objects.MovableGameObject;
+import pl.mmorpg.prototype.server.resources.Assets;
 
-public class CollisionMap
+public class CollisionMap<T extends CollisionObject>
 {
-    private GameObject nullObject = GameObject.NULL_OBJECT;
-    private GameObject[][] collisionMap;
+    private Object[][] collisionMap;
     private int scale;
 
     public CollisionMap(int width, int height)
     {
         this(width, height, 1);
     }
-    
+
     public CollisionMap(int width, int height, int scale)
     {
         this.scale = scale;
         collisionMap = createCollisionMap(width, height);
-        collisionMap = placeNullObjectOnBorder(collisionMap);
     }
 
-    private GameObject[][] createCollisionMap(int width, int height)
+    private Object[][] createCollisionMap(int width, int height)
     {
-        GameObject[][] collisionMap = new GameObject[width][];
+        Object[][] collisionMap = new Object[width][];
         for (int i = 0; i < width; i++)
         {
-            collisionMap[i] = new GameObject[height];
+            collisionMap[i] = new Object[height];
             for (int j = 0; j < height; j++)
                 collisionMap[i][j] = null;
         }
         return collisionMap;
     }
 
-    private GameObject[][] placeNullObjectOnBorder(GameObject[][] collisionMap)
+    public void placeObjectOnBorder(T object)
     {
         for (int i = 0; i < collisionMap.length; i++)
         {
-            collisionMap[i][0] = nullObject;
-            collisionMap[i][collisionMap[0].length - 1] = nullObject;
+            collisionMap[i][0] = object;
+            collisionMap[i][collisionMap[0].length - 1] = object;
         }
 
         for (int j = 0; j < collisionMap[0].length; j++)
         {
-            collisionMap[0][j] = nullObject;
-            collisionMap[collisionMap.length - 1][j] = nullObject;
+            collisionMap[0][j] = object;
+            collisionMap[collisionMap.length - 1][j] = object;
         }
-        return collisionMap;
     }
-    
+
     public void setScale(int scale)
     {
         this.scale = scale;
     }
-    
+
     public int getScale()
     {
         return scale;
     }
 
-    public void insert(GameObject object)
+    public void insert(T object)
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
@@ -74,17 +68,8 @@ public class CollisionMap
                 collisionMap[i][j] = object;
 
     }
-
-    public void undefinedObjectInsert(Rectangle rectangle)
-    {
-        MapCollisionUnknownObject unknownObject = new MapCollisionUnknownObject(rectangle);
-        IntegerRectangle collision = new IntegerRectangle(rectangle, scale);
-        for (int i = collision.x; i <= collision.x + collision.width; i++)
-            for (int j = collision.y; j <= collision.y + collision.height; j++)
-                collisionMap[i][j] = unknownObject;
-    }
-
-    public void remove(GameObject object)
+    
+    public void remove(T object)
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
@@ -93,78 +78,79 @@ public class CollisionMap
                 collisionMap[i][j] = null;
     }
 
-    public GameObject tryToRepositionCollisionGoingLeft(int moveValue, MovableGameObject object)
+    public T tryToRepositionCollisionGoingLeft(int moveValue, T object)
     {
-        GameObject possibleCollision = checkForSpaceGoingLeft(moveValue,
+        T possibleCollision = checkForSpaceGoingLeft(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
             repositionCollisionGoingLeft(moveValue, object);
         return possibleCollision;
     }
 
-    public GameObject tryToRepositionCollisionGoingRight(int moveValue, MovableGameObject object)
+    public T tryToRepositionCollisionGoingRight(int moveValue, T object)
     {
-        GameObject possibleCollision = checkForSpaceGoingRight(moveValue,
+        T possibleCollision = checkForSpaceGoingRight(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
             repositionCollisionGoingRight(moveValue, object);
         return possibleCollision;
     }
 
-    public GameObject tryToRepositionCollisionGoingDown(int moveValue, MovableGameObject object)
+    public T tryToRepositionCollisionGoingDown(int moveValue, T object)
     {
-        GameObject possibleCollision = checkForSpaceGoingDown(moveValue,
+        T possibleCollision = checkForSpaceGoingDown(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
             repositionCollisionGoingDown(moveValue, object);
         return possibleCollision;
     }
 
-    public GameObject tryToRepositionCollisionGoingUp(int moveValue, MovableGameObject object)
+    public T tryToRepositionCollisionGoingUp(int moveValue, T object)
     {
-        GameObject possibleCollision = checkForSpaceGoingUp(moveValue, new IntegerRectangle(object.getCollisionRect(), scale));
+        T possibleCollision = checkForSpaceGoingUp(moveValue,
+                new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
             repositionCollisionGoingUp(moveValue, object);
         return possibleCollision;
     }
 
-    private GameObject checkForSpaceGoingLeft(int moveValue, IntegerRectangle collision)
+    private T checkForSpaceGoingLeft(int moveValue, IntegerRectangle collision)
     {
         for (int i = collision.x - 1; i >= collision.x - moveValue; i--)
             for (int j = collision.y; j <= collision.getUpperBound(); j++)
                 if (collisionMap[i][j] != null)
-                    return collisionMap[i][j];
+                    return (T)collisionMap[i][j];
         return null;
     }
 
-    private GameObject checkForSpaceGoingRight(int moveValue, IntegerRectangle collision)
+    private T checkForSpaceGoingRight(int moveValue, IntegerRectangle collision)
     {
         for (int i = collision.getRightBound() + 1; i <= collision.getRightBound() + moveValue; i++)
             for (int j = collision.y; j <= collision.getUpperBound(); j++)
                 if (collisionMap[i][j] != null)
-                    return collisionMap[i][j];
+                    return (T)collisionMap[i][j];
         return null;
     }
 
-    private GameObject checkForSpaceGoingDown(int moveValue, IntegerRectangle collision)
+    private T checkForSpaceGoingDown(int moveValue, IntegerRectangle collision)
     {
         for (int i = collision.y - 1; i >= collision.y - moveValue; i--)
             for (int j = collision.x; j <= collision.getRightBound(); j++)
                 if (collisionMap[j][i] != null)
-                    return collisionMap[j][i];
+                    return (T)collisionMap[j][i];
         return null;
     }
 
-    private GameObject checkForSpaceGoingUp(int moveValue, IntegerRectangle collision)
+    private T checkForSpaceGoingUp(int moveValue, IntegerRectangle collision)
     {
         for (int i = collision.getUpperBound() + 1; i <= collision.getUpperBound() + moveValue; i++)
             for (int j = collision.x; j <= collision.getRightBound(); j++)
                 if (collisionMap[j][i] != null)
-                    return collisionMap[j][i];
+                    return (T)collisionMap[j][i];
         return null;
     }
 
-    private void repositionCollisionGoingLeft(int moveValue, GameObject object)
+    private void repositionCollisionGoingLeft(int moveValue, T object)
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
@@ -177,7 +163,7 @@ public class CollisionMap
                 collisionMap[j][i] = null;
     }
 
-    private void repositionCollisionGoingRight(int moveValue, GameObject object)
+    private void repositionCollisionGoingRight(int moveValue, T object)
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
@@ -190,7 +176,7 @@ public class CollisionMap
                 collisionMap[j][i] = null;
     }
 
-    private void repositionCollisionGoingDown(int moveValue, GameObject object)
+    private void repositionCollisionGoingDown(int moveValue, T object)
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
@@ -203,7 +189,7 @@ public class CollisionMap
                 collisionMap[j][i] = null;
     }
 
-    private void repositionCollisionGoingUp(int moveValue, GameObject object)
+    private void repositionCollisionGoingUp(int moveValue, T object)
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
@@ -218,38 +204,29 @@ public class CollisionMap
 
     public void render(SpriteBatch batch)
     {
-        Pixmap drawable = new Pixmap(1, 1, Format.Alpha);
-        Pixmap.setBlending(Pixmap.Blending.None);
+        Texture blackPixel = Assets.get("collisionMapDebug.png");
         for (int i = 0; i < collisionMap.length; i += 1)
             for (int j = 0; j < collisionMap[0].length; j += 1)
                 if (collisionMap[i][j] != null)
-                {
-                    drawable.setColor(1.0f, 1.0f, 0.0f, 0.5f);
-                    drawable.drawRectangle(10, 10, 100, 100);
-                    Texture img = new Texture(drawable);
-                    batch.draw(img, i, j);
-                    img.dispose();
-                }
-        drawable.dispose();
-
+                    batch.draw(blackPixel, i, j);
     }
 
-    public GameObject isColliding(Rectangle rectangle)
+    public T isColliding(Rectangle rectangle)
     {
         IntegerRectangle collision = new IntegerRectangle(rectangle, scale);
 
         for (int i = collision.x; i < collision.x + collision.width; i++)
             for (int j = collision.y; j < collision.y + collision.height; j++)
                 if (collisionMap[i][j] != null)
-                    return collisionMap[i][j];
+                    return (T)collisionMap[i][j];
         return null;
     }
 
-	public GameObject get(int gameX, int gameY)
-	{
-		if(gameX / scale >= collisionMap.length || gameY / scale >= collisionMap[0].length)
-			return null;
-		return collisionMap[gameX / scale][gameY / scale];
-	}
+    public T get(int gameX, int gameY)
+    {
+        if (gameX / scale >= collisionMap.length || gameY / scale >= collisionMap[0].length)
+            return null;
+        return (T)collisionMap[gameX / scale][gameY / scale];
+    }
 
 }

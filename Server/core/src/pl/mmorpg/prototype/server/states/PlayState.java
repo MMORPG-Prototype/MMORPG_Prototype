@@ -20,6 +20,7 @@ import pl.mmorpg.prototype.server.collision.CollisionMap;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.GameObject;
+import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Dragon;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -29,7 +30,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 {
     private Server server;
     private StateManager states;
-    private CollisionMap collisionMap = new CollisionMap(1500, 800);
+    private CollisionMap<GameObject> collisionMap = new CollisionMap<>(1500, 800);
     private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
     private TiledMapRenderer mapRenderer;
     private ServerInputHandler inputHandler = new ServerInputHandler(this);
@@ -43,21 +44,21 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         camera.setToOrtho(false);
 
         collisionMap.setScale(1);
-        
+
         TiledMap map = Assets.get("Map/tiled.tmx");
         MapObjects objects = map.getLayers().get("Warstwa Obiektu 1").getObjects();
         Array<RectangleMapObject> byType = objects.getByType(RectangleMapObject.class);
-        byType.forEach((rectangle) -> collisionMap.undefinedObjectInsert(rectangle.getRectangle()));
+        byType.forEach((rectangle) -> collisionMap.insert(new MapCollisionUnknownObject(rectangle.getRectangle())));
 
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         mapRenderer.setView(camera);
-        
+
         Gdx.input.setInputProcessor(inputHandler);
     }
-    
+
     public void addDragon()
     {
-    	Dragon dragon = new Dragon(IdSupplier.getId(), collisionMap, this);
+        Dragon dragon = new Dragon(IdSupplier.getId(), collisionMap, this);
         dragon.setPosition(400, 400);
         collisionMap.insert(dragon);
         add(dragon);
@@ -67,9 +68,10 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     @Override
     public void render(SpriteBatch batch)
     {
-        //mapRenderer.render(new int[] { 0, 1, 2, 3, 4 });
-        Collection<GameObject> toRender = gameObjects.values();
-		for (GameObject object : toRender)
+        collisionMap.render(batch);
+        // mapRenderer.render(new int[] { 0, 1, 2, 3, 4 });
+                Collection<GameObject> toRender = gameObjects.values();
+        for (GameObject object : toRender)
             object.render(batch);
 
     }
@@ -102,7 +104,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         return gameObjects;
     }
 
-    public CollisionMap getCollisionMap()
+    public CollisionMap<GameObject> getCollisionMap()
     {
         return collisionMap;
     }
@@ -119,21 +121,21 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         return gameObjects.containsKey(objectId);
     }
 
-	@Override
-	public void send(Object packet)
-	{
-		server.sendToAllTCP(packet);		
-	}
+    @Override
+    public void send(Object packet)
+    {
+        server.sendToAllTCP(packet);
+    }
 
-	public void objectTargeted(Monster source, Monster target)
-	{
-		source.targetMonster(target);	
-	}
+    public void objectTargeted(Monster source, Monster target)
+    {
+        source.targetMonster(target);
+    }
 
-	public void playerKilled(PlayerCharacter playerCharacter, Monster target)
-	{
-		server.sendToAllTCP(PacketsMaker.makeExperienceGainPacket(playerCharacter.getId(), target.getProperites().experienceGain));
-	}
-
+    public void playerKilled(PlayerCharacter playerCharacter, Monster target)
+    {
+        server.sendToAllTCP(
+                PacketsMaker.makeExperienceGainPacket(playerCharacter.getId(), target.getProperites().experienceGain));
+    }
 
 }
