@@ -1,6 +1,5 @@
 package pl.mmorpg.prototype.server.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import pl.mmorpg.prototype.server.collision.CollisionMap;
@@ -10,11 +9,11 @@ import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
 public abstract class MovableGameObject extends GameObject
 {
-    private static final float stopChasingDistance = 3.0f;
+    private static final float stopChasingDistance = 5.0f;
     private float moveSpeed = 150.0f;
     private float movementX = 0.0f;
     private float movementY = 0.0f;
-    private float packetSendingInterval = 0.15f;
+    private float packetSendingInterval = 0.20f;
     private float currentPacketSendingTime = 0.0f;
     private PacketsSender packetsSender;
 
@@ -42,11 +41,11 @@ public abstract class MovableGameObject extends GameObject
                 ;
         }
         if (collision == null)
-            sendRepoisitionPacket();
+            sendRepositionPacket();
         return collision;
     }
 
-    private void sendRepoisitionPacket()
+    private void sendRepositionPacket()
     {
         if (currentPacketSendingTime >= packetSendingInterval)
         {
@@ -68,7 +67,7 @@ public abstract class MovableGameObject extends GameObject
         }
 
         if (collision == null)
-            sendRepoisitionPacket();
+            sendRepositionPacket();
         return collision;
     }
 
@@ -85,7 +84,7 @@ public abstract class MovableGameObject extends GameObject
         }
 
         if (collision == null)
-            sendRepoisitionPacket();
+            sendRepositionPacket();
         return collision;
     }
 
@@ -102,7 +101,7 @@ public abstract class MovableGameObject extends GameObject
         }
 
         if (collision == null)
-            sendRepoisitionPacket();
+            sendRepositionPacket();
         return collision;
     }
 
@@ -138,24 +137,28 @@ public abstract class MovableGameObject extends GameObject
         return collision;
     }
 
-    public void moveLeft()
+    public void moveLeft(float deltaTime)
     {
-        setX(getX() - getMoveSpeed() * Gdx.graphics.getDeltaTime());
+        setX(getX() - getMoveSpeed() * deltaTime);
+        sendRepositionPacket();
     }
 
-    public void moveRight()
+    public void moveRight(float deltaTime)
     {
-        setX(getX() + getMoveSpeed() * Gdx.graphics.getDeltaTime());
+        setX(getX() + getMoveSpeed() * deltaTime);
+        sendRepositionPacket();
     }
 
-    public void moveDown()
+    public void moveDown(float deltaTime)
     {
-        setY(getY() - getMoveSpeed() * Gdx.graphics.getDeltaTime());
+        setY(getY() - getMoveSpeed() * deltaTime);
+        sendRepositionPacket();
     }
 
-    public void moveUp()
+    public void moveUp(float deltaTime)
     {
-        setY(getY() + getMoveSpeed() * Gdx.graphics.getDeltaTime());
+        setY(getY() + getMoveSpeed() * deltaTime);
+        sendRepositionPacket();
     }
 
     public float getMoveSpeed()
@@ -191,10 +194,27 @@ public abstract class MovableGameObject extends GameObject
 
     }
     
+    protected void chaseTarget(float deltaTime, Monster target)
+    {
+        float deltaX = target.getX() - getX();
+        if(Math.abs(deltaX) > stopChasingDistance)
+            if (deltaX > 0)
+                moveRight(deltaTime);
+            else
+                moveLeft(deltaTime);
+
+        float deltaY = target.getY() - getY();
+        if(Math.abs(deltaY) > stopChasingDistance)
+            if (deltaY > 0)
+                moveUp(deltaTime);
+            else
+                moveDown(deltaTime);
+    }
+    
     protected boolean isNearTarget(Monster target)
     {
-        return Math.abs(target.getX() - getX()) > stopChasingDistance &&
-                Math.abs(target.getY() - getY()) > stopChasingDistance;
+        return Math.abs(target.getX() - getX()) < stopChasingDistance &&
+                Math.abs(target.getY() - getY()) < stopChasingDistance;
     }
 
 }

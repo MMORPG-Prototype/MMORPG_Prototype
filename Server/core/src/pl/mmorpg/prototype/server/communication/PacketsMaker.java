@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server.communication;
 
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
@@ -40,7 +41,7 @@ public class PacketsMaker
         packet.identifier = monster.getIdentifier();
         packet.x = monster.getX();
         packet.y = monster.getY();
-        packet.properties = monster.getProperites();
+        packet.properties = monster.getProperties();
         return packet;
     }
 
@@ -51,7 +52,7 @@ public class PacketsMaker
         packet.identifier = player.getIdentifier();
         packet.x = player.getX();
         packet.y = player.getY();
-        packet.properties = player.getProperites();
+        packet.properties = player.getProperties();
         packet.data = PacketsMaker.makeCharacterPacket(player.getUserCharacterData());
         return packet;
     }
@@ -153,12 +154,19 @@ public class PacketsMaker
         return packet;
     }
 
-    public static FireDamagePacket makeFireDamagePacket(long id, int spellDamage)
+    public static FireDamagePacket makeFireDamagePacket(long targetId, int spellDamage)
     {
         FireDamagePacket fireDamagePacket = new FireDamagePacket();
-        fireDamagePacket.setTargetId(id);
+        fireDamagePacket.setTargetId(targetId);
         fireDamagePacket.setDamage(spellDamage);
         return fireDamagePacket;
+    }
+
+    public static ManaDrainPacket makeManaDrainPacket(int manaDrain)
+    {
+        ManaDrainPacket packet = new ManaDrainPacket();
+        packet.manaDrained = manaDrain;
+        return packet;
     }
 
 }

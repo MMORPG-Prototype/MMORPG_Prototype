@@ -31,10 +31,10 @@ public class PlayerCharacter extends Monster
     }
 
     @Override
-    protected void killed(Monster target)
+    public void killed(Monster target)
     {
         linkedState.playerKilled(this, target);
-        userCharacter.setExperience(userCharacter.getExperience() + target.getProperites().experienceGain);
+        userCharacter.setExperience(userCharacter.getExperience() + target.getProperties().experienceGain);
         super.killed(target);
     }
 
@@ -45,26 +45,38 @@ public class PlayerCharacter extends Monster
 
     public void addItem(Item item)
     {
-    	items.put(item.getId(), item);
+        items.put(item.getId(), item);
     }
-    
+
     public void useItem(long id, PacketsSender packetSender)
     {
         useItem(id, this, packetSender);
     }
-    
+
     public void useItem(long id, Monster target, PacketsSender packetSender)
     {
-    	Item characterItem = items.get(id);
-        if(characterItem == null)
+        Item characterItem = items.get(id);
+        if (characterItem == null)
             throw new CharacterDoesntHaveItemException(id);
-        if(!(characterItem instanceof Useable))
+        if (!(characterItem instanceof Useable))
             throw new CannotUseThisItemException(characterItem);
-        ((Useable)characterItem).use(target, packetSender);
+        ((Useable) characterItem).use(target, packetSender);
     }
 
-	public Collection<Item> getItems()
-	{
-		return items.values();		
-	}
+    public Collection<Item> getItems()
+    {
+        return items.values();
+    }
+    
+    public void spellUsed(int manaDrain)
+    {
+        int newManaValue = userCharacter.getManaPoints() - manaDrain;
+        userCharacter.setManaPoints(newManaValue);
+        getProperties().mp = newManaValue;
+    }
+
+    public boolean hasMana(int manaDrain)
+    {
+        return getProperties().mp >= manaDrain;
+    }
 }

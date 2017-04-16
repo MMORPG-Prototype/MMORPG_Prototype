@@ -31,6 +31,10 @@ public abstract class GameObject implements CollisionObject
     private GameObject()
     {
     }
+    
+    public void onRemoval()
+    {
+    }
 
     public abstract void update(float deltaTime);
 
@@ -114,7 +118,7 @@ public abstract class GameObject implements CollisionObject
         return ObjectsIdentifier.getObjectIdentifier(getClass());
     }
     
-    public void removeItself(GameObjectsContainer linkedContainer, PacketsSender packetSender)
+    public final void removeItself(GameObjectsContainer linkedContainer, PacketsSender packetSender)
     {
         linkedContainer.remove(getId());
         packetSender.send(PacketsMaker.makeRemovalPacket(getId()));

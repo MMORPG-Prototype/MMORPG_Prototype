@@ -6,14 +6,14 @@ import pl.mmorpg.prototype.client.objects.CustomAnimation;
 
 public class OneLoopAnimationGraphic extends InfiniteAnimationGraphic
 {
-	public OneLoopAnimationGraphic(CustomAnimation<TextureRegion> animation)
-	{
-		super(animation);
-	}
+    public OneLoopAnimationGraphic(CustomAnimation<TextureRegion> animation)
+    {
+        super(animation);
+    }
 
-	@Override
-	public boolean shouldDelete()
-	{
-		return animation.isAnimationFinished();
-	}
+    @Override
+    public boolean shouldDelete()
+    {
+        return animation.isAnimationFinished();
+    }
 }

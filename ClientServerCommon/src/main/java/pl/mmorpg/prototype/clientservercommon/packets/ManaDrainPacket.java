@@ -1,12 +1,11 @@
 package pl.mmorpg.prototype.clientservercommon.packets;
 
+import lombok.Data;
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
-public class ObjectCreationPacket
+@Data
+public class ManaDrainPacket
 {
-    public long id;
-    public String identifier;
-    public float x;
-    public float y;
+    public int manaDrained;
 }

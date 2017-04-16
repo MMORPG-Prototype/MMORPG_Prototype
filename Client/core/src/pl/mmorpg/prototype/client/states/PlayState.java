@@ -1,13 +1,11 @@
 package pl.mmorpg.prototype.client.states;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.stream.Collectors;
+import java.util.function.BiFunction;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,7 +15,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.minlog.Log;
-import com.opengamma.strata.collect.Unchecked;
 
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
@@ -29,15 +26,17 @@ import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.objects.GameObject;
+import pl.mmorpg.prototype.client.objects.GraphicObjectsContainer;
 import pl.mmorpg.prototype.client.objects.NullPlayer;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.objects.graphic.BloodAnimation;
 import pl.mmorpg.prototype.client.objects.graphic.ExperienceGainLabel;
+import pl.mmorpg.prototype.client.objects.graphic.FireDamageLabel;
 import pl.mmorpg.prototype.client.objects.graphic.GameWorldLabel;
 import pl.mmorpg.prototype.client.objects.graphic.GraphicGameObject;
 import pl.mmorpg.prototype.client.objects.graphic.HealLabel;
 import pl.mmorpg.prototype.client.objects.graphic.ManaReplenishLabel;
-import pl.mmorpg.prototype.client.objects.graphic.MonsterDamageLabel;
+import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
@@ -50,13 +49,14 @@ import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 
-public class PlayState implements State, GameObjectsContainer, PacketsSender
+public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
 {
     private Client client;
     private StateManager states;
@@ -123,8 +123,8 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
     public void update(float deltaTime)
     {
         for (GameObject object : gameObjects.values())
-            object.update(deltaTime);      
-        
+            object.update(deltaTime);
+
         graphicObjectsUpdate(deltaTime);
         camera.viewportWidth = 900;
         camera.viewportHeight = 500;
@@ -137,11 +137,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
     private void graphicObjectsUpdate(float deltaTime)
     {
         Iterator<GraphicGameObject> it = clientGraphics.iterator();
-        while(it.hasNext())
+        while (it.hasNext())
         {
             GraphicGameObject object = it.next();
             object.update(deltaTime);
-            if(!object.isAlive())
+            if (!object.isAlive())
                 it.remove();
         }
     }
@@ -157,11 +157,19 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
     {
         gameObjects.put(object.getId(), object);
     }
+    
+    @Override
+    public void add(GraphicGameObject graphic)
+    {
+        clientGraphics.add(graphic);
+    }
 
     @Override
     public void removeObject(long id)
     {
         GameObject object = gameObjects.remove(id);
+        GraphicObjectsContainer graphics = this;
+        object.onRemoval(graphics);
         if (object == player)
             playerHasDied();
         else if (player.hasLockedOnTarget(object))
@@ -248,8 +256,10 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
 
     public void userClickedOnGameBoard(float x, float y)
     {
-        float gameBoardX = (player.getX() - camera.viewportWidth / 2 + x * camera.viewportWidth / Settings.GAME_WIDTH) - player.getWidth()/2;
-        float gameBoardY = player.getY() - camera.viewportHeight / 2 + y * camera.viewportHeight / Settings.GAME_HEIGHT - player.getHeight()/2;
+        float gameBoardX = (player.getX() - camera.viewportWidth / 2 + x * camera.viewportWidth / Settings.GAME_WIDTH)
+                - player.getWidth() / 2;
+        float gameBoardY = player.getY() - camera.viewportHeight / 2 + y * camera.viewportHeight / Settings.GAME_HEIGHT
+                - player.getHeight() / 2;
         MonsterTargetingPacket packet = PacketsMaker.makeTargetingPacket(gameBoardX, gameBoardY);
         client.sendTCP(packet);
     }
@@ -264,18 +274,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
     public boolean has(long targetId)
     {
         return gameObjects.get(targetId) != null;
-    }
-
-    public void monsterDamagePacketReceived(NormalDamagePacket packet)
-    {
-        Monster attackTarget = (Monster) gameObjects.get(packet.getTargetId());
-        attackTarget.gotHitBy(packet.getDamage());
-        GraphicGameObject damageNumber = new MonsterDamageLabel(packet.getDamage(), attackTarget);
-        GraphicGameObject bloodAnimation = new BloodAnimation(attackTarget);
-        clientGraphics.add(damageNumber);
-        clientGraphics.add(bloodAnimation);
-        if (attackTarget == player)
-            userInterface.updateHitPointManaPointDialog();
     }
 
     public void experienceGainPacketReceived(ExperienceGainPacket packet)
@@ -317,4 +315,37 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender
             userInterface.updateHpMpDialog();
         }
     }
+
+    private void damagePacketReceived(long targetId, int damage,
+            BiFunction<Integer, GameObject, GraphicGameObject> damageLabelCreator)
+    {
+        Monster attackTarget = (Monster) gameObjects.get(targetId);
+        attackTarget.gotHitBy(damage);
+        GraphicGameObject damageNumber = damageLabelCreator.apply(damage, attackTarget);
+        GraphicGameObject bloodAnimation = new BloodAnimation(attackTarget);
+        clientGraphics.add(damageNumber);
+        clientGraphics.add(bloodAnimation);
+        if (attackTarget == player)
+            userInterface.updateHitPointManaPointDialog();
+    }
+
+    public void fireDamagePacketReceived(FireDamagePacket packet)
+    {
+        damagePacketReceived(packet.getTargetId(), packet.getDamage(),
+                (damage, target) -> new FireDamageLabel(damage, target));
+    }
+
+    public void normalDamagePacketReceived(NormalDamagePacket packet)
+    {
+        damagePacketReceived(packet.getTargetId(), packet.getDamage(),
+                (damage, target) -> new NormalDamageLabel(damage, target));
+    }
+
+    public void playerUsedMana(int manaDrain)
+    {
+        player.manaDrained(manaDrain);
+        userInterface.updateHitPointManaPointDialog();
+    }
+
+
 }

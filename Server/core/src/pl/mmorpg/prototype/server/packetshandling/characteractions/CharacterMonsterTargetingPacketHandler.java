@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.server.packetshandling;
+package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import java.util.Map;
 
@@ -11,6 +11,8 @@ import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
+import pl.mmorpg.prototype.server.packetshandling.PacketHandlingHelper;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class CharacterMonsterTargetingPacketHandler extends PacketHandlerBase<MonsterTargetingPacket>

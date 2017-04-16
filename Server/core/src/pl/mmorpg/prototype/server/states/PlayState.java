@@ -24,6 +24,7 @@ import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Dragon;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.objects.spells.Fireball;
 import pl.mmorpg.prototype.server.resources.Assets;
 
 public class PlayState extends State implements GameObjectsContainer, PacketsSender
@@ -67,9 +68,9 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     @Override
     public void render(SpriteBatch batch)
     {
-        //collisionMap.render(batch);
+        // collisionMap.render(batch);
         // mapRenderer.render(new int[] { 0, 1, 2, 3, 4 });
-                Collection<GameObject> toRender = gameObjects.values();
+        Collection<GameObject> toRender = gameObjects.values();
         for (GameObject object : toRender)
             object.render(batch);
 
@@ -93,6 +94,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     public GameObject remove(long objectId)
     {
         GameObject object = gameObjects.remove(objectId);
+        object.onRemoval();
         collisionMap.remove(object);
         return object;
     }
@@ -134,7 +136,16 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     public void playerKilled(PlayerCharacter playerCharacter, Monster target)
     {
         server.sendToAllTCP(
-                PacketsMaker.makeExperienceGainPacket(playerCharacter.getId(), target.getProperites().experienceGain));
+                PacketsMaker.makeExperienceGainPacket(playerCharacter.getId(), target.getProperties().experienceGain));
+    }
+
+    public void createFireball(PlayerCharacter source, Monster targetedMonster)
+    {
+        Fireball fireball = new Fireball(IdSupplier.getId(), source, this, this);
+        fireball.setTarget(targetedMonster);
+        fireball.setPosition(source.getX(), source.getY());
+        gameObjects.put(fireball.getId(), fireball);
+        server.sendToAllTCP(PacketsMaker.makeCreationPacket(fireball));
     }
 
 }

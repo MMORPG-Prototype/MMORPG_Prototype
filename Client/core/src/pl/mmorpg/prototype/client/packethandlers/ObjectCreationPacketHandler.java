@@ -7,19 +7,19 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 
 public class ObjectCreationPacketHandler extends PacketHandlerBase<ObjectCreationPacket>
 {
-	private PlayState playState;
-	private static ObjectsFactory objectsFactory = new ObjectsFactory();
+    private PlayState playState;
+    private static ObjectsFactory objectsFactory = new ObjectsFactory();
 
-	public ObjectCreationPacketHandler(PlayState playState)
-	{
-		this.playState = playState;
-	}
-	
-	@Override
-	public void handlePacket(ObjectCreationPacket packet)
-	{
-		GameObject newObject = objectsFactory.produce(packet);
-		playState.add(newObject);
-	}
+    public ObjectCreationPacketHandler(PlayState playState)
+    {
+        this.playState = playState;
+    }
+
+    @Override
+    public void handlePacket(ObjectCreationPacket packet)
+    {
+        GameObject newObject = objectsFactory.produce(packet);
+        playState.add(newObject);
+    }
 
 }

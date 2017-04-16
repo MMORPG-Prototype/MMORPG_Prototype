@@ -2,9 +2,7 @@ package pl.mmorpg.prototype.server.objects.spells;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import pl.mmorpg.prototype.server.collision.CollisionMap;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.states.GameObjectsContainer;
@@ -12,15 +10,12 @@ import pl.mmorpg.prototype.server.states.GameObjectsContainer;
 public abstract class ThrowableObject extends MovableGameObject
 {
     private Monster target = null;
-    private CollisionMap<GameObject> collisionMap;
     private GameObjectsContainer linkedContainer;
     private PacketsSender packetSender;
 
-    public ThrowableObject(Texture lookout, long id, CollisionMap<GameObject> collisionMap,
-            GameObjectsContainer linkedContainer, PacketsSender packetSender)
+    public ThrowableObject(Texture lookout, long id, GameObjectsContainer linkedContainer, PacketsSender packetSender)
     {
         super(lookout, id, packetSender);
-        this.collisionMap = collisionMap;
         this.linkedContainer = linkedContainer;
         this.packetSender = packetSender;
     }
@@ -28,15 +23,23 @@ public abstract class ThrowableObject extends MovableGameObject
     @Override
     public void update(float deltaTime)
     {
-        if (hasTarget())
+        if (hasTarget() && targedIsAlive())
         {
-            chaseTarget(deltaTime, collisionMap, target);
+            chaseTarget(deltaTime, target);
             if (isNearTarget(target))
             {
                 removeItself(linkedContainer, packetSender);
                 onFinish(target);
             }
         }
+        else
+            removeItself(linkedContainer, packetSender);
+        super.update(deltaTime);
+    }
+
+    private boolean targedIsAlive()
+    {
+        return target.isAlive();
     }
 
     public abstract void onFinish(Monster target);

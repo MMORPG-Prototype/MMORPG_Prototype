@@ -26,34 +26,43 @@ public class Player extends HealthBarMonster
         recreateHealthBar();
         initPosition(data.getStartingX(), data.getStartingY());
     }
-    
+
     @Override
     public void render(SpriteBatch batch)
     {
-    	super.render(batch);
-    	if(hasLockedOnTarget())
-    	{
-    		GameObject target = getTarget();
-    		batch.draw(lockOnTexture, target.getX(), target.getY(), target.getWidth(), target.getHeight());
-    	}
+        super.render(batch);
+        if (hasLockedOnTarget())
+        {
+            GameObject target = getTarget();
+            batch.draw(lockOnTexture, target.getX(), target.getY(), target.getWidth(), target.getHeight());
+        }
     }
-    
+
     public UserCharacterDataPacket getData()
     {
-    	return data;
+        return data;
     }
-    
+
     public void addExperience(int experienceGain)
     {
-    	data.setExperience(data.getExperience() + experienceGain);
+        data.setExperience(data.getExperience() + experienceGain);
     }
 
-	@Override
-	public void gotHitBy(int damage)
-	{
-		data.setHitPoints(data.getHitPoints() - damage);
-		super.gotHitBy(damage);
-	}
-
+    @Override
+    public void gotHitBy(int damage)
+    {
+        data.setHitPoints(data.getHitPoints() - damage);
+        super.gotHitBy(damage);
+    }
+    
+    public void manaDrained(int manaDrain)
+    {
+        Integer manaPoints = data.getManaPoints();
+        manaPoints -= manaDrain;
+        if(manaPoints < 0)
+            manaPoints = 0;
+        data.setManaPoints(manaPoints);
+        getProperties().mp = manaPoints;
+    }
 
 }

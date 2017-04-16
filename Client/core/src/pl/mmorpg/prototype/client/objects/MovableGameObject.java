@@ -6,8 +6,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.Directions;
 
 public abstract class MovableGameObject extends GameObject
 {
-	private final static float stopMovingTimeBound = 0.2f;
-	private float stopMovingTime = 0.0f;
+    private final static float stopMovingTimeBound = 0.2f;
+    private float stopMovingTime = 0.0f;
     private float stepSpeed = 150.0f;
     private float targetX = 100.0f;
     private float targetY = 100.0f;
@@ -20,13 +20,13 @@ public abstract class MovableGameObject extends GameObject
         targetX = getX();
         targetY = getY();
     }
-    
+
     public void initPosition(float x, float y)
     {
-    	targetX = x;
-    	targetY = y;
-    	super.setX(x);
-    	super.setY(y);
+        targetX = x;
+        targetY = y;
+        super.setX(x);
+        super.setY(y);
     }
 
     @Override
@@ -38,21 +38,21 @@ public abstract class MovableGameObject extends GameObject
         handleMovementStop(deltaTime);
     }
 
-	private void handleMovementStop(float deltaTime)
-	{
-		stopMovingTime += deltaTime;
-        if(stopMovingTime > stopMovingTimeBound)
+    private void handleMovementStop(float deltaTime)
+    {
+        stopMovingTime += deltaTime;
+        if (stopMovingTime > stopMovingTimeBound)
         {
-        	stopMovingTime = 0.0f;
-        	lastMoveDirection = Directions.NONE;
+            stopMovingTime = 0.0f;
+            lastMoveDirection = Directions.NONE;
         }
-	}
+    }
 
     private void repositionX(float deltaTime)
     {
         float deltaX = targetX - getX();
-        float stepValue = stepSpeed*deltaTime;
-        if(deltaX < 0)
+        float stepValue = stepSpeed * deltaTime;
+        if (deltaX < 0)
             stepValue = -stepValue;
         if (Math.abs(deltaX) > Math.abs(stepValue))
             super.setX(getX() + stepValue);
@@ -63,8 +63,8 @@ public abstract class MovableGameObject extends GameObject
     private void repositionY(float deltaTime)
     {
         float deltaY = targetY - getY();
-        float stepValue = stepSpeed*deltaTime;
-        if(deltaY < 0)
+        float stepValue = stepSpeed * deltaTime;
+        if (deltaY < 0)
             stepValue = -stepValue;
         if (Math.abs(deltaY) > Math.abs(stepValue))
             super.setY(getY() + stepValue);
@@ -75,20 +75,20 @@ public abstract class MovableGameObject extends GameObject
     @Override
     public void setX(float x)
     {
-    	if(x > getX())
-    		lastMoveDirection = Directions.RIGHT;
-    	else if(x < getX())
-    		lastMoveDirection = Directions.LEFT;
+        if (x > getX())
+            lastMoveDirection = Directions.RIGHT;
+        else if (x < getX())
+            lastMoveDirection = Directions.LEFT;
         targetX = x;
     }
 
     @Override
     public void setY(float y)
     {
-    	if(y > getY())
-    		lastMoveDirection = Directions.UP;
-    	else if (y < getY())
-    		lastMoveDirection = Directions.DOWN;
+        if (y > getY())
+            lastMoveDirection = Directions.UP;
+        else if (y < getY())
+            lastMoveDirection = Directions.DOWN;
         targetY = y;
     }
 
@@ -98,18 +98,22 @@ public abstract class MovableGameObject extends GameObject
         setX(x);
         setY(y);
     }
-   
-    
+
     public int getLastMoveDirection()
     {
-    	return lastMoveDirection;
-    }   
-    
+        return lastMoveDirection;
+    }
+
     public boolean isNearTarget()
     {
-        float stepValue = stepSpeed*lastDeltaTime;
+        float stepValue = stepSpeed * lastDeltaTime;
         float deltaY = targetY - getY();
         float deltaX = targetX - getX();
         return Math.abs(deltaY) <= stepValue && Math.abs(deltaX) <= stepValue;
+    }
+    
+    public void setStepSpeed(float stepSpeed)
+    {
+        this.stepSpeed = stepSpeed;
     }
 }

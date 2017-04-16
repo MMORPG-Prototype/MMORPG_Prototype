@@ -23,7 +23,7 @@ public class SmallHpPotion extends Potion
     @Override
     public void useItem(Monster target, PacketsSender packetSender)
     {
-        MonsterProperties targetProperties = target.getProperites();
+        MonsterProperties targetProperties = target.getProperties();
         int previous = targetProperties.hp;
         targetProperties.hp += HEAL_POWER;
         if(targetProperties.hp > targetProperties.maxHp)

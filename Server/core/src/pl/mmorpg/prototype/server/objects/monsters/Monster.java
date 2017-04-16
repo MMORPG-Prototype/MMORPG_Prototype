@@ -20,6 +20,7 @@ public abstract class Monster extends MovableGameObject
     protected final MonsterProperties properties;
     private Monster targetedMonster = null;
     private float hitTime = 1000.0f;
+    private boolean isAlive = true;
     protected PlayState linkedState;
 
     private List<Monster> targetedBy = new LinkedList<>();
@@ -41,7 +42,7 @@ public abstract class Monster extends MovableGameObject
 
     }
 
-    protected boolean isTargetingAnotherMonster()
+    public boolean isTargetingAnotherMonster()
     {
         return targetedMonster != null;
     }
@@ -81,7 +82,7 @@ public abstract class Monster extends MovableGameObject
         if (target.properties.hp <= 0)
         {
             this.killed(target);
-            target.die(this);
+            target.die();
         }
     }
 
@@ -98,7 +99,7 @@ public abstract class Monster extends MovableGameObject
         target.isTargetedBy(this);
     }
 
-    protected Monster getTargetedMonster()
+    public Monster getTargetedMonster()
     {
         return targetedMonster;
     }
@@ -108,22 +109,28 @@ public abstract class Monster extends MovableGameObject
         targetedBy.add(source);
     }
 
-    private void die(Monster source)
+    public void die()
     {
+        isAlive = false;
         linkedState.remove(getId());
         linkedState.send(PacketsMaker.makeRemovalPacket(getId()));
         for (Monster targetedBY : targetedBy)
             targetedBY.targetedMonster = null;
     }
 
-    protected void killed(Monster target)
+    public void killed(Monster target)
     {
         targetedMonster = null;
     }
 
-    public MonsterProperties getProperites()
+    public MonsterProperties getProperties()
     {
         return properties;
+    }
+    
+    public boolean isAlive()
+    {
+        return isAlive;
     }
 
 }

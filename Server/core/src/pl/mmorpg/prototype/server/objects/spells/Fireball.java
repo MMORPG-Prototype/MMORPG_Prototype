@@ -1,31 +1,27 @@
 package pl.mmorpg.prototype.server.objects.spells;
 
-import com.badlogic.gdx.graphics.Texture;
-
-import pl.mmorpg.prototype.server.collision.CollisionMap;
-import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.GameObjectsContainer;
 
-public class Fireball extends ThrowableObject
+public class Fireball extends Spell
 {
+    public static final int DAMAGE = 20;
+    public static final int MANA_DRAIN = 10;
     private PacketsSender packetSender;
-    private static final int spellDamage = 20;
+    private Monster source;
 
-    public Fireball(Texture lookout, long id, CollisionMap<GameObject> collisionMap,
-            GameObjectsContainer linkedContainer, PacketsSender packetSender)
+    public Fireball(long id, Monster source, GameObjectsContainer linkedContainer, PacketsSender packetSender)
     {
-        super(lookout, id, collisionMap, linkedContainer, packetSender);
+        super(Assets.get("fireball.png"), id, source, linkedContainer, packetSender);
+        this.source = source;
         this.packetSender = packetSender;
     }
 
     @Override
-    public void onFinish(Monster target)
+    public int getSpellDamage()
     {
-        target.getProperites().hp -= spellDamage;
-        packetSender.send(PacketsMaker.makeFireDamagePacket(getId(), spellDamage));
+        return 20;
     }
-
 }

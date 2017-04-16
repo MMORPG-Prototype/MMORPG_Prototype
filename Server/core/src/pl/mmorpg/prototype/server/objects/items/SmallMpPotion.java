@@ -24,7 +24,7 @@ public class SmallMpPotion extends Potion
     @Override
     public void useItem(Monster target, PacketsSender packetSender)
     {
-        MonsterProperties targetProperties = target.getProperites();
+        MonsterProperties targetProperties = target.getProperties();
         int previous = targetProperties.mp;
         targetProperties.mp += MANA_REPLENISH_POWER; 
         if(targetProperties.mp > targetProperties.maxMp)
