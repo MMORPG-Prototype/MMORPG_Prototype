@@ -1,7 +1,9 @@
 package pl.mmorpg.prototype.server.objects.spells;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -12,6 +14,7 @@ public abstract class ThrowableObject extends MovableGameObject
     private Monster target = null;
     private GameObjectsContainer linkedContainer;
     private PacketsSender packetSender;
+	private final Vector2 flyingVector = new Vector2();
 
     public ThrowableObject(Texture lookout, long id, GameObjectsContainer linkedContainer, PacketsSender packetSender)
     {
@@ -52,6 +55,18 @@ public abstract class ThrowableObject extends MovableGameObject
     public void setTarget(Monster target)
     {
         this.target = target;
+    }
+    
+    @Override
+    protected void chaseTarget(float deltaTime, Monster target)
+    {
+    	flyingVector.x = getX() - target.getX();
+    	flyingVector.y = getY() - target.getY(); 
+		float angle = flyingVector.angle();
+		flyingVector.set(getMoveSpeed()/70, getMoveSpeed()/70);
+		flyingVector.setAngle(angle);
+		setPosition(getX() - flyingVector.x, getY() - flyingVector.y);
+		packetSender.send(PacketsMaker.makeRepositionPacket(this));
     }
 
 }
