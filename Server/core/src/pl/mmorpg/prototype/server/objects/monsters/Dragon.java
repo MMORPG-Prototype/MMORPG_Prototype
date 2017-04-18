@@ -1,11 +1,14 @@
 package pl.mmorpg.prototype.server.objects.monsters;
 
+import java.util.Collection;
+
 import pl.mmorpg.prototype.clientservercommon.IdSupplier;
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.DragonPropertiesBuilder;
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
 import pl.mmorpg.prototype.server.collision.CollisionMap;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.DragonBody;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
 import pl.mmorpg.prototype.server.objects.monsters.loot.DragonLootGenerator;
@@ -19,7 +22,7 @@ public class Dragon extends LootableMonster
 	
 	public Dragon(long id, CollisionMap<GameObject> collisionMap, PlayState playState)
 	{
-		super(Assets.get("monster.png"), id, getDragonProperies(), collisionMap, playState, dragonLootGenerator);
+		super(Assets.get("monster.png"), id, getDragonProperies(), collisionMap, playState);
 	}
 
 	@Override
@@ -41,9 +44,11 @@ public class Dragon extends LootableMonster
 	}
 
 	@Override
-	protected MonsterBody getDeadBody()
+	protected MonsterBody getDeadBodyWithLoot()
 	{
-		DragonBody dragonBody = new DragonBody(IdSupplier.getId(), getItems());
+		dragonLootGenerator.generateAndApplyLoot(this);
+		Collection<Item> items = getItems();
+		DragonBody dragonBody = new DragonBody(IdSupplier.getId(), getProperties().gold, items);
 		return dragonBody;
 	}
 	

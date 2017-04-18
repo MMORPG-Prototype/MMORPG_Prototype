@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.userinterface;
 
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,6 +24,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class UserInterface
@@ -57,14 +59,27 @@ public class UserInterface
 		addOtherDialogs();
 		showDialogs();
 		dialogs.hideKeyMappedDialogs();
-		stage.addListener(new ClickListener()
-		{
 
+		stage.addListener(new ClickListener(Buttons.LEFT)
+		{
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
 				if(!dialogs.hasDialogOnPosition(x,y))
-					linkedState.userClickedOnGameBoard(x, y);
+				{
+					linkedState.userLeftClickedOnGameBoard(x, y);
+				}
+			}
+		});
+		stage.addListener(new ClickListener(Buttons.RIGHT)
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
+			{
+				if(!dialogs.hasDialogOnPosition(x,y))
+				{
+					linkedState.userRightClickedOnGameBoard(x, y);
+				}
 			}
 		});
 	}
@@ -202,6 +217,12 @@ public class UserInterface
 		if(usedItem.shouldBeRemoved() && quickAccessDialog.hasItem(usedItem))
 			quickAccessDialog.removeItem(usedItem);
 			
+	}
+
+	public void containerOpened(CharacterItemDataPacket[] contentItems)
+	{
+		for(CharacterItemDataPacket item : contentItems)
+			System.out.println(item);	
 	}
 
 }

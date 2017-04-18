@@ -7,9 +7,9 @@ import pl.mmorpg.prototype.server.resources.Assets;
 
 public class DragonBody extends MonsterBody
 {
-	public DragonBody(long id, Collection<Item> loot)
+	public DragonBody(long id, int gold, Collection<Item> loot)
 	{
-		super(Assets.get("dead-dragon.png"), id, loot);
+		super(Assets.get("dead-dragon.png"), id, gold, loot);
 	}
 
 }

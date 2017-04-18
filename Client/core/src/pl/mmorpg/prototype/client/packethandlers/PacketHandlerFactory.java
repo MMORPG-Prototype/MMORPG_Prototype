@@ -11,6 +11,7 @@ import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
@@ -54,6 +55,7 @@ public class PacketHandlerFactory
         packetHandlers.put(MpChangeByItemUsagePacket.class, new MpChangeByItemUsagePacketHandler(playState));
         packetHandlers.put(ManaDrainPacket.class, new ManaDrainPacketHandler(playState));
         packetHandlers.put(ItemUsagePacket.class, new ItemUsagePacketHandler(playState));
+        packetHandlers.put(ContainerContentPacket.class, new ContainerContentPacketHandler(playState));
 
         // Ignore frameowrk keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

@@ -1,5 +1,8 @@
 package pl.mmorpg.prototype.server.communication;
 
+import java.util.Collection;
+
+import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
@@ -168,6 +171,16 @@ public class PacketsMaker
         packet.manaDrained = manaDrain;
         return packet;
     }
+
+	public static ContainerContentPacket makeOpenContainerPacket(Collection<Item> containerItems)
+	{
+		CharacterItemDataPacket[] containerContent = containerItems.stream()
+				.map( item -> makeItemPacket(item))
+				.toArray(CharacterItemDataPacket[]::new);
+		ContainerContentPacket packet = new ContainerContentPacket();
+		packet.setContentItems(containerContent);
+		return packet;
+	}
 
 
 }

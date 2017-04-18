@@ -194,7 +194,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     @Override
     public void addItems(Collection<Item> items)
     {
-    	items.addAll(items);
+    	items.forEach( item -> this.items.put(item.getId(), item));
     }
     
 

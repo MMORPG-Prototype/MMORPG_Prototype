@@ -9,6 +9,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 
 public class PacketsMaker
 {
@@ -55,4 +56,12 @@ public class PacketsMaker
         FireballSpellUsagePacket packet = new FireballSpellUsagePacket();
         return packet;
     }
+
+	public static OpenContainterPacket makeContainterOpeningPacket(float x, float y)
+	{
+		OpenContainterPacket packet = new OpenContainterPacket();
+		packet.gameX = (int)x;
+		packet.gameY = (int)y;
+		return packet;
+	}
 }

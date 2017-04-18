@@ -22,6 +22,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveRightPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
@@ -32,6 +33,7 @@ import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveDownPacke
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveLeftPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveRightPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveUpPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.OpenContainerPacketHandler;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class PacketHandlerFactory
@@ -66,6 +68,7 @@ public class PacketHandlerFactory
                 new ItemUsagePacketHandler(loggedUsersKeyUserId, authenticatedClientsKeyClientId, playState, server));
         packetHandlers.put(FireballSpellUsagePacket.class, new FireballSpellUsagePacketHandler(loggedUsersKeyUserId,
                 authenticatedClientsKeyClientId, server, playState));
+        packetHandlers.put(OpenContainterPacket.class, new OpenContainerPacketHandler(server, playState));
 
         // Ignore framework packets
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

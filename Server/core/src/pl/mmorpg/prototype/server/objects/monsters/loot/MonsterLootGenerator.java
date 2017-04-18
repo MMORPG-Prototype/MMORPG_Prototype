@@ -14,6 +14,7 @@ public interface MonsterLootGenerator
 	default void generateAndApplyLoot(Monster monster)
 	{
 		monster.getProperties().gold = generateGold();
-		monster.addItems(generateItems());
+		Collection<Item> items = generateItems();
+		monster.addItems(items);
 	}
 }

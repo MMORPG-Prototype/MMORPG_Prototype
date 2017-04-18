@@ -42,7 +42,8 @@ public abstract class MonsterLootGeneratorBase implements MonsterLootGenerator
 
 	private boolean willLootRandom(ItemLootInfo itemLoot)
 	{
-		return random.nextFloat() <= itemLoot.getChancesOfDropping();			
+		boolean willLoot = random.nextFloat() <= itemLoot.getChancesOfDropping();
+		return willLoot;
 	}
 
 	private Item convertToItem(ItemLootInfo itemLoot)

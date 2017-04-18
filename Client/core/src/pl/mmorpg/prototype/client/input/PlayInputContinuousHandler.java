@@ -24,7 +24,6 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
 		@Override
 		public void handle()
 		{
-
 			MoveUpPacket packet = new MoveUpPacket();
 			packet.id = player.getId();
 			client.sendTCP(packet);
@@ -37,7 +36,6 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
 		@Override
 		public void handle()
 		{
-
 			MoveLeftPacket packet = new MoveLeftPacket();
 			packet.id = player.getId();
 			client.sendTCP(packet);
@@ -61,7 +59,6 @@ public class PlayInputContinuousHandler extends InputProcessorAdapter
 		@Override
 		public void handle()
 		{
-
 			MoveRightPacket packet = new MoveRightPacket();
 			packet.id = player.getId();
 			client.sendTCP(packet);

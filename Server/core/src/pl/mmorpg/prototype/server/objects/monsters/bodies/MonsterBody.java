@@ -10,10 +10,12 @@ import pl.mmorpg.prototype.server.objects.items.Item;
 public class MonsterBody extends GameObject
 {
 	private Collection<Item> loot;
+	private int gold;
 
-	public MonsterBody(Texture lookout, long id, Collection<Item> loot)
+	public MonsterBody(Texture lookout, long id, int gold, Collection<Item> loot)
 	{
 		super(lookout, id);
+		this.gold = gold;
 		this.loot = loot;
 	}
 
@@ -25,6 +27,11 @@ public class MonsterBody extends GameObject
 	public Collection<Item> getLoot()
 	{
 		return loot;
+	}
+	
+	public int getGold()
+	{
+		return gold;
 	}
 
 }

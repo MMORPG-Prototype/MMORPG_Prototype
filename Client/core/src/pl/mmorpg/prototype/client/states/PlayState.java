@@ -56,6 +56,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemData
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
 {
@@ -255,15 +256,23 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         }
     }
 
-    public void userClickedOnGameBoard(float x, float y)
+    public void userLeftClickedOnGameBoard(float x, float y)
     {
-        float gameBoardX = (player.getX() - camera.viewportWidth / 2 + x * camera.viewportWidth / Settings.GAME_WIDTH)
-                - player.getWidth() / 2;
-        float gameBoardY = player.getY() - camera.viewportHeight / 2 + y * camera.viewportHeight / Settings.GAME_HEIGHT
-                - player.getHeight() / 2;
-        MonsterTargetingPacket packet = PacketsMaker.makeTargetingPacket(gameBoardX, gameBoardY);
+        MonsterTargetingPacket packet = PacketsMaker.makeTargetingPacket(getRealX(x), getRealY(y));
         client.sendTCP(packet);
     }
+
+	private float getRealY(float y)
+	{
+		return player.getY() - camera.viewportHeight / 2 + y * camera.viewportHeight / Settings.GAME_HEIGHT
+                - player.getHeight() / 2;
+	}
+
+	private float getRealX(float x)
+	{
+		return (player.getX() - camera.viewportWidth / 2 + x * camera.viewportWidth / Settings.GAME_WIDTH)
+                - player.getWidth() / 2;
+	}
 
     public void monsterTargeted(Long monsterId)
     {
@@ -353,6 +362,17 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         player.manaDrained(manaDrain);
         userInterface.updateHitPointManaPointDialog();
     }
+
+	public void userRightClickedOnGameBoard(float x, float y)
+	{
+        OpenContainterPacket packet = PacketsMaker.makeContainterOpeningPacket(getRealX(x), getRealY(y));
+        client.sendTCP(packet);	
+	}
+
+	public void containerOpened(CharacterItemDataPacket[] contentItems)
+	{
+		userInterface.containerOpened(contentItems);
+	} 
 
 
 }
