@@ -14,6 +14,12 @@ public class MonsterProperties
 	public int maxMp;
 	public int hp;
 	public int mp;
+	public int dexitirity;
+	public int strength;
+	public int magic;
+	public int experience;
+	public int gold;
+	public int level;
 
 	private MonsterProperties()
 	{
@@ -69,11 +75,64 @@ public class MonsterProperties
 			monsterProperties.maxHp = maxHp;
 			return this;
 		}
+		
+		public Builder strength(int strength)
+		{
+			monsterProperties.strength = strength;
+			return this;
+		}
+		
+		public Builder magic(int magic)
+		{
+			monsterProperties.magic = magic;
+			return this;
+		}
 
-		public MonsterProperties build()
+		public Builder dexitirity(int dexitirity)
+		{
+			monsterProperties.dexitirity = dexitirity;
+			return this;
+		}
+		
+		public Builder hp(int hp)
+		{
+			monsterProperties.hp = hp;
+			return this;
+		}
+		
+		public Builder mp(int mp)
+		{
+			monsterProperties.mp = mp;
+			return this;
+		}
+		
+		public Builder hpAndMpFull()
 		{
 			monsterProperties.hp = monsterProperties.maxHp;
 			monsterProperties.mp = monsterProperties.maxMp;
+			return this;
+		}
+		
+		public Builder experience(int experience)
+		{
+			monsterProperties.experience = experience;
+			return this;
+		}
+		
+		public Builder gold(int gold)
+		{
+			monsterProperties.gold = gold;
+			return this;
+		}
+		
+		public Builder level(int level)
+		{
+			monsterProperties.level = level;
+			return this;
+		}
+
+		public MonsterProperties build()
+		{
 			return monsterProperties;
 		}
 	}

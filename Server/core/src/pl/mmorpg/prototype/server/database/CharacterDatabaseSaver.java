@@ -15,11 +15,17 @@ public class CharacterDatabaseSaver
 {
 	public static void save(PlayerCharacter character)
 	{
+		saveCharacterItems(character);
+		saveCharacterProperties(character);
+	}
+
+	private static void saveCharacterItems(PlayerCharacter character)
+	{
 		Collection<Item> items = character.getItems();
 		Collection<CharacterItem> databaseItems = items.stream()
 				.map((item) -> toDatabaseEquiv(item, (int)character.getId()))
 				.collect(Collectors.toList());
-		save((int)character.getId(), databaseItems);
+		saveCharacterItems(character.getUserCharacterData(), databaseItems);
 	}
 	
 	private static CharacterItem toDatabaseEquiv(Item item, int ownerId)
@@ -33,15 +39,17 @@ public class CharacterDatabaseSaver
 		return characterItem;
 	}
 	
-    private static void save(Integer userCharacterId, Collection<CharacterItem> items)
-    {
-        UserCharacter userCharacter = UserCharacterTableManager.getUserCharacter(userCharacterId);
-        save(userCharacter, items);
-    }
     
-    private static void save(UserCharacter toSave, Collection<CharacterItem> items)
+    private static void saveCharacterItems(UserCharacter toSave, Collection<CharacterItem> items)
     {
         CharacterItemTableManager.deleteAllCharacterItems(toSave);
         items.forEach((item) -> CharacterItemTableManager.save(item));
     }
+    
+	private static void saveCharacterProperties(PlayerCharacter character)
+	{
+		character.updateUserCharacterData();
+		UserCharacter userCharacterData = character.getUserCharacterData();
+		HibernateUtil.makeOperation( session -> session.update(userCharacterData));
+	}
 }

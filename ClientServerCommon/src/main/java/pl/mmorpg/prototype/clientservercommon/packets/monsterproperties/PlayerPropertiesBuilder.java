@@ -19,8 +19,16 @@ public class PlayerPropertiesBuilder extends MonsterProperties.Builder
 				.attackRange(50)
 				.attackSpeed(1.0f)
 				.defense(5)
-				.maxHp(CharacterStatsCalculator.getMaxHP(dataPacket))
-				.maxMp(CharacterStatsCalculator.getMaxMP(dataPacket));
+				.hp(dataPacket.getHitPoints())
+				.mp(dataPacket.getManaPoints())
+				.maxMp(CharacterStatsCalculator.getMaxMP(dataPacket))
+		 		.maxHp(CharacterStatsCalculator.getMaxHP(dataPacket))
+		 		.gold(dataPacket.getGold())
+		 		.experience(dataPacket.getExperience())
+		 		.level(dataPacket.getLevel())
+		 		.dexitirity(dataPacket.getDexitirity())
+		 		.strength(dataPacket.getStrength())
+		 		.magic(dataPacket.getMagic());
 		 return super.build();
 	}
 }

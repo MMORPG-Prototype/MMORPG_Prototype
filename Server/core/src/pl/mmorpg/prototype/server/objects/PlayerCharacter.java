@@ -79,4 +79,18 @@ public class PlayerCharacter extends Monster
     {
         return getProperties().mp >= manaDrain;
     }
+
+	public void updateUserCharacterData()
+	{
+		userCharacter.setDexitirity(properties.dexitirity);
+		userCharacter.setExperience(properties.experience);
+		userCharacter.setGold(properties.gold);
+		userCharacter.setHitPoints(properties.hp);
+		userCharacter.setLastLocationX((int)getX());
+		userCharacter.setLastLocationY((int)getY());
+		userCharacter.setLevel(properties.level);
+		userCharacter.setMagic(properties.magic);
+		userCharacter.setManaPoints(properties.mp);
+		userCharacter.setStrength(properties.strength);
+	}
 }
