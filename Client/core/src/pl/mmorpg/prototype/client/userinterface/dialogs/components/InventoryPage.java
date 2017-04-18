@@ -80,20 +80,6 @@ public class InventoryPage extends VerticalGroup
 		return false;
 	}
 
-	public boolean removeIfHas(long itemId)
-	{
-		for (InventoryField field : inventoryFields.values())
-		{
-			Item item = field.getItem();
-			if (item != null && item.getId() == itemId)
-			{
-				field.removeItem();
-				return true;
-			}
-		}
-
-		return false;
-	}
 
 	public Item getItem(long itemId)
 	{

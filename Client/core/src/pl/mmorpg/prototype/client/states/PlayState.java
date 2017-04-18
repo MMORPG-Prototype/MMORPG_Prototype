@@ -354,10 +354,5 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         userInterface.updateHitPointManaPointDialog();
     }
 
-	public void removeCharacterItem(long targetId)
-	{
-		userInterface.removeItem(targetId);	
-	}
-
 
 }

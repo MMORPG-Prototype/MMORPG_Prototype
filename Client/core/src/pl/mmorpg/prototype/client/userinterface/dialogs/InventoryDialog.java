@@ -160,14 +160,6 @@ public class InventoryDialog extends Dialog
 		return false;
 	}
 	
-	public boolean removeIfHas(long itemId)
-	{
-		for(InventoryPage inventoryPage : inventoryPages)
-			if(inventoryPage.removeIfHas(itemId))
-				return true;
-		return false;
-	}
-	
 	public ItemUseable useItem(long itemId)
 	{
 		ItemUseable item = null;
