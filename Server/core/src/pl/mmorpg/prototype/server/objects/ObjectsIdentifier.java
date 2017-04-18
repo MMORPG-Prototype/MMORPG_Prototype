@@ -5,6 +5,7 @@ import java.util.Map;
 
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.objects.monsters.Dragon;
+import pl.mmorpg.prototype.server.objects.monsters.bodies.DragonBody;
 import pl.mmorpg.prototype.server.objects.spells.Fireball;
 
 public class ObjectsIdentifier
@@ -15,6 +16,7 @@ public class ObjectsIdentifier
     {
         identifiers.put(PlayerCharacter.class, ObjectsIdentifiers.PLAYER);
         identifiers.put(Dragon.class, ObjectsIdentifiers.DRAGON);
+        identifiers.put(DragonBody.class, ObjectsIdentifiers.DRAGON_DEAD);
         identifiers.put(Fireball.class, ObjectsIdentifiers.FIREBALL);
     }
 

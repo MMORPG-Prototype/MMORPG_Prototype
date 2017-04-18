@@ -8,6 +8,8 @@ public interface ItemsOwner
 {
 
 	void addItem(Item item);
+	
+	void addItems(Collection<Item> items);
 
 	Collection<Item> getItems();
 	

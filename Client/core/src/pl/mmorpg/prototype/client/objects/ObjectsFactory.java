@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.client.objects;
 
 import pl.mmorpg.prototype.client.exceptions.GameException;
 import pl.mmorpg.prototype.client.objects.monsters.Dragon;
+import pl.mmorpg.prototype.client.objects.monsters.bodies.DragonBody;
 import pl.mmorpg.prototype.client.objects.spells.FireBall;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 
@@ -19,6 +20,8 @@ public class ObjectsFactory
             object = new Player(id);
         else if (identifier.equals(ObjectsIdentifier.getObjectIdentifier(Dragon.class)))
             object = new Dragon(id);
+        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(DragonBody.class)))
+        	object = new DragonBody(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(FireBall.class)))
             object = new FireBall(id);
         else

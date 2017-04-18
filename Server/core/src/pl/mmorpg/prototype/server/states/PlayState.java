@@ -24,6 +24,7 @@ import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Dragon;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
 import pl.mmorpg.prototype.server.objects.spells.Fireball;
 import pl.mmorpg.prototype.server.resources.Assets;
 
@@ -32,6 +33,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     private Server server;
     private StateManager states;
     private CollisionMap<GameObject> collisionMap = new CollisionMap<>(1500, 800, GameObject.NULL_OBJECT);
+    private CollisionMap<MonsterBody> deadBodiesCollisionMap = new CollisionMap<>(1500, 800, 4);
     private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
     private TiledMapRenderer mapRenderer;
     private ServerInputHandler inputHandler = new ServerInputHandler(this);
@@ -88,6 +90,13 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     public void add(GameObject object)
     {
         gameObjects.put(object.getId(), object);
+    }
+    
+    
+    public void addDeadBody(MonsterBody monsterBody)
+    {
+    	add(monsterBody);
+    	deadBodiesCollisionMap.insert(monsterBody);
     }
 
     @Override

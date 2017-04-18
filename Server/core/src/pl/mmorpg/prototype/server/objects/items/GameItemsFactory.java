@@ -9,13 +9,17 @@ public class GameItemsFactory
 
     public static Item produce(CharacterItem item, long gameId)
     {
-        ItemIdentifiers itemIdentifier = item.getIdentifier();
-        if(itemIdentifier.equals(ItemIdentifiers.SMALL_HP_POTION))
-            return new SmallHpPotion(gameId, item.getCount());
-        else if(itemIdentifier.equals(ItemIdentifiers.SMALL_MP_POTION))
-            return new SmallMpPotion(gameId, item.getCount());
+        return produce(item.getIdentifier(), item.getCount(), gameId);
+    }
+    
+    public static Item produce(ItemIdentifiers identifier, int itemCount, long gameId)
+    {
+        if(identifier.equals(ItemIdentifiers.SMALL_HP_POTION))
+            return new SmallHpPotion(gameId, itemCount);
+        else if(identifier.equals(ItemIdentifiers.SMALL_MP_POTION))
+            return new SmallMpPotion(gameId, itemCount);
         
-        throw new UnknownItemTypeException(itemIdentifier);
+        throw new UnknownItemTypeException(identifier);
     }
 
 }

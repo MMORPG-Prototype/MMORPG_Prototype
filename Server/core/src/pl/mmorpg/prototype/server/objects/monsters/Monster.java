@@ -190,5 +190,12 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     	if(items.remove(id) == null)
     		throw new NoSuchItemToRemoveException(id);
     }
+    
+    @Override
+    public void addItems(Collection<Item> items)
+    {
+    	items.addAll(items);
+    }
+    
 
 }

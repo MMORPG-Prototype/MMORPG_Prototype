@@ -1,19 +1,25 @@
 package pl.mmorpg.prototype.server.objects.monsters;
 
+import pl.mmorpg.prototype.clientservercommon.IdSupplier;
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.DragonPropertiesBuilder;
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
 import pl.mmorpg.prototype.server.collision.CollisionMap;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.monsters.bodies.DragonBody;
+import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
+import pl.mmorpg.prototype.server.objects.monsters.loot.DragonLootGenerator;
+import pl.mmorpg.prototype.server.objects.monsters.loot.MonsterLootGenerator;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
-public class Dragon extends AutoTargetingMonster
+public class Dragon extends LootableMonster
 {
-
+	private static final MonsterLootGenerator dragonLootGenerator = new DragonLootGenerator();
+	
 	public Dragon(long id, CollisionMap<GameObject> collisionMap, PlayState playState)
 	{
-		super(Assets.get("monster.png"), id, getDragonProperies(), collisionMap, playState);
+		super(Assets.get("monster.png"), id, getDragonProperies(), collisionMap, playState, dragonLootGenerator);
 	}
 
 	@Override
@@ -33,5 +39,13 @@ public class Dragon extends AutoTargetingMonster
 	{
 		return monster instanceof PlayerCharacter;
 	}
+
+	@Override
+	protected MonsterBody getDeadBody()
+	{
+		DragonBody dragonBody = new DragonBody(IdSupplier.getId(), getItems());
+		return dragonBody;
+	}
+	
 
 }
