@@ -47,6 +47,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
@@ -311,10 +312,16 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         if (target == player)
         {
             UserCharacterDataPacket data = player.getData();
-            data.setHitPoints(data.getHitPoints() + packet.getMpChange());
+            data.setManaPoints(data.getManaPoints() + packet.getMpChange());
             userInterface.updateHpMpDialog();
         }
     }
+    
+    public void itemUsagePacketReceived(ItemUsagePacket packet)
+    {
+    	userInterface.itemUsed(packet.getItemId());
+    }
+    
 
     private void damagePacketReceived(long targetId, int damage,
             BiFunction<Integer, GameObject, GraphicGameObject> damageLabelCreator)
@@ -346,6 +353,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         player.manaDrained(manaDrain);
         userInterface.updateHitPointManaPointDialog();
     }
+
+	public void removeCharacterItem(long targetId)
+	{
+		userInterface.removeItem(targetId);	
+	}
 
 
 }

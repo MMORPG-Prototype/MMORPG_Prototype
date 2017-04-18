@@ -23,4 +23,16 @@ public abstract class Potion extends StackableItem implements ItemUseable
 	{
 		packetSender.send(PacketsMaker.makeItemUsagePacket(this, target));
 	}
+	
+	@Override
+	public void useIterfaceUpdate()
+	{
+		decreaseItemCount();
+	}
+	
+	@Override
+	public boolean shouldBeRemoved()
+	{
+		return isDepleted();
+	}
 }

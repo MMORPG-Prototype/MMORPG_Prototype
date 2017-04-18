@@ -123,7 +123,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     }
 
     @Override
-    public void send(Object packet)
+    public void sendToAll(Object packet)
     {
         server.sendToAllTCP(packet);
     }
@@ -147,5 +147,12 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         gameObjects.put(fireball.getId(), fireball);
         server.sendToAllTCP(PacketsMaker.makeCreationPacket(fireball));
     }
+
+    @Override
+	public void sendTo(int connectionId, Object packet)
+	{
+		server.sendToTCP(connectionId, packet);		
+	}
+
 
 }

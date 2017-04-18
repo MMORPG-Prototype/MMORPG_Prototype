@@ -30,7 +30,7 @@ public class SmallMpPotion extends Potion
         if(targetProperties.mp > targetProperties.maxMp)
             targetProperties.mp = targetProperties.maxMp;
         int delta = targetProperties.mp - previous;
-        packetSender.send(PacketsMaker.makeMpChangeByItemUsagePacket(delta, target.getId()));
+        packetSender.sendToAll(PacketsMaker.makeMpChangeByItemUsagePacket(delta, target.getId()));
 
     }
 

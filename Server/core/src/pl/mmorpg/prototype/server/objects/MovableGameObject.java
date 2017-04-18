@@ -50,7 +50,7 @@ public abstract class MovableGameObject extends GameObject
         if (currentPacketSendingTime >= packetSendingInterval)
         {
             currentPacketSendingTime = 0.0f;
-            packetsSender.send(PacketsMaker.makeRepositionPacket(this));
+            packetsSender.sendToAll(PacketsMaker.makeRepositionPacket(this));
         }
     }
 

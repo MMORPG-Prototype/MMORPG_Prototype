@@ -43,4 +43,10 @@ public class ItemReference extends Item
     {
         item.draw(batch, getX(), getY());
     }
+
+	@Override
+	public boolean shouldBeRemoved()
+	{
+		return false;
+	}
 }

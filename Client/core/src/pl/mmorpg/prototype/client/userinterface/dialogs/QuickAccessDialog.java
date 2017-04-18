@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.exceptions.CannotUseThisItemException;
+import pl.mmorpg.prototype.client.exceptions.NoSuchItemInQuickAccessBarException;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
@@ -73,6 +74,25 @@ public class QuickAccessDialog extends Dialog
 			throw new CannotUseThisItemException(item);
 
 		((ItemUseable) item).use(target, packetSender);
+	}
+
+	public boolean hasItem(Item item)
+	{
+		for(InventoryField field : quickAccessButtons.values())
+			if(field.hasItem() && field.getItem() == item)
+				return true;
+		return false;
+	}
+
+	public void removeItem(Item usedItem)
+	{
+		for(InventoryField field : quickAccessButtons.values())
+			if(field.hasItem() && field.getItem() == usedItem)
+			{
+				field.removeItem();
+				return;
+			}
+		throw new NoSuchItemInQuickAccessBarException(usedItem);
 	}
 	
 }

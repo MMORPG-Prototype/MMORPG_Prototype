@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import pl.mmorpg.prototype.client.exceptions.NoSuchItemInInventoryException;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -193,6 +194,21 @@ public class UserInterface
 	public void updateHpMpDialog()
 	{
 		hpMpDialog.updateValues();
+	}
+
+	public void removeItem(long itemId)
+	{
+		if(!inventoryDialog.removeIfHas(itemId))
+			throw new NoSuchItemInInventoryException(itemId);
+	}
+
+	public void itemUsed(long itemId)
+	{
+		Item usedItem = (Item)inventoryDialog.useItem(itemId);
+		
+		if(usedItem.shouldBeRemoved() && quickAccessDialog.hasItem(usedItem))
+			quickAccessDialog.removeItem(usedItem);
+			
 	}
 
 }

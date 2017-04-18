@@ -121,7 +121,7 @@ public abstract class GameObject implements CollisionObject
     public final void removeItself(GameObjectsContainer linkedContainer, PacketsSender packetSender)
     {
         linkedContainer.remove(getId());
-        packetSender.send(PacketsMaker.makeRemovalPacket(getId()));
+        packetSender.sendToAll(PacketsMaker.makeRemovalPacket(getId()));
     }
 
     private static class NullGameObject extends GameObject

@@ -14,6 +14,7 @@ import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchInventoryFieldInPosition;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemReference;
+import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
@@ -151,11 +152,30 @@ public class InventoryDialog extends Dialog
 		return lastFieldWithItemClicked;		
 	}
 
-	public void removeIfHas(Item item)
+	public boolean removeIfHas(Item item)
 	{
 		for(InventoryPage inventoryPage : inventoryPages)
 			if(inventoryPage.removeIfHas(item))
-				return;	
+				return true;
+		return false;
+	}
+	
+	public boolean removeIfHas(long itemId)
+	{
+		for(InventoryPage inventoryPage : inventoryPages)
+			if(inventoryPage.removeIfHas(itemId))
+				return true;
+		return false;
+	}
+	
+	public ItemUseable useItem(long itemId)
+	{
+		ItemUseable item = null;
+		for(InventoryPage inventoryPage : inventoryPages)
+			if((item = inventoryPage.useIfHas(itemId)) != null)
+				return item;
+		return item;
+		
 	}
 
 }

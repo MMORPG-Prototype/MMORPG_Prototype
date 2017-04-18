@@ -29,7 +29,7 @@ public class Dragon extends AutoTargetingMonster
 	}
 
 	@Override
-	protected boolean shouldTargetOn(Monster monster)
+	protected boolean shouldTargetOn(ItemsOwner monster)
 	{
 		return monster instanceof PlayerCharacter;
 	}

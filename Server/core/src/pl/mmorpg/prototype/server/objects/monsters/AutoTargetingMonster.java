@@ -67,8 +67,8 @@ public abstract class AutoTargetingMonster extends WalkingMonster
     private boolean canBeTargeted(GameObject gameObject)
     {
         return gameObject != null && gameObject != this && gameObject instanceof Monster
-                && shouldTargetOn((Monster) gameObject);
+                && shouldTargetOn((ItemsOwner) gameObject);
     }
 
-    protected abstract boolean shouldTargetOn(Monster monster);
+    protected abstract boolean shouldTargetOn(ItemsOwner monster);
 }

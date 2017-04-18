@@ -28,7 +28,7 @@ public abstract class Spell extends ThrowableObject
         int spellDamage = getSpellDamage();
         MonsterProperties properties = target.getProperties();
         properties.hp -= spellDamage;
-        packetSender.send(PacketsMaker.makeFireDamagePacket(target.getId(), spellDamage));
+        packetSender.sendToAll(PacketsMaker.makeFireDamagePacket(target.getId(), spellDamage));
         if(properties.hp <= 0) 
         {
             source.killed(target);

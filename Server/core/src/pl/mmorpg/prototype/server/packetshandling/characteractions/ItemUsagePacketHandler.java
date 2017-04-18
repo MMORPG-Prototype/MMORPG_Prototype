@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.server.UserInfo;
+import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.PlayerUsingItemNotFoundException;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
@@ -39,7 +40,8 @@ public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
 		if(itemUser == null)
 			throw new PlayerUsingItemNotFoundException();
 		Monster target = (Monster)playState.getObject(packet.getTargetId());
-		itemUser.useItem(packet.getItemId(), target, (object) -> server.sendToAllTCP(object));
+		itemUser.useItem(packet.getItemId(), target, (PacketsSender)playState);
+		connection.sendTCP(packet);
 	}
 
 }

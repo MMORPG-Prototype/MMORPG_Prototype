@@ -78,4 +78,7 @@ public abstract class Item extends Actor
     {
         return id;
     }
+
+	public abstract boolean shouldBeRemoved();
+
 }

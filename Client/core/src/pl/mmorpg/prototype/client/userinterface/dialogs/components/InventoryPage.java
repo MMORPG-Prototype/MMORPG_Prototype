@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 
 public class InventoryPage extends VerticalGroup
@@ -21,7 +22,7 @@ public class InventoryPage extends VerticalGroup
 	public InventoryPage(InventoryDialog inventoryDialog)
 	{
 		this.inventoryDialog = inventoryDialog;
-		
+
 		space(0).pad(0).padRight(5).fill();
 		for (int i = 0; i < 5; i++)
 		{
@@ -57,7 +58,7 @@ public class InventoryPage extends VerticalGroup
 	{
 		inventoryDialog.buttonClicked(inventoryFields.get(cellPosition));
 	}
-	
+
 	public InventoryField getField(Point point)
 	{
 		return inventoryFields.get(point);
@@ -70,12 +71,55 @@ public class InventoryPage extends VerticalGroup
 
 	public boolean removeIfHas(Item item)
 	{
-		for(InventoryField field : inventoryFields.values())
-			if(field.getItem() == item)
+		for (InventoryField field : inventoryFields.values())
+			if (field.getItem() == item)
 			{
 				field.removeItem();
 				return true;
 			}
 		return false;
+	}
+
+	public boolean removeIfHas(long itemId)
+	{
+		for (InventoryField field : inventoryFields.values())
+		{
+			Item item = field.getItem();
+			if (item != null && item.getId() == itemId)
+			{
+				field.removeItem();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public Item getItem(long itemId)
+	{
+		for (InventoryField field : inventoryFields.values())
+		{
+			Item item = field.getItem();
+			if (item != null && item.getId() == itemId)
+				return item;
+		}
+		return null;
+	}
+
+	public ItemUseable useIfHas(long itemId)
+	{
+		for (InventoryField field : inventoryFields.values())
+		{
+			Item item = field.getItem();
+			if (item != null && item.getId() == itemId)
+			{
+				ItemUseable itemUseable = (ItemUseable)item;
+				itemUseable.useIterfaceUpdate();
+				if(item.shouldBeRemoved())
+					field.removeItem();
+				return itemUseable;
+			}
+		}
+		return null;
 	}
 }

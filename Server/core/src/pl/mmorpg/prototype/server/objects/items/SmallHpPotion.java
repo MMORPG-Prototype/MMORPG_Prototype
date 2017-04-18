@@ -29,7 +29,7 @@ public class SmallHpPotion extends Potion
         if(targetProperties.hp > targetProperties.maxHp)
             targetProperties.hp = targetProperties.maxHp;
         int delta = targetProperties.hp - previous;
-        packetSender.send(PacketsMaker.makeHpChangeByItemUsagePacket(delta, target.getId()));
+        packetSender.sendToAll(PacketsMaker.makeHpChangeByItemUsagePacket(delta, target.getId()));
     }
 
 }

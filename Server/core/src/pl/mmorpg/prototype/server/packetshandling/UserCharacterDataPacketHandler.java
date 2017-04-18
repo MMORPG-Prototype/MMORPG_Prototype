@@ -51,7 +51,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
         info.userCharacter = character;
 
         sendCurrentGameObjectsInfo(clientId);
-        PlayerCharacter newPlayer = new PlayerCharacter(character, playState);
+        PlayerCharacter newPlayer = new PlayerCharacter(character, playState, clientId);
         Collection<Item> playerItems = getPlayerItems(newPlayer);
         playerItems.forEach((item) -> newPlayer.addItem(item));
         playState.add(newPlayer);

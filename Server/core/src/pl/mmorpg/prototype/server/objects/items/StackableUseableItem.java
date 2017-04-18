@@ -1,7 +1,5 @@
 package pl.mmorpg.prototype.server.objects.items;
 
-
-
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.exceptions.OutOfStockExcpetion;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -25,6 +23,8 @@ public abstract class StackableUseableItem extends StackableItem implements Usea
         {
             count--;
             useItem(target, packetSender);
+            if(count <= 0)
+            	target.removeItem(getId());
         }
         else
         	throw new OutOfStockExcpetion();

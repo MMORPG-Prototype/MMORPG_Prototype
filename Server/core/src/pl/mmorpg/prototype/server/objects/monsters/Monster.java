@@ -1,7 +1,10 @@
 package pl.mmorpg.prototype.server.objects.monsters;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,12 +13,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.communication.PacketsSender;
+import pl.mmorpg.prototype.server.exceptions.CannotUseThisItemException;
+import pl.mmorpg.prototype.server.exceptions.CharacterDoesntHaveItemException;
+import pl.mmorpg.prototype.server.exceptions.NoSuchItemToRemoveException;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
+import pl.mmorpg.prototype.server.objects.items.Item;
+import pl.mmorpg.prototype.server.objects.items.Useable;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
-public abstract class Monster extends MovableGameObject
+public abstract class Monster extends MovableGameObject implements ItemUser
 {
+    private Map<Long, Item> items = new ConcurrentHashMap<>();
+    
     private static final BitmapFont font = Assets.getFont();
     protected final MonsterProperties properties;
     private Monster targetedMonster = null;
@@ -77,7 +88,7 @@ public abstract class Monster extends MovableGameObject
     {
         int damage = DamageCalculator.getDamage(this, target);
         target.properties.hp -= damage;
-        linkedState.send(PacketsMaker.makeNormalDamagePacket(target.getId(), damage));
+        linkedState.sendToAll(PacketsMaker.makeNormalDamagePacket(target.getId(), damage));
         if (target.properties.hp <= 0)
         {
             this.killed(target);
@@ -111,7 +122,7 @@ public abstract class Monster extends MovableGameObject
     public void die()
     {
         linkedState.remove(getId());
-        linkedState.send(PacketsMaker.makeRemovalPacket(getId()));
+        linkedState.sendToAll(PacketsMaker.makeRemovalPacket(getId()));
         for (Monster targetedBY : targetedBy)
             targetedBY.targetedMonster = null;
     }
@@ -142,6 +153,42 @@ public abstract class Monster extends MovableGameObject
     	for (Monster targetedBY : targetedBy)
             targetedBY.targetedMonster = null;
     	super.onRemoval();
+    }
+    
+    @Override
+	public void addItem(Item item)
+    {
+        items.put(item.getId(), item);
+    }
+
+    @Override
+	public void useItem(long id, PacketsSender packetSender)
+    {
+        useItem(id, this, packetSender);
+    }
+
+    @Override
+	public void useItem(long id, Monster target, PacketsSender packetSender)
+    {
+        Item characterItem = items.get(id);
+        if (characterItem == null)
+            throw new CharacterDoesntHaveItemException(id);
+        if (!(characterItem instanceof Useable))
+            throw new CannotUseThisItemException(characterItem);
+        ((Useable) characterItem).use(target, packetSender);
+    }
+
+    @Override
+	public Collection<Item> getItems()
+    {
+        return items.values();
+    }
+    
+    @Override
+    public void removeItem(long id)
+    {
+    	if(items.remove(id) == null)
+    		throw new NoSuchItemToRemoveException(id);
     }
 
 }
