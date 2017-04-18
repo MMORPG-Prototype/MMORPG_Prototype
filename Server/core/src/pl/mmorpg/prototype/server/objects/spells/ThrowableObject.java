@@ -3,7 +3,6 @@ package pl.mmorpg.prototype.server.objects.spells;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
-import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -26,23 +25,27 @@ public abstract class ThrowableObject extends MovableGameObject
     @Override
     public void update(float deltaTime)
     {
-        if (hasTarget() && targedIsAlive())
+        if (hasTarget() && targetIsAlive())
         {
             chaseTarget(deltaTime, target);
             if (isNearTarget(target))
             {
                 removeItself(linkedContainer, packetSender);
                 onFinish(target);
+                return;
             }
         }
         else
-            removeItself(linkedContainer, packetSender);
+        {
+        	removeItself(linkedContainer, packetSender);
+        	return;
+        }
         super.update(deltaTime);
     }
 
-    private boolean targedIsAlive()
+    private boolean targetIsAlive()
     {
-        return target.isAlive();
+        return target.isInGame();
     }
 
     public abstract void onFinish(Monster target);
@@ -66,7 +69,7 @@ public abstract class ThrowableObject extends MovableGameObject
 		flyingVector.set(getMoveSpeed()/70, getMoveSpeed()/70);
 		flyingVector.setAngle(angle);
 		setPosition(getX() - flyingVector.x, getY() - flyingVector.y);
-		packetSender.send(PacketsMaker.makeRepositionPacket(this));
+		sendRepositionPacket();
     }
 
 }

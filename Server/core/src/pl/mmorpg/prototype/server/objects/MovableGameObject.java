@@ -45,7 +45,7 @@ public abstract class MovableGameObject extends GameObject
         return collision;
     }
 
-    private void sendRepositionPacket()
+    protected void sendRepositionPacket()
     {
         if (currentPacketSendingTime >= packetSendingInterval)
         {

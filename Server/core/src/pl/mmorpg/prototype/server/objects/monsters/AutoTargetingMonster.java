@@ -24,22 +24,29 @@ public abstract class AutoTargetingMonster extends WalkingMonster
     @Override
     public void update(float deltaTime)
     {
-        if (!isTargetingAnotherMonster())
-        {
-            setMovingRandomly(true);
-            Monster monster = tryToFindTarget();
-            if (monster != null)
-            {
-                targetMonster(monster);
-                setMovingRandomly(false);
-            }
-        } else
-        {
-            chaseTarget(deltaTime, collisionMap, getTargetedMonster());
-            setMovingRandomly(false);
-        }
         super.update(deltaTime);
+        if (!isTargetingAnotherMonster())
+            whenHasNoTarget();
+		else
+            whenHasTarget(deltaTime);
     }
+
+	private void whenHasNoTarget()
+	{
+		setMovingRandomly(true);
+		Monster monster = tryToFindTarget();
+		if (monster != null)
+		{
+		    targetMonster(monster);
+		    setMovingRandomly(false);
+		}
+	}
+	
+	private void whenHasTarget(float deltaTime)
+	{
+		chaseTarget(deltaTime, collisionMap, getTargetedMonster());
+		setMovingRandomly(false);
+	}
 
     private Monster tryToFindTarget()
     {

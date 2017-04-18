@@ -23,6 +23,8 @@ public abstract class Spell extends ThrowableObject
     @Override
     public void onFinish(Monster target)
     {
+    	if(!target.isTargetingAnotherMonster())
+    		target.targetMonster(source);
         int spellDamage = getSpellDamage();
         MonsterProperties properties = target.getProperties();
         properties.hp -= spellDamage;
