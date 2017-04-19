@@ -22,6 +22,9 @@ import pl.mmorpg.prototype.server.exceptions.OutOfBoundsException;
 public class LayerCollisionMapTests
 {
 	private StackableCollisionMap<StackableCollisionObject> collisionMap;
+	private static final int containerWidth = 10;
+	private static final int containerHeight = 10;
+	
 	
 	@Mock
 	private StackableCollisionObject object;
@@ -29,13 +32,13 @@ public class LayerCollisionMapTests
 	@Before
 	public void createCollisionMap()
 	{
-		collisionMap = new LayerCollisionMap<>(6, 6, 24, 24);
+		collisionMap = new LayerCollisionMap<>(6, 6, containerWidth, containerHeight);
 	}
 
 	@Test
 	public void insertObjectOnPosition0_0_shouldBeAbleToRetrieveIt()
 	{
-		instertObjectOnPoistion_shouldBeAbleToRetreiveIt(new Point(0, 0));
+		instertObjectOnPoistion_shouldBeAbleToRetreiveIt(calcPosition(0, 0));
 	}
 
 	private void instertObjectOnPoistion_shouldBeAbleToRetreiveIt(Point position)
@@ -52,7 +55,12 @@ public class LayerCollisionMapTests
 	@Test
 	public void insertObjectOnPosition4_4_shouldBeAbleToRetrieveIt()
 	{
-		instertObjectOnPoistion_shouldBeAbleToRetreiveIt(new Point(4, 4));
+		instertObjectOnPoistion_shouldBeAbleToRetreiveIt(calcPosition(4, 4));
+	}
+	
+	private Point calcPosition(int x, int y)
+	{
+		return new Point(x*containerWidth, y*containerHeight);
 	}
 	
 	@Test
@@ -60,10 +68,10 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(1, 1));
+		.thenReturn(calcPosition(1, 1));
 		collisionMap.insert(object);
 		collisionMap.remove(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(1, 1));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(1, 1));
 		assertTrue(collisionObjects.isEmpty());
 	}
 	
@@ -72,10 +80,10 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(1, 1));
+		.thenReturn(calcPosition(1, 1));
 		collisionMap.insert(object);
 		collisionMap.moveRight(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(2, 1));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(2, 1));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -84,10 +92,10 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(2, 1));
+		.thenReturn(calcPosition(2, 1));
 		collisionMap.insert(object);
 		collisionMap.moveRight(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(3, 1));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(3, 1));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -96,10 +104,10 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(2, 1));
+		.thenReturn(calcPosition(2, 1));
 		collisionMap.insert(object);
 		collisionMap.moveRight(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(2, 1));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(2, 1));
 		assertTrue(collisionObjects.isEmpty());
 	}
 	
@@ -108,10 +116,10 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(1, 1));
+		.thenReturn(calcPosition(1, 1));
 		collisionMap.insert(object);
 		collisionMap.moveRight(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(1, 1));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(1, 1));
 		assertTrue(collisionObjects.isEmpty());
 	}
 	
@@ -120,10 +128,10 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(2, 2));
+		.thenReturn(calcPosition(2, 2));
 		collisionMap.insert(object);
 		collisionMap.moveDown(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(2, 3));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(2, 3));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -132,10 +140,10 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(2, 3));
+		.thenReturn(calcPosition(2, 3));
 		collisionMap.insert(object);
 		collisionMap.moveUp(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(2, 2));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(2, 2));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -144,14 +152,14 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(2, 2));
+		.thenReturn(calcPosition(2, 2));
 		collisionMap.insert(object);
 		collisionMap.moveDown(object);
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(2, 3));
+		.thenReturn(calcPosition(2, 3));
 		collisionMap.moveDown(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(2, 4));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(2, 4));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -160,10 +168,10 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(2, 2));
+		.thenReturn(calcPosition(2, 2));
 		collisionMap.insert(object);
 		collisionMap.moveLeft(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(1, 2));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(1, 2));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -172,18 +180,18 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(3, 2));
+		.thenReturn(calcPosition(3, 2));
 		collisionMap.insert(object);
 		collisionMap.moveLeft(object);
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(2, 2));
+		.thenReturn(calcPosition(2, 2));
 		collisionMap.moveLeft(object);
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(1, 2));
+		.thenReturn(calcPosition(1, 2));
 		collisionMap.moveLeft(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(0, 2));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(0, 2));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -192,26 +200,26 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(4, 4));
+		.thenReturn(calcPosition(4, 4));
 		collisionMap.insert(object);
 		collisionMap.moveUp(object);
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(4, 3));
+		.thenReturn(calcPosition(4, 3));
 		collisionMap.moveDown(object);
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(4, 4));
+		.thenReturn(calcPosition(4, 4));
 		collisionMap.moveLeft(object);
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(3, 4));
+		.thenReturn(calcPosition(3, 4));
 		collisionMap.moveLeft(object);
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(2, 4));
+		.thenReturn(calcPosition(2, 4));
 		collisionMap.moveRight(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(new Point(3, 4));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(3, 4));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -220,7 +228,7 @@ public class LayerCollisionMapTests
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(new Point(5, 5)); 
+		.thenReturn(calcPosition(5, 5)); 
 		collisionMap.insert(object);
 		collisionMap.moveDown(object);
 	}
@@ -228,8 +236,8 @@ public class LayerCollisionMapTests
 	@Test
 	public void detectCollidingObject2_2And2_3Collision()
 	{
-		StackableCollisionObject firstCollisionObject = mockObject(new Point(2, 2));
-		StackableCollisionObject secondCollisionObject = mockObject(new Point(2, 3));
+		StackableCollisionObject firstCollisionObject = mockObject(calcPosition(2, 2));
+		StackableCollisionObject secondCollisionObject = mockObject(calcPosition(2, 3));
 		Mockito
 		.when(secondCollisionObject.isColliding(firstCollisionObject))
 		.thenReturn(true);
@@ -247,8 +255,44 @@ public class LayerCollisionMapTests
 	@Test
 	public void detectCollidingObject2_2And3_3Collision()
 	{
-		StackableCollisionObject firstCollisionObject = mockObject(new Point(2, 2));
-		StackableCollisionObject secondCollisionObject = mockObject(new Point(3, 3));
+		StackableCollisionObject firstCollisionObject = mockObject(calcPosition(2, 2));
+		StackableCollisionObject secondCollisionObject = mockObject(calcPosition(3, 3));
+		collisionMap.insert(firstCollisionObject);
+		collisionMap.insert(secondCollisionObject);
+		Mockito
+		.when(firstCollisionObject.isColliding(secondCollisionObject))
+		.thenReturn(true);
+		Mockito
+		.when(secondCollisionObject.isColliding(firstCollisionObject))
+		.thenReturn(true);
+		Collection<StackableCollisionObject> collidingObjects = collisionMap.getCollidingObjects(firstCollisionObject);
+		assertTrue(!collidingObjects.contains(firstCollisionObject));
+		assertTrue(collidingObjects.contains(secondCollisionObject));
+	}
+	
+	@Test
+	public void detectCollidingObject0_0And1_1Collision()
+	{
+		StackableCollisionObject firstCollisionObject = mockObject(calcPosition(0, 0));
+		StackableCollisionObject secondCollisionObject = mockObject(calcPosition(1, 1));
+		collisionMap.insert(firstCollisionObject);
+		collisionMap.insert(secondCollisionObject);
+		Mockito
+		.when(firstCollisionObject.isColliding(secondCollisionObject))
+		.thenReturn(true);
+		Mockito
+		.when(secondCollisionObject.isColliding(firstCollisionObject))
+		.thenReturn(true);
+		Collection<StackableCollisionObject> collidingObjects = collisionMap.getCollidingObjects(firstCollisionObject);
+		assertTrue(!collidingObjects.contains(firstCollisionObject));
+		assertTrue(collidingObjects.contains(secondCollisionObject));
+	}
+	
+	@Test
+	public void detectCollidingObject5_5And5_4Collision()
+	{
+		StackableCollisionObject firstCollisionObject = mockObject(calcPosition(5, 5));
+		StackableCollisionObject secondCollisionObject = mockObject(calcPosition(5, 4));
 		collisionMap.insert(firstCollisionObject);
 		collisionMap.insert(secondCollisionObject);
 		Mockito

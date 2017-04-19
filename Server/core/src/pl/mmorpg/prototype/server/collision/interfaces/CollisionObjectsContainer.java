@@ -12,4 +12,8 @@ public interface CollisionObjectsContainer<T extends StackableCollisionObject>
 	
 	Collection<T> getObjects();
 	
+	T top();
+	
+	T removeFromTop();
+	
 }

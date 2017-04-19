@@ -6,7 +6,9 @@ public interface StackableCollisionObject extends RectangleCollisionObject
 {
 	Point getCenter();
 
-	int getUniqueId();
+	int getCollisionContainerId();
+	
+	void setCollisionContainerId(int id);
 
 	boolean isColliding(RectangleCollisionObject object);
 }

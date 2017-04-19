@@ -7,7 +7,7 @@ public class ThereIsNoSuchObjectToRemoveException extends RuntimeException
 
 	public ThereIsNoSuchObjectToRemoveException(StackableCollisionObject object)
 	{
-		super("Object id: " + object.getUniqueId() + ", object: " + object);
+		super("Object id: " + object.getCollisionContainerId() + ", object: " + object);
 	}
 
 }

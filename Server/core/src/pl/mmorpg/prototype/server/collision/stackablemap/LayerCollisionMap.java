@@ -16,9 +16,13 @@ import pl.mmorpg.prototype.server.exceptions.OutOfBoundsException;
 public class LayerCollisionMap<T extends StackableCollisionObject> implements StackableCollisionMap<T>
 {
 	private CollisionObjectsContainer<T>[][] collisionMap;
+	private int containerWidth;
+	private int containerHeight;
 
 	public LayerCollisionMap(int width, int height, int containerWidth, int containerHeight)
 	{
+		this.containerWidth = containerWidth;
+		this.containerHeight = containerHeight;
 		collisionMap = createCollisionMap(width, height); 
 	}
 
@@ -43,7 +47,7 @@ public class LayerCollisionMap<T extends StackableCollisionObject> implements St
 
 	private CollisionObjectsContainer<T> getContainer(Point position)
 	{
-		return collisionMap[position.x][position.y];
+		return collisionMap[position.x / containerWidth][position.y / containerHeight];
 	}
 
 	@Override
@@ -67,7 +71,7 @@ public class LayerCollisionMap<T extends StackableCollisionObject> implements St
 		CollisionObjectsContainer<T> container = getContainer(position);
 
 		container.removeOrThrow(object);
-		position.x++;
+		position.x+=containerWidth;
 		CollisionObjectsContainer<T> newFirstLayerContainer = getContainer(position);
 		newFirstLayerContainer.insertObject(object);
 	}
@@ -79,7 +83,7 @@ public class LayerCollisionMap<T extends StackableCollisionObject> implements St
 		CollisionObjectsContainer<T> container = getContainer(position);
 
 		container.removeOrThrow(object);
-		position.x--;
+		position.x-=containerWidth;
 		CollisionObjectsContainer<T> newFirstLayerContainer = getContainer(position);
 		newFirstLayerContainer.insertObject(object);
 
@@ -89,12 +93,13 @@ public class LayerCollisionMap<T extends StackableCollisionObject> implements St
 	public void moveDown(T object)
 	{
 		Point position = new Point(object.getCenter());
-		if (position.y + 1 >= collisionMap[0].length)
+		if (position.y + containerHeight >= collisionMap[0].length * containerHeight)
 			throw new OutOfBoundsException(new Point(position.x, position.y + 1));
+		
 		CollisionObjectsContainer<T> container = getContainer(position);
 
 		container.removeOrThrow(object);
-		position.y++;
+		position.y+= containerHeight;
 		CollisionObjectsContainer<T> newFirstLayerContainer = getContainer(position);
 		newFirstLayerContainer.insertObject(object);
 
@@ -117,37 +122,40 @@ public class LayerCollisionMap<T extends StackableCollisionObject> implements St
 	public Collection<T> getCollidingObjects(T object)
 	{
 		Point position = new Point(object.getCenter());
-		Rectangle containerIndexRange = new Rectangle(position.x, position.y, 1, 1);
-		if(containerIndexRange.x > 0)
-		{
-			containerIndexRange.width++;
-			containerIndexRange.x--;
-		}
-		if(containerIndexRange.x < collisionMap.length - 1)
-			containerIndexRange.width++;
-		if(containerIndexRange.y > 0)
-		{
-			containerIndexRange.y--;
-			containerIndexRange.height++;
-		}
-		if(containerIndexRange.y < collisionMap[0].length - 1)
-			containerIndexRange.height++;
+		Rectangle containerIndexRange = getContainerIndexRange(position);
 		
-		return getCollidingObjects(object, containerIndexRange);
-	}
-
-	private Collection<T> getCollidingObjects(T object, Rectangle containerIndexRange)
-	{
 		Collection<T> collisionObjects = new LinkedList<>();
 		for(int i=containerIndexRange.x; i < containerIndexRange.x + containerIndexRange.width; i++)
 			for(int j=containerIndexRange.y; j < containerIndexRange.y + containerIndexRange.height; j++)
 			{
-				CollisionObjectsContainer<T> targetContainer = getContainer(new Point(i, j));
+				CollisionObjectsContainer<T> targetContainer = getContainer(new Point(i*containerWidth, j*containerHeight));
 				Collection<T> collidingObjects = getCollidingObjects(object, targetContainer);
 				collisionObjects.addAll(collidingObjects);
 			}
 		return collisionObjects;
 	}
+
+	private Rectangle getContainerIndexRange(Point position)
+	{
+		Rectangle containerIndexRange = new Rectangle(position.x/containerWidth, position.y/containerHeight, 1, 1);
+
+		if(containerIndexRange.x < collisionMap.length - 1)
+			containerIndexRange.width++;
+		if(containerIndexRange.y < collisionMap[0].length - 1)
+			containerIndexRange.height++;
+		if(containerIndexRange.x > 0)
+		{
+			containerIndexRange.width++;
+			containerIndexRange.x--;
+		}
+		if(containerIndexRange.y > 0)
+		{
+			containerIndexRange.y--;
+			containerIndexRange.height++;
+		}
+		return containerIndexRange;
+	}
+
 
 	private Collection<T> getCollidingObjects(RectangleCollisionObject object,
 			CollisionObjectsContainer<T> targetContainer)
