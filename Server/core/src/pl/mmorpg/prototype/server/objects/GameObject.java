@@ -5,12 +5,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-import pl.mmorpg.prototype.server.collision.CollisionObject;
+import pl.mmorpg.prototype.server.collision.interfaces.RectangleCollisionObject;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.states.GameObjectsContainer;
 
-public abstract class GameObject implements CollisionObject
+public abstract class GameObject implements RectangleCollisionObject
 {
     public static final NullGameObject NULL_OBJECT = new NullGameObject();
 
@@ -123,7 +123,7 @@ public abstract class GameObject implements CollisionObject
         linkedContainer.remove(getId());
         packetSender.sendToAll(PacketsMaker.makeRemovalPacket(getId()));
     }
-
+	
     private static class NullGameObject extends GameObject
     {
 

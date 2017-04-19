@@ -1,19 +1,21 @@
 package pl.mmorpg.prototype.collision;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import pl.mmorpg.prototype.server.collision.CollisionMap;
+import pl.mmorpg.prototype.server.collision.interfaces.CollisionMap;
+import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 
-public class CollisionMapTests
+public class PixelCollisionMapTests
 {
 
     @Test
     public void borderColiision()
     {
-        CollisionMap<CollisionMapTestObject> collisionMap = new CollisionMap<>(4, 4);
-        CollisionMapTestObject object = new CollisionMapTestObject();
+        PixelCollisionMap<PixelCollisionMapTestObject> collisionMap = new PixelCollisionMap<>(4, 4);
+        PixelCollisionMapTestObject object = new PixelCollisionMapTestObject();
         collisionMap.placeObjectOnBorder(object);
         assertTrue(collisionMap.get(0, 0) != null);
         assertTrue(collisionMap.get(0, 1) != null);
@@ -36,7 +38,7 @@ public class CollisionMapTests
     @Test
     public void outOfBoundCollision()
     {
-        CollisionMap<CollisionMapTestObject> collisionMap = new CollisionMap<>(1000, 1000);
+        CollisionMap<PixelCollisionMapTestObject> collisionMap = new PixelCollisionMap<>(1000, 1000);
         assertEquals(collisionMap.get(-1, 23), null);
         assertEquals(collisionMap.get(234, -2), null);
         assertEquals(collisionMap.get(-123, -1), null);
@@ -48,25 +50,25 @@ public class CollisionMapTests
     @Test
     public void successfulInstertionTest()
     {
-        CollisionMap<CollisionMapTestObject> collisionMap = new CollisionMap<>(1000, 1000);
+        CollisionMap<PixelCollisionMapTestObject> collisionMap = new PixelCollisionMap<>(1000, 1000);
         int objectWidth = 20;
         int objectHeight = 20;
-        CollisionMapTestObject object = new CollisionMapTestObject(25, 20, objectWidth, objectHeight);
+        PixelCollisionMapTestObject object = new PixelCollisionMapTestObject(25, 20, objectWidth, objectHeight);
         collisionMap.insert(object);
         assertThereIsPlacedObject(collisionMap, object);     
         assertNullAroundObject(collisionMap, object);
     }
 
-    private void assertThereIsPlacedObject(CollisionMap<CollisionMapTestObject> collisionMap,
-            CollisionMapTestObject object)
+    private void assertThereIsPlacedObject(CollisionMap<PixelCollisionMapTestObject> collisionMap,
+            PixelCollisionMapTestObject object)
     {
         for (int i = (int) object.getX(); i <= object.getWidth() + object.getX(); i++)
             for (int j = (int) object.getY(); j <= object.getY() + object.getHeight(); j++)
                 assertEquals(collisionMap.get(i, j), object);
     }
 
-    private void assertNullAroundObject(CollisionMap<CollisionMapTestObject> collisionMap,
-            CollisionMapTestObject object)
+    private void assertNullAroundObject(CollisionMap<PixelCollisionMapTestObject> collisionMap,
+            PixelCollisionMapTestObject object)
     {
         for (int i = (int) object.getX() - 1; i <= object.getX() + object.getWidth() + 1; i++)
         {
@@ -83,13 +85,13 @@ public class CollisionMapTests
     @Test
     public void successfullMovement()
     {
-        CollisionMap<CollisionMapTestObject> collisionMap = new CollisionMap<>(100, 100);
+        CollisionMap<PixelCollisionMapTestObject> collisionMap = new PixelCollisionMap<>(100, 100);
         int objectWidth = 20;
         int objectHeight = 20;
-        CollisionMapTestObject object = new CollisionMapTestObject(25, 20, objectWidth, objectHeight);
+        PixelCollisionMapTestObject object = new PixelCollisionMapTestObject(25, 20, objectWidth, objectHeight);
         collisionMap.insert(object);
         int moveValue = 2;
-        collisionMap.tryToRepositionCollisionGoingRight(moveValue, object);
+        collisionMap.tryToRepositionGoingRight(moveValue, object);
         object.x += 2;
         assertThereIsPlacedObject(collisionMap, object);
         assertNullAroundObject(collisionMap, object);

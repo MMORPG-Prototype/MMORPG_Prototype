@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.IdSupplier;
-import pl.mmorpg.prototype.server.collision.CollisionMap;
+import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.GameObject;
@@ -33,8 +33,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 {
     private Server server;
     private StateManager states;
-    private CollisionMap<GameObject> collisionMap = new CollisionMap<>(1500, 800, GameObject.NULL_OBJECT);
-    private CollisionMap<MonsterBody> deadBodiesCollisionMap = new CollisionMap<>(1500, 800, 4);
+    private PixelCollisionMap<GameObject> collisionMap = new PixelCollisionMap<>(1500, 800, GameObject.NULL_OBJECT);
+    private PixelCollisionMap<MonsterBody> deadBodiesCollisionMap = new PixelCollisionMap<>(1500, 800, 4);
     private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
     private TiledMapRenderer mapRenderer;
     private ServerInputHandler inputHandler = new ServerInputHandler(this);
@@ -115,7 +115,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         return gameObjects;
     }
 
-    public CollisionMap<GameObject> getCollisionMap()
+    public PixelCollisionMap<GameObject> getCollisionMap()
     {
         return collisionMap;
     }

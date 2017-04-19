@@ -1,36 +1,35 @@
-package pl.mmorpg.prototype.server.collision;
+package pl.mmorpg.prototype.server.collision.pixelmap;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
+import pl.mmorpg.prototype.server.collision.interfaces.CollisionMap;
+import pl.mmorpg.prototype.server.collision.interfaces.RectangleCollisionObject;
 import pl.mmorpg.prototype.server.resources.Assets;
 
-public class CollisionMap<T extends CollisionObject>
+public class PixelCollisionMap<T extends RectangleCollisionObject> implements CollisionMap<T>
 {
     private Object[][] collisionMap;
     private int scale;
     
-    
-    
-    public CollisionMap(int width, int height)
+    public PixelCollisionMap(int width, int height)
     {
         this(width, height, 1);
     }
 
-    public CollisionMap(int width, int height, int scale)
+    public PixelCollisionMap(int width, int height, int scale)
     {
         this.scale = scale;
         collisionMap = createCollisionMap(width, height);
     }
     
-    public CollisionMap(int width, int height, int scale, T borderObject)
+    public PixelCollisionMap(int width, int height, int scale, T borderObject)
     {
         this(width, height, scale);
         placeObjectOnBorder(borderObject);
     }
     
-    public CollisionMap(int width, int height, T borderObject)
+    public PixelCollisionMap(int width, int height, T borderObject)
     {
         this(width, height);
         placeObjectOnBorder(borderObject);
@@ -73,6 +72,7 @@ public class CollisionMap<T extends CollisionObject>
         return scale;
     }
 
+    @Override
     public void insert(T object)
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
@@ -80,9 +80,9 @@ public class CollisionMap<T extends CollisionObject>
         for (int i = collision.x; i <= collision.x + collision.width; i++)
             for (int j = collision.y; j <= collision.y + collision.height; j++)
                 collisionMap[i][j] = object;
-
     }
-    
+
+    @Override
     public void remove(T object)
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
@@ -92,7 +92,8 @@ public class CollisionMap<T extends CollisionObject>
                 collisionMap[i][j] = null;
     }
 
-    public T tryToRepositionCollisionGoingLeft(int moveValue, T object)
+    @Override
+    public T tryToRepositionGoingLeft(int moveValue, T object)
     {
         T possibleCollision = checkForSpaceGoingLeft(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
@@ -101,7 +102,8 @@ public class CollisionMap<T extends CollisionObject>
         return possibleCollision;
     }
 
-    public T tryToRepositionCollisionGoingRight(int moveValue, T object)
+    @Override
+    public T tryToRepositionGoingRight(int moveValue, T object)
     {
         T possibleCollision = checkForSpaceGoingRight(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
@@ -110,7 +112,8 @@ public class CollisionMap<T extends CollisionObject>
         return possibleCollision;
     }
 
-    public T tryToRepositionCollisionGoingDown(int moveValue, T object)
+    @Override
+    public T tryToRepositionGoingDown(int moveValue, T object)
     {
         T possibleCollision = checkForSpaceGoingDown(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
@@ -119,7 +122,8 @@ public class CollisionMap<T extends CollisionObject>
         return possibleCollision;
     }
 
-    public T tryToRepositionCollisionGoingUp(int moveValue, T object)
+    @Override
+    public T tryToRepositionGoingUp(int moveValue, T object)
     {
         T possibleCollision = checkForSpaceGoingUp(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
@@ -225,17 +229,6 @@ public class CollisionMap<T extends CollisionObject>
                     batch.draw(blackPixel, i, j);
     }
 
-    public T isColliding(Rectangle rectangle)
-    {
-        IntegerRectangle collision = new IntegerRectangle(rectangle, scale);
-
-        for (int i = collision.x; i < collision.x + collision.width; i++)
-            for (int j = collision.y; j < collision.y + collision.height; j++)
-                if (collisionMap[i][j] != null)
-                    return (T)collisionMap[i][j];
-        return null;
-    }
-
     public T get(int gameX, int gameY)
     {
         if (gameX / scale >= collisionMap.length || gameY / scale >= collisionMap[0].length
@@ -243,5 +236,4 @@ public class CollisionMap<T extends CollisionObject>
             return null;
         return (T)collisionMap[gameX / scale][gameY / scale];
     }
-
 }

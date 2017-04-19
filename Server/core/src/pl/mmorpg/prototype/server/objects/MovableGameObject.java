@@ -2,7 +2,7 @@ package pl.mmorpg.prototype.server.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import pl.mmorpg.prototype.server.collision.CollisionMap;
+import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -29,7 +29,7 @@ public abstract class MovableGameObject extends GameObject
         currentPacketSendingTime += deltaTime;
     }
 
-    public GameObject moveRight(CollisionMap<GameObject> collisionMap, float deltaTime)
+    public GameObject moveRight(PixelCollisionMap<GameObject> collisionMap, float deltaTime)
     {
         movementX += getMoveSpeed() * deltaTime;
         int collisionMoveValue = (int) movementX;
@@ -54,7 +54,7 @@ public abstract class MovableGameObject extends GameObject
         }
     }
 
-    public GameObject moveLeft(CollisionMap<GameObject> collisionMap, float deltaTime)
+    public GameObject moveLeft(PixelCollisionMap<GameObject> collisionMap, float deltaTime)
     {
         movementX -= getMoveSpeed() * deltaTime;
         int collisionMoveValue = (int) -movementX;
@@ -71,7 +71,7 @@ public abstract class MovableGameObject extends GameObject
         return collision;
     }
 
-    public GameObject moveDown(CollisionMap<GameObject> collisionMap, float deltaTime)
+    public GameObject moveDown(PixelCollisionMap<GameObject> collisionMap, float deltaTime)
     {
         movementY -= getMoveSpeed() * deltaTime;
         int collisionMoveValue = (int) -movementY;
@@ -88,7 +88,7 @@ public abstract class MovableGameObject extends GameObject
         return collision;
     }
 
-    public GameObject moveUp(CollisionMap<GameObject> collisionMap, float deltaTime)
+    public GameObject moveUp(PixelCollisionMap<GameObject> collisionMap, float deltaTime)
     {
         movementY += getMoveSpeed() * deltaTime;
         int collisionMoveValue = (int) movementY;
@@ -105,33 +105,33 @@ public abstract class MovableGameObject extends GameObject
         return collision;
     }
 
-    public GameObject moveRight(CollisionMap<GameObject> collisionMap, int moveValue)
+    public GameObject moveRight(PixelCollisionMap<GameObject> collisionMap, int moveValue)
     {
-        GameObject collision = collisionMap.tryToRepositionCollisionGoingRight(moveValue, this);
+        GameObject collision = collisionMap.tryToRepositionGoingRight(moveValue, this);
         if (collision == null)
             setX(getX() + moveValue * collisionMap.getScale());
         return collision;
     }
 
-    public GameObject moveLeft(CollisionMap<GameObject> collisionMap, int moveValue)
+    public GameObject moveLeft(PixelCollisionMap<GameObject> collisionMap, int moveValue)
     {
-        GameObject collision = collisionMap.tryToRepositionCollisionGoingLeft(moveValue, this);
+        GameObject collision = collisionMap.tryToRepositionGoingLeft(moveValue, this);
         if (collision == null)
             setX(getX() - moveValue * collisionMap.getScale());
         return collision;
     }
 
-    public GameObject moveUp(CollisionMap<GameObject> collisionMap, int moveValue)
+    public GameObject moveUp(PixelCollisionMap<GameObject> collisionMap, int moveValue)
     {
-        GameObject collision = collisionMap.tryToRepositionCollisionGoingUp(moveValue, this);
+        GameObject collision = collisionMap.tryToRepositionGoingUp(moveValue, this);
         if (collision == null)
             setY(getY() + moveValue * collisionMap.getScale());
         return collision;
     }
 
-    public GameObject moveDown(CollisionMap<GameObject> collisionMap, int moveValue)
+    public GameObject moveDown(PixelCollisionMap<GameObject> collisionMap, int moveValue)
     {
-        GameObject collision = collisionMap.tryToRepositionCollisionGoingDown(moveValue, this);
+        GameObject collision = collisionMap.tryToRepositionGoingDown(moveValue, this);
         if (collision == null)
             setY(getY() - moveValue * collisionMap.getScale());
         return collision;
@@ -176,7 +176,7 @@ public abstract class MovableGameObject extends GameObject
         this.packetSendingInterval = packetSendingInterval;
     }
     
-    protected void chaseTarget(float deltaTime, CollisionMap<GameObject> collisionMap, Monster target)
+    protected void chaseTarget(float deltaTime, PixelCollisionMap<GameObject> collisionMap, Monster target)
     {
         float deltaX = target.getX() - getX();
         if(Math.abs(deltaX) > stopChasingDistance)

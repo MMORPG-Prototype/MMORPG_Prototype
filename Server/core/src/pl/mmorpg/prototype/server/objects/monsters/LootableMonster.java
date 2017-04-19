@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.server.objects.monsters;
 import com.badlogic.gdx.graphics.Texture;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
-import pl.mmorpg.prototype.server.collision.CollisionMap;
+import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
@@ -14,7 +14,7 @@ public abstract class LootableMonster extends AutoTargetingMonster
 	private PlayState playState;
 
 	protected LootableMonster(Texture lookout, long id, MonsterProperties properties,
-			CollisionMap<GameObject> collisionMap, PlayState playState)
+			PixelCollisionMap<GameObject> collisionMap, PlayState playState)
 	{
 		super(lookout, id, properties, collisionMap, playState);
 		this.playState = playState;
