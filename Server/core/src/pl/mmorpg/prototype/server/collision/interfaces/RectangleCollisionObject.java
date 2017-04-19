@@ -6,5 +6,8 @@ public interface RectangleCollisionObject
 {
 	Rectangle getCollisionRect();
 
-
+	default boolean containsPoint(int gameX, int gameY)
+	{
+		return getCollisionRect().contains(gameX, gameY);
+	}
 }

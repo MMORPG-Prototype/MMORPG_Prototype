@@ -56,7 +56,7 @@ public abstract class AutoTargetingMonster extends WalkingMonster
         for (int i = 0; i < numberOfCheckingPointPerDimension; i++)
             for (int j = 0; j < numberOfCheckingPointPerDimension; j++)
             {
-                GameObject gameObject = collisionMap.get(searchingStartingPointX + i * checkInterval,
+                GameObject gameObject = collisionMap.getTopObject(searchingStartingPointX + i * checkInterval,
                         searchingStartingPointY + j * checkInterval);
                 if (canBeTargeted(gameObject))
                     return (Monster) gameObject;

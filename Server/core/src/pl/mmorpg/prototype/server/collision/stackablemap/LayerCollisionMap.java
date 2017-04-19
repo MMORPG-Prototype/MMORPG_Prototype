@@ -51,7 +51,7 @@ public class LayerCollisionMap<T extends StackableCollisionObject> implements St
 	}
 
 	@Override
-	public Collection<T> getCollisionObjects(Point position)
+	public Collection<T> getCollisionObjectsFromSingleContainer(Point position)
 	{
 		Collection<T> collisionObjects = getContainer(position).getObjects();
 		return collisionObjects;
@@ -166,6 +166,12 @@ public class LayerCollisionMap<T extends StackableCollisionObject> implements St
 				.filter( possibleCollision -> object != possibleCollision 
 											&& possibleCollision.isColliding(object))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public T getTopObject(int gameX, int gameY)
+	{
+		return getContainer(new Point(gameX, gameY)).top(gameX, gameY);
 	}
 	
 	/*public void printContent()

@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public interface StackableCollisionMap<T extends StackableCollisionObject> extends CollisionMap<T>
 {
-	Collection<T> getCollisionObjects(Point position);
+	Collection<T> getCollisionObjectsFromSingleContainer(Point position);
 	
 	Collection<T> getCollidingObjects(T object);
 
@@ -24,7 +24,7 @@ public interface StackableCollisionMap<T extends StackableCollisionObject> exten
 		for(int i=0; i<moveValue; i++)
 		{	
 			position.x++;
-			T collision = get(position.x, position.y);
+			T collision = getTopObject(position.x, position.y);
 			if(collision != null)
 			{
 				moveRight(object);
@@ -32,15 +32,6 @@ public interface StackableCollisionMap<T extends StackableCollisionObject> exten
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	default T get(int gameX, int gameY)
-	{
-		Collection<T> collisionObjects = getCollisionObjects(new Point(gameX, gameY));
-		return collisionObjects.stream()
-				.findFirst()
-				.orElse(null);
 	}
 	
 
@@ -51,7 +42,7 @@ public interface StackableCollisionMap<T extends StackableCollisionObject> exten
 		for(int i=0; i<moveValue; i++)
 		{	
 			position.x--;
-			T collision = get(position.x, position.y);
+			T collision = getTopObject(position.x, position.y);
 			if(collision != null)
 			{
 				moveLeft(object);
@@ -68,7 +59,7 @@ public interface StackableCollisionMap<T extends StackableCollisionObject> exten
 		for(int i=0; i<moveValue; i++)
 		{	
 			position.y--;
-			T collision = get(position.x, position.y);
+			T collision = getTopObject(position.x, position.y);
 			if(collision != null)
 			{
 				moveUp(object);
@@ -85,7 +76,7 @@ public interface StackableCollisionMap<T extends StackableCollisionObject> exten
 		for(int i=0; i<moveValue; i++)
 		{	
 			position.y++;
-			T collision = get(position.x, position.y);
+			T collision = getTopObject(position.x, position.y);
 			if(collision != null)
 			{
 				moveDown(object);

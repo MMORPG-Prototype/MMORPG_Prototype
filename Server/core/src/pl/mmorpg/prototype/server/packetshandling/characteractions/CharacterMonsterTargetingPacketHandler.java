@@ -32,7 +32,7 @@ public class CharacterMonsterTargetingPacketHandler extends PacketHandlerBase<Mo
     @Override
     public void handle(Connection connection, MonsterTargetingPacket packet)
     {
-        GameObject target = playState.getCollisionMap().get(packet.gameX, packet.gameY);
+        GameObject target = playState.getCollisionMap().getTopObject(packet.gameX, packet.gameY);
         if (target != null && target instanceof Monster)
         {
             UserCharacter userCharacter = PacketHandlingHelper.getUserCharacterByConnectionId(connection.getID(),

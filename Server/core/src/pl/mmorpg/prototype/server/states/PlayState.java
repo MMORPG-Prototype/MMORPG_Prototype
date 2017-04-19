@@ -168,12 +168,12 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 
     public boolean hasContainer(int gameX, int gameY)
     {
-    	return deadBodiesCollisionMap.get(gameX, gameY) != null;
+    	return deadBodiesCollisionMap.getTopObject(gameX, gameY) != null;
     }
 
 	public Collection<Item> getContainerItems(int gameX, int gameY)
 	{
-		MonsterBody monsterBody = deadBodiesCollisionMap.get(gameX, gameY);
+		MonsterBody monsterBody = deadBodiesCollisionMap.getTopObject(gameX, gameY);
 		return monsterBody.getLoot();		
 	}
 

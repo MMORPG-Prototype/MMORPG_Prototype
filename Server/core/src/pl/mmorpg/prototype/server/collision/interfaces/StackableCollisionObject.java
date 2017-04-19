@@ -11,4 +11,5 @@ public interface StackableCollisionObject extends RectangleCollisionObject
 	void setCollisionContainerId(int id);
 
 	boolean isColliding(RectangleCollisionObject object);
+
 }

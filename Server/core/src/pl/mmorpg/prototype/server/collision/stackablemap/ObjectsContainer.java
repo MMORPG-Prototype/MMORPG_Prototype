@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server.collision.stackablemap;
 
 import java.util.Collection;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import pl.mmorpg.prototype.server.collision.interfaces.CollisionObjectsContainer;
@@ -58,6 +59,20 @@ public class ObjectsContainer<T extends StackableCollisionObject> implements Col
 	public T removeFromTop()
 	{
 		return objects.pollLastEntry().getValue();
+	}
+	
+	@Override
+	public T top(int gameX, int gameY)
+	{
+		Entry<Integer, T> topEntry = objects.lastEntry();
+		while(topEntry != null)
+		{
+			T object = topEntry.getValue();
+			if(object.containsPoint(gameX, gameY))
+				return object;
+			topEntry = objects.lowerEntry(topEntry.getKey());
+		}
+		return null;
 	}
 
 }

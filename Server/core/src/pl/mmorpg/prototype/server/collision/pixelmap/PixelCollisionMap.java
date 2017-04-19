@@ -229,7 +229,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
                     batch.draw(blackPixel, i, j);
     }
 
-    public T get(int gameX, int gameY)
+    public T getTopObject(int gameX, int gameY)
     {
         if (gameX / scale >= collisionMap.length || gameY / scale >= collisionMap[0].length
                 || gameX < 0 || gameY < 0)

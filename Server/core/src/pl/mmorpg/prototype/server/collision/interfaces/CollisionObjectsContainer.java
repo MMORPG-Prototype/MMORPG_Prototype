@@ -14,6 +14,9 @@ public interface CollisionObjectsContainer<T extends StackableCollisionObject>
 	
 	T top();
 	
+	T top(int gameX, int gameY);
+	
 	T removeFromTop();
+
 	
 }

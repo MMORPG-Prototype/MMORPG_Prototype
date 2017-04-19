@@ -47,7 +47,7 @@ public class LayerCollisionMapTests
 		.when(object.getCenter())
 		.thenReturn(position);
 		collisionMap.insert(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(object.getCenter());
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(object.getCenter());
 		assertTrue(collisionObjects.contains(object));
 		assertEquals(collisionObjects.size(), 1);
 	}
@@ -71,7 +71,7 @@ public class LayerCollisionMapTests
 		.thenReturn(calcPosition(1, 1));
 		collisionMap.insert(object);
 		collisionMap.remove(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(1, 1));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(1, 1));
 		assertTrue(collisionObjects.isEmpty());
 	}
 	
@@ -83,7 +83,7 @@ public class LayerCollisionMapTests
 		.thenReturn(calcPosition(1, 1));
 		collisionMap.insert(object);
 		collisionMap.moveRight(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(2, 1));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(2, 1));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -95,7 +95,7 @@ public class LayerCollisionMapTests
 		.thenReturn(calcPosition(2, 1));
 		collisionMap.insert(object);
 		collisionMap.moveRight(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(3, 1));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(3, 1));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -107,7 +107,7 @@ public class LayerCollisionMapTests
 		.thenReturn(calcPosition(2, 1));
 		collisionMap.insert(object);
 		collisionMap.moveRight(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(2, 1));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(2, 1));
 		assertTrue(collisionObjects.isEmpty());
 	}
 	
@@ -119,7 +119,7 @@ public class LayerCollisionMapTests
 		.thenReturn(calcPosition(1, 1));
 		collisionMap.insert(object);
 		collisionMap.moveRight(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(1, 1));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(1, 1));
 		assertTrue(collisionObjects.isEmpty());
 	}
 	
@@ -131,7 +131,7 @@ public class LayerCollisionMapTests
 		.thenReturn(calcPosition(2, 2));
 		collisionMap.insert(object);
 		collisionMap.moveDown(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(2, 3));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(2, 3));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -143,7 +143,7 @@ public class LayerCollisionMapTests
 		.thenReturn(calcPosition(2, 3));
 		collisionMap.insert(object);
 		collisionMap.moveUp(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(2, 2));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(2, 2));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -159,7 +159,7 @@ public class LayerCollisionMapTests
 		.when(object.getCenter())
 		.thenReturn(calcPosition(2, 3));
 		collisionMap.moveDown(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(2, 4));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(2, 4));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -171,7 +171,7 @@ public class LayerCollisionMapTests
 		.thenReturn(calcPosition(2, 2));
 		collisionMap.insert(object);
 		collisionMap.moveLeft(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(1, 2));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(1, 2));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -191,7 +191,7 @@ public class LayerCollisionMapTests
 		.when(object.getCenter())
 		.thenReturn(calcPosition(1, 2));
 		collisionMap.moveLeft(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(0, 2));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(0, 2));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
@@ -219,7 +219,7 @@ public class LayerCollisionMapTests
 		.when(object.getCenter())
 		.thenReturn(calcPosition(2, 4));
 		collisionMap.moveRight(object);
-		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjects(calcPosition(3, 4));
+		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(3, 4));
 		assertTrue(collisionObjects.contains(object));
 	}
 	
