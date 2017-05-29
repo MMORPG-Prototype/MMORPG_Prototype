@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public abstract class GameObject extends Sprite
 {
     private long id;
+    private int layer = 0;
 
     public GameObject(Texture lookout, long id)
     {
@@ -40,4 +41,14 @@ public abstract class GameObject extends Sprite
     public void onRemoval(GraphicObjectsContainer graphics)
     {
     }
+
+	public int getLayer()
+	{
+		return layer;
+	}
+
+	public void setLayer(int layer)
+	{
+		this.layer = layer;
+	}
 }

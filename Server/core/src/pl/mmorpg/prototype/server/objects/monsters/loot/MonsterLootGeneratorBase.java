@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.Range;
 
-import pl.mmorpg.prototype.clientservercommon.IdSupplier;
+import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
 import pl.mmorpg.prototype.server.objects.items.Item;
 

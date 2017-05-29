@@ -80,8 +80,8 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         player = new NullPlayer();
         this.states = states;
         inputMultiplexer = new InputMultiplexer();
-        camera.setToOrtho(false);
-
+        camera.setToOrtho(false, 900, 500);
+        
         TiledMap map = Assets.get("Map/tiled.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
         mapRenderer.setView(camera);
@@ -128,13 +128,16 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
             object.update(deltaTime);
 
         graphicObjectsUpdate(deltaTime);
-        camera.viewportWidth = 900;
-        camera.viewportHeight = 500;
-        camera.position.set(player.getX() - player.getWidth() / 2, player.getY() - player.getHeight() / 2, 0);
-        camera.update();
+        cameraUpdate();
         inputHandler.process();
         userInterface.update();
     }
+
+	private void cameraUpdate()
+	{
+		camera.position.set(player.getX() - player.getWidth() / 2, player.getY() - player.getHeight() / 2, 0);
+        camera.update();
+	}
 
     private void graphicObjectsUpdate(float deltaTime)
     {

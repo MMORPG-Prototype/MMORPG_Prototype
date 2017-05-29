@@ -15,10 +15,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Server;
 
-import pl.mmorpg.prototype.clientservercommon.IdSupplier;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionMap;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.collision.stackablemap.LayerCollisionMap;
+import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.GameObject;

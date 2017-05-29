@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.clientservercommon;
+package pl.mmorpg.prototype.server.communication;
 
 public class IdSupplier
 {

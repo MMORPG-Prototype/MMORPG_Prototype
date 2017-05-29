@@ -1,11 +1,13 @@
 package pl.mmorpg.prototype.client.userinterface;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -19,9 +21,11 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.OpenContainerDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.DialogIdSupplier;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -29,6 +33,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterData
 
 public class UserInterface
 {
+	private final DialogIdSupplier dialogIdSupplier = new DialogIdSupplier();
+	
 	private final Stage stage = Assets.getStage();
 	private final MenuDialog menuDialog;
 	private final InventoryDialog inventoryDialog;
@@ -43,6 +49,7 @@ public class UserInterface
 	private MousePointerToItem mousePointerToItem = new MousePointerToItem();
 
 	private PlayState linkedState;
+	
 
 	public UserInterface(PlayState linkedState, UserCharacterDataPacket character)
 	{
@@ -82,6 +89,15 @@ public class UserInterface
 				}
 			}
 		});
+	}
+	
+	public void mapDialogsWithKeys()
+	{
+		dialogs.map(Keys.T, chatDialog);
+		dialogs.map(Keys.E, equipmentDialog);
+		dialogs.map(Keys.M, menuDialog);
+		dialogs.map(Keys.I, inventoryDialog);
+		dialogs.map(Keys.C, statisticsDialog);
 	}
 
 	private void addOtherDialogs()
@@ -123,14 +139,7 @@ public class UserInterface
 		return dialogs;
 	}
 
-	public void mapDialogsWithKeys()
-	{
-		dialogs.map(Keys.T, chatDialog);
-		dialogs.map(Keys.E, equipmentDialog);
-		dialogs.map(Keys.M, menuDialog);
-		dialogs.map(Keys.I, inventoryDialog);
-		dialogs.map(Keys.C, statisticsDialog);
-	}
+
 
 	public void clear()
 	{
@@ -221,8 +230,12 @@ public class UserInterface
 
 	public void containerOpened(CharacterItemDataPacket[] contentItems)
 	{
+		Dialog containerDialog = new OpenContainerDialog(contentItems, "Container", dialogs, dialogIdSupplier.get());
+		containerDialog.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - containerDialog.getHeight());
+		stage.addActor(containerDialog);
+		dialogs.add(containerDialog);
 		for(CharacterItemDataPacket item : contentItems)
-			System.out.println(item);	
+			System.out.println(item);
 	}
 
 }

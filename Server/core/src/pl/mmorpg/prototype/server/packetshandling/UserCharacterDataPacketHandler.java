@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
-import pl.mmorpg.prototype.clientservercommon.IdSupplier;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.server.UserInfo;
+import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;

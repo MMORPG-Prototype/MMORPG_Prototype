@@ -12,6 +12,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import pl.mmorpg.prototype.client.exceptions.CannotFindSpecifiedDialogTypeException;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.Identifiable;
 
 public class ActorManipulator
 {
@@ -47,10 +48,10 @@ public class ActorManipulator
 			dialogTarget.toFront();
 		}
 	}
-	
+
 	public void hideKeyMappedDialogs()
 	{
-		for(Actor dialog : mappedDialogs.values())
+		for (Actor dialog : mappedDialogs.values())
 			dialog.setVisible(false);
 	}
 
@@ -67,9 +68,17 @@ public class ActorManipulator
 	public Actor searchForDialog(Class<? extends Actor> clazz)
 	{
 		return Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
-				.filter((d) -> d.getClass().equals(clazz))
-				.findFirst()
+				.filter((d) -> d.getClass().equals(clazz)).findFirst()
 				.orElseThrow(CannotFindSpecifiedDialogTypeException::new);
+	}
+
+	public <T extends Actor & Identifiable> void removeDialog(T dialog)
+	{
+		boolean dialogFound = dialogs.removeIf(
+				(d) -> d.getClass().equals(dialog.getClass()) && ((Identifiable) d).getId() == dialog.getId());
+
+		if (!dialogFound)
+			throw new CannotFindSpecifiedDialogTypeException();
 	}
 
 	public void showOrHide(Class<? extends Actor> clazz)
@@ -89,22 +98,19 @@ public class ActorManipulator
 		List<Actor> mouseHoveringDialogs = getDialogsOnMousePosition();
 		if (!mouseHoveringDialogs.isEmpty())
 		{
-			if(!containsLastMouseHoveringDialog(mouseHoveringDialogs))
+			if (!containsLastMouseHoveringDialog(mouseHoveringDialogs))
 			{
 				lastActiveDialog = mouseHoveringDialogs.iterator().next();
 				lastActiveDialog.toFront();
-			}
-			else
+			} else
 				lastActiveDialog.toFront();
 		}
 	}
 
 	private List<Actor> getDialogsOnMousePosition()
 	{
-		List<Actor> mouseHoveringDialogs =
-				Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
-				.filter((d) -> d.isVisible() && mouseHovers(d))
-				.collect(Collectors.toList());
+		List<Actor> mouseHoveringDialogs = Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
+				.filter((d) -> d.isVisible() && mouseHovers(d)).collect(Collectors.toList());
 		return mouseHoveringDialogs;
 	}
 
@@ -127,8 +133,6 @@ public class ActorManipulator
 	public boolean hasDialogOnPosition(float x, float y)
 	{
 		return Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
-				.filter((d) -> d.isVisible() && mouseHovers(d)).
-				findAny().
-				isPresent();
+				.filter((d) -> d.isVisible() && mouseHovers(d)).findAny().isPresent();
 	}
 }

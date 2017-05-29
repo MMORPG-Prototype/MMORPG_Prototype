@@ -2,7 +2,7 @@ package pl.mmorpg.prototype.server.objects;
 
 import com.badlogic.gdx.math.Rectangle;
 
-import pl.mmorpg.prototype.clientservercommon.IdSupplier;
+import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.resources.Assets;
 
 public class MapCollisionUnknownObject extends GameObject
