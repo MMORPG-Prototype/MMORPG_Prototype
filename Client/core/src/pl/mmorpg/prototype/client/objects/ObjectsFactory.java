@@ -1,8 +1,10 @@
 package pl.mmorpg.prototype.client.objects;
 
 import pl.mmorpg.prototype.client.exceptions.GameException;
-import pl.mmorpg.prototype.client.objects.monsters.Dragon;
-import pl.mmorpg.prototype.client.objects.monsters.bodies.DragonBody;
+import pl.mmorpg.prototype.client.objects.monsters.GreenDragon;
+import pl.mmorpg.prototype.client.objects.monsters.RedDragon;
+import pl.mmorpg.prototype.client.objects.monsters.bodies.GreenDragonBody;
+import pl.mmorpg.prototype.client.objects.monsters.bodies.RedDragonBody;
 import pl.mmorpg.prototype.client.objects.spells.FireBall;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 
@@ -18,10 +20,14 @@ public class ObjectsFactory
         GameObject object = null;
         if (identifier.equals(ObjectsIdentifier.getObjectIdentifier(Player.class)))
             object = new Player(id);
-        else if (identifier.equals(ObjectsIdentifier.getObjectIdentifier(Dragon.class)))
-            object = new Dragon(id);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(DragonBody.class)))
-        	object = new DragonBody(id);
+        else if (identifier.equals(ObjectsIdentifier.getObjectIdentifier(GreenDragon.class)))
+            object = new GreenDragon(id);
+        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GreenDragonBody.class)))
+        	object = new GreenDragonBody(id);
+        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(RedDragon.class)))
+        	object = new RedDragon(id);
+        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(RedDragonBody.class)))
+        	object = new RedDragonBody(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(FireBall.class)))
             object = new FireBall(id);
         else

@@ -25,8 +25,9 @@ import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.Item;
-import pl.mmorpg.prototype.server.objects.monsters.Dragon;
+import pl.mmorpg.prototype.server.objects.monsters.GreenDragon;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.objects.monsters.RedDragon;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
 import pl.mmorpg.prototype.server.objects.spells.Fireball;
 import pl.mmorpg.prototype.server.resources.Assets;
@@ -61,14 +62,25 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         Gdx.input.setInputProcessor(inputHandler);
     }
 
-    public void addDragon()
+    public void addGreenDragon()
     {
-        Dragon dragon = new Dragon(IdSupplier.getId(), collisionMap, this);
-        dragon.setPosition(400, 400);
-        collisionMap.insert(dragon);
-        add(dragon);
-        server.sendToAllTCP(PacketsMaker.makeCreationPacket(dragon));
+        Monster dragon = new GreenDragon(IdSupplier.getId(), collisionMap, this);
+        addMonster(dragon);
     }
+    
+	public void addRedDragon()
+	{
+		Monster dragon = new RedDragon(IdSupplier.getId(), collisionMap, this);
+        addMonster(dragon);
+	}
+	
+	private void addMonster(Monster monster)
+	{
+		monster.setPosition(400, 400);
+        collisionMap.insert(monster);
+        add(monster);
+        server.sendToAllTCP(PacketsMaker.makeCreationPacket(monster));	
+	}
 
     @Override
     public void render(SpriteBatch batch)

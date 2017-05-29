@@ -17,7 +17,9 @@ public class ServerInputHandler extends InputAdapter
 	public boolean keyDown(int keycode)
 	{
 		if(keycode == Keys.D)
-			playState.addDragon();
+			playState.addGreenDragon();
+		else if(keycode == Keys.R)
+			playState.addRedDragon();
 		return false;
 	}
 	

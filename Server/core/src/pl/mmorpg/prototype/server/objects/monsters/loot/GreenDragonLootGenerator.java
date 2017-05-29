@@ -7,7 +7,7 @@ import org.apache.commons.lang3.Range;
 
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 
-public class DragonLootGenerator extends MonsterLootGeneratorBase
+public class GreenDragonLootGenerator extends MonsterLootGeneratorBase
 {
 	@Override
 	public Range<Integer> getGoldRange()

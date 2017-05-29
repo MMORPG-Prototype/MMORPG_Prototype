@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.clientservercommon.packets.monsterproperties;
 
-public class DragonPropertiesBuilder extends MonsterProperties.Builder
+public class GreenDragonPropertiesBuilder extends MonsterProperties.Builder
 {
 	@Override
 	public MonsterProperties build()

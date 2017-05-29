@@ -55,7 +55,7 @@ public abstract class WalkingGameObject extends MovableGameObject
         {
             characterTextures[i] = new TextureRegion[countX];
             for (int j = 0; j < countX; j++)
-                characterTextures[i][j] = charactersTextures[i + fromX][j + fromY];
+                characterTextures[i][j] = charactersTextures[i + fromY][j + fromX];
         }
         return characterTextures;
     }

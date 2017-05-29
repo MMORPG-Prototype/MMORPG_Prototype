@@ -139,8 +139,6 @@ public class UserInterface
 		return dialogs;
 	}
 
-
-
 	public void clear()
 	{
 		stage.clear();
@@ -231,11 +229,14 @@ public class UserInterface
 	public void containerOpened(CharacterItemDataPacket[] contentItems)
 	{
 		Dialog containerDialog = new OpenContainerDialog(contentItems, "Container", dialogs, dialogIdSupplier.get());
-		containerDialog.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - containerDialog.getHeight());
+		positionDialogNearMouse(containerDialog);
 		stage.addActor(containerDialog);
 		dialogs.add(containerDialog);
-		for(CharacterItemDataPacket item : contentItems)
-			System.out.println(item);
+	}
+
+	private void positionDialogNearMouse(Dialog containerDialog)
+	{
+		containerDialog.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - containerDialog.getHeight());
 	}
 
 }

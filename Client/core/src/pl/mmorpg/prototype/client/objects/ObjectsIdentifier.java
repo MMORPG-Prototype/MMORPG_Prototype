@@ -3,8 +3,10 @@ package pl.mmorpg.prototype.client.objects;
 import java.util.HashMap;
 import java.util.Map;
 
-import pl.mmorpg.prototype.client.objects.monsters.Dragon;
-import pl.mmorpg.prototype.client.objects.monsters.bodies.DragonBody;
+import pl.mmorpg.prototype.client.objects.monsters.GreenDragon;
+import pl.mmorpg.prototype.client.objects.monsters.RedDragon;
+import pl.mmorpg.prototype.client.objects.monsters.bodies.GreenDragonBody;
+import pl.mmorpg.prototype.client.objects.monsters.bodies.RedDragonBody;
 import pl.mmorpg.prototype.client.objects.spells.FireBall;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 
@@ -15,8 +17,10 @@ public class ObjectsIdentifier
     static
     {
         identifiers.put(Player.class, ObjectsIdentifiers.PLAYER);
-        identifiers.put(Dragon.class, ObjectsIdentifiers.DRAGON);
-        identifiers.put(DragonBody.class, ObjectsIdentifiers.DRAGON_DEAD);
+        identifiers.put(GreenDragon.class, ObjectsIdentifiers.GREEN_DRAGON);
+        identifiers.put(GreenDragonBody.class, ObjectsIdentifiers.GREEN_DRAGON_DEAD);
+        identifiers.put(RedDragon.class, ObjectsIdentifiers.RED_DRAGON);
+        identifiers.put(RedDragonBody.class, ObjectsIdentifiers.RED_DRAGON);
         identifiers.put(FireBall.class, ObjectsIdentifiers.FIREBALL);
     }
 
