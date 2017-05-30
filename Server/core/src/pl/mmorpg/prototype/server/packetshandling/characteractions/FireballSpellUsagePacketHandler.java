@@ -11,7 +11,7 @@ import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
-import pl.mmorpg.prototype.server.objects.monsters.abilities.spells.Fireball;
+import pl.mmorpg.prototype.server.objects.monsters.spells.Fireball;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlingHelper;
 import pl.mmorpg.prototype.server.states.PlayState;

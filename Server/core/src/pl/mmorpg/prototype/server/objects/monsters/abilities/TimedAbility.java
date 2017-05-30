@@ -11,6 +11,7 @@ public abstract class TimedAbility implements Ability
 	{
 		this.timeInterval = timeInterval;
 	}
+	
 
 	@Override
 	public boolean shouldUse()

@@ -104,7 +104,12 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 	{
 		for(Ability ability : abilities)
 			if(ability.shouldUse())
-				ability.use(this, (PacketsSender)linkedState);	
+			{
+				if(ability.shouldBeUsedOnItself())
+					ability.use(this, (PacketsSender)linkedState);
+				else if(ability.shouldBeUsedOnTargetedMonster() && isTargetingAnotherMonster())
+					ability.use(targetedMonster, (PacketsSender)linkedState);
+			}
 	}
 
     @Override

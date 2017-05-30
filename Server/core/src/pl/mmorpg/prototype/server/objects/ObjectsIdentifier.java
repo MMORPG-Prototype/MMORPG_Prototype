@@ -6,9 +6,9 @@ import java.util.Map;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.objects.monsters.GreenDragon;
 import pl.mmorpg.prototype.server.objects.monsters.RedDragon;
-import pl.mmorpg.prototype.server.objects.monsters.abilities.spells.Fireball;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.GreenDragonBody;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.RedDragonBody;
+import pl.mmorpg.prototype.server.objects.monsters.spells.Fireball;
 
 public class ObjectsIdentifier
 {

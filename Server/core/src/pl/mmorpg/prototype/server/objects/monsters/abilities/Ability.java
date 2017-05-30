@@ -8,4 +8,7 @@ public interface Ability
 	boolean shouldUse();
 	
 	void use(Monster target, PacketsSender packetSender);
+	
+	boolean shouldBeUsedOnTargetedMonster();
+	boolean shouldBeUsedOnItself();
 }

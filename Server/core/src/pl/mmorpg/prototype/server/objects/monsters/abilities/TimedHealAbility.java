@@ -29,6 +29,18 @@ public class TimedHealAbility extends TimedAbility
         
         packetSender.sendToAll(PacketsMaker.makeHpNotifiedIncreasePacket(delta, target.getId()));			
 	}
+
+	@Override
+	public boolean shouldBeUsedOnTargetedMonster()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean shouldBeUsedOnItself()
+	{
+		return true;
+	}
 	
 
 	
