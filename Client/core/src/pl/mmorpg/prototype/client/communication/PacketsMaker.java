@@ -10,6 +10,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionP
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 
 public class PacketsMaker
 {
@@ -62,6 +63,14 @@ public class PacketsMaker
 		OpenContainterPacket packet = new OpenContainterPacket();
 		packet.gameX = (int)x;
 		packet.gameY = (int)y;
+		return packet;
+	}
+
+	public static TakeItemFromContainerPacket makeTakeItemFromContainerPacket(long containerId, long itemId)
+	{
+		TakeItemFromContainerPacket packet = new TakeItemFromContainerPacket();
+		packet.setContainerId(containerId);
+		packet.setItemId(itemId);
 		return packet;
 	}
 }

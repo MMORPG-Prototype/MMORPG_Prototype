@@ -139,11 +139,18 @@ public class ActorManipulator
 
 	public boolean hasIdentifiableDialog(long containerId)
 	{
-		Optional<Actor> searchedElement = 
-				dialogs
-				.stream()
+		Optional<Actor> searchedElement = dialogs.stream()
 				.filter( d -> d instanceof Identifiable && 
 						((Identifiable) d).getId() == containerId).findFirst();
 		return searchedElement.isPresent();
+	}
+	
+	public <T extends Actor & Identifiable> T getIdentifiableDialog(long containerId)
+	{
+		return (T)dialogs.stream()
+				.filter( d -> d instanceof Identifiable && 
+						((Identifiable) d).getId() == containerId)
+				.findFirst()
+				.orElseThrow(CannotFindSpecifiedDialogTypeException::new);
 	}
 }

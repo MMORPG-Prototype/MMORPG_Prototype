@@ -13,6 +13,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
@@ -173,12 +174,20 @@ public class PacketsMaker
 
 	public static ContainerContentPacket makeOpenContainerPacket(GameContainer container)
 	{
-		CharacterItemDataPacket[] containerContent = container.getItems().stream()
+		CharacterItemDataPacket[] containerContent = container.getItems().values().stream()
 				.map( item -> makeItemPacket(item))
 				.toArray(CharacterItemDataPacket[]::new);
 		ContainerContentPacket packet = new ContainerContentPacket();
 		packet.setContentItems(containerContent);
 		packet.setContainerId(container.getId());
+		return packet;
+	}
+
+	public static ContainerItemRemovalPacket makeContainerItemRemovalPacket(long containerId, long itemId)
+	{
+		ContainerItemRemovalPacket packet = new ContainerItemRemovalPacket();
+		packet.setContainerId(containerId);
+		packet.setItemId(itemId);
 		return packet;
 	}
 

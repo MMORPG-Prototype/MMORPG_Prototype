@@ -54,6 +54,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
@@ -375,6 +376,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void containerOpened(CharacterItemDataPacket[] contentItems, long containerId)
 	{
 		userInterface.containerOpened(contentItems, containerId);
+	}
+
+	public void containerItemRemovalPacketReceived(ContainerItemRemovalPacket packet)
+	{
+		userInterface.removeContainerItem(packet.getContainerId(), packet.getItemId());
 	} 
 
 

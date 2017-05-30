@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -34,7 +35,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterData
 public class UserInterface
 {
 	private final DialogIdSupplier dialogIdSupplier = new DialogIdSupplier();
-	
+
 	private final Stage stage = Assets.getStage();
 	private final MenuDialog menuDialog;
 	private final InventoryDialog inventoryDialog;
@@ -49,7 +50,6 @@ public class UserInterface
 	private MousePointerToItem mousePointerToItem = new MousePointerToItem();
 
 	private PlayState linkedState;
-	
 
 	public UserInterface(PlayState linkedState, UserCharacterDataPacket character)
 	{
@@ -72,7 +72,7 @@ public class UserInterface
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				if(!dialogs.hasDialogOnPosition(x,y))
+				if (!dialogs.hasDialogOnPosition(x, y))
 				{
 					linkedState.userLeftClickedOnGameBoard(x, y);
 				}
@@ -83,14 +83,14 @@ public class UserInterface
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				if(!dialogs.hasDialogOnPosition(x,y))
+				if (!dialogs.hasDialogOnPosition(x, y))
 				{
 					linkedState.userRightClickedOnGameBoard(x, y);
 				}
 			}
 		});
 	}
-	
+
 	public void mapDialogsWithKeys()
 	{
 		dialogs.map(Keys.T, chatDialog);
@@ -201,10 +201,10 @@ public class UserInterface
 	{
 		statisticsDialog.updateStatistics();
 	}
- 
+
 	public void updateHitPointManaPointDialog()
 	{
-		hpMpDialog.updateValues();		
+		hpMpDialog.updateValues();
 	}
 
 	public void userWantsToLogOut()
@@ -219,22 +219,23 @@ public class UserInterface
 
 	public void itemUsed(long itemId)
 	{
-		Item usedItem = (Item)inventoryDialog.useItem(itemId);
-		
-		if(usedItem.shouldBeRemoved() && quickAccessDialog.hasItem(usedItem))
+		Item usedItem = (Item) inventoryDialog.useItem(itemId);
+
+		if (usedItem.shouldBeRemoved() && quickAccessDialog.hasItem(usedItem))
 			quickAccessDialog.removeItem(usedItem);
-			
+
 	}
 
 	public void containerOpened(CharacterItemDataPacket[] contentItems, long containerId)
 	{
-		if(!dialogs.hasIdentifiableDialog(containerId))
+		if (!dialogs.hasIdentifiableDialog(containerId))
 			createAndOpenContainerDialog(contentItems, containerId);
 	}
 
 	private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, long containerId)
 	{
-		Dialog containerDialog = new OpenContainerDialog(contentItems, "Container", dialogs, containerId);
+		Dialog containerDialog = new OpenContainerDialog(contentItems, "Container", dialogs,
+				(PacketsSender) linkedState, containerId);
 		positionDialogNearMouse(containerDialog);
 		stage.addActor(containerDialog);
 		dialogs.add(containerDialog);
@@ -242,7 +243,18 @@ public class UserInterface
 
 	private void positionDialogNearMouse(Dialog containerDialog)
 	{
-		containerDialog.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - containerDialog.getHeight());
+		containerDialog.setPosition(Gdx.input.getX(),
+				Gdx.graphics.getHeight() - Gdx.input.getY() - containerDialog.getHeight());
+	}
+
+	public void removeContainerItem(long containerId, long itemId)
+	{
+		if(dialogs.hasIdentifiableDialog(containerId))
+		{
+			OpenContainerDialog dialog = dialogs.getIdentifiableDialog(containerId);
+			dialog.removeItem(itemId);
+		}
+		
 	}
 
 }

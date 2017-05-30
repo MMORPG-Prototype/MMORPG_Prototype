@@ -2,6 +2,8 @@ package pl.mmorpg.prototype.server.objects.containers;
 
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import pl.mmorpg.prototype.clientservercommon.Identifiable;
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
@@ -11,12 +13,14 @@ import pl.mmorpg.prototype.server.objects.items.Item;
 public class GameContainer implements Identifiable
 {
 	private long id;
-	private Collection<Item> items;
+	private Map<Long, Item> items = new ConcurrentHashMap<>();
 
 	public GameContainer(long id, Collection<Item> items)
 	{
 		this.id = id;
-		this.items = items;
+		for (Item item : items)
+			this.items.put(item.getId(), item);
+		
 	}
 	
 	@Override
@@ -25,9 +29,14 @@ public class GameContainer implements Identifiable
 		return id;
 	}
 	
-	public Collection<Item> getItems()
+	public Map<Long, Item> getItems()
 	{
 		return items;
+	}
+
+	public Item removeItem(long itemId)
+	{
+		return items.remove(itemId);
 	}
 
 }

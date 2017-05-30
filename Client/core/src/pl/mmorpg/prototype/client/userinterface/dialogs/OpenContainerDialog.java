@@ -4,8 +4,12 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import pl.mmorpg.prototype.client.communication.PacketsMaker;
+import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemFactory;
@@ -13,6 +17,7 @@ import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.AutoCleanupOnCloseButtonDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 
 public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 {
@@ -20,32 +25,63 @@ public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 	private static final int BUTTON_SIZE = 32;
 	private Map<Point, InventoryField> containerFields = new HashMap<>();
 
-	public OpenContainerDialog(CharacterItemDataPacket[] itemsToShow, String title, ActorManipulator linkedContainer, long id)
+	public OpenContainerDialog(CharacterItemDataPacket[] itemsToShow, String title, ActorManipulator linkedContainer,
+			PacketsSender packetsSender, long id)
 	{
 		super(title, linkedContainer, id);
-		
+
 		int numberOfItems = itemsToShow.length;
-		
-		for(int i=0; i<numberOfItems; i += ROW_LENGTH)
+
+		for (int i = 0; i < numberOfItems; i += ROW_LENGTH)
 		{
 			HorizontalGroup buttonRow = new HorizontalGroup().space(0).pad(0).fill();
-			for(int j=0; j<ROW_LENGTH; j++)
+			for (int j = 0; j < ROW_LENGTH; j++)
 			{
-				InventoryField field = new InventoryField();
-				int nextIndex = i*ROW_LENGTH + j;
-				if(nextIndex < numberOfItems)
+				InventoryField field = createField(packetsSender);
+				int nextIndex = i * ROW_LENGTH + j;
+				buttonRow.addActor(field);
+				containerFields.put(new Point(j, i), field);
+				if (nextIndex < numberOfItems)
 				{
 					Item item = ItemFactory.produceItem(itemsToShow[nextIndex]);
 					field.put(new ItemReference(item));
 				}
-				buttonRow.addActor(field);
-				containerFields.put(new Point(j, i), field);
 			}
 			this.getContentTable().add(buttonRow);
 		}
-		
-		setWidth(ROW_LENGTH*BUTTON_SIZE + 50);
+
+		setWidth(ROW_LENGTH * BUTTON_SIZE + 50);
 		setHeight(80);
+	}
+
+	private InventoryField createField(PacketsSender packetsSender)
+	{
+		InventoryField field = new InventoryField();
+		field.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
+			{
+				if (field.hasItem())
+				{
+					TakeItemFromContainerPacket packet = PacketsMaker
+							.makeTakeItemFromContainerPacket(OpenContainerDialog.this.getId(), field.getItem().getId());
+					packetsSender.send(packet);
+				}
+			}
+		});
+		return field;
+	}
+
+	public boolean removeItem(long itemId)
+	{
+		for(InventoryField field : containerFields.values())
+			if(field.hasItem() && field.getItem().getId() == itemId)
+			{
+				field.removeItem();
+				return true;
+			}
+		return false;	
 	}
 
 }

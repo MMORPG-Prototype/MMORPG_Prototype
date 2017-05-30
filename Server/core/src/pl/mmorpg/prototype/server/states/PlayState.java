@@ -39,8 +39,10 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     private PixelCollisionMap<GameObject> collisionMap = new PixelCollisionMap<>(1500, 800, GameObject.NULL_OBJECT);
     private StackableCollisionMap<MonsterBody> deadBodiesCollisionMap = new LayerCollisionMap<>(1500, 800, 20, 20);
     private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
+    private Map<Long, GameContainer> gameContainers = new ConcurrentHashMap<>();
     private TiledMapRenderer mapRenderer;
     private ServerInputHandler inputHandler = new ServerInputHandler(this);
+    
 
     private OrthographicCamera camera = new OrthographicCamera(1400, 700);
 
@@ -111,6 +113,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     public void addDeadBody(MonsterBody monsterBody)
     {
     	add(monsterBody);
+    	GameContainer container = monsterBody.getContainer();
+		gameContainers.put(container.getId(), container);
     	deadBodiesCollisionMap.insert(monsterBody);
     }
 
@@ -188,6 +192,11 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		MonsterBody monsterBody = deadBodiesCollisionMap.getTopObject(gameX, gameY);
 		GameContainer containerWithLoot = monsterBody.getContainer();
 		return containerWithLoot;		
+	}
+
+	public GameContainer getContainer(long containerId)
+	{
+		return gameContainers.get(containerId);
 	}
 
 

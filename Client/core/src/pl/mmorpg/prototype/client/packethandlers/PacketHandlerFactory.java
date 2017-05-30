@@ -26,6 +26,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 
@@ -56,6 +57,7 @@ public class PacketHandlerFactory
         packetHandlers.put(ManaDrainPacket.class, new ManaDrainPacketHandler(playState));
         packetHandlers.put(ItemUsagePacket.class, new ItemUsagePacketHandler(playState));
         packetHandlers.put(ContainerContentPacket.class, new ContainerContentPacketHandler(playState));
+        packetHandlers.put(ContainerItemRemovalPacket.class, new ContainerItemRemovalPacketHandler(playState));
 
         // Ignore frameowrk keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
