@@ -20,7 +20,7 @@ public class ObjectsIdentifier
         identifiers.put(GreenDragon.class, ObjectsIdentifiers.GREEN_DRAGON);
         identifiers.put(GreenDragonBody.class, ObjectsIdentifiers.GREEN_DRAGON_DEAD);
         identifiers.put(RedDragon.class, ObjectsIdentifiers.RED_DRAGON);
-        identifiers.put(RedDragonBody.class, ObjectsIdentifiers.RED_DRAGON);
+        identifiers.put(RedDragonBody.class, ObjectsIdentifiers.RED_DRAGON_DEAD);
         identifiers.put(FireBall.class, ObjectsIdentifiers.FIREBALL);
     }
 
