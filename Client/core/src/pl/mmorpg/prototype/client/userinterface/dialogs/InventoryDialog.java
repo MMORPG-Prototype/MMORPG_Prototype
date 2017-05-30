@@ -15,6 +15,7 @@ import pl.mmorpg.prototype.client.exceptions.NoSuchInventoryFieldInPosition;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.ItemUseable;
+import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
@@ -119,7 +120,26 @@ public class InventoryDialog extends Dialog
 		InventoryField field = inventoryPages.get(currentPageIndex).getField(position);
 		return field.getItem();
 	}
-
+	
+	
+	public void addItem(StackableItem item)
+	{
+		for(InventoryPage inventoryPage : inventoryPages)
+		{
+			for (InventoryField field : inventoryPage.getAllFields())
+			{
+				Item fieldItem = field.getItem();
+				if(fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
+				{
+					((StackableItem)fieldItem).stackWith(item);
+					return;
+				}
+			}
+		}
+		
+		addItem((Item)item);
+	}
+	
 	public void addItem(Item item)
 	{
 		for (InventoryField field : inventoryPages.get(currentPageIndex).getAllFields())

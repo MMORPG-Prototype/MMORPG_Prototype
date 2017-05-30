@@ -72,11 +72,14 @@ public class InventoryPage extends VerticalGroup
 	public boolean removeIfHas(Item item)
 	{
 		for (InventoryField field : inventoryFields.values())
-			if (field.getItem() == item)
+		{
+			Item fieldItem = field.getItem();
+			if (fieldItem == item)	
 			{
 				field.removeItem();
 				return true;
 			}
+		}
 		return false;
 	}
 

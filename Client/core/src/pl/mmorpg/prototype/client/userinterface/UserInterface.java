@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.helpers.UserInterfaceManager;
@@ -173,7 +174,10 @@ public class UserInterface
 
 	public void addItemToInventory(Item newItem)
 	{
-		inventoryDialog.addItem(newItem);
+		if(newItem instanceof StackableItem)
+			inventoryDialog.addItem((StackableItem)newItem);
+		else
+			inventoryDialog.addItem(newItem);
 	}
 
 	public void quickAccesButtonClicked(InventoryField field)

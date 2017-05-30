@@ -27,6 +27,11 @@ public abstract class StackableItem extends Item
     {
         count++;
     }
+    
+    public void stackWith(StackableItem item)
+    {
+    	this.count += item.count;
+    }
 
     public void decreaseItemCount()
     {
