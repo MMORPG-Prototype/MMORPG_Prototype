@@ -13,7 +13,7 @@ import pl.mmorpg.prototype.server.exceptions.PlayerUsingItemNotFoundException;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
-import pl.mmorpg.prototype.server.packetshandling.PacketHandlerHelper;
+import pl.mmorpg.prototype.server.packetshandling.PacketHandlingHelper;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
@@ -35,7 +35,7 @@ public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
 	@Override
 	public void handle(Connection connection, ItemUsagePacket packet)
 	{
-		int characterId = PacketHandlerHelper.getCharacterIdByConnectionId(connection.getID(), loggedUsersKeyUserId, authenticatedClientsKeyClientId);
+		int characterId = PacketHandlingHelper.getCharacterIdByConnectionId(connection.getID(), loggedUsersKeyUserId, authenticatedClientsKeyClientId);
 		PlayerCharacter itemUser = (PlayerCharacter)playState.getObject(characterId);
 		if(itemUser == null)
 			throw new PlayerUsingItemNotFoundException();

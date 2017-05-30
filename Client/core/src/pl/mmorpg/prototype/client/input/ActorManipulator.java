@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,7 +13,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import pl.mmorpg.prototype.client.exceptions.CannotFindSpecifiedDialogTypeException;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.Identifiable;
+import pl.mmorpg.prototype.clientservercommon.Identifiable;
 
 public class ActorManipulator
 {
@@ -75,7 +76,7 @@ public class ActorManipulator
 	public <T extends Actor & Identifiable> void removeDialog(T dialog)
 	{
 		boolean dialogFound = dialogs.removeIf(
-				(d) -> d.getClass().equals(dialog.getClass()) && ((Identifiable) d).getId() == dialog.getId());
+				d -> d.getClass().equals(dialog.getClass()) && ((Identifiable) d).getId() == dialog.getId());
 
 		if (!dialogFound)
 			throw new CannotFindSpecifiedDialogTypeException();
@@ -134,5 +135,15 @@ public class ActorManipulator
 	{
 		return Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
 				.filter((d) -> d.isVisible() && mouseHovers(d)).findAny().isPresent();
+	}
+
+	public boolean hasIdentifiableDialog(long containerId)
+	{
+		Optional<Actor> searchedElement = 
+				dialogs
+				.stream()
+				.filter( d -> d instanceof Identifiable && 
+						((Identifiable) d).getId() == containerId).findFirst();
+		return searchedElement.isPresent();
 	}
 }

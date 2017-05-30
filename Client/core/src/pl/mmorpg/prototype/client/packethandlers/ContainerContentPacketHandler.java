@@ -16,7 +16,7 @@ public class ContainerContentPacketHandler extends PacketHandlerBase<ContainerCo
 	@Override
 	public void handlePacket(ContainerContentPacket packet)
 	{
-		playState.containerOpened(packet.getContentItems());		
+		playState.containerOpened(packet.getContentItems(), packet.getContainerId());		
 	}
 
 }

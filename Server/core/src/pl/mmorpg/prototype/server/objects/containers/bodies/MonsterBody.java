@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.server.objects.monsters.bodies;
+package pl.mmorpg.prototype.server.objects.containers.bodies;
 
 import java.awt.Point;
 import java.util.Collection;
@@ -9,21 +9,19 @@ import com.esotericsoftware.minlog.Log;
 import pl.mmorpg.prototype.server.collision.interfaces.RectangleCollisionObject;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionObject;
 import pl.mmorpg.prototype.server.objects.GameObject;
-import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.objects.items.Item;
 
 public class MonsterBody extends GameObject implements StackableCollisionObject
 {
-	private GameContainer loot;
+	private Collection<Item> loot;
 	private int gold;
 	private int containerId = -1;
-	
 
 	public MonsterBody(Texture lookout, long id, int gold, Collection<Item> loot)
 	{
 		super(lookout, id);
 		this.gold = gold;
-		this.loot = new GameContainer(id, loot);
+		this.loot = loot;
 	}
 
 	@Override
@@ -31,7 +29,7 @@ public class MonsterBody extends GameObject implements StackableCollisionObject
 	{
 	}
 	
-	public GameContainer getContainer()
+	public Collection<Item> getLoot()
 	{
 		return loot;
 	}

@@ -372,9 +372,9 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         client.sendTCP(packet);	
 	}
 
-	public void containerOpened(CharacterItemDataPacket[] contentItems)
+	public void containerOpened(CharacterItemDataPacket[] contentItems, long containerId)
 	{
-		userInterface.containerOpened(contentItems);
+		userInterface.containerOpened(contentItems, containerId);
 	} 
 
 

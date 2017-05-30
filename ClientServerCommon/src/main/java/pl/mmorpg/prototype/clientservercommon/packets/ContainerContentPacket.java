@@ -9,4 +9,5 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 public class ContainerContentPacket
 {
 	private CharacterItemDataPacket[] contentItems;
+	private long containerId;
 }

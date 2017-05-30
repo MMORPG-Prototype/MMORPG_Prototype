@@ -24,7 +24,7 @@ import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
-import pl.mmorpg.prototype.server.objects.items.Item;
+import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.objects.monsters.GreenDragon;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.RedDragon;
@@ -183,10 +183,11 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     	return deadBodiesCollisionMap.getTopObject(gameX, gameY) != null;
     }
 
-	public Collection<Item> getContainerItems(int gameX, int gameY)
+	public GameContainer getContainer(int gameX, int gameY)
 	{
 		MonsterBody monsterBody = deadBodiesCollisionMap.getTopObject(gameX, gameY);
-		return monsterBody.getLoot();		
+		GameContainer containerWithLoot = monsterBody.getContainer();
+		return containerWithLoot;		
 	}
 
 

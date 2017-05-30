@@ -1,7 +1,5 @@
 package pl.mmorpg.prototype.server.communication;
 
-import java.util.Collection;
-
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
@@ -21,6 +19,7 @@ import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -172,13 +171,14 @@ public class PacketsMaker
         return packet;
     }
 
-	public static ContainerContentPacket makeOpenContainerPacket(Collection<Item> containerItems)
+	public static ContainerContentPacket makeOpenContainerPacket(GameContainer container)
 	{
-		CharacterItemDataPacket[] containerContent = containerItems.stream()
+		CharacterItemDataPacket[] containerContent = container.getItems().stream()
 				.map( item -> makeItemPacket(item))
 				.toArray(CharacterItemDataPacket[]::new);
 		ContainerContentPacket packet = new ContainerContentPacket();
 		packet.setContentItems(containerContent);
+		packet.setContainerId(container.getId());
 		return packet;
 	}
 

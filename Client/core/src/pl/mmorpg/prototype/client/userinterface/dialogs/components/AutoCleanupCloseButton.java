@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.input.ActorManipulator;
+import pl.mmorpg.prototype.clientservercommon.Identifiable;
 
 public class AutoCleanupCloseButton extends CloseButton
 {

@@ -20,7 +20,7 @@ public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 	private static final int BUTTON_SIZE = 32;
 	private Map<Point, InventoryField> containerFields = new HashMap<>();
 
-	public OpenContainerDialog(CharacterItemDataPacket[] itemsToShow, String title, ActorManipulator linkedContainer, int id)
+	public OpenContainerDialog(CharacterItemDataPacket[] itemsToShow, String title, ActorManipulator linkedContainer, long id)
 	{
 		super(title, linkedContainer, id);
 		

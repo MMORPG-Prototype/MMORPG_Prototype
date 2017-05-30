@@ -4,12 +4,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
+import pl.mmorpg.prototype.clientservercommon.Identifiable;
 
 public class AutoCleanupOnCloseButtonDialog extends Dialog implements Identifiable
 {
-	private int id;
+	private long id;
 
-	public AutoCleanupOnCloseButtonDialog(String title, ActorManipulator linkedContainer, int id)
+	public AutoCleanupOnCloseButtonDialog(String title, ActorManipulator linkedContainer, long id)
 	{
 		super(title, Settings.DEFAULT_SKIN);
 		this.id = id;
@@ -20,7 +21,7 @@ public class AutoCleanupOnCloseButtonDialog extends Dialog implements Identifiab
 	}
 	
 	@Override
-	public int getId()
+	public long getId()
 	{
 		return id;
 	}

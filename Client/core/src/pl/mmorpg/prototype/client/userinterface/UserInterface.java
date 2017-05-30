@@ -226,9 +226,15 @@ public class UserInterface
 			
 	}
 
-	public void containerOpened(CharacterItemDataPacket[] contentItems)
+	public void containerOpened(CharacterItemDataPacket[] contentItems, long containerId)
 	{
-		Dialog containerDialog = new OpenContainerDialog(contentItems, "Container", dialogs, dialogIdSupplier.get());
+		if(!dialogs.hasIdentifiableDialog(containerId))
+			createAndOpenContainerDialog(contentItems, containerId);
+	}
+
+	private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, long containerId)
+	{
+		Dialog containerDialog = new OpenContainerDialog(contentItems, "Container", dialogs, containerId);
 		positionDialogNearMouse(containerDialog);
 		stage.addActor(containerDialog);
 		dialogs.add(containerDialog);

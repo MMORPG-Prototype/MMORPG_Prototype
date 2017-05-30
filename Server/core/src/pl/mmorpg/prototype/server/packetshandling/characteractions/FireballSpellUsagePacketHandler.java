@@ -13,7 +13,7 @@ import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.spells.Fireball;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
-import pl.mmorpg.prototype.server.packetshandling.PacketHandlerHelper;
+import pl.mmorpg.prototype.server.packetshandling.PacketHandlingHelper;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class FireballSpellUsagePacketHandler extends PacketHandlerBase<FireballSpellUsagePacket>
@@ -37,7 +37,7 @@ public class FireballSpellUsagePacketHandler extends PacketHandlerBase<FireballS
     @Override
     public void handle(Connection connection, FireballSpellUsagePacket packet)
     {
-        int characterId = PacketHandlerHelper.getCharacterIdByConnectionId(connection.getID(), loggedUsersKeyUserId, authenticatedClientsKeyClientId);
+        int characterId = PacketHandlingHelper.getCharacterIdByConnectionId(connection.getID(), loggedUsersKeyUserId, authenticatedClientsKeyClientId);
         PlayerCharacter character = (PlayerCharacter)playState.getObject(characterId);
         if(character.isTargetingAnotherMonster() && character.hasMana(Fireball.MANA_DRAIN))
         {
