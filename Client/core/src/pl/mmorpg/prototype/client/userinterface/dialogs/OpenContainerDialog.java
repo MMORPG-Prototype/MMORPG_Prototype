@@ -32,26 +32,31 @@ public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 
 		int numberOfItems = itemsToShow.length;
 
-		for (int i = 0; i < numberOfItems; i += ROW_LENGTH)
-		{
-			HorizontalGroup buttonRow = new HorizontalGroup().space(0).pad(0).fill();
-			for (int j = 0; j < ROW_LENGTH; j++)
-			{
-				InventoryField field = createField(packetsSender);
-				int nextIndex = i * ROW_LENGTH + j;
-				buttonRow.addActor(field);
-				containerFields.put(new Point(j, i), field);
-				if (nextIndex < numberOfItems)
-				{
-					Item item = ItemFactory.produceItem(itemsToShow[nextIndex]);
-					field.put(new ItemReference(item));
-				}
-			}
-			this.getContentTable().add(buttonRow);
-		}
+		addFieldRow(itemsToShow, packetsSender, numberOfItems, 0);
+		for (int i = ROW_LENGTH; i < numberOfItems; i += ROW_LENGTH)
+			addFieldRow(itemsToShow, packetsSender, numberOfItems, i);
 
 		setWidth(ROW_LENGTH * BUTTON_SIZE + 50);
 		setHeight(80);
+	}
+
+	private void addFieldRow(CharacterItemDataPacket[] itemsToShow, PacketsSender packetsSender, int numberOfItems,
+			int i)
+	{
+		HorizontalGroup buttonRow = new HorizontalGroup().space(0).pad(0).fill();
+		for (int j = 0; j < ROW_LENGTH; j++)
+		{
+			InventoryField field = createField(packetsSender);
+			int nextIndex = i * ROW_LENGTH + j;
+			buttonRow.addActor(field);
+			containerFields.put(new Point(j, i), field);
+			if (nextIndex < numberOfItems)
+			{
+				Item item = ItemFactory.produceItem(itemsToShow[nextIndex]);
+				field.put(new ItemReference(item));
+			}
+		}
+		this.getContentTable().add(buttonRow);
 	}
 
 	private InventoryField createField(PacketsSender packetsSender)
