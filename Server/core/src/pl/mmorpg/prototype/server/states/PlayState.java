@@ -28,8 +28,8 @@ import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.objects.monsters.GreenDragon;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.RedDragon;
+import pl.mmorpg.prototype.server.objects.monsters.abilities.spells.Fireball;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
-import pl.mmorpg.prototype.server.objects.spells.Fireball;
 import pl.mmorpg.prototype.server.resources.Assets;
 
 public class PlayState extends State implements GameObjectsContainer, PacketsSender

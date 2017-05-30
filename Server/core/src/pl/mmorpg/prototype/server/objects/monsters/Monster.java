@@ -20,14 +20,16 @@ import pl.mmorpg.prototype.server.exceptions.NoSuchItemToRemoveException;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.Useable;
+import pl.mmorpg.prototype.server.objects.monsters.abilities.Ability;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public abstract class Monster extends MovableGameObject implements ItemUser
 {
-    private Map<Long, Item> items = new ConcurrentHashMap<>();
-    
-    private static final BitmapFont font = Assets.getFont();
+	private static final BitmapFont font = Assets.getFont();
+	private Map<Long, Item> items = new ConcurrentHashMap<>();
+    private List<Ability> abilities = new LinkedList<>();
+
     protected final MonsterProperties properties;
     private Monster targetedMonster = null;
     private float hitTime = 1000.0f;
@@ -49,10 +51,11 @@ public abstract class Monster extends MovableGameObject implements ItemUser
         super.update(deltaTime);
         if (isTargetingAnotherMonster())
             attackHandle(deltaTime);
-
+        abilitiesUsageHandle();
     }
 
-    public boolean isTargetingAnotherMonster()
+
+	public boolean isTargetingAnotherMonster()
     {
         return targetedMonster != null;
     }
@@ -95,6 +98,14 @@ public abstract class Monster extends MovableGameObject implements ItemUser
             target.die();
         }
     }
+    
+
+    private void abilitiesUsageHandle()
+	{
+		for(Ability ability : abilities)
+			if(ability.shouldUse())
+				ability.use(this, (PacketsSender)linkedState);	
+	}
 
     @Override
     public void render(SpriteBatch batch)
@@ -195,6 +206,11 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     public void addItems(Collection<Item> items)
     {
     	items.forEach( item -> this.items.put(item.getId(), item));
+    }
+    
+    protected void addAbility(Ability ability)
+    {
+    	abilities.add(ability);
     }
     
 

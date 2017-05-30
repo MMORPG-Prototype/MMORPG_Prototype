@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.server.objects.spells;
+package pl.mmorpg.prototype.server.objects.monsters.abilities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;

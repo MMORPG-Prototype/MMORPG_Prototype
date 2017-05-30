@@ -141,7 +141,7 @@ public class PacketsMaker
         return packet;
     }
 
-    public static HpChangeByItemUsagePacket makeHpChangeByItemUsagePacket(int delta, long targetId)
+    public static HpChangeByItemUsagePacket makeHpNotifiedIncreasePacket(int delta, long targetId)
     {
         HpChangeByItemUsagePacket packet = new HpChangeByItemUsagePacket();
         packet.setHpChange(delta);

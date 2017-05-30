@@ -8,6 +8,7 @@ import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.items.Item;
+import pl.mmorpg.prototype.server.objects.monsters.abilities.TimedHealAbility;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.GreenDragonBody;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
 import pl.mmorpg.prototype.server.objects.monsters.loot.GreenDragonLootGenerator;
@@ -22,6 +23,7 @@ public class GreenDragon extends Dragon
 	public GreenDragon(long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState)
 	{
 		super(Assets.get("monster.png"), id, getDragonProperies(), collisionMap, playState);
+		this.addAbility(new TimedHealAbility(5.0f, 10));
 	}
 
 	public static MonsterProperties getDragonProperies()

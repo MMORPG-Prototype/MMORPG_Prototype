@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.server.objects.spells;
+package pl.mmorpg.prototype.server.objects.monsters.abilities.spells;
 
 import com.badlogic.gdx.graphics.Texture;
 
@@ -6,14 +6,15 @@ import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterP
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.objects.monsters.abilities.ThrowableObject;
 import pl.mmorpg.prototype.server.states.GameObjectsContainer;
 
-public abstract class Spell extends ThrowableObject
+public abstract class ThrowableSpell extends ThrowableObject
 {
     private PacketsSender packetSender;
     private Monster source;
 
-    public Spell(Texture lookout, long id, Monster source, GameObjectsContainer linkedContainer, PacketsSender packetSender)
+    public ThrowableSpell(Texture lookout, long id, Monster source, GameObjectsContainer linkedContainer, PacketsSender packetSender)
     {
         super(lookout, id, linkedContainer, packetSender);
         this.source = source;
