@@ -2,7 +2,7 @@ package pl.mmorpg.prototype.server.objects.items;
 
 public abstract class StackableItem extends Item
 {
-    int count = 0;
+    protected int count = 0;
     
     public StackableItem(long id)
     {
@@ -24,4 +24,9 @@ public abstract class StackableItem extends Item
     {
         return count;
     }
+
+	public void stackWith(StackableItem newItem)
+	{
+		this.count += newItem.count;
+	}
 }

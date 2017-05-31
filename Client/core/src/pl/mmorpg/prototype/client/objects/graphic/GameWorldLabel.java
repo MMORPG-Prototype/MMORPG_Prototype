@@ -8,7 +8,7 @@ import pl.mmorpg.prototype.client.resources.Assets;
 
 public class GameWorldLabel extends GraphicGameObject
 {
-	private static final float maxLivingTime = 3.0f;
+	private final float maxLivingTime = 3.0f;
 	protected BitmapFont font = Assets.getFont();
 	private float currentLivingTime = 0.0f;
 	private final String message;
@@ -19,6 +19,7 @@ public class GameWorldLabel extends GraphicGameObject
 		x = source.getX();
 		y = source.getY() + 40;
 	}
+
 
 	@Override
 	public void update(float delta)

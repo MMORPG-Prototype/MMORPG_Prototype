@@ -19,6 +19,7 @@ import pl.mmorpg.prototype.server.exceptions.CharacterDoesntHaveItemException;
 import pl.mmorpg.prototype.server.exceptions.NoSuchItemToRemoveException;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.objects.items.Item;
+import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.items.Useable;
 import pl.mmorpg.prototype.server.objects.monsters.abilities.Ability;
 import pl.mmorpg.prototype.server.resources.Assets;
@@ -172,15 +173,32 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     }
     
     @Override
-	public void addItem(Item item)
+	public void addItem(Item newItem)
     {
-        items.put(item.getId(), item);
+    	if(newItem instanceof StackableItem)
+    	{
+    		for(Item item : items.values())
+    			if(item.getIdentifier().equals(newItem.getIdentifier()))
+    			{
+    				((StackableItem)item).stackWith((StackableItem)newItem);
+    				return;
+    			}
+    		
+    	}
+    	items.put(newItem.getId(), newItem);
     }
 
     @Override
 	public void useItem(long id, PacketsSender packetSender)
     {
-        useItem(id, this, packetSender);
+    	try
+    	{
+            useItem(id, this, packetSender);
+    	}
+    	catch(CharacterDoesntHaveItemException e)
+    	{
+    		//
+    	}
     }
 
     @Override

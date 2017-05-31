@@ -7,8 +7,10 @@ import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.server.UserInfo;
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.database.entities.User;
+import pl.mmorpg.prototype.server.exceptions.CharacterDoesntHaveItemException;
 import pl.mmorpg.prototype.server.exceptions.PlayerUsingItemNotFoundException;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -40,8 +42,15 @@ public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
 		if(itemUser == null)
 			throw new PlayerUsingItemNotFoundException();
 		Monster target = (Monster)playState.getObject(packet.getTargetId());
-		itemUser.useItem(packet.getItemId(), target, (PacketsSender)playState);
-		connection.sendTCP(packet);
+		try
+		{
+			itemUser.useItem(packet.getItemId(), target, (PacketsSender)playState);
+			connection.sendTCP(packet);
+		}
+		catch(CharacterDoesntHaveItemException e)
+		{
+			connection.sendTCP(PacketsMaker.makeUnacceptableOperationPacket("Your item stack was depleted"));
+		}
 	}
 
 }
