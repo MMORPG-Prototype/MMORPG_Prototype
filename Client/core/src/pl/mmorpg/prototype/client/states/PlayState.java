@@ -381,6 +381,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void containerItemRemovalPacketReceived(ContainerItemRemovalPacket packet)
 	{
 		userInterface.removeContainerItem(packet.getContainerId(), packet.getItemId());
+	}
+
+	public void showTimedErrorMessage(String errorMessage, float timeout)
+	{
+		userInterface.showTimedErrorMessage(errorMessage, timeout);		
 	} 
 
 

@@ -16,6 +16,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionP
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.GameObject;
@@ -188,6 +189,13 @@ public class PacketsMaker
 		ContainerItemRemovalPacket packet = new ContainerItemRemovalPacket();
 		packet.setContainerId(containerId);
 		packet.setItemId(itemId);
+		return packet;
+	}
+
+	public static UnacceptableOperationPacket makeUnacceptableOperationPacket(String errorMessage)
+	{
+		UnacceptableOperationPacket packet = new UnacceptableOperationPacket();
+		packet.setErrorMessage(errorMessage);
 		return packet;
 	}
 
