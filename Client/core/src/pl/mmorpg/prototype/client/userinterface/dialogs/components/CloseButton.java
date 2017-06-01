@@ -21,6 +21,6 @@ public class CloseButton extends Button
 				dialogToClose.setVisible(false);
 			}
 		});
-	}
+	} 
 
 }

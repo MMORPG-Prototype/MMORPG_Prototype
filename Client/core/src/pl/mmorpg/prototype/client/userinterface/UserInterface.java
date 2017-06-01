@@ -29,7 +29,6 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.OpenContainerDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.DialogIdSupplier;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
@@ -38,13 +37,11 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterData
 
 public class UserInterface
 {
-	private final DialogIdSupplier dialogIdSupplier = new DialogIdSupplier();
-
 	private final Stage stage = Assets.getStage();
 	private final MenuDialog menuDialog;
 	private final InventoryDialog inventoryDialog;
 	private final StatisticsDialog statisticsDialog;
-	private final ShortcutBarPane standardBarDialog;
+	private final ShortcutBarPane standardBarDialog; 
 	private final HitPointManaPointPane hpMpDialog;
 	private final QuickAccessDialog quickAccessDialog;
 	private final EquipmentDialog equipmentDialog;
@@ -67,7 +64,7 @@ public class UserInterface
 		equipmentDialog = new EquipmentDialog();
 		chatDialog = new ChatDialog(this);
 		mapDialogsWithKeys();
-		addOtherDialogs();
+		addOtherDialogs(); 
 		showDialogs();
 		dialogs.hideKeyMappedDialogs();
 

@@ -23,7 +23,7 @@ public class ChatList extends Table
 	
 	public void addMessage(String nickname, String message)
 	{
-		if(message.length() > 39)
+		if(message.length() > 39) 
 		{
 			addMessage(nickname, message.substring(0, 39));
 			addMessage("", message.substring(39));

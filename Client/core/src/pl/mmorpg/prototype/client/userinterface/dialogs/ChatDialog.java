@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.client.userinterface.dialogs;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ChatPane;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 
 public class ChatDialog extends Dialog
@@ -24,14 +26,10 @@ public class ChatDialog extends Dialog
 		super("Chat", Settings.DEFAULT_SKIN);
 		this.linkedInterface = linkedInterface;
 		setBounds(0, 0, 400, 200);
-		Table table = getContentTable();
-		this.clear();
-		this.align(Align.bottomLeft);
+		Button closeButton = new CloseButton(this); 
+		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 		
-		chatPane = new ChatPane();
-		table.add(chatPane).fillX();
-		table.row();
-		
+		Table table = getContentTable(); 
 		chatTextField = new TextField("", getSkin());
 		
 		chatTextField.addListener(new InputListener(){
@@ -48,10 +46,13 @@ public class ChatDialog extends Dialog
 				return false;
 			}
 		});
-			
-		table.add(chatTextField).fillX();
+
+		chatPane = new ChatPane();
+		table.add(chatPane).fillX();
+
 		table.row();
-		add(table);
+		table.add(chatTextField).fillX().align(Align.bottom);
+		table.align(Align.bottom);
 	}
 
 	private void sendMessage()

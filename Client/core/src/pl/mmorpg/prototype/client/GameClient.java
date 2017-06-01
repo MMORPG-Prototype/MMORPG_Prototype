@@ -29,7 +29,7 @@ public class GameClient extends ApplicationAdapter
     @Override
     public void create()
     {
-        mousePointer = Assets.get("cursor.gif");
+        mousePointer = Assets.get("cursor.gif"); 
         batch = Assets.getBatch();
         background = Assets.get("background.jpg");
         states = new StateManager();
@@ -67,6 +67,7 @@ public class GameClient extends ApplicationAdapter
         states.render(batch);
         batch.begin();
         batch.draw(mousePointer, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - 24, 24, 24);
+        batch.enableBlending();
         batch.end();
     }
 
@@ -79,7 +80,7 @@ public class GameClient extends ApplicationAdapter
 
     private void dontAllowMouseToGoOutOfWindow()
     {
-        if (Gdx.input.getX() < 0)
+        if (Gdx.input.getX() < 0) 
             Gdx.input.setCursorPosition(0, Gdx.input.getY());
         if (Gdx.input.getY() < 0)
             Gdx.input.setCursorPosition(Gdx.input.getX(), 0);
