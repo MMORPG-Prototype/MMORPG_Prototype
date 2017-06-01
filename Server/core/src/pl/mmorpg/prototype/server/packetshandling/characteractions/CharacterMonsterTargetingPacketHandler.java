@@ -9,6 +9,7 @@ import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.exceptions.CannotTargetItselfException;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
@@ -38,8 +39,17 @@ public class CharacterMonsterTargetingPacketHandler extends PacketHandlerBase<Mo
             UserCharacter userCharacter = PacketHandlingHelper.getUserCharacterByConnectionId(connection.getID(),
                     loggedUsersKeyUserId, authenticatedClientsKeyClientId);
             GameObject source = playState.getObject(userCharacter.getId());
-            playState.objectTargeted((Monster) source, (Monster) target);
-            connection.sendTCP(PacketsMaker.makeTargetingReplyPacket(target));
+
+            try
+            {
+                playState.objectTargeted((Monster) source, (Monster) target);
+                connection.sendTCP(PacketsMaker.makeTargetingReplyPacket(target));
+            }
+            catch(CannotTargetItselfException e)
+            {
+            	connection.sendTCP(PacketsMaker.makeUnacceptableOperationPacket("Cannot target itself"));
+            }
+
         }
     }
 

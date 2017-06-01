@@ -49,6 +49,7 @@ public class Assets
 		loadOthers();
     }
 	
+	
 	private static void loadSeveralStages()
 	{
 		for(int i=0; i<7; i++)

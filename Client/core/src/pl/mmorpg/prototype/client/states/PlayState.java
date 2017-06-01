@@ -84,6 +84,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         camera.setToOrtho(false, 900, 500);
         
         TiledMap map = Assets.get("Map/tiled.tmx");
+        
         mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
         mapRenderer.setView(camera);
 
@@ -111,7 +112,9 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
     public void render(SpriteBatch batch)
     {
         batch.setProjectionMatrix(camera.combined);
+        batch.disableBlending();
         mapRenderer.render(new int[] { 0 });
+        batch.enableBlending();
         batch.begin();
         for (GameObject object : gameObjects.values())
             object.render(batch);
@@ -185,7 +188,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
     private void playerHasDied()
     {
         this.userWantsToChangeCharacter();
-
     }
 
     @Override

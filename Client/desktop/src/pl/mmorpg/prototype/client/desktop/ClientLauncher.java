@@ -13,6 +13,7 @@ public class ClientLauncher
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = Settings.GAME_WIDTH;
         config.height = Settings.GAME_HEIGHT;
+        config.vSyncEnabled = false;
         new LwjglApplication(new GameClient(), config);
     }
 }

@@ -19,7 +19,6 @@ import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
-import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.states.helpers.UserInterfaceManager;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
@@ -32,6 +31,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.DialogIdSupplier;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -266,10 +266,10 @@ public class UserInterface
 
 	public void showTimedErrorMessage(String errorMessage, float timeout)
 	{
-		Label label = new Label(errorMessage, Settings.DEFAULT_SKIN);
+		Label label = new TimedLabel(errorMessage, timeout);
 		label.setColor(Color.RED);
-		label.setX(500);
-		label.setY(500);
+		label.setX(960);
+		label.setY(55);
 		
 		stage.addActor(label);
 	}

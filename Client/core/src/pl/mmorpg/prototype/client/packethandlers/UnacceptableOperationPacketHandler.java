@@ -15,7 +15,7 @@ public class UnacceptableOperationPacketHandler extends PacketHandlerBase<Unacce
 	@Override
 	public void handlePacket(UnacceptableOperationPacket packet)
 	{
-		playState.showTimedErrorMessage(packet.getErrorMessage(), 3.0f);
+		playState.showTimedErrorMessage(packet.getErrorMessage(), 5.0f);
 	}
 
 }

@@ -59,8 +59,10 @@ public class GameClient extends ApplicationAdapter
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
+        batch.disableBlending();
         batch.setColor(Color.WHITE);
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.enableBlending();
         batch.end();
         states.render(batch);
         batch.begin();

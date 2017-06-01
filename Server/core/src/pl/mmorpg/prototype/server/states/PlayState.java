@@ -21,6 +21,7 @@ import pl.mmorpg.prototype.server.collision.stackablemap.LayerCollisionMap;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
+import pl.mmorpg.prototype.server.exceptions.CannotTargetItselfException;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
@@ -158,6 +159,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 
     public void objectTargeted(Monster source, Monster target)
     {
+    	if(source == target)
+    		throw new CannotTargetItselfException();
         source.targetMonster(target);
     }
 
