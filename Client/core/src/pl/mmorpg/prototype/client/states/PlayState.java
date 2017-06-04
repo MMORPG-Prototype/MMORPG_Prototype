@@ -81,13 +81,14 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         player = new NullPlayer();
         this.states = states;
         inputMultiplexer = new InputMultiplexer();
-        camera.setToOrtho(false, 900, 500);
+        camera.setToOrtho(false);
         
         TiledMap map = Assets.get("Map/tiled.tmx");
         
         mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
         mapRenderer.setView(camera);
-
+        camera.viewportWidth = 900;
+        camera.viewportHeight = 500;
     }
 
     public void initialize(UserCharacterDataPacket character)
