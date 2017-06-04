@@ -15,15 +15,13 @@ import pl.mmorpg.prototype.server.objects.items.Item;
 public class MonsterBody extends GameObject implements StackableCollisionObject
 {
 	private GameContainer loot;
-	private int gold;
 	private int containerId = -1;
 	
 
 	public MonsterBody(Texture lookout, long id, int gold, Collection<Item> loot)
 	{
 		super(lookout, id);
-		this.gold = gold;
-		this.loot = new GameContainer(id, loot);
+		this.loot = new GameContainer(id, loot, gold);
 	}
 
 	@Override
@@ -34,11 +32,6 @@ public class MonsterBody extends GameObject implements StackableCollisionObject
 	public GameContainer getContainer()
 	{
 		return loot;
-	}
-	
-	public int getGold()
-	{
-		return gold;
 	}
 
 	@Override

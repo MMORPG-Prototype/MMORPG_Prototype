@@ -5,11 +5,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class StringValueLabel<T> extends Label
 {
-	private T value;
+	private T value = null;
+	private final String originalText;
 	
 	public StringValueLabel(CharSequence text, Skin skin)
 	{
+		this(text, skin, null);
+	}
+	
+	public StringValueLabel(CharSequence text, Skin skin, T value)
+	{
 		super(text, skin);
+		this.value = value;
+		originalText = text.toString();
+		update();
 	}
 	
 	public void setValue(T obj)
@@ -19,7 +28,15 @@ public class StringValueLabel<T> extends Label
 	
 	public void update()
 	{
-		this.setText(getText() + value.toString());
+		if(value != null)
+			this.setText(originalText + value.toString());
+		else
+			this.setText(originalText);
+	}
+
+	public T getValue()
+	{
+		return value;
 	}
 	
 }

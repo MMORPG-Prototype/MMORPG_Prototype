@@ -7,7 +7,6 @@ public class ContainerContentPacketHandler extends PacketHandlerBase<ContainerCo
 {
 	private PlayState playState;
 
-
 	public ContainerContentPacketHandler(PlayState playState)
 	{
 		this.playState = playState;
@@ -16,7 +15,7 @@ public class ContainerContentPacketHandler extends PacketHandlerBase<ContainerCo
 	@Override
 	public void handlePacket(ContainerContentPacket packet)
 	{
-		playState.containerOpened(packet.getContentItems(), packet.getContainerId());		
+		playState.containerOpened(packet.getContentItems(), packet.getGoldAmount(), packet.getContainerId());		
 	}
 
 }

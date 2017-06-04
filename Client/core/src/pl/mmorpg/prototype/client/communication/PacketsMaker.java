@@ -11,6 +11,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpel
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
 
 public class PacketsMaker
 {
@@ -71,6 +72,13 @@ public class PacketsMaker
 		TakeItemFromContainerPacket packet = new TakeItemFromContainerPacket();
 		packet.setContainerId(containerId);
 		packet.setItemId(itemId);
+		return packet;
+	}
+
+	public static TakingGoldFromContainerPacket makeTakingGoldFromContainerPacket(long containerId)
+	{
+		TakingGoldFromContainerPacket packet = new TakingGoldFromContainerPacket();
+		packet.setContainerId(containerId);
 		return packet;
 	}
 }

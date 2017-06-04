@@ -151,8 +151,9 @@ public class InventoryDialog extends Dialog
 		throw new NoFreeFieldException();
 	}
 
-	public void updateGoldValue()
+	public void increaseGoldValue(int goldAmount)
 	{
+		goldLabel.setValue(goldLabel.getValue() + goldAmount);
 		goldLabel.update();
 	}
 
@@ -189,5 +190,6 @@ public class InventoryDialog extends Dialog
 		return item;
 		
 	}
+
 
 }

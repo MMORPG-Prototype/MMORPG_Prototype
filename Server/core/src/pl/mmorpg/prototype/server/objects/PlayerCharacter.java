@@ -60,5 +60,11 @@ public class PlayerCharacter extends Monster
 		userCharacter.setManaPoints(properties.mp);
 		userCharacter.setStrength(properties.strength);
 	}
+
+	public void addGold(int gold)
+	{
+		getProperties().gold += gold;
+		userCharacter.setGold(userCharacter.getGold() + gold);
+	}
 	
 }

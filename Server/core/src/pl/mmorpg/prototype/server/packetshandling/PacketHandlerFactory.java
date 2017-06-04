@@ -24,6 +24,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpel
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
@@ -36,6 +37,7 @@ import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveRightPack
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveUpPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.OpenContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakeItemFromContainerPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.TakingGoldFromContainerPacketHandler;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class PacketHandlerFactory
@@ -72,6 +74,8 @@ public class PacketHandlerFactory
 				authenticatedClientsKeyClientId, server, playState));
 		packetHandlers.put(OpenContainterPacket.class, new OpenContainerPacketHandler(server, playState));
 		packetHandlers.put(TakeItemFromContainerPacket.class, new TakeItemFromContainerPacketHandler(
+				loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
+		packetHandlers.put(TakingGoldFromContainerPacket.class, new TakingGoldFromContainerPacketHandler(
 				loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
 
 		// Ignore framework packets

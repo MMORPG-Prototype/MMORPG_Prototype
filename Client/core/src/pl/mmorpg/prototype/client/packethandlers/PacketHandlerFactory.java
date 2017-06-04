@@ -12,6 +12,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
@@ -26,6 +27,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
@@ -60,6 +62,8 @@ public class PacketHandlerFactory
         packetHandlers.put(ContainerContentPacket.class, new ContainerContentPacketHandler(playState));
         packetHandlers.put(ContainerItemRemovalPacket.class, new ContainerItemRemovalPacketHandler(playState));
         packetHandlers.put(UnacceptableOperationPacket.class, new UnacceptableOperationPacketHandler(playState));
+        packetHandlers.put(GoldReceivePacket.class, new GoldReceivePacketHandler(playState));
+        packetHandlers.put(ContainerGoldRemovalPacket.class, new ContainerGoldRemovalPacketHandler(playState));
 
         // Ignore frameowrk keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

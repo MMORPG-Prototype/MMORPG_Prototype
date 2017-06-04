@@ -230,15 +230,15 @@ public class UserInterface
 
 	}
 
-	public void containerOpened(CharacterItemDataPacket[] contentItems, long containerId)
+	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold,  long containerId)
 	{
 		if (!dialogs.hasIdentifiableDialog(containerId))
-			createAndOpenContainerDialog(contentItems, containerId);
+			createAndOpenContainerDialog(contentItems, gold, containerId);
 	}
 
-	private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, long containerId)
+	private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, int gold, long containerId)
 	{
-		Dialog containerDialog = new OpenContainerDialog(contentItems, "Container", dialogs,
+		Dialog containerDialog = new OpenContainerDialog(contentItems, gold, "Container", dialogs,
 				(PacketsSender) linkedState, containerId);
 		positionDialogNearMouse(containerDialog);
 		stage.addActor(containerDialog);
@@ -270,5 +270,21 @@ public class UserInterface
 		
 		stage.addActor(label);
 	}
+
+	public void decreaseGoldFromContainerDialog(long containerId, int goldAmount)
+	{
+		OpenContainerDialog containerDialog = (OpenContainerDialog)dialogs.getIdentifiableDialog(containerId);
+		if(containerDialog != null)
+			containerDialog.updateGoldByDecreasingBy(goldAmount);
+		
+	}
+
+	public void updateGoldAmountInInventory(int goldAmount)
+	{
+		InventoryDialog inventory = (InventoryDialog)dialogs.searchForDialog(InventoryDialog.class);
+		inventory.increaseGoldValue(goldAmount);
+	}
+
+
 
 }

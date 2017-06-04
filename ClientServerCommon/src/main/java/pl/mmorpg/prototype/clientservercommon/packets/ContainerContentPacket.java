@@ -10,4 +10,5 @@ public class ContainerContentPacket
 {
 	private CharacterItemDataPacket[] contentItems;
 	private long containerId;
+	private int goldAmount;
 }

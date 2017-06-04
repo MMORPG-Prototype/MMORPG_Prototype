@@ -375,9 +375,9 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         client.sendTCP(packet);	
 	}
 
-	public void containerOpened(CharacterItemDataPacket[] contentItems, long containerId)
+	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold, long containerId)
 	{
-		userInterface.containerOpened(contentItems, containerId);
+		userInterface.containerOpened(contentItems, gold, containerId);
 	}
 
 	public void containerItemRemovalPacketReceived(ContainerItemRemovalPacket packet)
@@ -388,6 +388,17 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void showTimedErrorMessage(String errorMessage, float timeout)
 	{
 		userInterface.showTimedErrorMessage(errorMessage, timeout);		
+	}
+
+	public void decreaseGoldFromDialogInterface(long containerId, int goldAmount)
+	{
+		userInterface.decreaseGoldFromContainerDialog(containerId, goldAmount);
+	}
+
+	public void characterReceivedGold(int goldAmount)
+	{
+		player.getProperties().gold += goldAmount;
+		userInterface.updateGoldAmountInInventory(goldAmount);
 	} 
 
 

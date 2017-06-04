@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server.communication;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
@@ -13,6 +14,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
@@ -181,6 +183,7 @@ public class PacketsMaker
 		ContainerContentPacket packet = new ContainerContentPacket();
 		packet.setContentItems(containerContent);
 		packet.setContainerId(container.getId());
+		packet.setGoldAmount(container.getGoldAmount());
 		return packet;
 	}
 
@@ -196,6 +199,21 @@ public class PacketsMaker
 	{
 		UnacceptableOperationPacket packet = new UnacceptableOperationPacket();
 		packet.setErrorMessage(errorMessage);
+		return packet;
+	}
+
+	public static ContainerGoldRemovalPacket makeContainerGoldRemovalPacket(long containerId, int gold)
+	{
+		ContainerGoldRemovalPacket packet = new ContainerGoldRemovalPacket();
+		packet.setContainerId(containerId);
+		packet.setGoldAmount(gold);
+		return packet;
+	}
+
+	public static GoldReceivePacket makeGoldReceivePacket(int gold)
+	{
+		GoldReceivePacket packet = new GoldReceivePacket();
+		packet.setGoldAmount(gold);
 		return packet;
 	}
 
