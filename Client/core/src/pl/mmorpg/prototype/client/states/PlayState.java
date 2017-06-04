@@ -82,13 +82,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         this.states = states;
         inputMultiplexer = new InputMultiplexer();
         camera.setToOrtho(false);
-        
-        TiledMap map = Assets.get("Map/tiled.tmx");
-        
-        mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
-        mapRenderer.setView(camera);
         camera.viewportWidth = 900;
         camera.viewportHeight = 500;
+        TiledMap map = Assets.get("Map/tiled2.tmx");
+        mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
+        
     }
 
     public void initialize(UserCharacterDataPacket character)
@@ -114,15 +112,18 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
     {
         batch.setProjectionMatrix(camera.combined);
         batch.disableBlending();
+        mapRenderer.setView(camera);
         mapRenderer.render(new int[] { 0 });
         batch.enableBlending();
+        mapRenderer.render(new int[] { 1 } );
+        mapRenderer.render(new int[] { 2 } );
         batch.begin();
         for (GameObject object : gameObjects.values())
             object.render(batch);
         for (GraphicGameObject object : clientGraphics)
             object.render(batch);
         batch.end();
-        mapRenderer.render(new int[] { 1, 2, 3, 4 });
+        mapRenderer.render(new int[] { 3, 4, 5, 6, 7, 8 } );
         userInterface.draw(batch);
     }
 

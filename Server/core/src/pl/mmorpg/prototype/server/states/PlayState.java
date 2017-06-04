@@ -37,15 +37,15 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 {
     private Server server;
     private StateManager states;
-    private PixelCollisionMap<GameObject> collisionMap = new PixelCollisionMap<>(1500, 800, GameObject.NULL_OBJECT);
-    private StackableCollisionMap<MonsterBody> deadBodiesCollisionMap = new LayerCollisionMap<>(1500, 800, 20, 20);
+    private PixelCollisionMap<GameObject> collisionMap = new PixelCollisionMap<>(6400, 4800, GameObject.NULL_OBJECT);
+    private StackableCollisionMap<MonsterBody> deadBodiesCollisionMap = new LayerCollisionMap<>(214, 160, 30, 30);
     private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
     private Map<Long, GameContainer> gameContainers = new ConcurrentHashMap<>();
     private TiledMapRenderer mapRenderer;
     private ServerInputHandler inputHandler = new ServerInputHandler(this);
     
 
-    private OrthographicCamera camera = new OrthographicCamera(1400, 700);
+    private OrthographicCamera camera = new OrthographicCamera(6400, 4800);
 
     public PlayState(Server server, StateManager states)
     {
@@ -54,8 +54,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         camera.setToOrtho(false);
 
         collisionMap.setScale(1);
-        TiledMap map = Assets.get("Map/tiled.tmx");
-        MapObjects objects = map.getLayers().get("Warstwa Obiektu 1").getObjects();
+        TiledMap map = Assets.get("Map/tiled2.tmx");
+        MapObjects objects = map.getLayers().get("CollisionLayer").getObjects();
         Array<RectangleMapObject> byType = objects.getByType(RectangleMapObject.class);
         byType.forEach((rectangle) -> collisionMap.insert(new MapCollisionUnknownObject(rectangle.getRectangle())));
 
