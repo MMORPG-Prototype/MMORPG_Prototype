@@ -37,7 +37,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 {
     private Server server;
     private StateManager states;
-    private PixelCollisionMap<GameObject> collisionMap = new PixelCollisionMap<>(6400, 4800, GameObject.NULL_OBJECT);
+    private PixelCollisionMap<GameObject> collisionMap = new PixelCollisionMap<>(64000, 4800, GameObject.NULL_OBJECT);
     private StackableCollisionMap<MonsterBody> deadBodiesCollisionMap = new LayerCollisionMap<>(214, 160, 30, 30);
     private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
     private Map<Long, GameContainer> gameContainers = new ConcurrentHashMap<>();
