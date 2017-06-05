@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.exceptions.CannotUseThisItemException;

@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.client.objects.monsters;
 
 import pl.mmorpg.prototype.client.resources.Assets;
-import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.GreenDragonPropertiesBuilder;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.GreenDragonPropertiesBuilder;
 
 public class GreenDragon extends HealthBarMonster
 {

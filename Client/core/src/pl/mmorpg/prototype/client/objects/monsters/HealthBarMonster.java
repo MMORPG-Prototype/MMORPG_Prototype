@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import pl.mmorpg.prototype.client.objects.CustomAnimation;
 import pl.mmorpg.prototype.client.objects.graphic.HealthBar;
-import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 
 public abstract class HealthBarMonster extends Monster
 {
