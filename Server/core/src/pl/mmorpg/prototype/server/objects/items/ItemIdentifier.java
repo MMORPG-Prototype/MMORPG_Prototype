@@ -13,6 +13,7 @@ public class ItemIdentifier
     {
         identifiers.put(SmallHpPotion.class, ItemIdentifiers.SMALL_HP_POTION);
         identifiers.put(SmallMpPotion.class, ItemIdentifiers.SMALL_MP_POTION);
+        identifiers.put(BlueBerry.class, ItemIdentifiers.BLUE_BERRY);
     }
 
     public static ItemIdentifiers getIdentifier(Class<? extends Item> clazz)

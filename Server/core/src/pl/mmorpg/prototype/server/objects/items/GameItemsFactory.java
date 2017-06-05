@@ -18,6 +18,8 @@ public class GameItemsFactory
             return new SmallHpPotion(gameId, itemCount);
         else if(identifier.equals(ItemIdentifiers.SMALL_MP_POTION))
             return new SmallMpPotion(gameId, itemCount);
+        else if(identifier.equals(ItemIdentifiers.BLUE_BERRY))
+        	return new BlueBerry(gameId, itemCount);
         
         throw new UnknownItemTypeException(identifier);
     }

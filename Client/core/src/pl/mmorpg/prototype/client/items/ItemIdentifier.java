@@ -13,6 +13,7 @@ public class ItemIdentifier
     {
         identifiers.put(SmallHealthPotion.class, ItemIdentifiers.SMALL_HP_POTION.toString());
         identifiers.put(SmallManaPotion.class, ItemIdentifiers.SMALL_MP_POTION.toString());
+        identifiers.put(BlueBerry.class, ItemIdentifiers.BLUE_BERRY.toString());
     }
 
     public static String getObjectIdentifier(Class<?> type)
