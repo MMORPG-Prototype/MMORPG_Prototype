@@ -1,6 +1,5 @@
 package pl.mmorpg.prototype.client.objects.monsters;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import pl.mmorpg.prototype.client.objects.AttackingGameObject;
@@ -11,9 +10,9 @@ public abstract class Monster extends AttackingGameObject
 {
 	protected MonsterProperties properties;
 
-	protected Monster(Texture textureSheet, int sheetStartX, int sheetStartY, long id, MonsterProperties properties)
+	protected Monster(TextureSheetAnimationInfo sheetInfo, long id, MonsterProperties properties)
 	{
-		super(textureSheet, sheetStartX, sheetStartY, id);
+		super(sheetInfo, id);
 		this.properties = properties;
 	}
 

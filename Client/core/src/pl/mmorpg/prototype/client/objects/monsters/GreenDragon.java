@@ -5,10 +5,19 @@ import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.GreenD
 
 public class GreenDragon extends HealthBarMonster
 {
-
 	public GreenDragon(long id)
 	{
-		super(Assets.get("monsterSheet.png"), 0, 0, id, new GreenDragonPropertiesBuilder().build());
+		super(new TextureSheetAnimationInfo
+				.Builder(Assets.get("monsterSheet.png"))
+				.textureTileWidth(12)
+				.textureTileHeight(8)
+				.textureCountedTileWidth(3)
+				.textureCountedTileHeight(4)
+				.textureTileXOffset(0)
+				.textureTileYOffset(0)
+				.build(), 
+				id, 
+				new GreenDragonPropertiesBuilder().build());
 	}
 
 }

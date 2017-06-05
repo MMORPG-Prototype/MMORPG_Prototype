@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import pl.mmorpg.prototype.client.objects.monsters.HealthBarMonster;
+import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
@@ -16,7 +17,16 @@ public class Player extends HealthBarMonster
 
     public Player(long id)
     {
-        super(Assets.get("characters.png"), 0, 0, id, new MonsterProperties.Builder().build());
+        super(new TextureSheetAnimationInfo
+				.Builder(Assets.get("characters.png"))
+				.textureTileWidth(12)
+				.textureTileHeight(8)
+				.textureCountedTileWidth(3)
+				.textureCountedTileHeight(4)
+				.textureTileXOffset(0)
+				.textureTileYOffset(0)
+				.build(), 
+				id, new MonsterProperties.Builder().build());
     }
 
     public void initialize(UserCharacterDataPacket characterData)

@@ -1,6 +1,5 @@
 package pl.mmorpg.prototype.client.objects.monsters;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -12,9 +11,9 @@ public abstract class HealthBarMonster extends Monster
 {
 	private HealthBar healthBar;
 
-	public HealthBarMonster(Texture textureSheet, int sheetStartX, int sheetStartY, long id, MonsterProperties monster)
+	public HealthBarMonster(TextureSheetAnimationInfo sheetInfo, long id, MonsterProperties monster)
 	{
-		super(textureSheet, sheetStartX, sheetStartY, id, monster);
+		super(sheetInfo, id, monster);
 		healthBar = new HealthBar(monster.maxHp, this);
 	}
 

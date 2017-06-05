@@ -8,7 +8,17 @@ public class Skeleton extends HealthBarMonster
 
 	public Skeleton(long id)
 	{
-		super(Assets.get("skeletonWarrior.png"), 0, 0, id, new SkeletonPropertiesBuilder().build());
+		super(new TextureSheetAnimationInfo
+				.Builder(Assets.get("skeletonWarrior.png"))
+				.textureTileHeight(4)
+				.textureTileWidth(4)
+				.textureCountedTileWidth(4)
+				.textureCountedTileHeight(4)
+				.textureTileXOffset(0)
+				.textureTileYOffset(0)
+				.build(), 
+				id, 
+				new SkeletonPropertiesBuilder().build());
 
 	}
 
