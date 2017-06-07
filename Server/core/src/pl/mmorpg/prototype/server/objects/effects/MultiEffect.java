@@ -19,19 +19,35 @@ public abstract class MultiEffect extends EffectBase<MultiEffect>
 	@Override
 	public void activate()
 	{
-		effects.values().forEach(e -> e.activate());
+		effects.values().forEach( e -> 
+		{
+			if(!e.isEffectActivated()) 
+				e.activate();
+		});
 	}
 
 	@Override
 	public void deactivate()
 	{	
-		effects.values().forEach( e -> e.deactivate());
+		effects.values().forEach( e -> 
+		{
+			if(e.isEffectActivated()) 
+				e.deactivate();
+		});
 	}
 
 	@Override
 	public void update(float deltaTime)
 	{
-		effects.values().forEach( e -> e.update(deltaTime));
+		effects.values().forEach( e -> 
+		{
+			if(e.isEffectActivated()) 
+			{
+				e.update(deltaTime);
+				if(e.shouldDeactivate())
+					e.deactivate();
+			}
+		});
 	}
 
 	@Override
