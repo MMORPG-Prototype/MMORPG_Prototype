@@ -8,4 +8,5 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 public class ShopItemsPacket
 {
 	private ShopItemPacket[] shopItems;
+	private long shopId;
 }

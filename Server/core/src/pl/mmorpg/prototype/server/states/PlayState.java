@@ -31,6 +31,7 @@ import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.RedDragon;
 import pl.mmorpg.prototype.server.objects.monsters.Skeleton;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
+import pl.mmorpg.prototype.server.objects.monsters.npcs.GroceryShopNpc;
 import pl.mmorpg.prototype.server.objects.monsters.spells.Fireball;
 import pl.mmorpg.prototype.server.resources.Assets;
 
@@ -64,9 +65,17 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         mapRenderer.setView(camera);
 
         Gdx.input.setInputProcessor(inputHandler);
+        
+        addNpcs();
     }
 
-    public void addGreenDragon()
+    private void addNpcs()
+	{
+    	GroceryShopNpc groceryShop = new GroceryShopNpc(IdSupplier.getId(), collisionMap, this);
+		addMonster(groceryShop);
+	}
+
+	public void addGreenDragon()
     {
         Monster dragon = new GreenDragon(IdSupplier.getId(), collisionMap, this);
         addMonster(dragon);

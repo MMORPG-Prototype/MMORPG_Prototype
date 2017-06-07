@@ -15,7 +15,7 @@ public class ShopItemsPacketHandler extends PacketHandlerBase<ShopItemsPacket>
 	@Override
 	public void handlePacket(ShopItemsPacket packet)
 	{
-		playState.openShopDialog(packet.getShopItems());
+		playState.openShopDialog(packet.getShopItems(), packet.getShopId());
 	}
 
 }

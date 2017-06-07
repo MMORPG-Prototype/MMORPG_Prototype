@@ -240,7 +240,7 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static ShopItemsPacket makeShopItemsPacket(Collection<ShopItemWrapper> availableItems)
+	public static ShopItemsPacket makeShopItemsPacket(Collection<ShopItemWrapper> availableItems, long shopId)
 	{
 		
 		ShopItemPacket[] itemsArray = availableItems
@@ -250,6 +250,7 @@ public class PacketsMaker
 		
 		ShopItemsPacket packet = new ShopItemsPacket();
 		packet.setShopItems(itemsArray);
+		packet.setShopId(shopId);
 		return packet;	
 	}
 	

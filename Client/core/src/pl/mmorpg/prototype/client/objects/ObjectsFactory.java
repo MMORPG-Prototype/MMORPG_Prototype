@@ -8,6 +8,7 @@ import pl.mmorpg.prototype.client.objects.monsters.Skeleton;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.GreenDragonBody;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.RedDragonBody;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.SkeletonBody;
+import pl.mmorpg.prototype.client.objects.monsters.npcs.GroceryShopNpc;
 import pl.mmorpg.prototype.client.objects.spells.FireBall;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 
@@ -37,6 +38,8 @@ public class ObjectsFactory
         	object = new Skeleton(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SkeletonBody.class)))
         	object = new SkeletonBody(id);
+        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GroceryShopNpc.class)))
+        	object = new GroceryShopNpc(id);
         else
             throw new ObjectIdentifierNotFoundException(identifier);
 

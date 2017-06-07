@@ -10,6 +10,7 @@ import pl.mmorpg.prototype.server.objects.monsters.Skeleton;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.GreenDragonBody;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.RedDragonBody;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.SkeletonBody;
+import pl.mmorpg.prototype.server.objects.monsters.npcs.GroceryShopNpc;
 import pl.mmorpg.prototype.server.objects.monsters.spells.Fireball;
 
 public class ObjectsIdentifier
@@ -26,6 +27,7 @@ public class ObjectsIdentifier
         identifiers.put(Fireball.class, ObjectsIdentifiers.FIREBALL);
         identifiers.put(Skeleton.class, ObjectsIdentifiers.SKELETON);
         identifiers.put(SkeletonBody.class, ObjectsIdentifiers.SKELETON_DEAD);
+        identifiers.put(GroceryShopNpc.class, ObjectsIdentifiers.GROCERY_NPC);
     }
 
     public static String getObjectIdentifier(Class<?> type)

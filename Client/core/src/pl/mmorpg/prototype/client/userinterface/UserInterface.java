@@ -27,6 +27,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.OpenContainerDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
@@ -283,6 +284,13 @@ public class UserInterface
 	{
 		InventoryDialog inventory = (InventoryDialog)dialogs.searchForDialog(InventoryDialog.class);
 		inventory.increaseGoldValue(goldAmount);
+	}
+
+	public void openShopDialog(ShopItem[] shopItems, long shopId)
+	{
+		ShopDialog shop = new ShopDialog("Shop", dialogs, shopId, shopItems);
+		dialogs.add(shop);
+		stage.addActor(shop);
 	}
 
 

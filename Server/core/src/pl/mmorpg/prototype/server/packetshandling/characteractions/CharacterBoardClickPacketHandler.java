@@ -62,7 +62,7 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 	private void sendShopItemsInfo(Connection connection, ShopNpc source)
 	{
 		Collection<ShopItemWrapper> availableItems = source.getAvailableItems();
-		ShopItemsPacket shopItemsPacket = PacketsMaker.makeShopItemsPacket(availableItems);
+		ShopItemsPacket shopItemsPacket = PacketsMaker.makeShopItemsPacket(availableItems, source.getId());
 		connection.sendTCP(shopItemsPacket);
 	}
 	

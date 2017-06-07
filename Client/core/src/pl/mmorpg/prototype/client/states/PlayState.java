@@ -431,12 +431,12 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		}
 	}
 
-	public void openShopDialog(ShopItemPacket[] shopItemsPacket)
+	public void openShopDialog(ShopItemPacket[] shopItemsPacket, long shopId)
 	{
 		ShopItem[] shopItems = Stream.of(shopItemsPacket)
 				.map(this::makeShopItem)
 				.toArray(ShopItem[]::new);
-
+		userInterface.openShopDialog(shopItems, shopId);
 	} 
 	
 	private ShopItem makeShopItem(ShopItemPacket packet)

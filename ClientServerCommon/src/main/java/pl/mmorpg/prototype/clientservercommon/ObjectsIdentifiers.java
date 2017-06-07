@@ -10,5 +10,6 @@ public class ObjectsIdentifiers
 	public static final String FIREBALL = "Fireball";
 	public static final String SKELETON = "Skeleton";
 	public static final String SKELETON_DEAD = "Skeleton dead";
+	public static final String GROCERY_NPC = "Grocery npc";
 
 }
