@@ -23,6 +23,6 @@ public abstract class FoodItem extends StackableUseableItem
 	@Override
 	public void useItem(Monster target, PacketsSender packetSender)
 	{
-		target.addEffect(new FoodNaturalRegenerationEffect(target, regenerationTime));
+		target.addEffect(new FoodNaturalRegenerationEffect(target, regenerationTime, packetSender));
 	}
 }

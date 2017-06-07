@@ -423,7 +423,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		if(target == player)
 		{
             UserCharacterDataPacket data = player.getData();
-            data.setHitPoints(newMp);
+            data.setManaPoints(newMp);
 			userInterface.updateHpMpDialog();
 		}
 		
