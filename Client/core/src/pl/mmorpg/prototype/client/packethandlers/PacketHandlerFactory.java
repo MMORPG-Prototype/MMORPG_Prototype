@@ -14,10 +14,12 @@ import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
@@ -64,6 +66,8 @@ public class PacketHandlerFactory
         packetHandlers.put(UnacceptableOperationPacket.class, new UnacceptableOperationPacketHandler(playState));
         packetHandlers.put(GoldReceivePacket.class, new GoldReceivePacketHandler(playState));
         packetHandlers.put(ContainerGoldRemovalPacket.class, new ContainerGoldRemovalPacketHandler(playState));
+        packetHandlers.put(HpUpdatePacket.class, new HpUpdatePacketHandler(playState));
+        packetHandlers.put(MpUpdatePacket.class, new MpUpdatePacketHandler(playState));
 
         // Ignore frameowrk keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

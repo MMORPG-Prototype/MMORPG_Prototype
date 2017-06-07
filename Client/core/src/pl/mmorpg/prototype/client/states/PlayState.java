@@ -401,6 +401,32 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		player.getProperties().gold += goldAmount;
 		userInterface.updateGoldAmountInInventory(goldAmount);
+	}
+
+	public void updateHp(long targetId, int newHp)
+	{
+		Monster target = (Monster)getObject(targetId);
+		target.getProperties().hp = newHp;
+		if(target == player)
+		{
+            UserCharacterDataPacket data = player.getData();
+            data.setHitPoints(newHp);
+			userInterface.updateHpMpDialog();
+		}
+			
+	}
+
+	public void updateMp(long targetId, int newMp)
+	{
+		Monster target = (Monster)getObject(targetId);
+		target.getProperties().mp = newMp;
+		if(target == player)
+		{
+            UserCharacterDataPacket data = player.getData();
+            data.setHitPoints(newMp);
+			userInterface.updateHpMpDialog();
+		}
+		
 	} 
 
 
