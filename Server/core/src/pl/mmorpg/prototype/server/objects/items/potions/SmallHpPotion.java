@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.server.objects.items;
+package pl.mmorpg.prototype.server.objects.items.potions;
 
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;

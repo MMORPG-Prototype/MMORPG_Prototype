@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
+import pl.mmorpg.prototype.server.objects.items.food.BlueBerry;
+import pl.mmorpg.prototype.server.objects.items.potions.SmallHpPotion;
+import pl.mmorpg.prototype.server.objects.items.potions.SmallMpPotion;
 
 public class ItemIdentifier
 {

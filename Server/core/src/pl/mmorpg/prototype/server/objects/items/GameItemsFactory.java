@@ -3,6 +3,9 @@ package pl.mmorpg.prototype.server.objects.items;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.exceptions.UnknownItemTypeException;
+import pl.mmorpg.prototype.server.objects.items.food.BlueBerry;
+import pl.mmorpg.prototype.server.objects.items.potions.SmallHpPotion;
+import pl.mmorpg.prototype.server.objects.items.potions.SmallMpPotion;
 
 public class GameItemsFactory
 {
