@@ -288,9 +288,13 @@ public class UserInterface
 
 	public void openShopDialog(ShopItem[] shopItems, long shopId)
 	{
-		ShopDialog shop = new ShopDialog("Shop", dialogs, shopId, shopItems);
-		dialogs.add(shop);
-		stage.addActor(shop);
+		if (!dialogs.hasIdentifiableDialog(shopId))
+		{
+			ShopDialog shop = new ShopDialog("Shop", dialogs, shopId, shopItems);
+			positionDialogNearMouse(shop);
+			dialogs.add(shop);
+			stage.addActor(shop);
+		}
 	}
 
 

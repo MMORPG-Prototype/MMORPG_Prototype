@@ -64,320 +64,319 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContaint
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
 {
-    private Client client;
-    private StateManager states;
-    private Player player;
-    private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
-    private BlockingQueue<GraphicGameObject> clientGraphics = new LinkedBlockingQueue<>();
-    private InputProcessorAdapter inputHandler;
-    private InputMultiplexer inputMultiplexer;
-    private UserInterface userInterface;
-    private TiledMapRenderer mapRenderer;
-    private boolean isInitalized = false;
+	private Client client;
+	private StateManager states;
+	private Player player;
+	private Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
+	private BlockingQueue<GraphicGameObject> clientGraphics = new LinkedBlockingQueue<>();
+	private InputProcessorAdapter inputHandler;
+	private InputMultiplexer inputMultiplexer;
+	private UserInterface userInterface;
+	private TiledMapRenderer mapRenderer;
+	private boolean isInitalized = false;
 
-    private OrthographicCamera camera = new OrthographicCamera(900, 500);
+	private OrthographicCamera camera = new OrthographicCamera(900, 500);
 
-    public PlayState(StateManager states, Client client)
-    {
-        this.client = client;
-        inputHandler = new NullInputHandler();
-        player = new NullPlayer();
-        this.states = states;
-        inputMultiplexer = new InputMultiplexer();
-        camera.setToOrtho(false);
-        camera.viewportWidth = 900;
-        camera.viewportHeight = 500;
-        TiledMap map = Assets.get("Map/tiled2.tmx");
-        mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
-        
-    }
+	public PlayState(StateManager states, Client client)
+	{
+		this.client = client;
+		inputHandler = new NullInputHandler();
+		player = new NullPlayer();
+		this.states = states;
+		inputMultiplexer = new InputMultiplexer();
+		camera.setToOrtho(false);
+		camera.viewportWidth = 900;
+		camera.viewportHeight = 500;
+		TiledMap map = Assets.get("Map/tiled2.tmx");
+		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
 
-    public void initialize(UserCharacterDataPacket character)
-    {
-        player = new Player(character.getId());
-        player.initialize(character);
-        gameObjects.put((long) character.getId(), player);
-        inputHandler = new PlayInputContinuousHandler(client, player);
-        userInterface = new UserInterface(this, character);
-        inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs(), player, this));
-        inputMultiplexer.addProcessor(userInterface.getStage());
-        inputMultiplexer.addProcessor(inputHandler);
-        isInitalized = true;
-    }
+	}
 
-    public boolean isInitialized()
-    {
-        return isInitalized;
-    }
+	public void initialize(UserCharacterDataPacket character)
+	{
+		player = new Player(character.getId());
+		player.initialize(character);
+		gameObjects.put((long) character.getId(), player);
+		inputHandler = new PlayInputContinuousHandler(client, player);
+		userInterface = new UserInterface(this, character);
+		inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs(), player, this));
+		inputMultiplexer.addProcessor(userInterface.getStage());
+		inputMultiplexer.addProcessor(inputHandler);
+		isInitalized = true;
+	}
 
-    @Override
-    public void render(SpriteBatch batch)
-    {
-        batch.setProjectionMatrix(camera.combined);
-        batch.disableBlending();
-        mapRenderer.setView(camera);
-        mapRenderer.render(new int[] { 0 });
-        batch.enableBlending();
-        mapRenderer.render(new int[] { 1 } );
-        mapRenderer.render(new int[] { 2 } );
-        batch.begin();
-        for (GameObject object : gameObjects.values())
-            object.render(batch);
-        for (GraphicGameObject object : clientGraphics)
-            object.render(batch);
-        batch.end();
-        mapRenderer.render(new int[] { 3, 4, 5, 6, 7, 8 } );
-        userInterface.draw(batch);
-    }
+	public boolean isInitialized()
+	{
+		return isInitalized;
+	}
 
-    @Override
-    public void update(float deltaTime)
-    {
-        for (GameObject object : gameObjects.values())
-            object.update(deltaTime);
+	@Override
+	public void render(SpriteBatch batch)
+	{
+		batch.setProjectionMatrix(camera.combined);
+		batch.disableBlending();
+		mapRenderer.setView(camera);
+		mapRenderer.render(new int[] { 0 });
+		batch.enableBlending();
+		mapRenderer.render(new int[] { 1 });
+		mapRenderer.render(new int[] { 2 });
+		batch.begin();
+		for (GameObject object : gameObjects.values())
+			object.render(batch);
+		for (GraphicGameObject object : clientGraphics)
+			object.render(batch);
+		batch.end();
+		mapRenderer.render(new int[] { 3, 4, 5, 6, 7, 8 });
+		userInterface.draw(batch);
+	}
 
-        graphicObjectsUpdate(deltaTime);
-        cameraUpdate();
-        inputHandler.process();
-        userInterface.update();
-    }
+	@Override
+	public void update(float deltaTime)
+	{
+		for (GameObject object : gameObjects.values())
+			object.update(deltaTime);
+
+		graphicObjectsUpdate(deltaTime);
+		cameraUpdate();
+		inputHandler.process();
+		userInterface.update();
+	}
 
 	private void cameraUpdate()
 	{
 		camera.position.set(player.getX() - player.getWidth() / 2, player.getY() - player.getHeight() / 2, 0);
-        camera.update();
+		camera.update();
 	}
 
-    private void graphicObjectsUpdate(float deltaTime)
-    {
-        Iterator<GraphicGameObject> it = clientGraphics.iterator();
-        while (it.hasNext())
-        {
-            GraphicGameObject object = it.next();
-            object.update(deltaTime);
-            if (!object.isAlive())
-                it.remove();
-        }
-    }
+	private void graphicObjectsUpdate(float deltaTime)
+	{
+		Iterator<GraphicGameObject> it = clientGraphics.iterator();
+		while (it.hasNext())
+		{
+			GraphicGameObject object = it.next();
+			object.update(deltaTime);
+			if (!object.isAlive())
+				it.remove();
+		}
+	}
 
-    @Override
-    public void send(Object packet)
-    {
-        client.sendTCP(packet);
-    }
+	@Override
+	public void send(Object packet)
+	{
+		client.sendTCP(packet);
+	}
 
-    @Override
-    public void add(GameObject object)
-    {
-        gameObjects.put(object.getId(), object);
-    }
-    
-    @Override
-    public void add(GraphicGameObject graphic)
-    {
-        clientGraphics.add(graphic);
-    }
+	@Override
+	public void add(GameObject object)
+	{
+		gameObjects.put(object.getId(), object);
+	}
 
-    @Override
-    public void removeObject(long id)
-    {
-        GameObject object = gameObjects.remove(id);
-        GraphicObjectsContainer graphics = this;
-        object.onRemoval(graphics);
-        if (object == player)
-            playerHasDied();
-        else if (player.hasLockedOnTarget(object))
-            player.releaseTarget();
-    }
+	@Override
+	public void add(GraphicGameObject graphic)
+	{
+		clientGraphics.add(graphic);
+	}
 
-    private void playerHasDied()
-    {
-        this.userWantsToChangeCharacter();
-    }
+	@Override
+	public void removeObject(long id)
+	{
+		GameObject object = gameObjects.remove(id);
+		GraphicObjectsContainer graphics = this;
+		object.onRemoval(graphics);
+		if (object == player)
+			playerHasDied();
+		else if (player.hasLockedOnTarget(object))
+			player.releaseTarget();
+	}
 
-    @Override
-    public Map<Long, GameObject> getGameObjects()
-    {
-        return gameObjects;
-    }
+	private void playerHasDied()
+	{
+		this.userWantsToChangeCharacter();
+	}
 
-    @Override
-    public GameObject getObject(long id)
-    {
-        return gameObjects.get(id);
-    }
+	@Override
+	public Map<Long, GameObject> getGameObjects()
+	{
+		return gameObjects;
+	}
 
-    @Override
-    public void reactivate()
-    {
-        Gdx.input.setInputProcessor(inputMultiplexer);
-    }
+	@Override
+	public GameObject getObject(long id)
+	{
+		return gameObjects.get(id);
+	}
 
-    public void userWantsToDisconnect()
-    {
-        client.sendTCP(new DisconnectPacket());
-        reset();
-        states.push(new SettingsChoosingState(client, states));
+	@Override
+	public void reactivate()
+	{
+		Gdx.input.setInputProcessor(inputMultiplexer);
+	}
 
-    }
+	public void userWantsToDisconnect()
+	{
+		client.sendTCP(new DisconnectPacket());
+		reset();
+		states.push(new SettingsChoosingState(client, states));
 
-    private void reset()
-    {
-        isInitalized = false;
-        inputHandler = new NullInputHandler();
-        gameObjects.clear();
-        userInterface.clear();
-        inputMultiplexer.clear();
-    }
+	}
 
-    public void userWantsToChangeCharacter()
-    {
-        client.sendTCP(new CharacterChangePacket());
-        states.push(new ChoosingCharacterState(client, states));
-        reset();
-    }
+	private void reset()
+	{
+		isInitalized = false;
+		inputHandler = new NullInputHandler();
+		gameObjects.clear();
+		userInterface.clear();
+		inputMultiplexer.clear();
+	}
 
-    public void userWantsToLogOut()
-    {
-        client.sendTCP(new LogoutPacket());
-        states.push(new AuthenticationState(client, states));
-        reset();
-    }
+	public void userWantsToChangeCharacter()
+	{
+		client.sendTCP(new CharacterChangePacket());
+		states.push(new ChoosingCharacterState(client, states));
+		reset();
+	}
 
-    public void newItemPacketReceived(CharacterItemDataPacket itemData)
-    {
-        Item newItem = ItemFactory.produceItem(itemData);
-        userInterface.addItemToInventory(newItem);
-    }
+	public void userWantsToLogOut()
+	{
+		client.sendTCP(new LogoutPacket());
+		states.push(new AuthenticationState(client, states));
+		reset();
+	}
 
-    public void userWantsToSendMessage(String message)
-    {
-        ChatMessagePacket packet = PacketsMaker.makeChatMessagePacket(message);
-        client.sendTCP(packet);
-    }
+	public void newItemPacketReceived(CharacterItemDataPacket itemData)
+	{
+		Item newItem = ItemFactory.produceItem(itemData);
+		userInterface.addItemToInventory(newItem);
+	}
 
-    public void chatMessagePacketReceived(ChatMessageReplyPacket packet)
-    {
-        userInterface.addMessageToDialogChat(packet);
-        GameObject source = gameObjects.get(packet.sourceCharacterId);
-        GameWorldLabel message = new GameWorldLabel(packet.getMessage(), source);
-        if (clientGraphics.offer(message))
-        {
-            Log.warn("Couldn't add graphic object ");
-        }
-    }
+	public void userWantsToSendMessage(String message)
+	{
+		ChatMessagePacket packet = PacketsMaker.makeChatMessagePacket(message);
+		client.sendTCP(packet);
+	}
 
-    public void userLeftClickedOnGameBoard(float x, float y)
-    {
-        BoardClickPacket packet = PacketsMaker.makeBoardClickPacket(getRealX(x), getRealY(y));
-        client.sendTCP(packet);
-    }
+	public void chatMessagePacketReceived(ChatMessageReplyPacket packet)
+	{
+		userInterface.addMessageToDialogChat(packet);
+		GameObject source = gameObjects.get(packet.sourceCharacterId);
+		GameWorldLabel message = new GameWorldLabel(packet.getMessage(), source);
+		if (clientGraphics.offer(message))
+		{
+			Log.warn("Couldn't add graphic object ");
+		}
+	}
+
+	public void userLeftClickedOnGameBoard(float x, float y)
+	{
+		BoardClickPacket packet = PacketsMaker.makeBoardClickPacket(getRealX(x), getRealY(y));
+		client.sendTCP(packet);
+	}
 
 	private float getRealY(float y)
 	{
 		return player.getY() - camera.viewportHeight / 2 + y * camera.viewportHeight / Settings.GAME_HEIGHT
-                - player.getHeight() / 2;
+				- player.getHeight() / 2;
 	}
 
 	private float getRealX(float x)
 	{
 		return (player.getX() - camera.viewportWidth / 2 + x * camera.viewportWidth / Settings.GAME_WIDTH)
-                - player.getWidth() / 2;
+				- player.getWidth() / 2;
 	}
 
-    public void monsterTargeted(Long monsterId)
-    {
-        GameObject target = gameObjects.get(monsterId);
-        player.lockOnTarget(target);
-        System.out.println("Monster targeted " + gameObjects.get(monsterId));
-    }
+	public void monsterTargeted(Long monsterId)
+	{
+		GameObject target = gameObjects.get(monsterId);
+		player.lockOnTarget(target);
+		System.out.println("Monster targeted " + gameObjects.get(monsterId));
+	}
 
-    public boolean has(long targetId)
-    {
-        return gameObjects.get(targetId) != null;
-    }
+	public boolean has(long targetId)
+	{
+		return gameObjects.get(targetId) != null;
+	}
 
-    public void experienceGainPacketReceived(ExperienceGainPacket packet)
-    {
-        Player target = (Player) gameObjects.get(packet.getTargetId());
-        GraphicGameObject experienceGainLabel = new ExperienceGainLabel(String.valueOf(packet.getExperience()), target);
-        clientGraphics.add(experienceGainLabel);
-        if (target == player)
-        {
-            target.addExperience(packet.getExperience());
-            userInterface.updateStatsDialog();
-        }
-    }
+	public void experienceGainPacketReceived(ExperienceGainPacket packet)
+	{
+		Player target = (Player) gameObjects.get(packet.getTargetId());
+		GraphicGameObject experienceGainLabel = new ExperienceGainLabel(String.valueOf(packet.getExperience()), target);
+		clientGraphics.add(experienceGainLabel);
+		if (target == player)
+		{
+			target.addExperience(packet.getExperience());
+			userInterface.updateStatsDialog();
+		}
+	}
 
-    public void hpChangeByItemUsagePacketReceived(HpChangeByItemUsagePacket packet)
-    {
-        Monster target = (Monster) gameObjects.get(packet.getMonsterTargetId());
-        target.getProperties().hp += packet.getHpChange();
-        HealLabel healLabel = new HealLabel(String.valueOf(packet.getHpChange()), target);
-        clientGraphics.add(healLabel);
-        if (target == player)
-        {
-            UserCharacterDataPacket data = player.getData();
-            data.setHitPoints(data.getHitPoints() + packet.getHpChange());
-            userInterface.updateHpMpDialog();
-        }
-    }
+	public void hpChangeByItemUsagePacketReceived(HpChangeByItemUsagePacket packet)
+	{
+		Monster target = (Monster) gameObjects.get(packet.getMonsterTargetId());
+		target.getProperties().hp += packet.getHpChange();
+		HealLabel healLabel = new HealLabel(String.valueOf(packet.getHpChange()), target);
+		clientGraphics.add(healLabel);
+		if (target == player)
+		{
+			UserCharacterDataPacket data = player.getData();
+			data.setHitPoints(data.getHitPoints() + packet.getHpChange());
+			userInterface.updateHpMpDialog();
+		}
+	}
 
-    public void mpChangeByItemUsagePacketReceived(MpChangeByItemUsagePacket packet)
-    {
-        Monster target = (Monster) gameObjects.get(packet.getMonsterTargetId());
-        target.getProperties().mp -= packet.getMpChange();
-        ManaReplenishLabel manaReplenishLabel = new ManaReplenishLabel(String.valueOf(packet.getMpChange()), target);
-        clientGraphics.add(manaReplenishLabel);
-        if (target == player)
-        {
-            UserCharacterDataPacket data = player.getData();
-            data.setManaPoints(data.getManaPoints() + packet.getMpChange());
-            userInterface.updateHpMpDialog();
-        }
-    }
-    
-    public void itemUsagePacketReceived(ItemUsagePacket packet)
-    {
-    	userInterface.itemUsed(packet.getItemId());
-    }
-    
+	public void mpChangeByItemUsagePacketReceived(MpChangeByItemUsagePacket packet)
+	{
+		Monster target = (Monster) gameObjects.get(packet.getMonsterTargetId());
+		target.getProperties().mp -= packet.getMpChange();
+		ManaReplenishLabel manaReplenishLabel = new ManaReplenishLabel(String.valueOf(packet.getMpChange()), target);
+		clientGraphics.add(manaReplenishLabel);
+		if (target == player)
+		{
+			UserCharacterDataPacket data = player.getData();
+			data.setManaPoints(data.getManaPoints() + packet.getMpChange());
+			userInterface.updateHpMpDialog();
+		}
+	}
 
-    private void damagePacketReceived(long targetId, int damage,
-            BiFunction<Integer, GameObject, GraphicGameObject> damageLabelCreator)
-    {
-        Monster attackTarget = (Monster) gameObjects.get(targetId);
-        attackTarget.gotHitBy(damage);
-        GraphicGameObject damageNumber = damageLabelCreator.apply(damage, attackTarget);
-        GraphicGameObject bloodAnimation = new BloodAnimation(attackTarget);
-        clientGraphics.add(damageNumber);
-        clientGraphics.add(bloodAnimation);
-        if (attackTarget == player)
-            userInterface.updateHitPointManaPointDialog();
-    }
+	public void itemUsagePacketReceived(ItemUsagePacket packet)
+	{
+		userInterface.itemUsed(packet.getItemId());
+	}
 
-    public void fireDamagePacketReceived(FireDamagePacket packet)
-    {
-        damagePacketReceived(packet.getTargetId(), packet.getDamage(),
-                (damage, target) -> new FireDamageLabel(damage, target));
-    }
+	private void damagePacketReceived(long targetId, int damage,
+			BiFunction<Integer, GameObject, GraphicGameObject> damageLabelCreator)
+	{
+		Monster attackTarget = (Monster) gameObjects.get(targetId);
+		attackTarget.gotHitBy(damage);
+		GraphicGameObject damageNumber = damageLabelCreator.apply(damage, attackTarget);
+		GraphicGameObject bloodAnimation = new BloodAnimation(attackTarget);
+		clientGraphics.add(damageNumber);
+		clientGraphics.add(bloodAnimation);
+		if (attackTarget == player)
+			userInterface.updateHitPointManaPointDialog();
+	}
 
-    public void normalDamagePacketReceived(NormalDamagePacket packet)
-    {
-        damagePacketReceived(packet.getTargetId(), packet.getDamage(),
-                (damage, target) -> new NormalDamageLabel(damage, target));
-    }
+	public void fireDamagePacketReceived(FireDamagePacket packet)
+	{
+		damagePacketReceived(packet.getTargetId(), packet.getDamage(),
+				(damage, target) -> new FireDamageLabel(damage, target));
+	}
 
-    public void playerUsedMana(int manaDrain)
-    {
-        player.manaDrained(manaDrain);
-        userInterface.updateHitPointManaPointDialog();
-    }
+	public void normalDamagePacketReceived(NormalDamagePacket packet)
+	{
+		damagePacketReceived(packet.getTargetId(), packet.getDamage(),
+				(damage, target) -> new NormalDamageLabel(damage, target));
+	}
+
+	public void playerUsedMana(int manaDrain)
+	{
+		player.manaDrained(manaDrain);
+		userInterface.updateHitPointManaPointDialog();
+	}
 
 	public void userRightClickedOnGameBoard(float x, float y)
 	{
-        OpenContainterPacket packet = PacketsMaker.makeContainterOpeningPacket(getRealX(x), getRealY(y));
-        client.sendTCP(packet);	
+		OpenContainterPacket packet = PacketsMaker.makeContainterOpeningPacket(getRealX(x), getRealY(y));
+		client.sendTCP(packet);
 	}
 
 	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold, long containerId)
@@ -392,7 +391,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	public void showTimedErrorMessage(String errorMessage, float timeout)
 	{
-		userInterface.showTimedErrorMessage(errorMessage, timeout);		
+		userInterface.showTimedErrorMessage(errorMessage, timeout);
 	}
 
 	public void decreaseGoldFromDialogInterface(long containerId, int goldAmount)
@@ -408,37 +407,35 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	public void updateHp(long targetId, int newHp)
 	{
-		Monster target = (Monster)getObject(targetId);
+		Monster target = (Monster) getObject(targetId);
 		target.getProperties().hp = newHp;
-		if(target == player)
+		if (target == player)
 		{
-            UserCharacterDataPacket data = player.getData();
-            data.setHitPoints(newHp);
+			UserCharacterDataPacket data = player.getData();
+			data.setHitPoints(newHp);
 			userInterface.updateHpMpDialog();
 		}
-			
+
 	}
 
 	public void updateMp(long targetId, int newMp)
 	{
-		Monster target = (Monster)getObject(targetId);
+		Monster target = (Monster) getObject(targetId);
 		target.getProperties().mp = newMp;
-		if(target == player)
+		if (target == player)
 		{
-            UserCharacterDataPacket data = player.getData();
-            data.setManaPoints(newMp);
+			UserCharacterDataPacket data = player.getData();
+			data.setManaPoints(newMp);
 			userInterface.updateHpMpDialog();
 		}
 	}
 
 	public void openShopDialog(ShopItemPacket[] shopItemsPacket, long shopId)
 	{
-		ShopItem[] shopItems = Stream.of(shopItemsPacket)
-				.map(this::makeShopItem)
-				.toArray(ShopItem[]::new);
+		ShopItem[] shopItems = Stream.of(shopItemsPacket).map(this::makeShopItem).toArray(ShopItem[]::new);
 		userInterface.openShopDialog(shopItems, shopId);
-	} 
-	
+	}
+
 	private ShopItem makeShopItem(ShopItemPacket packet)
 	{
 		Item item = ItemFactory.produceItem(packet.getItem());
