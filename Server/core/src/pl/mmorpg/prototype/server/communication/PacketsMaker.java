@@ -3,9 +3,11 @@ package pl.mmorpg.prototype.server.communication;
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
@@ -214,6 +216,22 @@ public class PacketsMaker
 	{
 		GoldReceivePacket packet = new GoldReceivePacket();
 		packet.setGoldAmount(gold);
+		return packet;
+	}
+
+	public static HpUpdatePacket makeHpUpdatePacket(long monsterId, int hp)
+	{
+		HpUpdatePacket packet = new HpUpdatePacket();
+		packet.setNewHp(hp);
+		packet.setId(monsterId);
+		return packet;
+	}
+	
+	public static MpUpdatePacket makeMpUpdatePacket(long monsterId, int mp)
+	{
+		MpUpdatePacket packet = new MpUpdatePacket();
+		packet.setNewMp(mp);
+		packet.setId(monsterId);
 		return packet;
 	}
 

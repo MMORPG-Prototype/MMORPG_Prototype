@@ -30,9 +30,5 @@ public abstract class Potion extends StackableItem implements ItemUseable
 		decreaseItemCount();
 	}
 	
-	@Override
-	public boolean shouldBeRemoved()
-	{
-		return isDepleted();
-	}
+
 }

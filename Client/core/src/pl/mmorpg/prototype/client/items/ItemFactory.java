@@ -13,6 +13,8 @@ public class ItemFactory
             return new SmallHealthPotion(itemData.getId(), itemData.getCount());
         else if (identifier.equalsIgnoreCase(ItemIdentifiers.SMALL_MP_POTION.toString()))
             return new SmallManaPotion(itemData.getId(), itemData.getCount());
+        else if(identifier.equalsIgnoreCase(ItemIdentifiers.BLUE_BERRY.toString()))
+        	return new BlueBerry(itemData.getId(), itemData.getCount());
 
         throw new UnknownItemIdentifierException(identifier);
     }

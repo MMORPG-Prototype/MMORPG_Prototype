@@ -63,4 +63,10 @@ public abstract class StackableItem extends Item
         font.getData().setScale(1.0f);
         font.draw(batch, count.toString(), x + 22, y + 12);
     }
+    
+	@Override
+	public boolean shouldBeRemoved()
+	{
+		return isDepleted();
+	}
 }
