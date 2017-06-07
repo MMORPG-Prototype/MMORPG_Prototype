@@ -8,7 +8,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
@@ -37,9 +37,9 @@ public class PacketsMaker
         return packet;
     }
 
-    public static MonsterTargetingPacket makeTargetingPacket(float x, float y)
+    public static BoardClickPacket makeBoardClickPacket(float x, float y)
     {
-        MonsterTargetingPacket packet = new MonsterTargetingPacket();
+        BoardClickPacket packet = new BoardClickPacket();
         packet.gameX = (int) x;
         packet.gameY = (int) y;
         return packet;

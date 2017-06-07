@@ -21,14 +21,14 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveLeftPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveRightPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
-import pl.mmorpg.prototype.server.packetshandling.characteractions.CharacterMonsterTargetingPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.CharacterBoardClickPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.FireballSpellUsagePacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemUsagePacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveDownPacketHandler;
@@ -66,7 +66,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(playState));
 		packetHandlers.put(ChatMessagePacket.class,
 				new ChatMessagePacketHandler(server, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
-		packetHandlers.put(MonsterTargetingPacket.class, new CharacterMonsterTargetingPacketHandler(playState,
+		packetHandlers.put(BoardClickPacket.class, new CharacterBoardClickPacketHandler(playState,
 				loggedUsersKeyUserId, authenticatedClientsKeyClientId));
 		packetHandlers.put(ItemUsagePacket.class,
 				new ItemUsagePacketHandler(loggedUsersKeyUserId, authenticatedClientsKeyClientId, playState, server));

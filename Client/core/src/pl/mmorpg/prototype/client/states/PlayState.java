@@ -6,6 +6,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiFunction;
+import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -40,6 +41,7 @@ import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
+import pl.mmorpg.prototype.client.userinterface.ShopItem;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
@@ -50,13 +52,14 @@ import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
@@ -266,7 +269,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
     public void userLeftClickedOnGameBoard(float x, float y)
     {
-        MonsterTargetingPacket packet = PacketsMaker.makeTargetingPacket(getRealX(x), getRealY(y));
+        BoardClickPacket packet = PacketsMaker.makeBoardClickPacket(getRealX(x), getRealY(y));
         client.sendTCP(packet);
     }
 
@@ -426,8 +429,21 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
             data.setManaPoints(newMp);
 			userInterface.updateHpMpDialog();
 		}
-		
-	} 
+	}
 
+	public void openShopDialog(ShopItemPacket[] shopItemsPacket)
+	{
+		ShopItem[] shopItems = Stream.of(shopItemsPacket)
+				.map(this::makeShopItem)
+				.toArray(ShopItem[]::new);
+
+	} 
+	
+	private ShopItem makeShopItem(ShopItemPacket packet)
+	{
+		Item item = ItemFactory.produceItem(packet.getItem());
+		ShopItem shopItem = new ShopItem(item, packet.getPrice());
+		return shopItem;
+	}
 
 }

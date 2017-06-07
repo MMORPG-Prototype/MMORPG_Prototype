@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.server.communication;
 
+import java.util.Collection;
+
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
@@ -11,6 +13,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -29,6 +33,7 @@ import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopItemWrapper;
 
 public class PacketsMaker
 {
@@ -233,6 +238,28 @@ public class PacketsMaker
 		packet.setNewMp(mp);
 		packet.setId(monsterId);
 		return packet;
+	}
+
+	public static ShopItemsPacket makeShopItemsPacket(Collection<ShopItemWrapper> availableItems)
+	{
+		
+		ShopItemPacket[] itemsArray = availableItems
+				.stream()
+				.map(PacketsMaker::makeShopItemPacket)
+				.toArray(ShopItemPacket[]::new);
+		
+		ShopItemsPacket packet = new ShopItemsPacket();
+		packet.setShopItems(itemsArray);
+		return packet;	
+	}
+	
+	public static ShopItemPacket makeShopItemPacket(ShopItemWrapper itemWrapper)
+	{
+		ShopItemPacket singleItemPacketWrapper = new ShopItemPacket();
+		CharacterItemDataPacket itemPacket = makeItemPacket(itemWrapper.getItem());
+		singleItemPacketWrapper.setItem(itemPacket);
+		singleItemPacketWrapper.setPrice(itemWrapper.getPrice());
+		return singleItemPacketWrapper;
 	}
 
 
