@@ -2,8 +2,8 @@ package pl.mmorpg.prototype.server.objects.effects;
 
 public class MultiEffectWrapper implements Effect
 {
-	private Effect effect;
-	private boolean isActivated = false;
+	Effect effect;
+	boolean isActivated = false;
 	
 	MultiEffectWrapper(Effect effect)
 	{
@@ -32,7 +32,7 @@ public class MultiEffectWrapper implements Effect
 	@Override
 	public void update(float deltaTime)
 	{
-		effect.activate();
+		effect.update(deltaTime);
 	}
 
 	@Override

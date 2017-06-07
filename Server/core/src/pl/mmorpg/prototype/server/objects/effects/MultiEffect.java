@@ -13,8 +13,7 @@ public abstract class MultiEffect extends EffectBase<MultiEffect>
 	{
 		this.effects = effects
 				.stream()
-				.map( e -> new MultiEffectWrapper(e))
-				.collect(Collectors.toMap( e -> e.getClass(),  e -> e));
+				.collect(Collectors.toMap( e ->  e.getClass(), e -> new MultiEffectWrapper(e)));
 	}
 	
 	@Override
