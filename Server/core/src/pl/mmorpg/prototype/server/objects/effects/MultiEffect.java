@@ -65,7 +65,7 @@ public abstract class MultiEffect extends EffectBase<MultiEffect>
 		this.effects.forEach( (key, value) ->
 		{
 			MultiEffectWrapper sameTypeEffect = effect.effects.get(key);
-			value.stackWithSameTypeEffect(sameTypeEffect);
+			value.stackWithSameTypeEffect(sameTypeEffect.effect);
 		});
 	}
 
