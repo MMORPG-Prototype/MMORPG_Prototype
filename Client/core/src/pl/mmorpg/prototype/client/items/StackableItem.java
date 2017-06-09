@@ -53,7 +53,8 @@ public abstract class StackableItem extends Item
     {
         super.renderWhenDragged(batch);
         font.getData().setScale(1.0f);
-        font.draw(batch, count.toString(), getMouseX() + 6, getMouseY() - 2);
+        if(count > 0)     	
+        	font.draw(batch, count.toString(), getMouseX() + 6, getMouseY() - 2);
     }
 
     @Override
@@ -61,7 +62,8 @@ public abstract class StackableItem extends Item
     {
         super.draw(batch, x, y);
         font.getData().setScale(1.0f);
-        font.draw(batch, count.toString(), x + 22, y + 12);
+        if(count > 0)     	
+        	font.draw(batch, count.toString(), x + 22, y + 12);
     }
     
 	@Override
