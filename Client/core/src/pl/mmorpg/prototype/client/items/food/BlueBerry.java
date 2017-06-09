@@ -1,5 +1,6 @@
-package pl.mmorpg.prototype.client.items;
+package pl.mmorpg.prototype.client.items.food;
 
+import pl.mmorpg.prototype.client.items.ItemIdentifier;
 import pl.mmorpg.prototype.client.resources.Assets;
 
 public class BlueBerry extends FoodItem
