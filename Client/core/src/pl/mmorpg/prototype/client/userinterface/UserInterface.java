@@ -297,6 +297,18 @@ public class UserInterface
 		}
 	}
 
+	public void openShopDialog(ShopItem[] shopItems, long shopId)
+	{
+		if (!dialogs.hasIdentifiableDialog(shopId))
+		{
+			ShopDialog shop = new ShopDialog("Shop", dialogs, shopId, shopItems);
+			shop.setPosition(0, 100);
+			shop.pack();
+			dialogs.add(shop);
+			stage.addActor(shop);
+		}
+	}
+
 
 
 }
