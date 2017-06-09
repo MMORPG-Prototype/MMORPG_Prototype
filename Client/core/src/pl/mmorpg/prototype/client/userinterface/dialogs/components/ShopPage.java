@@ -4,6 +4,9 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 
@@ -32,13 +35,37 @@ public class ShopPage extends VerticalGroup
 			for (int j = 0; j < BUTTON_ROW_LENGTH; j++)
 			{
 				Point cellPosition = new Point(j, i);
-				InventoryField button = new InventoryField();
-				inventoryFields.put(cellPosition, button);
-				buttonRow.addActor(button);
+				InventoryField field = new InventoryField();
+				inventoryFields.put(cellPosition, field);
+				buttonRow.addActor(field);
 			}
 			addActor(buttonRow);
 		}
 		padBottom(8);
+	}
+
+	private void addPopUpInfoListener(InventoryField field, ShopItem item)
+	{
+		field.addListener( new InputListener()
+		{
+			private PopUpInfo infoDialog = new PopUpInfo(item);
+
+				
+			@Override
+			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor)
+			{
+				if(!infoDialog.hasParent())
+					field.add(infoDialog);
+				infoDialog.setVisible(true);
+			}
+
+			@Override
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor)
+			{
+				infoDialog.setVisible(false);
+				field.removeActor(infoDialog);
+			}
+		});
 	}
 	
 
@@ -49,6 +76,7 @@ public class ShopPage extends VerticalGroup
 		{
 			InventoryField field = inventoryFields.get(currentPosition);
 			field.put(new ItemReference(item.getItem()));
+			addPopUpInfoListener(field, item);
 			currentPosition = nextPosition(currentPosition);
 		}
 	}
