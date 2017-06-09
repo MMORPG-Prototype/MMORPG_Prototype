@@ -27,7 +27,6 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.OpenContainerDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
@@ -234,7 +233,7 @@ public class UserInterface
 	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold,  long containerId)
 	{
 		if (!dialogs.hasIdentifiableDialog(containerId))
-			createAndOpenContainerDialog(contentItems, gold, containerId);
+			Gdx.app.postRunnable(() -> createAndOpenContainerDialog(contentItems, gold, containerId));
 	}
 
 	private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, int gold, long containerId)
@@ -284,18 +283,6 @@ public class UserInterface
 	{
 		InventoryDialog inventory = (InventoryDialog)dialogs.searchForDialog(InventoryDialog.class);
 		inventory.increaseGoldValue(goldAmount);
-	}
-
-	public void openShopDialog(ShopItem[] shopItems, long shopId)
-	{
-		if (!dialogs.hasIdentifiableDialog(shopId))
-		{
-			ShopDialog shop = new ShopDialog("Shop", dialogs, shopId, shopItems);
-			shop.setPosition(0, 100);
-			shop.pack();
-			dialogs.add(shop);
-			stage.addActor(shop);
-		}
 	}
 
 
