@@ -1,6 +1,10 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
@@ -21,8 +25,13 @@ public class ShopBuyingDialog extends AutoCleanupOnCloseButtonDialog
 		super(humanReadableFromItemIdentifier(item.getItem().getIdentifier()), linkedInterface.getDialogs(),
 				item.getItem().getId());
 		this.item = item;
-		totalPrice = new StringValueLabel<>("Total price: ", getSkin(), item.getPrice());
-		this.getContentTable().add(numberOfItemsField);
+		totalPrice = new StringValueLabel<>("Total: ", getSkin(), item.getPrice());
+		Texture texture = item.getItem().getTexture();
+		Image image = new Image(texture);
+		Table upperContainer = new Table();
+		upperContainer.add(image).width(32).height(32).padRight(43);
+		upperContainer.add(numberOfItemsField).width(40).align(Align.right);
+		this.getContentTable().add(upperContainer).align(Align.left);
 		this.getContentTable().row();
 		this.getContentTable().add(totalPrice);
 		this.getContentTable().row();
