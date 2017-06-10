@@ -18,10 +18,4 @@ public class HpChangeByItemUsagePacketHandler extends PacketHandlerBase<HpChange
 		playState.hpChangeByItemUsagePacketReceived(packet);
 	}
 	
-	@Override
-	public boolean canBeHandled(Object packet)
-	{
-		return playState.isInitialized();
-	}
-
 }

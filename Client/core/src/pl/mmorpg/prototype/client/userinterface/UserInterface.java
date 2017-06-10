@@ -3,7 +3,6 @@ package pl.mmorpg.prototype.client.userinterface;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -27,6 +26,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.OpenContainerDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
@@ -38,6 +38,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterData
 public class UserInterface
 {
 	private final Stage stage = Assets.getStage();
+	private final Stage popUpInfoStage = Assets.getStage();
 	private final MenuDialog menuDialog;
 	private final InventoryDialog inventoryDialog;
 	private final StatisticsDialog statisticsDialog;
@@ -123,6 +124,7 @@ public class UserInterface
 	public void draw(SpriteBatch batch)
 	{
 		stage.draw();
+		popUpInfoStage.draw();
 		batch.begin();
 		if (mousePointerToItem.item != null)
 			mousePointerToItem.item.renderWhenDragged(batch);
@@ -131,6 +133,7 @@ public class UserInterface
 
 	public void update()
 	{
+		popUpInfoStage.act();
 		stage.act();
 		dialogs.manageZIndexes();
 	}
@@ -146,7 +149,7 @@ public class UserInterface
 		dialogs.clear();
 	}
 
-	public InputProcessor getStage()
+	public Stage getStage()
 	{
 		return stage;
 	}
@@ -233,7 +236,7 @@ public class UserInterface
 	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold,  long containerId)
 	{
 		if (!dialogs.hasIdentifiableDialog(containerId))
-			createAndOpenContainerDialog(contentItems, gold, containerId);
+			Gdx.app.postRunnable(() -> createAndOpenContainerDialog(contentItems, gold, containerId));
 	}
 
 	private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, int gold, long containerId)
@@ -282,9 +285,27 @@ public class UserInterface
 	public void updateGoldAmountInInventory(int goldAmount)
 	{
 		InventoryDialog inventory = (InventoryDialog)dialogs.searchForDialog(InventoryDialog.class);
-		inventory.increaseGoldValue(goldAmount);
+		inventory.updateGoldValue(goldAmount);
 	}
 
+
+	public void openShopDialog(ShopItem[] shopItems, long shopId)
+	{
+		if (!dialogs.hasIdentifiableDialog(shopId))
+		{
+			ShopDialog shop = new ShopDialog("Shop", shopId, shopItems, popUpInfoStage, this, (PacketsSender)linkedState);
+			shop.setPosition(0, 100);
+			shop.pack();
+			dialogs.add(shop);
+			stage.addActor(shop);
+		}
+	}
+
+	public void addDialog(Dialog dialog)
+	{	
+		dialogs.add(dialog);
+		stage.addActor(dialog);
+	}
 
 
 }

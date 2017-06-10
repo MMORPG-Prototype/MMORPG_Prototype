@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.graphics.Color;
@@ -11,13 +12,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.exceptions.CannotUseThisItemException;
 import pl.mmorpg.prototype.server.exceptions.CharacterDoesntHaveItemException;
 import pl.mmorpg.prototype.server.exceptions.NoSuchItemToRemoveException;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
+import pl.mmorpg.prototype.server.objects.effects.Effect;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.items.Useable;
@@ -30,6 +32,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 	private static final BitmapFont font = Assets.getFont();
 	private Map<Long, Item> items = new ConcurrentHashMap<>();
     private List<Ability> abilities = new LinkedList<>();
+    private Map<Class<? extends Effect>, Effect> ongoingEffects = new ConcurrentHashMap<>();
 
     protected final MonsterProperties properties;
     private Monster targetedMonster = null;
@@ -53,8 +56,9 @@ public abstract class Monster extends MovableGameObject implements ItemUser
         if (isTargetingAnotherMonster())
             attackHandle(deltaTime);
         abilitiesUsageHandle();
+        ongoingEffectsHandle(deltaTime);
     }
-
+  
 
 	public boolean isTargetingAnotherMonster()
     {
@@ -111,6 +115,22 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 				else if(ability.shouldBeUsedOnTargetedMonster() && isTargetingAnotherMonster())
 					ability.use(targetedMonster, (PacketsSender)linkedState);
 			}
+	}
+    
+
+	private void ongoingEffectsHandle(float deltaTime)
+	{
+		for(Entry<Class<? extends Effect>, Effect> effectsElement : ongoingEffects.entrySet())
+		{
+			Effect effect = effectsElement.getValue();
+			effect.update(deltaTime);
+			if(effect.shouldDeactivate())
+			{
+				effect.deactivate();
+				ongoingEffects.remove(effectsElement.getKey());
+			}
+		}
+		
 	}
 
     @Override
@@ -191,14 +211,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     @Override
 	public void useItem(long id, PacketsSender packetSender)
     {
-    	try
-    	{
-            useItem(id, this, packetSender);
-    	}
-    	catch(CharacterDoesntHaveItemException e)
-    	{
-    		//
-    	}
+        useItem(id, this, packetSender);
     }
 
     @Override
@@ -236,5 +249,16 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     	abilities.add(ability);
     }
     
+    public void addEffect(Effect effect)
+    {
+    	Effect sameTypeEffect = ongoingEffects.get(effect.getClass());
+    	if(sameTypeEffect != null)
+    		sameTypeEffect.stackWithSameTypeEffect(effect);
+    	else
+    	{
+    		effect.activate();
+    		ongoingEffects.put(effect.getClass(), effect);
+    	}
+    }
 
 }

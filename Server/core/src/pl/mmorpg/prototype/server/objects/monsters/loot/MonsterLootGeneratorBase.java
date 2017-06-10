@@ -24,7 +24,7 @@ public abstract class MonsterLootGeneratorBase implements MonsterLootGenerator
 	
 	private int randomValueIn(Range<Integer> range)
 	{
-		int result = random.nextInt(range.getMaximum() - range.getMinimum()) + range.getMinimum();
+		int result = random.nextInt(range.getMaximum() - range.getMinimum() + 1) + range.getMinimum();
 		return result;
 	}
 	

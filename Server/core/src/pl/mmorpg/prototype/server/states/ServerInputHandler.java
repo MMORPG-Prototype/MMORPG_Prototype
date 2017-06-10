@@ -20,6 +20,8 @@ public class ServerInputHandler extends InputAdapter
 			playState.addGreenDragon();
 		else if(keycode == Keys.R)
 			playState.addRedDragon();
+		else if(keycode == Keys.S)
+			playState.addSkeleton();
 		return false;
 	}
 	

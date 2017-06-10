@@ -13,4 +13,4 @@ public class MonstersFactory extends ObjectsFactory
         return monster;
     }
 
-}
+} 

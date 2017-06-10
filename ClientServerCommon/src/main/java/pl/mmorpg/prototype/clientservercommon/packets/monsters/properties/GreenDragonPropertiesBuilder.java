@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.clientservercommon.packets.monsterproperties;
+package pl.mmorpg.prototype.clientservercommon.packets.monsters.properties;
 
 public class GreenDragonPropertiesBuilder extends MonsterProperties.Builder
 {

@@ -5,8 +5,9 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
 @Data
-public class MonsterTargetingPacket
+public class BuyFromShopPacket
 {
-	public int gameX;
-	public int gameY;
+	private long shopId;
+	private long itemId;
+	private int amount;
 }

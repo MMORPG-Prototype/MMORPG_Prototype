@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.clientservercommon.packets;
 
-import pl.mmorpg.prototype.clientservercommon.packets.monsterproperties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable

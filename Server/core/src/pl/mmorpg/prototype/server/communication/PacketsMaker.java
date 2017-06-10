@@ -1,14 +1,21 @@
 package pl.mmorpg.prototype.server.communication;
 
+import java.util.Collection;
+
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -27,6 +34,7 @@ import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopItemWrapper;
 
 public class PacketsMaker
 {
@@ -214,6 +222,52 @@ public class PacketsMaker
 	{
 		GoldReceivePacket packet = new GoldReceivePacket();
 		packet.setGoldAmount(gold);
+		return packet;
+	}
+
+	public static HpUpdatePacket makeHpUpdatePacket(long monsterId, int hp)
+	{
+		HpUpdatePacket packet = new HpUpdatePacket();
+		packet.setNewHp(hp);
+		packet.setId(monsterId);
+		return packet;
+	}
+	
+	public static MpUpdatePacket makeMpUpdatePacket(long monsterId, int mp)
+	{
+		MpUpdatePacket packet = new MpUpdatePacket();
+		packet.setNewMp(mp);
+		packet.setId(monsterId);
+		return packet;
+	}
+
+	public static ShopItemsPacket makeShopItemsPacket(Collection<ShopItemWrapper> availableItems, long shopId)
+	{
+		
+		ShopItemPacket[] itemsArray = availableItems
+				.stream()
+				.map(PacketsMaker::makeShopItemPacket)
+				.toArray(ShopItemPacket[]::new);
+		
+		ShopItemsPacket packet = new ShopItemsPacket();
+		packet.setShopItems(itemsArray);
+		packet.setShopId(shopId);
+		return packet;	
+	}
+	
+	public static ShopItemPacket makeShopItemPacket(ShopItemWrapper itemWrapper)
+	{
+		ShopItemPacket singleItemPacketWrapper = new ShopItemPacket();
+		CharacterItemDataPacket itemPacket = makeItemPacket(itemWrapper.getItem());
+		singleItemPacketWrapper.setItem(itemPacket);
+		singleItemPacketWrapper.setPrice(itemWrapper.getPrice());
+		return singleItemPacketWrapper;
+	}
+
+	public static GoldAmountChangePacket makeGoldAmountChangePacket(int newGoldAmount)
+	{
+		GoldAmountChangePacket packet = new GoldAmountChangePacket();
+		packet.setNewGoldAmount(newGoldAmount);
 		return packet;
 	}
 
