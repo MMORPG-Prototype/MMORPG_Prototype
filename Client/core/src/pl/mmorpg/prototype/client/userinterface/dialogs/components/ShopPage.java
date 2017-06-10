@@ -4,9 +4,11 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 
@@ -20,10 +22,10 @@ public class ShopPage extends VerticalGroup
 	
 	private final Map<Point, InventoryField> inventoryFields = new HashMap<>();
 	
-	public ShopPage(ShopItem[] items)
+	public ShopPage(ShopItem[] items, Stage stageForPopUpInfo)
 	{
 		createUIElements();
-		insertItems(items);
+		insertItemsAndAddListeners(items, stageForPopUpInfo);
 	}
 
 	private void createUIElements()
@@ -44,7 +46,7 @@ public class ShopPage extends VerticalGroup
 		padBottom(8);
 	}
 
-	private void addPopUpInfoListener(InventoryField field, ShopItem item)
+	private void addPopUpInfoListener(InventoryField field, ShopItem item, Stage stageForPopUpInfo)
 	{
 		field.addListener( new InputListener()
 		{
@@ -54,33 +56,32 @@ public class ShopPage extends VerticalGroup
 			@Override
 			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor)
 			{
-				if(!infoDialog.hasParent())
-					field.add(infoDialog);
-				infoDialog.setVisible(true);
+				infoDialog.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() + 10);
+				infoDialog.toFront();
+				stageForPopUpInfo.addActor(infoDialog);
 			}
 
 			@Override
 			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor)
 			{
-				infoDialog.setVisible(false);
-				field.removeActor(infoDialog);
+				infoDialog.remove();
 			}
 		});
 	}
 	
 
-	private void insertItems(ShopItem[] items)
+	private void insertItemsAndAddListeners(ShopItem[] items, Stage stageForPopUpInfo)
 	{
 		Point currentPosition = new Point(0, 0);
 		for(ShopItem item : items)
 		{
 			InventoryField field = inventoryFields.get(currentPosition);
 			field.put(new ItemReference(item.getItem()));
-			addPopUpInfoListener(field, item);
+			addPopUpInfoListener(field, item, stageForPopUpInfo);
 			currentPosition = nextPosition(currentPosition);
 		}
 	}
-
+	
 	private Point nextPosition(Point position)
 	{
 		position.x++;

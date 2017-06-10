@@ -39,4 +39,10 @@ public class StringValueLabel<T> extends Label
 		return value;
 	}
 	
+	@Override
+	public String toString()
+	{
+		return originalText + value.toString();
+	}
+	
 }

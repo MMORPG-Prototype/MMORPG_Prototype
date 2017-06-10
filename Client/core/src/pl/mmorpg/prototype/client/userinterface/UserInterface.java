@@ -27,6 +27,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.OpenContainerDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
@@ -38,6 +39,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterData
 public class UserInterface
 {
 	private final Stage stage = Assets.getStage();
+	private final Stage popUpInfoStage = Assets.getStage();
 	private final MenuDialog menuDialog;
 	private final InventoryDialog inventoryDialog;
 	private final StatisticsDialog statisticsDialog;
@@ -123,6 +125,7 @@ public class UserInterface
 	public void draw(SpriteBatch batch)
 	{
 		stage.draw();
+		popUpInfoStage.draw();
 		batch.begin();
 		if (mousePointerToItem.item != null)
 			mousePointerToItem.item.renderWhenDragged(batch);
@@ -131,6 +134,7 @@ public class UserInterface
 
 	public void update()
 	{
+		popUpInfoStage.act();
 		stage.act();
 		dialogs.manageZIndexes();
 	}
@@ -290,7 +294,7 @@ public class UserInterface
 	{
 		if (!dialogs.hasIdentifiableDialog(shopId))
 		{
-			ShopDialog shop = new ShopDialog("Shop", dialogs, shopId, shopItems);
+			ShopDialog shop = new ShopDialog("Shop", dialogs, shopId, shopItems, popUpInfoStage);
 			shop.setPosition(0, 100);
 			shop.pack();
 			dialogs.add(shop);
