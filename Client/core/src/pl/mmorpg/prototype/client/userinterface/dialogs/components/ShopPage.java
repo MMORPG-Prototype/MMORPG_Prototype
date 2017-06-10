@@ -4,16 +4,18 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
+import pl.mmorpg.prototype.client.userinterface.UserInterface;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ShopBuyingDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.listeners.ActorPopUpHideListener;
 
 public class ShopPage extends VerticalGroup
 {
@@ -21,11 +23,13 @@ public class ShopPage extends VerticalGroup
 	private static final int BUTTON_COLUMN_LENGTH = 12;
 	
 	private final Map<Point, InventoryField> inventoryFields = new HashMap<>();
+	private UserInterface linkedInterface;
 	
-	public ShopPage(ShopItem[] items, Stage stageForPopUpInfo)
+	public ShopPage(ShopItem[] items, Stage stageForPopUpInfo, UserInterface linkedInterface)
 	{
 		createUIElements();
 		insertItemsAndAddListeners(items, stageForPopUpInfo);
+		this.linkedInterface = linkedInterface;
 	}
 
 	private void createUIElements()
@@ -46,30 +50,6 @@ public class ShopPage extends VerticalGroup
 		padBottom(8);
 	}
 
-	private void addPopUpInfoListener(InventoryField field, ShopItem item, Stage stageForPopUpInfo)
-	{
-		field.addListener( new InputListener()
-		{
-			private PopUpInfo infoDialog = new PopUpInfo(item);
-
-				
-			@Override
-			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor)
-			{
-				infoDialog.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() + 10);
-				infoDialog.toFront();
-				stageForPopUpInfo.addActor(infoDialog);
-			}
-
-			@Override
-			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor)
-			{
-				infoDialog.remove();
-			}
-		});
-	}
-	
-
 	private void insertItemsAndAddListeners(ShopItem[] items, Stage stageForPopUpInfo)
 	{
 		Point currentPosition = new Point(0, 0);
@@ -78,8 +58,30 @@ public class ShopPage extends VerticalGroup
 			InventoryField field = inventoryFields.get(currentPosition);
 			field.put(new ItemReference(item.getItem()));
 			addPopUpInfoListener(field, item, stageForPopUpInfo);
+			addListenerForUsingField(field, item);
 			currentPosition = nextPosition(currentPosition);
 		}
+	}
+
+	private void addPopUpInfoListener(InventoryField field, ShopItem item, Stage stageForPopUpInfo)
+	{
+		PopUpInfo infoDialog = new PopUpInfo(item);
+		InputListener popUpHideListener = new ActorPopUpHideListener(stageForPopUpInfo, infoDialog);
+		field.addListener(popUpHideListener);
+	}
+	
+	private void addListenerForUsingField(InventoryField field, ShopItem item)
+	{
+		field.addListener(new ClickListener()
+		{
+			@Override
+			public void clicked(InputEvent event, float x, float y)
+			{
+				ShopBuyingDialog dialog = new ShopBuyingDialog(item, linkedInterface);
+				linkedInterface.addDialog(dialog);
+				
+			}
+		});
 	}
 	
 	private Point nextPosition(Point position)

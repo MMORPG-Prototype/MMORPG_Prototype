@@ -3,7 +3,6 @@ package pl.mmorpg.prototype.client.userinterface;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -150,7 +149,7 @@ public class UserInterface
 		dialogs.clear();
 	}
 
-	public InputProcessor getStage()
+	public Stage getStage()
 	{
 		return stage;
 	}
@@ -294,12 +293,18 @@ public class UserInterface
 	{
 		if (!dialogs.hasIdentifiableDialog(shopId))
 		{
-			ShopDialog shop = new ShopDialog("Shop", dialogs, shopId, shopItems, popUpInfoStage);
+			ShopDialog shop = new ShopDialog("Shop", dialogs, shopId, shopItems, popUpInfoStage, this);
 			shop.setPosition(0, 100);
 			shop.pack();
 			dialogs.add(shop);
 			stage.addActor(shop);
 		}
+	}
+
+	public void addDialog(Dialog dialog)
+	{	
+		dialogs.add(dialog);
+		stage.addActor(dialog);
 	}
 
 

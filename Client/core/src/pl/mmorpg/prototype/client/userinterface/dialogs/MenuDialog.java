@@ -35,7 +35,7 @@ public class MenuDialog extends Dialog
 		getContentTable().add(exitButton);
 		getContentTable().row();
 
-		centerPosition();
+		DialogUtils.centerPosition(this);
 		pack();
 	}
 
@@ -44,14 +44,9 @@ public class MenuDialog extends Dialog
 	public void setVisible(boolean visible)
 	{
 		if(visible)
-			centerPosition();
+			DialogUtils.centerPosition(this);
 		super.setVisible(visible);
 	}
 
-	private void centerPosition()
-	{
-		setPosition(Math.round((Gdx.graphics.getWidth() - getWidth()) / 2),
-				Math.round((Gdx.graphics.getHeight() - getHeight()) / 2));	
-	}
 
 }
