@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
+import pl.mmorpg.prototype.client.communication.PacketsMaker;
+import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
@@ -20,7 +22,7 @@ public class ShopBuyingDialog extends AutoCleanupOnCloseButtonDialog
 	private StringValueLabel<Integer> totalPrice;
 	private ShopItem item;
 
-	public ShopBuyingDialog(ShopItem item, UserInterface linkedInterface)
+	public ShopBuyingDialog(ShopItem item, UserInterface linkedInterface, PacketsSender packetsSender, long shopId)
 	{
 		super(humanReadableFromItemIdentifier(item.getItem().getIdentifier()), linkedInterface.getDialogs(),
 				item.getItem().getId());
@@ -35,7 +37,7 @@ public class ShopBuyingDialog extends AutoCleanupOnCloseButtonDialog
 		this.getContentTable().row();
 		this.getContentTable().add(totalPrice);
 		this.getContentTable().row();
-		Button buyButton = ButtonCreator.createTextButton("Buy", () -> tryToBuyAction(linkedInterface));
+		Button buyButton = ButtonCreator.createTextButton("Buy", () -> tryToBuyAction(packetsSender, shopId));
 		this.getContentTable().add(buyButton);
 		pack();
 		DialogUtils.centerPosition(this);
@@ -69,10 +71,10 @@ public class ShopBuyingDialog extends AutoCleanupOnCloseButtonDialog
 		}
 	}
 
-	private void tryToBuyAction(UserInterface linkedInterface)
+	private void tryToBuyAction(PacketsSender packetsSender, long shopId)
 	{
 		int wantedAmount = numberOfItemsField.getValue();
-
+		packetsSender.send(PacketsMaker.makeBuyFromShopPacket(shopId, item.getItem().getId(), wantedAmount));
 	}
 
 }

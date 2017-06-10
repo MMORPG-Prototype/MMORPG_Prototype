@@ -57,6 +57,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
@@ -401,8 +402,9 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	public void characterReceivedGold(int goldAmount)
 	{
-		player.getProperties().gold += goldAmount;
-		userInterface.updateGoldAmountInInventory(goldAmount);
+		MonsterProperties properties = player.getProperties();
+		properties.gold += goldAmount;
+		userInterface.updateGoldAmountInInventory(properties.gold);
 	}
 
 	public void updateHp(long targetId, int newHp)
@@ -441,6 +443,12 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		Item item = ItemFactory.produceItem(packet.getItem());
 		ShopItem shopItem = new ShopItem(item, packet.getPrice());
 		return shopItem;
+	}
+
+	public void updateCharacterGold(int newGoldAmount)
+	{
+		player.getProperties().gold = newGoldAmount;
+		userInterface.updateGoldAmountInInventory(newGoldAmount);
 	}
 
 }

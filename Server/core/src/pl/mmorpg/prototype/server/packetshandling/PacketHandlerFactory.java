@@ -20,8 +20,9 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveDownPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveLeftPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveRightPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
@@ -66,8 +67,8 @@ public class PacketHandlerFactory
 		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(playState));
 		packetHandlers.put(ChatMessagePacket.class,
 				new ChatMessagePacketHandler(server, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
-		packetHandlers.put(BoardClickPacket.class, new CharacterBoardClickPacketHandler(playState,
-				loggedUsersKeyUserId, authenticatedClientsKeyClientId));
+		packetHandlers.put(BoardClickPacket.class,
+				new CharacterBoardClickPacketHandler(playState, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
 		packetHandlers.put(ItemUsagePacket.class,
 				new ItemUsagePacketHandler(loggedUsersKeyUserId, authenticatedClientsKeyClientId, playState, server));
 		packetHandlers.put(FireballSpellUsagePacket.class, new FireballSpellUsagePacketHandler(loggedUsersKeyUserId,
@@ -77,6 +78,8 @@ public class PacketHandlerFactory
 				loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
 		packetHandlers.put(TakingGoldFromContainerPacket.class, new TakingGoldFromContainerPacketHandler(
 				loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
+		packetHandlers.put(BuyFromShopPacket.class,
+				new BuyFromShopPacketHandler(playState, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

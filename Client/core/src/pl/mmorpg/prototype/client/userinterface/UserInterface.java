@@ -285,7 +285,7 @@ public class UserInterface
 	public void updateGoldAmountInInventory(int goldAmount)
 	{
 		InventoryDialog inventory = (InventoryDialog)dialogs.searchForDialog(InventoryDialog.class);
-		inventory.increaseGoldValue(goldAmount);
+		inventory.updateGoldValue(goldAmount);
 	}
 
 
@@ -293,7 +293,7 @@ public class UserInterface
 	{
 		if (!dialogs.hasIdentifiableDialog(shopId))
 		{
-			ShopDialog shop = new ShopDialog("Shop", dialogs, shopId, shopItems, popUpInfoStage, this);
+			ShopDialog shop = new ShopDialog("Shop", shopId, shopItems, popUpInfoStage, this, (PacketsSender)linkedState);
 			shop.setPosition(0, 100);
 			shop.pack();
 			dialogs.add(shop);

@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.server.communication;
 import java.util.Collection;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
@@ -261,6 +262,13 @@ public class PacketsMaker
 		singleItemPacketWrapper.setItem(itemPacket);
 		singleItemPacketWrapper.setPrice(itemWrapper.getPrice());
 		return singleItemPacketWrapper;
+	}
+
+	public static GoldAmountChangePacket makeGoldAmountChangePacket(int newGoldAmount)
+	{
+		GoldAmountChangePacket packet = new GoldAmountChangePacket();
+		packet.setNewGoldAmount(newGoldAmount);
+		return packet;
 	}
 
 

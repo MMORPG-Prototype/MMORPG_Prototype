@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
@@ -21,15 +22,13 @@ public class ShopPage extends VerticalGroup
 {
 	private static final int BUTTON_ROW_LENGTH = 6;
 	private static final int BUTTON_COLUMN_LENGTH = 12;
-	
+
 	private final Map<Point, InventoryField> inventoryFields = new HashMap<>();
-	private UserInterface linkedInterface;
-	
-	public ShopPage(ShopItem[] items, Stage stageForPopUpInfo, UserInterface linkedInterface)
+
+	public ShopPage(ShopItem[] items, Stage stageForPopUpInfo, UserInterface linkedInterface, PacketsSender packetSender, long shopId)
 	{
 		createUIElements();
-		insertItemsAndAddListeners(items, stageForPopUpInfo);
-		this.linkedInterface = linkedInterface;
+		insertItemsAndAddListeners(items, stageForPopUpInfo, linkedInterface, packetSender, shopId);
 	}
 
 	private void createUIElements()
@@ -50,15 +49,16 @@ public class ShopPage extends VerticalGroup
 		padBottom(8);
 	}
 
-	private void insertItemsAndAddListeners(ShopItem[] items, Stage stageForPopUpInfo)
+	private void insertItemsAndAddListeners(ShopItem[] items, Stage stageForPopUpInfo, UserInterface linkedInterface, PacketsSender packetSender,
+			long shopId)
 	{
 		Point currentPosition = new Point(0, 0);
-		for(ShopItem item : items)
+		for (ShopItem item : items)
 		{
 			InventoryField field = inventoryFields.get(currentPosition);
 			field.put(new ItemReference(item.getItem()));
 			addPopUpInfoListener(field, item, stageForPopUpInfo);
-			addListenerForUsingField(field, item);
+			addListenerForUsingField(field, item, linkedInterface, packetSender, shopId);
 			currentPosition = nextPosition(currentPosition);
 		}
 	}
@@ -69,25 +69,25 @@ public class ShopPage extends VerticalGroup
 		InputListener popUpHideListener = new ActorPopUpHideListener(stageForPopUpInfo, infoDialog);
 		field.addListener(popUpHideListener);
 	}
-	
-	private void addListenerForUsingField(InventoryField field, ShopItem item)
+
+	private void addListenerForUsingField(InventoryField field, ShopItem item, UserInterface linkedInterface, PacketsSender packetSender, long shopId)
 	{
 		field.addListener(new ClickListener()
 		{
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				ShopBuyingDialog dialog = new ShopBuyingDialog(item, linkedInterface);
+				ShopBuyingDialog dialog = new ShopBuyingDialog(item, linkedInterface, packetSender, shopId);
 				linkedInterface.addDialog(dialog);
-				
+
 			}
 		});
 	}
-	
+
 	private Point nextPosition(Point position)
 	{
 		position.x++;
-		if(position.x >= BUTTON_ROW_LENGTH)
+		if (position.x >= BUTTON_ROW_LENGTH)
 		{
 			position.x = 0;
 			position.y++;

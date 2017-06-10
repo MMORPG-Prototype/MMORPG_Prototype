@@ -67,4 +67,10 @@ public class PlayerCharacter extends Monster
 		userCharacter.setGold(userCharacter.getGold() + gold);
 	}
 	
+	public void setGold(int gold)
+	{
+		getProperties().gold = gold;
+		userCharacter.setGold(gold);
+	}
+	
 }
