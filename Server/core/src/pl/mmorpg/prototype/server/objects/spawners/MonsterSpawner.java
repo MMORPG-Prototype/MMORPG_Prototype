@@ -30,7 +30,7 @@ public class MonsterSpawner
 		spawners.forEach( s -> s.updateSpawnInterval(deltaTime));
 	}
 	
-	public Monster getMonster(long id)
+	public Monster getNewMonster(long id)
 	{
 		Optional<MonsterSpawnerUnit> suiteSpawner = spawners.stream()
 			.filter( sp -> sp.shouldSpawnMonster())

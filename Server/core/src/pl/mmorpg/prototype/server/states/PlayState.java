@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -29,6 +30,7 @@ import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.objects.monsters.GreenDragon;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.objects.monsters.MonsterIdentifier;
 import pl.mmorpg.prototype.server.objects.monsters.MonstersFactory;
 import pl.mmorpg.prototype.server.objects.monsters.RedDragon;
 import pl.mmorpg.prototype.server.objects.monsters.Skeleton;
@@ -61,10 +63,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		camera.setToOrtho(false);
 
 		collisionMap.setScale(1);
-		TiledMap map = Assets.get("Map/tiled2.tmx");
-		MapObjects objects = map.getLayers().get("CollisionLayer").getObjects();
-		Array<RectangleMapObject> byType = objects.getByType(RectangleMapObject.class);
-		byType.forEach((rectangle) -> collisionMap.insert(new MapCollisionUnknownObject(rectangle.getRectangle())));
+		TiledMap map = loadMap();
 
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
 		mapRenderer.setView(camera);
@@ -72,7 +71,42 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		Gdx.input.setInputProcessor(inputHandler);
 
 		addNpcs();
-		addMonsterSpawnerUnits();
+		// addMonsterSpawnerUnits();
+	}
+
+	private TiledMap loadMap()
+	{
+		TiledMap map = Assets.get("Map/tiled2.tmx");
+		loadCollision(map);
+		loadSpawners(map);
+		return map;
+	}
+
+	private void loadCollision(TiledMap map)
+	{
+		MapObjects objects = map.getLayers().get("CollisionLayer").getObjects();
+		Array<RectangleMapObject> collision = objects.getByType(RectangleMapObject.class);
+		collision.forEach((rectangle) -> collisionMap.insert(new MapCollisionUnknownObject(rectangle.getRectangle())));
+	}
+
+	private void loadSpawners(TiledMap map)
+	{
+		MapObjects objects = map.getLayers().get("SpawnAreasLayer").getObjects();
+		Array<RectangleMapObject> spawnerInfos = objects.getByType(RectangleMapObject.class);
+		spawnerInfos.forEach(spawnerElement -> addSpawner(spawnerElement));
+	}
+
+	private void addSpawner(RectangleMapObject spawnerElement)
+	{
+		MapProperties properties = spawnerElement.getProperties();
+		String monsterIdentifier = (String) properties.get("MonsterType");
+		Class<? extends Monster> monsterType = MonsterIdentifier.getMonsterType(monsterIdentifier);
+		float spawnInterval = (float) properties.get("spawnInterval");
+		int maximumMonsterAmount = (int) properties.get("MaximumMonsterAmount");
+		IntegerRectangle spawnArea = new IntegerRectangle(spawnerElement.getRectangle());
+		MonsterSpawnerUnit spawnerUnit = new MonsterSpawnerUnit(monsterType, spawnArea, maximumMonsterAmount,
+				spawnInterval);
+		monsterSpawner.addSpawner(spawnerUnit);
 	}
 
 	private void addMonsterSpawnerUnits()
@@ -140,8 +174,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private void handleSpawner(float deltaTime)
 	{
 		monsterSpawner.updateSpawners(deltaTime);
-		Monster spawnedMonster = monsterSpawner.getMonster(IdSupplier.getId());
-		if(spawnedMonster != null)
+		Monster spawnedMonster = monsterSpawner.getNewMonster(IdSupplier.getId());
+		if (spawnedMonster != null)
 			addMonster(spawnedMonster);
 	}
 
@@ -165,7 +199,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		GameObject object = gameObjects.remove(objectId);
 		object.onRemoval();
 		collisionMap.remove(object);
-		if(object instanceof Monster)
+		if (object instanceof Monster)
 			monsterSpawner.monsterHasDied(object.getId());
 		return object;
 	}
