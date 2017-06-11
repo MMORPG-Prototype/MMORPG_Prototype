@@ -1,7 +1,9 @@
 package pl.mmorpg.prototype.server.objects.spawners;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Optional;
 
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -9,6 +11,7 @@ import pl.mmorpg.prototype.server.objects.monsters.MonstersFactory;
 
 public class MonsterSpawner
 {
+	private Map<Long, MonsterSpawnerUnit> spawnersKeyMonsterId = new HashMap<>();
 	private Collection<MonsterSpawnerUnit> spawners = new LinkedList<>();
 	private MonstersFactory factory;
 	
@@ -34,12 +37,22 @@ public class MonsterSpawner
 			.findAny();
 		if(!suiteSpawner.isPresent())
 			return null;
-		return suiteSpawner.get().getNewMonster(factory, id);
+		
+		MonsterSpawnerUnit monsterSpawnerUnit = suiteSpawner.get();
+		Monster monster = monsterSpawnerUnit.getNewMonster(factory, id);
+		spawnersKeyMonsterId.put(monster.getId(), monsterSpawnerUnit);
+		return monster;
 	}
 	
-	public void monsterHasDied(Monster monster)
+	public void monsterHasDied(long monsterId)
 	{
-		//TODO
+		boolean monsterWasSpawnedByThisSpawner = spawnersKeyMonsterId.containsKey(monsterId);
+		if(monsterWasSpawnedByThisSpawner)
+		{
+			MonsterSpawnerUnit spawner = spawnersKeyMonsterId.remove(monsterId);
+			spawner.decreaseSpawnedMonstersAmount();
+		}
+		
 	}
 	
 }

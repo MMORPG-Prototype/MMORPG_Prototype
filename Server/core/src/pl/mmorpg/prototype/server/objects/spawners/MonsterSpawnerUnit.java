@@ -58,7 +58,7 @@ public class MonsterSpawnerUnit
 		return monster;
 	}
 	
-	public void decreaseSpawnedMonsterAmount()
+	public void decreaseSpawnedMonstersAmount()
 	{
 		currentAmount--;
 	}

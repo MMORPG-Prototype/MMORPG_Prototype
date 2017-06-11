@@ -78,9 +78,9 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private void addMonsterSpawnerUnits()
 	{
 		MonsterSpawnerUnit greenDragonSpawnerUnit = new MonsterSpawnerUnit(GreenDragon.class,
-				new IntegerRectangle(100, 100, 400, 400), 3);
+				new IntegerRectangle(100, 100, 400, 400), 1);
 		MonsterSpawnerUnit redDragonSpawnerUnit = new MonsterSpawnerUnit(RedDragon.class,
-				new IntegerRectangle(100, 100, 400, 400), 3);
+				new IntegerRectangle(100, 100, 400, 400), 1);
 		monsterSpawner.addSpawner(greenDragonSpawnerUnit);
 		monsterSpawner.addSpawner(redDragonSpawnerUnit);
 	}
@@ -165,6 +165,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		GameObject object = gameObjects.remove(objectId);
 		object.onRemoval();
 		collisionMap.remove(object);
+		if(object instanceof Monster)
+			monsterSpawner.monsterHasDied(object.getId());
 		return object;
 	}
 
