@@ -25,7 +25,8 @@ public class ShopPage extends VerticalGroup
 
 	private final Map<Point, InventoryField> inventoryFields = new HashMap<>();
 
-	public ShopPage(ShopItem[] items, Stage stageForPopUpInfo, UserInterface linkedInterface, PacketsSender packetSender, long shopId)
+	public ShopPage(ShopItem[] items, Stage stageForPopUpInfo, UserInterface linkedInterface,
+			PacketsSender packetSender, long shopId)
 	{
 		createUIElements();
 		insertItemsAndAddListeners(items, stageForPopUpInfo, linkedInterface, packetSender, shopId);
@@ -49,8 +50,8 @@ public class ShopPage extends VerticalGroup
 		padBottom(8);
 	}
 
-	private void insertItemsAndAddListeners(ShopItem[] items, Stage stageForPopUpInfo, UserInterface linkedInterface, PacketsSender packetSender,
-			long shopId)
+	private void insertItemsAndAddListeners(ShopItem[] items, Stage stageForPopUpInfo, UserInterface linkedInterface,
+			PacketsSender packetSender, long shopId)
 	{
 		Point currentPosition = new Point(0, 0);
 		for (ShopItem item : items)
@@ -77,9 +78,17 @@ public class ShopPage extends VerticalGroup
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				ShopBuyingDialog dialog = new ShopBuyingDialog(item, linkedInterface, packetSender, shopId);
-				linkedInterface.addDialog(dialog);
+				if(!dialogIsAlreadyOpened(item, linkedInterface))
+				{
+					ShopBuyingDialog dialog = new ShopBuyingDialog(item, linkedInterface, packetSender, shopId);
+					linkedInterface.addDialog(dialog);
+				};
 
+			}
+
+			private boolean dialogIsAlreadyOpened(ShopItem item, UserInterface linkedInterface)
+			{
+				return linkedInterface.getDialogs().hasIdentifiableDialog(item.getItem().getId());
 			}
 		});
 	}
