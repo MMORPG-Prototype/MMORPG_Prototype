@@ -29,7 +29,9 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public abstract class Monster extends MovableGameObject implements ItemUser
 {
+	private static final float RELEASE_TARGET_DISTANCE = 400.0f;
 	private static final BitmapFont font = Assets.getFont();
+	
 	private Map<Long, Item> items = new ConcurrentHashMap<>();
     private List<Ability> abilities = new LinkedList<>();
     private Map<Class<? extends Effect>, Effect> ongoingEffects = new ConcurrentHashMap<>();
@@ -53,11 +55,21 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     public void update(float deltaTime)
     {
         super.update(deltaTime);
-        if (isTargetingAnotherMonster())
-            attackHandle(deltaTime);
+        targetedMonsterHandle(deltaTime);
         abilitiesUsageHandle();
         ongoingEffectsHandle(deltaTime);
     }
+
+	private void targetedMonsterHandle(float deltaTime)
+	{
+		if (isTargetingAnotherMonster())
+        {
+			if(distance(getTargetedMonster()) >= RELEASE_TARGET_DISTANCE)
+				stopTargetingMonster();
+			else
+				attackHandle(deltaTime);
+        }
+	}
   
 
 	public boolean isTargetingAnotherMonster()
