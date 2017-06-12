@@ -6,9 +6,11 @@ import java.util.Map;
 import pl.mmorpg.prototype.client.objects.monsters.GreenDragon;
 import pl.mmorpg.prototype.client.objects.monsters.RedDragon;
 import pl.mmorpg.prototype.client.objects.monsters.Skeleton;
+import pl.mmorpg.prototype.client.objects.monsters.Snake;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.GreenDragonBody;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.RedDragonBody;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.SkeletonBody;
+import pl.mmorpg.prototype.client.objects.monsters.bodies.SnakeBody;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.GroceryShopNpc;
 import pl.mmorpg.prototype.client.objects.spells.FireBall;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
@@ -28,6 +30,8 @@ public class ObjectsIdentifier
         identifiers.put(Skeleton.class, ObjectsIdentifiers.SKELETON);
         identifiers.put(SkeletonBody.class, ObjectsIdentifiers.SKELETON_DEAD);
         identifiers.put(GroceryShopNpc.class, ObjectsIdentifiers.GROCERY_NPC);
+        identifiers.put(Snake.class, ObjectsIdentifiers.SNAKE);
+        identifiers.put(SnakeBody.class, ObjectsIdentifiers.SNAKE_DEAD);
     }
 
     public static String getObjectIdentifier(Class<?> type)

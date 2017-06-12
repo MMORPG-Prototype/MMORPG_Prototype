@@ -14,6 +14,7 @@ public class MonsterIdentifier
 		monsterTypes.put(ObjectsIdentifiers.GREEN_DRAGON, GreenDragon.class);
 		monsterTypes.put(ObjectsIdentifiers.RED_DRAGON, RedDragon.class);
 		monsterTypes.put(ObjectsIdentifiers.SKELETON, Skeleton.class);
+		monsterTypes.put(ObjectsIdentifiers.SNAKE, Snake.class);
 	}
 	
 	public static Class<? extends Monster> getMonsterType(String identifier)

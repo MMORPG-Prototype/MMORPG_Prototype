@@ -24,6 +24,8 @@ public class MonstersFactory
 			return new RedDragon(id, collisionMap, linkedState);
 		else if(monsterClass.equals(Skeleton.class))
 			return new Skeleton(id, collisionMap, linkedState);
+		else if(monsterClass.equals(Snake.class))
+			return new Snake(id, collisionMap, linkedState);
 		
 		throw new MonsterClassIsntSupportedException(monsterClass);		
 	}
