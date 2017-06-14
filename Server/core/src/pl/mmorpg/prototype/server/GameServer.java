@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
 
@@ -18,7 +17,7 @@ import pl.mmorpg.prototype.server.states.StateManager;
 
 public class GameServer extends ApplicationAdapter
 {
-    private SpriteBatch batch;
+    //private SpriteBatch batch;
     private StateManager states;
     private Server server;
     private PlayState playState;
@@ -28,7 +27,7 @@ public class GameServer extends ApplicationAdapter
     {
         Assets.loadAssets();
         states = new StateManager();
-        batch = Assets.getBatch();
+        //batch = Assets.getBatch();
         server = initializeServer();
         playState = new PlayState(server, states);
         server.addListener(new ServerListener(server, playState));
@@ -61,9 +60,9 @@ public class GameServer extends ApplicationAdapter
     {
         update();
         clearScreen();
-        batch.begin();
-        states.render(batch);
-        batch.end();
+        //batch.begin();
+       // states.render(batch);
+        //batch.end();
     }
 
     private void update()
@@ -81,7 +80,7 @@ public class GameServer extends ApplicationAdapter
     public void dispose()
     {
         Assets.dispose();
-        batch.dispose();
+       // batch.dispose();
     }
 
 }
