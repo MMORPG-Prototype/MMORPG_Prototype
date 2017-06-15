@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Optional;
 
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.MonstersFactory;
@@ -32,16 +31,18 @@ public class MonsterSpawner
 	
 	public Monster getNewMonster(long id)
 	{
-		Optional<MonsterSpawnerUnit> suiteSpawner = spawners.stream()
-			.filter( sp -> sp.shouldSpawnMonster())
-			.findAny();
-		if(!suiteSpawner.isPresent())
+		MonsterSpawnerUnit monsterSpawnerUnit = getSuiteSpawnerUnit();
+		if(monsterSpawnerUnit == null)
 			return null;
 		
-		MonsterSpawnerUnit monsterSpawnerUnit = suiteSpawner.get();
 		Monster monster = monsterSpawnerUnit.getNewMonster(factory, id);
 		spawnersKeyMonsterId.put(monster.getId(), monsterSpawnerUnit);
 		return monster;
+	}
+
+	private MonsterSpawnerUnit getSuiteSpawnerUnit()
+	{
+		return spawners.stream().filter(sp -> sp.shouldSpawnMonster()).findAny().orElse(null);
 	}
 	
 	public void monsterHasDied(long monsterId)

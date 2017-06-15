@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.mockito.Mockito;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -27,6 +25,7 @@ import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.exceptions.CannotTargetItselfException;
+import pl.mmorpg.prototype.server.headless.NullOrthogonalTiledMapRenderer;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
@@ -70,7 +69,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 
 		if(ServerSettings.isHeadless)
 		{
-			mapRenderer = Mockito.mock(OrthogonalTiledMapRenderer.class);
+			mapRenderer = new NullOrthogonalTiledMapRenderer();
 		}
 		else
 			mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
@@ -137,6 +136,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	public void addGreenDragon()
 	{
 		Monster dragon = new GreenDragon(IdSupplier.getId(), collisionMap, this);
+		dragon.setPosition(100, 100);
 		addMonster(dragon);
 	}
 
