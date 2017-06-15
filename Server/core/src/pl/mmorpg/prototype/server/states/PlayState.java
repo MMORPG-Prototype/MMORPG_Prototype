@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.mockito.Mockito;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Server;
 
+import pl.mmorpg.prototype.server.ServerSettings;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionMap;
 import pl.mmorpg.prototype.server.collision.pixelmap.IntegerRectangle;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
@@ -65,7 +68,10 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		collisionMap.setScale(1);
 		TiledMap map = loadMap();
 
-		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
+		if(ServerSettings.isHeadless)
+			mapRenderer = Mockito.mock(OrthogonalTiledMapRenderer.class);
+		else
+			mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
 		mapRenderer.setView(camera);
 
 		Gdx.input.setInputProcessor(inputHandler);
@@ -154,8 +160,9 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	@Override
 	public void render(SpriteBatch batch)
 	{
-		// collisionMap.render(batch);
-		// mapRenderer.render(new int[] { 0, 1, 2, 3, 4 });
+		batch.end();
+		mapRenderer.render();
+		batch.begin();
 		Collection<GameObject> toRender = gameObjects.values();
 		for (GameObject object : toRender)
 			object.render(batch);

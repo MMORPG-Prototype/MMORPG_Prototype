@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
+import pl.mmorpg.prototype.server.ServerSettings;
 import pl.mmorpg.prototype.server.exceptions.GameException;
 
 public class Assets
@@ -26,7 +27,15 @@ public class Assets
 	private static Map<String, Class<?>> classTypes = new HashMap<String, Class<?>>();
 	private static AssetManager assets = new AssetManager();
 	private static BitmapFont font = new BitmapFont();
-	private static SpriteBatch batch = Mockito.mock(SpriteBatch.class);
+	private static SpriteBatch batch;
+	
+	static
+	{
+		if(ServerSettings.isHeadless)
+			batch = Mockito.mock(SpriteBatch.class);
+		else
+			batch = new SpriteBatch();
+	}
 
 	public static void loadAssets()
 	{

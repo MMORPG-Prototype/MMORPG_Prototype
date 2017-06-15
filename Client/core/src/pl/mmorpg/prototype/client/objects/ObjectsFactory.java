@@ -5,9 +5,11 @@ import pl.mmorpg.prototype.client.exceptions.GameException;
 import pl.mmorpg.prototype.client.objects.monsters.GreenDragon;
 import pl.mmorpg.prototype.client.objects.monsters.RedDragon;
 import pl.mmorpg.prototype.client.objects.monsters.Skeleton;
+import pl.mmorpg.prototype.client.objects.monsters.Snake;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.GreenDragonBody;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.RedDragonBody;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.SkeletonBody;
+import pl.mmorpg.prototype.client.objects.monsters.bodies.SnakeBody;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.GroceryShopNpc;
 import pl.mmorpg.prototype.client.objects.spells.FireBall;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
@@ -40,6 +42,10 @@ public class ObjectsFactory
         	object = new SkeletonBody(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GroceryShopNpc.class)))
         	object = new GroceryShopNpc(id);
+        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(Snake.class)))
+        	object = new Snake(id); 
+        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SnakeBody.class)))
+        	object = new SnakeBody(id); 
         else
             throw new ObjectIdentifierNotFoundException(identifier);
 
