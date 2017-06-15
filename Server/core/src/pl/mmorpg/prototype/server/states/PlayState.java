@@ -11,7 +11,8 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Server;
 
@@ -38,6 +39,7 @@ import pl.mmorpg.prototype.server.objects.monsters.npcs.GroceryShopNpc;
 import pl.mmorpg.prototype.server.objects.monsters.spells.Fireball;
 import pl.mmorpg.prototype.server.objects.spawners.MonsterSpawner;
 import pl.mmorpg.prototype.server.objects.spawners.MonsterSpawnerUnit;
+import pl.mmorpg.prototype.server.resources.Assets;
 
 public class PlayState extends State implements GameObjectsContainer, PacketsSender
 {
@@ -48,7 +50,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private final StackableCollisionMap<MonsterBody> deadBodiesCollisionMap = new LayerCollisionMap<>(214, 160, 30, 30);
 	private final Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
 	private final Map<Long, GameContainer> gameContainers = new ConcurrentHashMap<>();
-	//private final TiledMapRenderer mapRenderer;
+	private final TiledMapRenderer mapRenderer;
 	private final ServerInputHandler inputHandler = new ServerInputHandler(this);
 	private final MonsterSpawner monsterSpawner = new MonsterSpawner(new MonstersFactory(collisionMap, this));
 
@@ -63,8 +65,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		collisionMap.setScale(1);
 		TiledMap map = loadMap();
 
-		//mapRenderer = new OrthogonalTiledMapRenderer(map);
-		//mapRenderer.setView(camera);
+		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
+		mapRenderer.setView(camera);
 
 		Gdx.input.setInputProcessor(inputHandler);
 
@@ -74,7 +76,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 
 	private TiledMap loadMap()
 	{
-		TiledMap map = new TmxMapLoader().load("assets/Map/tiled2.tmx");
+		TiledMap map = Assets.get("Map/tiled2.tmx");
 		loadCollision(map);
 		loadSpawners(map);
 		return map;
