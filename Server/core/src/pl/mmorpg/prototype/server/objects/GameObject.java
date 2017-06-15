@@ -1,8 +1,8 @@
 package pl.mmorpg.prototype.server.objects;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import pl.mmorpg.prototype.server.collision.interfaces.RectangleCollisionObject;
@@ -38,7 +38,7 @@ public abstract class GameObject implements RectangleCollisionObject
 
     public abstract void update(float deltaTime);
 
-    public void render(SpriteBatch batch)
+    public void render(Batch batch)
     {
         sprite.draw(batch);
     }
@@ -133,7 +133,7 @@ public abstract class GameObject implements RectangleCollisionObject
         }
 
         @Override
-        public void render(SpriteBatch batch)
+        public void render(Batch batch)
         {
         }
 

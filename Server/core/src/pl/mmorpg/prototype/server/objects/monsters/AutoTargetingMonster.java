@@ -11,7 +11,6 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 {
     private static final int rangeOfCheckingForTarget = 200;
     private static final int checkInterval = 20;
-    private static final float stopChasingDistance = 3.0f;
     private PixelCollisionMap<GameObject> collisionMap;
 
     protected AutoTargetingMonster(Texture lookout, long id, MonsterProperties properties,

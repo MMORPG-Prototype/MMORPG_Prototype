@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
@@ -146,7 +146,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 	}
 
     @Override
-    public void render(SpriteBatch batch)
+    public void render(Batch batch)
     {
         super.render(batch);
         font.draw(batch, String.valueOf(properties.hp), getX() + 3, getY() + 40);

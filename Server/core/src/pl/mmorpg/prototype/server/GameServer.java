@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
 
@@ -18,7 +18,7 @@ import pl.mmorpg.prototype.server.states.StateManager;
 
 public class GameServer extends ApplicationAdapter
 {
-    private SpriteBatch batch;
+    private Batch batch;
     private StateManager states;
     private Server server;
     private PlayState playState;

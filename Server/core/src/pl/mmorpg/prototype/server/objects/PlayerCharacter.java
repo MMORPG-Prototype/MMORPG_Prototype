@@ -10,14 +10,12 @@ import pl.mmorpg.prototype.server.states.PlayState;
 public class PlayerCharacter extends Monster
 {
     private UserCharacter userCharacter;
-    private int connectionId;
 
-    public PlayerCharacter(UserCharacter userCharacter, PlayState linkedState, int connectionId)
+    public PlayerCharacter(UserCharacter userCharacter, PlayState linkedState)
     {
         super(Assets.get("MainChar.png"), userCharacter.getId(), linkedState,
                 new PlayerPropertiesBuilder(PacketsMaker.makeCharacterPacket(userCharacter)).build());
         this.userCharacter = userCharacter;
-		this.connectionId = connectionId;
         setPacketSendingInterval(0.0f);
         setPosition(userCharacter.getLastLocationX(), userCharacter.getLastLocationY());
     }

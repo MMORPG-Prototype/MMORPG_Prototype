@@ -8,7 +8,6 @@ import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
 public class FoodNaturalRegenerationEffect extends MultiEffect
 {
-	private Monster eater;
 
 	public FoodNaturalRegenerationEffect(Monster eater, float activeTime, PacketsSender packetSender)
 	{

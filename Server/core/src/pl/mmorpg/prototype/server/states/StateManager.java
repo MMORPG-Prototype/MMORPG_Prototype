@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.server.states;
 import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class StateManager
 {
@@ -19,7 +19,7 @@ public class StateManager
         return states.peek();
     }
 
-    public void render(SpriteBatch batch)
+    public void render(Batch batch)
     {
         usedState().render(batch);
     }

@@ -23,7 +23,6 @@ public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
 	private Map<Integer, User> authenticatedClientsKeyClientId;
 	private Map<Integer, UserInfo> loggedUsersKeyUserId;
 	private PlayState playState;
-	private Server server;
 
 	public ItemUsagePacketHandler(Map<Integer, UserInfo> loggedUsersKeyUserId,
 			Map<Integer, User> authenticatedClientsKeyClientId, PlayState playState, Server server)
@@ -31,7 +30,6 @@ public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
 		this.loggedUsersKeyUserId = loggedUsersKeyUserId;
 		this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
 		this.playState = playState;
-		this.server = server;
 	}
 	
 	@Override
