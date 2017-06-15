@@ -276,9 +276,11 @@ public class UserInterface
 
 	public void decreaseGoldFromContainerDialog(long containerId, int goldAmount)
 	{
-		OpenContainerDialog containerDialog = (OpenContainerDialog)dialogs.getIdentifiableDialog(containerId);
-		if(containerDialog != null)
+		if (dialogs.hasIdentifiableDialog(containerId))
+		{
+			OpenContainerDialog containerDialog = (OpenContainerDialog)dialogs.getIdentifiableDialog(containerId);
 			containerDialog.updateGoldByDecreasingBy(goldAmount);
+		}
 		
 	}
 
