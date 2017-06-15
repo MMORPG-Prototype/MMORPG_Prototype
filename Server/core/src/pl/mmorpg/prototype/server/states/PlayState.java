@@ -69,7 +69,9 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		TiledMap map = loadMap();
 
 		if(ServerSettings.isHeadless)
+		{
 			mapRenderer = Mockito.mock(OrthogonalTiledMapRenderer.class);
+		}
 		else
 			mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
 		mapRenderer.setView(camera);
