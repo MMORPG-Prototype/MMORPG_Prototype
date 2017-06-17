@@ -9,7 +9,7 @@
 	This application was tested with profiler towards memory leaks and it is 99% certain that it currently doesn't have any.
 	This project currently contains about 16 000 lines of code (that is without comments or whitespace lines) distrubuted across 442 *.java files.
 
-	## Frameworks and libraries used:
+## Frameworks and libraries used:
 	- Libgdx
 	- Hibernate
 	- Kryonet
