@@ -10,10 +10,10 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.AskForIpDialog;
 
 public class SettingsChoosingState implements State
 {
-	private Client client;
-	private Stage stage = Assets.getStage();
-	private StateManager states;
-	private String ip;
+	private final Client client;
+	private final Stage stage = Assets.getStage();
+	private final StateManager states;
+	private ConnectionInfo connectionInfo = null;
 
 	public SettingsChoosingState(Client client, StateManager states)
 	{
@@ -21,7 +21,7 @@ public class SettingsChoosingState implements State
 		this.states = states;
 		Gdx.input.setInputProcessor(stage);
 
-		AskForIpDialog dialog = new AskForIpDialog(this);
+		AskForIpDialog dialog = new AskForIpDialog(this, new ConnectionInfo("localhost"));
 		dialog.show(stage);
 	}
 
@@ -36,17 +36,17 @@ public class SettingsChoosingState implements State
 	public void update(float deltaTime)
 	{
 		stage.act();
-		if(ip != null)
+		if(connectionInfo != null)
 		{
 			stage.dispose();
-			states.set(new ConnectionState(client, states, ip));
+			states.set(new ConnectionState(client, states, connectionInfo));
 		}
 
 	}
 
-	public void connect(String ip)
+	public void connect(ConnectionInfo connectionInfo)
 	{
-		this.ip = ip;
+		this.connectionInfo = connectionInfo;
 	}
 
 	@Override

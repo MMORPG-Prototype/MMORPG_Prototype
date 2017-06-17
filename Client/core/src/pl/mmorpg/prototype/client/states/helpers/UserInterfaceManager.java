@@ -10,11 +10,12 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryFiel
 public class UserInterfaceManager
 {
 
-	public static MousePointerToItem inventoryFieldClicked(MousePointerToItem mousePointerToItem, InventoryField inventoryField, InventoryDialog inventory)
+	public static MousePointerToItem inventoryFieldClicked(MousePointerToItem mousePointerToItem,
+			InventoryField inventoryField, InventoryDialog inventory)
 	{
 		if (mousePointerToItem.item == null && inventoryField.hasItem())
 		{
-			mousePointerToItem.item= inventoryField.getItem();
+			mousePointerToItem.item = inventoryField.getItem();
 			inventoryField.removeItem();
 		} else if (mousePointerToItem.item != null && inventoryField.hasItem())
 		{
@@ -27,33 +28,32 @@ public class UserInterfaceManager
 			inventoryField.put(new ItemReference(mousePointerToItem.item));
 			mousePointerToItem.item = null;
 		}
-		if(mousePointerToItem.item != null)
+		if (mousePointerToItem.item != null)
 			mousePointerToItem.itemSource = ItemSources.INVENTORY;
 		return mousePointerToItem;
 	}
-	
-	public static MousePointerToItem quickAccessFieldClicked(MousePointerToItem mousePointerToItem, InventoryField quickAccessField, InventoryField itemSource)
+
+	public static MousePointerToItem quickAccessFieldClicked(MousePointerToItem mousePointerToItem,
+			InventoryField quickAccessField, InventoryField itemSource)
 	{
 		if (mousePointerToItem.item != null && !quickAccessField.hasItem())
 		{
-			if(itemSource != null && mousePointerToItem.itemSource.equals(ItemSources.INVENTORY))			
+			if (itemSource != null && mousePointerToItem.itemSource.equals(ItemSources.INVENTORY))
 				itemSource.put(new ItemReference(mousePointerToItem.item));
 			quickAccessField.put(new ItemReference(mousePointerToItem.item));
 			mousePointerToItem.item = null;
-		}
-		else if(mousePointerToItem.item != null && quickAccessField.hasItem())
+		} else if (mousePointerToItem.item != null && quickAccessField.hasItem())
 		{
 			Item item = quickAccessField.getItem();
 			quickAccessField.removeItem();
 			quickAccessField.put(new ItemReference(mousePointerToItem.item));
 			mousePointerToItem.item = item;
-		}
-		else if(mousePointerToItem.item == null && quickAccessField.hasItem())
+		} else if (mousePointerToItem.item == null && quickAccessField.hasItem())
 		{
 			mousePointerToItem.item = quickAccessField.getItem();
 			quickAccessField.removeItem();
 		}
-		if(mousePointerToItem.item != null)
+		if (mousePointerToItem.item != null)
 			mousePointerToItem.itemSource = ItemSources.QUICK_ACCESS_BAR;
 		return mousePointerToItem;
 	}

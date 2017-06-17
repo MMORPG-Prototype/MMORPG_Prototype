@@ -5,36 +5,34 @@ import java.io.IOException;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.esotericsoftware.kryonet.Client;
 
-import pl.mmorpg.prototype.clientservercommon.Settings;
-
 public class ConnectionState implements State
 {
-	private StateManager states;
-	private Client client;
-	private int maxTryouts = 3;
+	private final StateManager states;
+	private final Client client;
+	private final int maxTryouts = 3;
 	private int currentTryout = 0;
 
 	private Thread connectThread;
 
-	public ConnectionState(Client client, StateManager states, String ip)
+	public ConnectionState(Client client, StateManager states, ConnectionInfo connectionInfo)
 	{
 		this.client = client;
 		this.states = states;
-		connectThread = new Thread(() -> tryConnecting(client, ip));
+		client.start();
+		connectThread = new Thread(() -> tryConnecting(client, connectionInfo));
 		connectThread.start();
 	}
 
-	private void tryConnecting(Client client, String ip)
+	private void tryConnecting(Client client, ConnectionInfo connectionInfo)
 	{
 		try
 		{
-			client.start();
-			client.connect(3000, ip, Settings.TCP_PORT, Settings.UDP_PORT);
+			client.connect(3000, connectionInfo.getIp(), connectionInfo.getTcpPort(), connectionInfo.getUdpPort());
 		} catch (IOException e)
 		{
 			currentTryout++;
 			if (currentTryout < maxTryouts)
-				tryConnecting(client, ip);
+				tryConnecting(client, connectionInfo);
 		}
 
 	}

@@ -2,33 +2,40 @@ package pl.mmorpg.prototype.client.userinterface.dialogs;
 
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
+import pl.mmorpg.prototype.client.states.ConnectionInfo;
 import pl.mmorpg.prototype.client.states.SettingsChoosingState;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.IntegerField;
 
 public class AskForIpDialog extends Dialog
 {
-	private TextField ipField;
-	private SettingsChoosingState linkedState;
+	private final TextField ipField;
+	private final SettingsChoosingState linkedState;
+	private final IntegerField tcpPortField;
+	private final IntegerField udpPortField;
 
-	public AskForIpDialog(SettingsChoosingState state)
+	public AskForIpDialog(SettingsChoosingState state, ConnectionInfo defaultConnection)
 	{
 		super("Connect to server", Settings.DEFAULT_SKIN);
 		this.linkedState = state;
-		ipField = new TextField("localhost", Settings.DEFAULT_SKIN);
-		ipField.addListener((event) ->
-		{
-			if (Gdx.input.isKeyPressed(Input.Keys.ENTER))
-				this.hide();
-			return true;
-		});
-		this.button("Ok", DialogResults.OK);
-		button("Cancel", DialogResults.CANCEL);
+		ipField = new TextField(defaultConnection.getIp(), getSkin());
 		text("Server ip: ");
 		this.getContentTable().add(ipField);
+		this.getContentTable().row();
+		text("Tcp port: ");
+		tcpPortField = new IntegerField(defaultConnection.getTcpPort(), getSkin());
+		this.getContentTable().add(tcpPortField);
+		this.getContentTable().row();
+		text("Udp port: ");
+		udpPortField = new IntegerField(defaultConnection.getUdpPort(), getSkin());
+		this.getContentTable().add(udpPortField);
+		this.getContentTable().row();
+		
+		this.button("Ok", DialogResults.OK);
+		button("Cancel", DialogResults.CANCEL);
 	}
 
 	@Override
@@ -42,7 +49,8 @@ public class AskForIpDialog extends Dialog
 
 	private void transferToConnectionState()
 	{
-		linkedState.connect(ipField.getText());
+		ConnectionInfo info = new ConnectionInfo(ipField.getText(), tcpPortField.getValue(), udpPortField.getValue());
+		linkedState.connect(info);
 	}
 
 }
