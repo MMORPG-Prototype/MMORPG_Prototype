@@ -2,6 +2,8 @@ package pl.mmorpg.prototype.server.database.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,4 +27,8 @@ public class User implements java.io.Serializable
 
 	@Column(name = "password", nullable = false)
 	private String password;
+	
+	@Column(name = "role", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private UserRole role = UserRole.USER;
 }
