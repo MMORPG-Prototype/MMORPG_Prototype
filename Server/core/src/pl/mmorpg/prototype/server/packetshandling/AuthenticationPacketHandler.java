@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.minlog.Log;
 
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
@@ -30,7 +31,19 @@ public class AuthenticationPacketHandler extends PacketHandlerBase<Authenticatio
 	public void handle(Connection connection, AuthenticationPacket packet)
 	{
 		Authenticator authenticator = new Authenticator(loggedUsersKeyUserId, packet);
-		authenticator.tryAuthenticating();
+		try
+		{
+			authenticator.tryAuthenticating();		
+		}
+		catch(ExceptionInInitializerError | NoClassDefFoundError e)
+		{
+			Log.error("Database connection problem");
+			AuthenticationReplyPacket replyPacket = new AuthenticationReplyPacket();
+			replyPacket.message = "Database connection problem";
+			server.sendToTCP(connection.getID(), replyPacket);
+			return;
+		}
+		
 		if (authenticator.isAuthenticated())
 		{
 			User user = authenticator.getUser();

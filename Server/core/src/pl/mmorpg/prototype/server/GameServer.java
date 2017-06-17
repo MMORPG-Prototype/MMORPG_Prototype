@@ -30,7 +30,6 @@ public class GameServer extends ApplicationAdapter
         states = new StateManager();
         batch = Assets.getBatch();
         server = initializeServer();
-        server = new Server();
         playState = new PlayState(server, states);
         server.addListener(new ServerListener(server, playState));
         bindServer();

@@ -13,12 +13,13 @@ import org.reflections.Reflections;
 
 public class HibernateUtil
 {
-	private static final SessionFactory sessionFactory;
-	static
+	private static SessionFactory sessionFactory = null;
+
+	private static void initialize()
 	{
 		try
 		{
-			Configuration config = new Configuration().configure("hibernate.cfg.xml");
+			Configuration config = new Configuration().configure(Settings.hibernateConfigFilePath);
 			registerEntityTypes(config);
 			sessionFactory = config.buildSessionFactory();
 		} catch (Throwable ex)
@@ -38,16 +39,22 @@ public class HibernateUtil
 
 	public static SessionFactory getSessionFactory()
 	{
+		if(sessionFactory == null)
+			initialize();
 		return sessionFactory;
 	}
 
 	public static Session openSession()
 	{
+		if(sessionFactory == null)
+			initialize();
 		return sessionFactory.openSession();
 	}
 
 	public static void makeOperation(SessionAction sessionAction)
 	{
+		if(sessionFactory == null)
+			initialize();
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		sessionAction.make(session);
