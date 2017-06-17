@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pl.mmorpg.prototype.server.commandUtils.actions.ChangeDatabaseConfigFilePathCommand;
+import pl.mmorpg.prototype.server.commandUtils.actions.CloseCommand;
 import pl.mmorpg.prototype.server.commandUtils.actions.CommandAction;
 import pl.mmorpg.prototype.server.commandUtils.actions.HelpCommand;
 import pl.mmorpg.prototype.server.commandUtils.actions.SetInternalExternalDatabaseConfigPath;
@@ -24,6 +25,7 @@ public class CommandHandler
 		addCommand(new ChangeDatabaseConfigFilePathCommand());
 		addCommand(new SetInternalExternalDatabaseConfigPath());
 		addCommand(new UserChangeRoleCommand());
+		addCommand(new CloseCommand());
 	}
 	
 	private void addCommand(CommandAction command)
