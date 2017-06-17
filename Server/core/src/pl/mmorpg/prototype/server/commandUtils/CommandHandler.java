@@ -3,8 +3,10 @@ package pl.mmorpg.prototype.server.commandUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+import pl.mmorpg.prototype.server.commandUtils.actions.ChangeDatabaseConfigFilePathCommand;
 import pl.mmorpg.prototype.server.commandUtils.actions.CommandAction;
-import pl.mmorpg.prototype.server.commandUtils.actions.HelpAction;
+import pl.mmorpg.prototype.server.commandUtils.actions.HelpCommand;
+import pl.mmorpg.prototype.server.commandUtils.actions.SetInternalExternalDatabaseConfigPath;
 
 public class CommandHandler
 {
@@ -17,8 +19,10 @@ public class CommandHandler
 	
 	private void initializeCommands()
 	{
-		addCommand(new HelpAction(commands));
-		
+		addCommand(new HelpCommand(commands));
+		addCommand(new ChangeDatabaseConfigFilePathCommand());
+		addCommand(new SetInternalExternalDatabaseConfigPath());
+
 	}
 	
 	private void addCommand(CommandAction command)

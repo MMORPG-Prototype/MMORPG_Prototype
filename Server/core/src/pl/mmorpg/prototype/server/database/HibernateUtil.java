@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.server.database;
 
+import java.io.File;
 import java.util.Set;
 
 import javax.persistence.Table;
@@ -19,7 +20,12 @@ public class HibernateUtil
 	{
 		try
 		{
-			Configuration config = new Configuration().configure(Settings.hibernateConfigFilePath);
+			Configuration config = new Configuration();
+			if(Settings.HIBERNATE_CONFIG_INTERNAL_PATH)
+				config.configure(Settings.HIBERNATE_CONFIG_FILE_PATH);
+			else
+				config.configure(new File(Settings.HIBERNATE_CONFIG_FILE_PATH));
+			
 			registerEntityTypes(config);
 			sessionFactory = config.buildSessionFactory();
 		} catch (Throwable ex)

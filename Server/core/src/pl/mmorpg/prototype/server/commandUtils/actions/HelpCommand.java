@@ -2,11 +2,11 @@ package pl.mmorpg.prototype.server.commandUtils.actions;
 
 import java.util.Map;
 
-public class HelpAction implements CommandAction
+public class HelpCommand implements CommandAction
 {
 	private Map<String, CommandAction> commands;
 
-	public HelpAction(Map<String, CommandAction> commands)
+	public HelpCommand(Map<String, CommandAction> commands)
 	{
 		this.commands = commands;
 	}
@@ -15,7 +15,7 @@ public class HelpAction implements CommandAction
 	public void run(String args)
 	{
 		for(CommandAction command : commands.values())
-			System.out.println(command.getName() + "\t " + command.getDescription());
+			System.out.println(String.format("%20s\t\t%s ", command.getName(), command.getDescription()));
 	}
 
 
