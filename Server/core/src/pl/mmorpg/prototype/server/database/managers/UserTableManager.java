@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.server.database.managers;
 
+import java.util.Collection;
+
 import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
@@ -19,7 +21,7 @@ public class UserTableManager
 		session.close();
 		return user;
 	}
-
+	
 
 	private static Query<User> getGetUserByUsernameQuery(String username, Session session)
 	{
@@ -29,6 +31,13 @@ public class UserTableManager
 		return getUserQuery;
 	}
 	
+	public static Collection<User> getAllUsers()
+	{
+		Session session = HibernateUtil.openSession();
+		Query<User> getAllUsersQuery = session.createQuery("from User as user", User.class);
+		Collection<User> users = getAllUsersQuery.getResultList();
+		return users;
+	}
 	
 	public static boolean hasUser(String username)
 	{
