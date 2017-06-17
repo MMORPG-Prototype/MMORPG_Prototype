@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
@@ -20,6 +21,7 @@ import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.helpers.UserInterfaceManager;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ConsoleDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
@@ -47,6 +49,7 @@ public class UserInterface
 	private final QuickAccessDialog quickAccessDialog;
 	private final EquipmentDialog equipmentDialog;
 	private final ChatDialog chatDialog;
+	private final ConsoleDialog consoleDialog;
 	private final ActorManipulator dialogs = new ActorManipulator();
 
 	private MousePointerToItem mousePointerToItem = new MousePointerToItem();
@@ -64,6 +67,7 @@ public class UserInterface
 		quickAccessDialog = new QuickAccessDialog(this);
 		equipmentDialog = new EquipmentDialog();
 		chatDialog = new ChatDialog(this);
+		consoleDialog = new ConsoleDialog(this);
 		mapDialogsWithKeys();
 		addOtherDialogs(); 
 		showDialogs();
@@ -100,6 +104,7 @@ public class UserInterface
 		dialogs.map(Keys.M, menuDialog);
 		dialogs.map(Keys.I, inventoryDialog);
 		dialogs.map(Keys.C, statisticsDialog);
+		dialogs.map(Keys.L, consoleDialog);
 	}
 
 	private void addOtherDialogs()
@@ -119,6 +124,7 @@ public class UserInterface
 		stage.addActor(inventoryDialog);
 		stage.addActor(statisticsDialog);
 		stage.addActor(equipmentDialog);
+		stage.addActor(consoleDialog);
 	}
 
 	public void draw(SpriteBatch batch)
@@ -307,6 +313,11 @@ public class UserInterface
 	{	
 		dialogs.add(dialog);
 		stage.addActor(dialog);
+	}
+
+	public void sendCommandToExecute(String command)
+	{
+		linkedState.send(PacketsMaker.makeScriptCodePacket(command));
 	}
 
 

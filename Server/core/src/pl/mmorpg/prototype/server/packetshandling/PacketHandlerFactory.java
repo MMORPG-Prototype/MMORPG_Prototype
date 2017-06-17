@@ -15,6 +15,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveDownPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveLeftPacket;
@@ -80,6 +81,7 @@ public class PacketHandlerFactory
 				loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
 		packetHandlers.put(BuyFromShopPacket.class,
 				new BuyFromShopPacketHandler(playState, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
+		packetHandlers.put(ScriptCodePacket.class, new ScriptCodePacketHandler(playState));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

@@ -66,9 +66,9 @@ public class ActorManipulator
 		return mappedDialogs.containsKey(key);
 	}
 
-	public Actor searchForDialog(Class<? extends Actor> clazz)
+	public <T extends Actor> T searchForDialog(Class<T> clazz)
 	{
-		return Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
+		return (T)Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
 				.filter((d) -> d.getClass().equals(clazz)).findFirst()
 				.orElseThrow(CannotFindSpecifiedDialogTypeException::new);
 	}

@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.script.ScriptException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -35,7 +37,6 @@ import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.MonsterIdentifier;
 import pl.mmorpg.prototype.server.objects.monsters.MonstersFactory;
 import pl.mmorpg.prototype.server.objects.monsters.RedDragon;
-import pl.mmorpg.prototype.server.objects.monsters.Skeleton;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.GroceryShopNpc;
 import pl.mmorpg.prototype.server.objects.monsters.spells.Fireball;
@@ -54,7 +55,9 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private final Map<Long, GameContainer> gameContainers = new ConcurrentHashMap<>();
 	private final TiledMapRenderer mapRenderer;
 	private final ServerInputHandler inputHandler = new ServerInputHandler(this);
-	private final MonsterSpawner monsterSpawner = new MonsterSpawner(new MonstersFactory(collisionMap, this));
+	private final MonstersFactory monsterFactory = new MonstersFactory(collisionMap, this);
+	private final MonsterSpawner monsterSpawner = new MonsterSpawner(monsterFactory);
+	private final GameCommandsHandler gameCommandsHandler = new GameCommandsHandler(this);
 
 	private OrthographicCamera camera = new OrthographicCamera(6400, 4800);
 
@@ -78,7 +81,6 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		Gdx.input.setInputProcessor(inputHandler);
 
 		addNpcs();
-		// addMonsterSpawnerUnits();
 	}
 
 	private TiledMap loadMap()
@@ -133,26 +135,14 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		addMonster(groceryShop);
 	}
 
-	public void addGreenDragon()
+	void addMonster(String identifier, int x, int y)
 	{
-		Monster dragon = new GreenDragon(IdSupplier.getId(), collisionMap, this);
-		dragon.setPosition(100, 100);
-		addMonster(dragon);
+		Monster monster = monsterFactory.produce(MonsterIdentifier.getMonsterType(identifier), IdSupplier.getId());
+		monster.setPosition(x, y);
+		addMonster(monster);
 	}
-
-	public void addRedDragon()
-	{
-		Monster dragon = new RedDragon(IdSupplier.getId(), collisionMap, this);
-		addMonster(dragon);
-	}
-
-	public void addSkeleton()
-	{
-		Monster skeleton = new Skeleton(IdSupplier.getId(), collisionMap, this);
-		addMonster(skeleton);
-	}
-
-	private void addMonster(Monster monster)
+	
+	void addMonster(Monster monster)
 	{
 		collisionMap.insert(monster);
 		add(monster);
@@ -285,6 +275,11 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	public GameContainer getContainer(long containerId)
 	{
 		return gameContainers.get(containerId);
+	}
+
+	public void executeCode(String code) throws ScriptException
+	{
+		gameCommandsHandler.execute(code);
 	}
 
 }

@@ -6,6 +6,7 @@ import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
@@ -89,6 +90,13 @@ public class PacketsMaker
 		packet.setShopId(shopId);
 		packet.setItemId(itemId);
 		packet.setAmount(amount);
+		return packet;
+	}
+
+	public static ScriptCodePacket makeScriptCodePacket(String command)
+	{
+		ScriptCodePacket packet = new ScriptCodePacket();
+		packet.setCode(command);
 		return packet;
 	}
 }

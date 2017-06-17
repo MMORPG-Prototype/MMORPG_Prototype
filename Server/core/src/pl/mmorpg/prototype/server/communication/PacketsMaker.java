@@ -14,6 +14,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
@@ -268,6 +269,13 @@ public class PacketsMaker
 	{
 		GoldAmountChangePacket packet = new GoldAmountChangePacket();
 		packet.setNewGoldAmount(newGoldAmount);
+		return packet;
+	}
+
+	public static ScriptExecutionErrorPacket makeScriptExecutionErrorPacket(String error)
+	{
+		ScriptExecutionErrorPacket packet = new ScriptExecutionErrorPacket();
+		packet.setError(error);
 		return packet;
 	}
 

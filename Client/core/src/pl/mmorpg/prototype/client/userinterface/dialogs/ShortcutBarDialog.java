@@ -23,8 +23,10 @@ public class ShortcutBarDialog extends Dialog
 				() -> linkedInterface.showOrHideDialog(ChatDialog.class));
 		TextButton equipmentButton = ButtonCreator.createTextButton("Equipment", 
 				() -> linkedInterface.showOrHideDialog(EquipmentDialog.class));
-		
+		TextButton consoleDialog = ButtonCreator.createTextButton("Console", 
+				() -> linkedInterface.showOrHideDialog(ConsoleDialog.class));		
 
+		add(consoleDialog).bottom().right();
 		add(chatButton).bottom().right();
 		add(statisticsButton).bottom().right();
 		add(inventoryButton).bottom().right();

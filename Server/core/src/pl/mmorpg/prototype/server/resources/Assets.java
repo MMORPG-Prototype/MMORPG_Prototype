@@ -28,10 +28,10 @@ public class Assets
 	private static AssetManager assets = new AssetManager();
 	private static BitmapFont font = new BitmapFont();
 	private static Batch batch;
-	
+
 	static
 	{
-		if(ServerSettings.isHeadless)
+		if (ServerSettings.isHeadless)
 			batch = new NullBatch();
 		else
 			batch = new SpriteBatch();
@@ -41,36 +41,36 @@ public class Assets
 	{
 		assets.setLoader(TiledMap.class, new TmxMapLoader());
 		addClassTypes();
-        loadAll();
+		loadAll();
 	}
 
 	private static void addClassTypes()
-    {
-        classTypes.put("png", Texture.class);
-        classTypes.put("jpg", Texture.class);
-        classTypes.put("bmp", Texture.class);
-        classTypes.put("gif", Texture.class);
-        classTypes.put("mp3", Music.class);
-        classTypes.put("ogg", Sound.class);
-        classTypes.put("tmx", TiledMap.class);
-    }
+	{
+		classTypes.put("png", Texture.class);
+		classTypes.put("jpg", Texture.class);
+		classTypes.put("bmp", Texture.class);
+		classTypes.put("gif", Texture.class);
+		classTypes.put("mp3", Music.class);
+		classTypes.put("ogg", Sound.class);
+		classTypes.put("tmx", TiledMap.class);
+	}
 
 	private static void loadAll()
-    {
+	{
 		Collection<FileHandle> fileHandles = new ArrayList<>();
-        fileHandles = loadFromSubdirectories(assetsPath, fileHandles);
+		fileHandles = loadFromSubdirectories(assetsPath, fileHandles);
 		for (FileHandle file : fileHandles)
 			assets.load(file.path(), getClassFromPath(file.path()));
 
-        assets.finishLoading();
-    }
-	
+		assets.finishLoading();
+	}
+
 	private static Collection<FileHandle> loadFromSubdirectories(String path, Collection<FileHandle> fileHandles)
 	{
 		FileHandle[] files = Gdx.files.internal(path).list();
 		for (FileHandle file : files)
 		{
-			if(file.isDirectory())
+			if (file.isDirectory())
 				fileHandles = loadFromSubdirectories(file.path(), fileHandles);
 			else
 				fileHandles = tryAddingFile(file, fileHandles);
@@ -80,55 +80,54 @@ public class Assets
 
 	private static Collection<FileHandle> tryAddingFile(FileHandle file, Collection<FileHandle> fileHandles)
 	{
-
-			fileHandles.add(file);
-			return fileHandles;
+		fileHandles.add(file);
+		return fileHandles;
 	}
 
 	private static Class<?> getClassFromPath(String path)
-    {
-        String extension = getExtension(path);
-        if (classTypes.containsKey(extension))
-            return classTypes.get(extension);
-        else
-            throw new UnknownExtensionException(extension);
-    }
+	{
+		String extension = getExtension(path);
+		if (classTypes.containsKey(extension))
+			return classTypes.get(extension);
+		else
+			throw new UnknownExtensionException(extension);
+	}
 
 	private static String getExtension(String path)
-    {
-        int extensionStartIndex = path.lastIndexOf('.') + 1;
-        return path.substring(extensionStartIndex);
-    }
+	{
+		int extensionStartIndex = path.lastIndexOf('.') + 1;
+		return path.substring(extensionStartIndex);
+	}
 
 	public static <T> T get(String fileName)
-    {
-        T asset = assets.get(assetsPath + '/' + fileName);
-        return asset;
-    }
+	{
+		T asset = assets.get(assetsPath + '/' + fileName);
+		return asset;
+	}
 
 	public static <T> T get(String fileName, Class<T> classType)
-    {
-        return assets.get(assetsPath + '/' + fileName, classType);
-    }
+	{
+		return assets.get(assetsPath + '/' + fileName, classType);
+	}
 
 	public static void dispose()
-    {
-        assets.dispose();
-        font.dispose();
-    }
+	{
+		assets.dispose();
+		font.dispose();
+	}
 
 	public static BitmapFont getFont()
-    {
-        return font;
-    }
+	{
+		return font;
+	}
 
 	private static class UnknownExtensionException extends GameException
-    {
-        public UnknownExtensionException(String extension)
-        {
-            super("Extension " + extension + " is not recognized");
-        }
-    }
+	{
+		public UnknownExtensionException(String extension)
+		{
+			super("Extension " + extension + " is not recognized");
+		}
+	}
 
 	public static Batch getBatch()
 	{

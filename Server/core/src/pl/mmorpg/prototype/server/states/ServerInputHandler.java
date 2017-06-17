@@ -1,6 +1,5 @@
 package pl.mmorpg.prototype.server.states;
 
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 
 public class ServerInputHandler extends InputAdapter
@@ -16,12 +15,6 @@ public class ServerInputHandler extends InputAdapter
 	@Override
 	public boolean keyDown(int keycode)
 	{
-		if(keycode == Keys.D)
-			playState.addGreenDragon();
-		else if(keycode == Keys.R)
-			playState.addRedDragon();
-		else if(keycode == Keys.S)
-			playState.addSkeleton();
 		return false;
 	}
 	

@@ -43,6 +43,7 @@ import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ConsoleDialog;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
@@ -449,6 +450,12 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		player.getProperties().gold = newGoldAmount;
 		userInterface.updateGoldAmountInInventory(newGoldAmount);
+	}
+
+	public void scriptExecutionErrorReceived(String error)
+	{
+		ConsoleDialog console = userInterface.getDialogs().searchForDialog(ConsoleDialog.class);
+		console.addMessage(error);
 	}
 
 }
