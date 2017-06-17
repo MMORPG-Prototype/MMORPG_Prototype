@@ -81,7 +81,7 @@ public class PacketHandlerFactory
 				loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
 		packetHandlers.put(BuyFromShopPacket.class,
 				new BuyFromShopPacketHandler(playState, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
-		packetHandlers.put(ScriptCodePacket.class, new ScriptCodePacketHandler(playState));
+		packetHandlers.put(ScriptCodePacket.class, new ScriptCodePacketHandler(playState, authenticatedClientsKeyClientId));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
