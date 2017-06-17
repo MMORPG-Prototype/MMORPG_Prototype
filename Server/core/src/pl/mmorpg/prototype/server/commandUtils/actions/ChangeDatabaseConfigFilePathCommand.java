@@ -27,7 +27,7 @@ public class ChangeDatabaseConfigFilePathCommand implements CommandAction
 	@Override
 	public String getName()
 	{
-		return "-db-config";
+		return "db-config";
 	}
 
 }
