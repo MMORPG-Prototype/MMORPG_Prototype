@@ -1,15 +1,19 @@
 package pl.mmorpg.prototype.server.resources;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import com.badlogic.gdx.Gdx;
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -23,7 +27,6 @@ import pl.mmorpg.prototype.server.headless.NullBatch;
 
 public class Assets
 {
-	private static String assetsPath = "assets";
 	private static Map<String, Class<?>> classTypes = new HashMap<String, Class<?>>();
 	private static AssetManager assets = new AssetManager();
 	private static BitmapFont font = new BitmapFont();
@@ -57,31 +60,30 @@ public class Assets
 
 	private static void loadAll()
 	{
-		Collection<FileHandle> fileHandles = new ArrayList<>();
-		fileHandles = loadFromSubdirectories(assetsPath, fileHandles);
-		for (FileHandle file : fileHandles)
-			assets.load(file.path(), getClassFromPath(file.path()));
+		Set<String> files = getClasspathResources(classTypes.keySet());
+		for (String file : files)
+			assets.load(file, getClassFromPath(file));
 
 		assets.finishLoading();
 	}
-
-	private static Collection<FileHandle> loadFromSubdirectories(String path, Collection<FileHandle> fileHandles)
+	
+	private static Set<String> getClasspathResources(Set<String> filesExtensions)
 	{
-		FileHandle[] files = Gdx.files.internal(path).list();
-		for (FileHandle file : files)
-		{
-			if (file.isDirectory())
-				fileHandles = loadFromSubdirectories(file.path(), fileHandles);
-			else
-				fileHandles = tryAddingFile(file, fileHandles);
-		}
-		return fileHandles;
+		return new Reflections(new ConfigurationBuilder()
+				.setUrls(ClasspathHelper.forJavaClassPath())
+				.setScanners(new ResourcesScanner()))
+					.getResources(Pattern.compile("(.*?)." + getCombinedExtensions(filesExtensions)));
 	}
-
-	private static Collection<FileHandle> tryAddingFile(FileHandle file, Collection<FileHandle> fileHandles)
+	
+	private static String getCombinedExtensions(Set<String> filesExtensions)
 	{
-		fileHandles.add(file);
-		return fileHandles;
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append('(');
+		String joinedExtensions = filesExtensions.stream()
+		.collect(Collectors.joining("|"));
+		strBuilder.append(joinedExtensions);
+		strBuilder.append(')');
+		return strBuilder.toString();
 	}
 
 	private static Class<?> getClassFromPath(String path)
@@ -101,13 +103,13 @@ public class Assets
 
 	public static <T> T get(String fileName)
 	{
-		T asset = assets.get(assetsPath + '/' + fileName);
+		T asset = assets.get(fileName);
 		return asset;
 	}
 
 	public static <T> T get(String fileName, Class<T> classType)
 	{
-		return assets.get(assetsPath + '/' + fileName, classType);
+		return assets.get(fileName, classType);
 	}
 
 	public static void dispose()
