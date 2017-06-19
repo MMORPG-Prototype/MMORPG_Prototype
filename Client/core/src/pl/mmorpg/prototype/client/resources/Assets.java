@@ -1,7 +1,5 @@
 package pl.mmorpg.prototype.client.resources;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -19,7 +18,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -30,13 +28,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.google.common.collect.Sets;
 
 import pl.mmorpg.prototype.client.exceptions.GameException;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 
 public class Assets
 {
-	private static String assetsPath = "";
 	private static Map<String, Class<?>> classTypes = new HashMap<String, Class<?>>();
 	private static Set<String> ignoredExtensions = new TreeSet<>();
 	private static AssetManager assets = new AssetManager();
@@ -94,43 +92,41 @@ public class Assets
 
 	private static void loadSkins()
 	{
-		Set<String> a = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath())
-				.setScanners(new ResourcesScanner())).getResources(Pattern.compile("(.*?).json"));
-		for (String s : a)
-		{
-			skins.put(s, new Skin(Gdx.files.classpath(s)));
-		}
+		Set<String> skinPaths = getClasspathResources(Sets.newHashSet("json"));
+		for (String path : skinPaths)
+			skins.put(path, new Skin(Gdx.files.classpath(path)));
 
+	}
+
+	private static Set<String> getClasspathResources(Set<String> filesExtensions)
+	{
+		return new Reflections(new ConfigurationBuilder()
+				.setUrls(ClasspathHelper.forJavaClassPath())
+				.setScanners(new ResourcesScanner()))
+					.getResources(Pattern.compile("(.*?)." + getCombinedExtensions(filesExtensions)));
+	}
+
+	private static String getCombinedExtensions(Set<String> filesExtensions)
+	{
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append('(');
+		String joinedExtensions = filesExtensions.stream()
+		.collect(Collectors.joining("|"));
+		strBuilder.append(joinedExtensions);
+		strBuilder.append(')');
+		return strBuilder.toString();
 	}
 
 	public static void loadOthers()
 	{
-		Collection<FileHandle> fileHandles = new ArrayList<>();
-		Set<String> a = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath())
-				.setScanners(new ResourcesScanner())).getResources(Pattern.compile("(.*?).(gif|png|tmx|jpg)"));
+		Set<String> resourcesPaths = getClasspathResources(classTypes.keySet());
 
-		System.out.println("Size: " + a.size());
-		for (String s : a)
-		{
-			System.out.println(s);
-			assets.load(s, getClassFromPath(s));
-		}
+		for (String path : resourcesPaths)
+			assets.load(path, getClassFromPath(path));
 
 		assets.finishLoading();
 	}
 
-	private static Collection<FileHandle> loadFromSubdirectories(String path, Collection<FileHandle> fileHandles)
-	{
-		FileHandle[] files = Gdx.files.internal(path).list();
-		for (FileHandle file : files)
-		{
-			if (file.isDirectory())
-				fileHandles = loadFromSubdirectories(file.path(), fileHandles);
-			else if (!ignoredExtensions.contains(getExtension(file.path())))
-				fileHandles.add(file);
-		}
-		return fileHandles;
-	}
 
 	private static Class<?> getClassFromPath(String path)
 	{
@@ -152,10 +148,10 @@ public class Assets
 		T asset;
 		try
 		{
-			asset = assets.get(assetsPath + fileName);
+			asset = assets.get(fileName);
 		} catch (GdxRuntimeException e)
 		{
-			asset = (T) skins.get(assetsPath + fileName);
+			asset = (T) skins.get(fileName);
 		}
 		if (asset == null)
 			throw new UnloadedAssetException(fileName);
@@ -164,7 +160,7 @@ public class Assets
 
 	public static <T> T get(String fileName, Class<T> classType)
 	{
-		return assets.get(assetsPath + fileName, classType);
+		return assets.get(fileName, classType);
 	}
 
 	public static void dispose()
