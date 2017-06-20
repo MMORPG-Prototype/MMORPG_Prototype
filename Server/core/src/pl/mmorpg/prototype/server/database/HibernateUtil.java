@@ -32,6 +32,13 @@ public class HibernateUtil
 			throw new ExceptionInInitializerError(ex);
 		}
 	}
+	
+	public static void recreateDatabase()
+	{
+		Configuration config = new Configuration().configure("hibernateRectreateDatabase.cfg.xml");
+		registerEntityTypes(config);
+		config.buildSessionFactory().openSession().close();
+	}
 
 	private static void registerEntityTypes(Configuration config)
 	{

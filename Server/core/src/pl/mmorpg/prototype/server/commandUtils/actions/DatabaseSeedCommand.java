@@ -13,7 +13,7 @@ import pl.mmorpg.prototype.server.database.seeders.TableSeeder;
 import pl.mmorpg.prototype.server.database.seeders.UserCharactersTableSeeder;
 import pl.mmorpg.prototype.server.database.seeders.UsersTableSeeder;
 
-public class SeedDatabaseCommand implements CommandAction
+public class DatabaseSeedCommand implements CommandAction
 {
 
 	@Override
