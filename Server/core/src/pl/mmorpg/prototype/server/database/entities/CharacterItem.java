@@ -9,12 +9,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
+import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 
 @Entity(name = "CharacterItem")
-@Table(name = "Character_Items")
+@Table(
+		name = "Character_Items", 
+		uniqueConstraints=
+		@UniqueConstraint(columnNames={
+				"character_id", 
+				"inventoryPageNumber", 
+				"inventoryX", 
+				"inventoryY"
+				})
+)
 @Data
 public class CharacterItem
 {
@@ -33,5 +44,8 @@ public class CharacterItem
 	
 	@ManyToOne
 	private UserCharacter character;
+	
+	private InventoryPosition inventoryPosition;
+
 	
 }
