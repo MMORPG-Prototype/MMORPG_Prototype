@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchInventoryFieldInPosition;
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemInventoryPositon;
 import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.items.StackableItem;
@@ -150,6 +151,12 @@ public class InventoryDialog extends Dialog
 			}
 		throw new NoFreeFieldException();
 	}
+	
+	public void addItem(Item newItem, ItemInventoryPositon inventoryPosition)
+	{
+		inventoryPages.get(inventoryPosition.pageNumber).put(newItem, inventoryPosition.position);
+		
+	}
 
 	public void updateGoldValue(int goldAmount)
 	{
@@ -190,6 +197,8 @@ public class InventoryDialog extends Dialog
 		return item;
 		
 	}
+
+
 
 
 }

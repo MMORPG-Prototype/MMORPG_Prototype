@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 
@@ -81,6 +82,11 @@ public class InventoryPage extends VerticalGroup
 			}
 		}
 		return false;
+	}
+	
+	public void put(Item item, Point position)
+	{
+		inventoryFields.get(position).put(new ItemReference(item));
 	}
 
 

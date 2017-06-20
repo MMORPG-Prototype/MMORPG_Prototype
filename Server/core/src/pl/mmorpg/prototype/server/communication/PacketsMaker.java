@@ -29,6 +29,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTarge
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
@@ -115,6 +116,10 @@ public class PacketsMaker
         packet.setId(id);
         packet.setIdentifier(item.getIdentifier().toString());
         packet.setCount(item.getCount());
+        InventoryPosition position = item.getInventoryPosition();
+        packet.setInventoryPageNumber(position.getInventoryPageNumber());
+        packet.setInventoryX(position.getInventoryX());
+        packet.setInventoryY(position.getInventoryY());
         return packet;
     }
 
@@ -278,7 +283,5 @@ public class PacketsMaker
 		packet.setError(error);
 		return packet;
 	}
-
-
 
 }

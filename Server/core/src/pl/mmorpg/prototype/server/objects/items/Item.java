@@ -6,7 +6,7 @@ import pl.mmorpg.prototype.server.objects.monsters.ItemsOwner;
 public abstract class Item
 {
     private long id;
-    protected ItemsOwner owner = null;    
+    protected ItemsOwner owner = null;
 
     public Item(long id)
     {

@@ -16,6 +16,7 @@ import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemInventoryPositon;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
@@ -187,6 +188,11 @@ public class UserInterface
 			inventoryDialog.addItem((StackableItem)newItem);
 		else
 			inventoryDialog.addItem(newItem);
+	}
+	
+	public void addItemToInventory(Item newItem, ItemInventoryPositon position)
+	{
+		inventoryDialog.addItem(newItem, position);
 	}
 
 	public void quickAccesButtonClicked(InventoryField field)

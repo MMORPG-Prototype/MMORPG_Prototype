@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.states;
 
+import java.awt.Point;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -26,6 +27,7 @@ import pl.mmorpg.prototype.client.input.PlayInputContinuousHandler;
 import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemFactory;
+import pl.mmorpg.prototype.client.items.ItemInventoryPositon;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.GraphicObjectsContainer;
 import pl.mmorpg.prototype.client.objects.NullPlayer;
@@ -249,7 +251,10 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void newItemPacketReceived(CharacterItemDataPacket itemData)
 	{
 		Item newItem = ItemFactory.produceItem(itemData);
-		userInterface.addItemToInventory(newItem);
+		ItemInventoryPositon position = new ItemInventoryPositon(itemData.getInventoryPageNumber(),
+				new Point(itemData.getInventoryX(), itemData.getInventoryY()));
+
+		userInterface.addItemToInventory(newItem, position);
 	}
 
 	public void userWantsToSendMessage(String message)
