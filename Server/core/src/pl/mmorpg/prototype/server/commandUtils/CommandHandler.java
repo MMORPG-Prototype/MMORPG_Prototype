@@ -7,6 +7,7 @@ import pl.mmorpg.prototype.server.commandUtils.actions.ChangeDatabaseConfigFileP
 import pl.mmorpg.prototype.server.commandUtils.actions.CloseCommand;
 import pl.mmorpg.prototype.server.commandUtils.actions.CommandAction;
 import pl.mmorpg.prototype.server.commandUtils.actions.HelpCommand;
+import pl.mmorpg.prototype.server.commandUtils.actions.SeedDatabaseCommand;
 import pl.mmorpg.prototype.server.commandUtils.actions.SetInternalExternalDatabaseConfigPath;
 import pl.mmorpg.prototype.server.commandUtils.actions.ShowRegisteredUsersCommand;
 import pl.mmorpg.prototype.server.commandUtils.actions.UserChangeRoleCommand;
@@ -28,6 +29,7 @@ public class CommandHandler
 		addCommand(new UserChangeRoleCommand());
 		addCommand(new CloseCommand());
 		addCommand(new ShowRegisteredUsersCommand());
+		addCommand(new SeedDatabaseCommand());
 	}
 	
 	private void addCommand(CommandAction command)

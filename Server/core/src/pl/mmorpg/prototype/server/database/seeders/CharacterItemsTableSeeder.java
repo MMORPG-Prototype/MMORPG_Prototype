@@ -20,8 +20,8 @@ public class CharacterItemsTableSeeder extends TableSeeder
 	public Collection<Object> getRecords()
 	{
 		Collection<Object> records = new LinkedList<>();
-		records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_HP_POTION, 5, new InventoryPosition(1, 1, 1)));
-		records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_MP_POTION, 1, new InventoryPosition(1, 1, 2)));
+		records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_HP_POTION, 5, new InventoryPosition(2, 1, 1)));
+		records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_MP_POTION, 1, new InventoryPosition(1, 1, 1)));
 		records.add(createCharacterItem("SmykChar", ItemIdentifiers.SMALL_MP_POTION, 7, new InventoryPosition(1, 1, 1)));
 		return records;
 	}

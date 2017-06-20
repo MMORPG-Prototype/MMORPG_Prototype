@@ -10,8 +10,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.reflections.Reflections;
 
-
-
 public class HibernateUtil
 {
 	private static SessionFactory sessionFactory = null;
