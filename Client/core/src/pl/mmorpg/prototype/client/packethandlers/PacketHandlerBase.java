@@ -5,7 +5,6 @@ public abstract class PacketHandlerBase<T> implements PacketHandler
 	@Override
 	public void handle(Object object)
 	{
-		@SuppressWarnings("unchecked")
 		T packet = (T) object;
 		handlePacket(packet);
 	}

@@ -9,5 +9,7 @@ public class TakeItemFromContainerPacket
 {
 	private long containerId;
 	private long itemId;
-	
+	private int desiredInventoryPage;
+	private int desiredInventoryX;
+	private int desiredInventoryY;
 }

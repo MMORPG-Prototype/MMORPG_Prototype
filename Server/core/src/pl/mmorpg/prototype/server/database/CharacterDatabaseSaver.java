@@ -34,12 +34,12 @@ public class CharacterDatabaseSaver
 		UserCharacter character = UserCharacterTableManager.getUserCharacter(ownerId);
 		characterItem.setCharacter(character);
 		characterItem.setIdentifier(item.getIdentifier());
+		characterItem.setInventoryPosition(item.getInventoryPosition());
 		if(item instanceof StackableItem)
 			characterItem.setCount(((StackableItem) item).getCount());
 		return characterItem;
 	}
-	
-    
+	    
     private static void saveCharacterItems(UserCharacter toSave, Collection<CharacterItem> items)
     {
         CharacterItemTableManager.deleteAllCharacterItems(toSave);

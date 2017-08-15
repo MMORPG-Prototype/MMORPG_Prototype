@@ -66,6 +66,7 @@ public class ActorManipulator
 		return mappedDialogs.containsKey(key);
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Actor> T searchForDialog(Class<T> clazz)
 	{
 		return (T)Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
@@ -144,7 +145,8 @@ public class ActorManipulator
 						((Identifiable) d).getId() == containerId).findFirst();
 		return searchedElement.isPresent();
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public <T extends Actor & Identifiable> T getIdentifiableDialog(long containerId)
 	{
 		return (T)dialogs.stream()

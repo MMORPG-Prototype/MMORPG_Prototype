@@ -27,7 +27,7 @@ import pl.mmorpg.prototype.client.input.PlayInputContinuousHandler;
 import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemFactory;
-import pl.mmorpg.prototype.client.items.ItemInventoryPositon;
+import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.GraphicObjectsContainer;
 import pl.mmorpg.prototype.client.objects.NullPlayer;
@@ -251,7 +251,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void newItemPacketReceived(CharacterItemDataPacket itemData)
 	{
 		Item newItem = ItemFactory.produceItem(itemData);
-		ItemInventoryPositon position = new ItemInventoryPositon(itemData.getInventoryPageNumber(),
+		ItemInventoryPosition position = new ItemInventoryPosition(itemData.getInventoryPageNumber(),
 				new Point(itemData.getInventoryX(), itemData.getInventoryY()));
 
 		userInterface.addItemToInventory(newItem, position);

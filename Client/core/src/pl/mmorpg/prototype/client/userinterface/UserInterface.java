@@ -16,7 +16,8 @@ import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
-import pl.mmorpg.prototype.client.items.ItemInventoryPositon;
+import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
+import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
@@ -181,18 +182,13 @@ public class UserInterface
 	{
 		linkedState.userWantsToChangeCharacter();
 	}
-
-	public void addItemToInventory(Item newItem)
+	
+	public void addItemToInventory(Item newItem, ItemInventoryPosition position)
 	{
 		if(newItem instanceof StackableItem)
-			inventoryDialog.addItem((StackableItem)newItem);
+			inventoryDialog.addItem((StackableItem)newItem, position);
 		else
-			inventoryDialog.addItem(newItem);
-	}
-	
-	public void addItemToInventory(Item newItem, ItemInventoryPositon position)
-	{
-		inventoryDialog.addItem(newItem, position);
+			inventoryDialog.addItem(newItem, position);
 	}
 
 	public void quickAccesButtonClicked(InventoryField field)
@@ -253,8 +249,9 @@ public class UserInterface
 
 	private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, int gold, long containerId)
 	{
+		ItemPositionSupplier desiredItemPositionSupplier = inventoryDialog::getDesiredItemPosition; 
 		Dialog containerDialog = new OpenContainerDialog(contentItems, gold, "Container", dialogs,
-				(PacketsSender) linkedState, containerId);
+				(PacketsSender) linkedState, containerId, desiredItemPositionSupplier);
 		positionDialogNearMouse(containerDialog);
 		stage.addActor(containerDialog);
 		dialogs.add(containerDialog);

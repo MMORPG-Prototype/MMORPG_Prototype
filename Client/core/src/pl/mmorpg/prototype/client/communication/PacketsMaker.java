@@ -1,6 +1,9 @@
 package pl.mmorpg.prototype.client.communication;
 
+import java.awt.Point;
+
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
@@ -69,11 +72,15 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static TakeItemFromContainerPacket makeTakeItemFromContainerPacket(long containerId, long itemId)
+	public static TakeItemFromContainerPacket makeTakeItemFromContainerPacket(long containerId, long itemId, ItemInventoryPosition position)
 	{
 		TakeItemFromContainerPacket packet = new TakeItemFromContainerPacket();
 		packet.setContainerId(containerId);
 		packet.setItemId(itemId);
+		packet.setDesiredInventoryPage(position.getPageNumber());
+		Point inventoryPoint = position.getPosition();
+		packet.setDesiredInventoryX(inventoryPoint.x);
+		packet.setDesiredInventoryY(inventoryPoint.y);
 		return packet;
 	}
 

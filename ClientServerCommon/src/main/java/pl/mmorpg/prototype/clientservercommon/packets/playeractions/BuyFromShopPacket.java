@@ -10,4 +10,7 @@ public class BuyFromShopPacket
 	private long shopId;
 	private long itemId;
 	private int amount;
+	private int desiredInventoryPage;
+	private int desiredInventoryX;
+	private int desiredInventoryY;
 }

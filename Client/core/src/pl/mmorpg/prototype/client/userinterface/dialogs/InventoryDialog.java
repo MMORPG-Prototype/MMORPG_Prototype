@@ -11,9 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
+import pl.mmorpg.prototype.client.exceptions.NoSuchFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchInventoryFieldInPosition;
 import pl.mmorpg.prototype.client.items.Item;
-import pl.mmorpg.prototype.client.items.ItemInventoryPositon;
+import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.items.StackableItem;
@@ -92,16 +93,16 @@ public class InventoryDialog extends Dialog
 
 	public void buttonClicked(InventoryField field)
 	{
-		if(field.hasItem())
+		if (field.hasItem())
 			lastFieldWithItemClicked = field;
 		linkedInterface.inventoryFieldClicked(field);
 	}
 
 	private void switchButtonClicked(int pageIndex)
 	{
-		for(InventoryTextField button : switchPageButtons)
+		for (InventoryTextField button : switchPageButtons)
 			button.setColor(1, 1, 1, 1);
-		
+
 		switchPageButtons.get(pageIndex).setColor(0.5f, 0.5f, 0.5f, 1);
 		currentPageButtons.clear();
 		currentPageButtons.addActor(inventoryPages.get(pageIndex));
@@ -121,41 +122,40 @@ public class InventoryDialog extends Dialog
 		InventoryField field = inventoryPages.get(currentPageIndex).getField(position);
 		return field.getItem();
 	}
-	
-	
+
 	public void addItem(StackableItem item)
 	{
-		for(InventoryPage inventoryPage : inventoryPages)
+		for (InventoryPage inventoryPage : inventoryPages)
 		{
 			for (InventoryField field : inventoryPage.getAllFields())
 			{
 				Item fieldItem = field.getItem();
-				if(fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
+				if (fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
 				{
-					((StackableItem)fieldItem).stackWith(item);
+					((StackableItem) fieldItem).stackWith(item);
 					return;
 				}
 			}
 		}
-		
-		addItem((Item)item);
+
+		addItem((Item) item);
 	}
-	
+
+	private InventoryField getField(ItemInventoryPosition freeFieldPosition)
+	{
+		return inventoryPages.get(freeFieldPosition.getPageNumber()).getField(new Point(freeFieldPosition.getPosition().x, freeFieldPosition.getPosition().y));
+	}
+
 	public void addItem(Item item)
 	{
-		for (InventoryField field : inventoryPages.get(currentPageIndex).getAllFields())
-			if (!field.hasItem())
-			{
-				field.put(new ItemReference(item));
-				return;
-			}
-		throw new NoFreeFieldException();
+		ItemInventoryPosition freeFieldPosition = getFreeInventoryPosition();
+		InventoryField freeField = getField(freeFieldPosition);
+		freeField.put(new ItemReference(item));
 	}
-	
-	public void addItem(Item newItem, ItemInventoryPositon inventoryPosition)
+
+	public void addItem(Item newItem, ItemInventoryPosition inventoryPosition)
 	{
-		inventoryPages.get(inventoryPosition.pageNumber).put(newItem, inventoryPosition.position);
-		
+		getField(inventoryPosition).put(new ItemReference(newItem));
 	}
 
 	public void updateGoldValue(int goldAmount)
@@ -177,28 +177,77 @@ public class InventoryDialog extends Dialog
 
 	public InventoryField getLastFieldWithItemClicked()
 	{
-		return lastFieldWithItemClicked;		
+		return lastFieldWithItemClicked;
 	}
 
 	public boolean removeIfHas(Item item)
 	{
-		for(InventoryPage inventoryPage : inventoryPages)
-			if(inventoryPage.removeIfHas(item))
+		for (InventoryPage inventoryPage : inventoryPages)
+			if (inventoryPage.removeIfHas(item))
 				return true;
 		return false;
 	}
-	
+
 	public ItemUseable useItem(long itemId)
 	{
 		ItemUseable item = null;
-		for(InventoryPage inventoryPage : inventoryPages)
-			if((item = inventoryPage.useIfHas(itemId)) != null)
+		for (InventoryPage inventoryPage : inventoryPages)
+			if ((item = inventoryPage.useIfHas(itemId)) != null)
 				return item;
 		return item;
-		
+	}
+	
+	public ItemInventoryPosition getFreeInventoryPosition()
+	{
+		for(int pageNumber=0; pageNumber<inventoryPages.size(); pageNumber++)
+		{
+			InventoryPage currentPage = inventoryPages.get(pageNumber);
+			for(int i=0; i<currentPage.getInventoryFieldsHeightNumber(); i++)
+				for(int j=0; j<currentPage.getInventoryFieldsWidthNumber(); j++)
+				{
+					Point fieldPosition = new Point(i, j);
+					InventoryField field = currentPage.getField(fieldPosition);
+					if(!field.hasItem())
+						return new ItemInventoryPosition(pageNumber, fieldPosition);
+				}
+		}
+		throw new NoFreeFieldException();
 	}
 
+	public ItemInventoryPosition getDesiredItemPosition(Item item)
+	{
+		if(item instanceof StackableItem)
+			return getFieldWithSuiteTypeStackableItemFor(item);
+		else
+			return getFreeInventoryPosition();
+	}
+	
+	public ItemInventoryPosition getFieldWithSuiteTypeStackableItemFor(Item item)
+	{
+		try
+		{
+			return getFieldWithSameTypeItemOnCurrentPage(item);
+		}
+		catch(NoSuchFieldException e)
+		{
+			return getFreeInventoryPosition();
+		}
+	}
 
-
+	private ItemInventoryPosition getFieldWithSameTypeItemOnCurrentPage(Item item)
+	{
+		// May want to change code to stack with items on other pages 
+		InventoryPage currentPage = inventoryPages.get(0);
+		for(int i=0; i<currentPage.getInventoryFieldsHeightNumber(); i++)
+			for(int j=0; j<currentPage.getInventoryFieldsWidthNumber(); j++)
+			{
+				Point fieldPosition = new Point(i, j);
+				InventoryField field = currentPage.getField(fieldPosition);
+				Item fieldItem = field.getItem();
+				if(fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
+					return new ItemInventoryPosition(0, fieldPosition);
+			}
+		throw new NoSuchFieldException();
+	}
 
 }

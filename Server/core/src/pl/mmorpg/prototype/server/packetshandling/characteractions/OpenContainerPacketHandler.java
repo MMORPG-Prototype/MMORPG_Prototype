@@ -28,6 +28,6 @@ public class OpenContainerPacketHandler extends PacketHandlerBase<OpenContainter
 			connection.sendTCP(PacketsMaker.makeOpenContainerPacket(container));
 		}
 		Log.info("OpenContainer packet received" + packet.gameX + " " + packet.gameY);
-	} 
+	}  
 
 }

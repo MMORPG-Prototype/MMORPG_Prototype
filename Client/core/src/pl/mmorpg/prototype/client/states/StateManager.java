@@ -50,6 +50,7 @@ public class StateManager
         return states.empty();
     }
 
+	@SuppressWarnings(value="unchecked")
 	public <T> T find(Class<T> stateType)
 	{
 		for (State state : states)

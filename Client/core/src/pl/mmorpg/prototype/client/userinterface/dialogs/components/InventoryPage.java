@@ -17,6 +17,9 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 
 public class InventoryPage extends VerticalGroup
 {
+	private static final int INVENTORY_FIELDS_HEIGHT_NUMBER = 5;
+	private static final int INVENTORY_FIELDS_WIDTH_NUMBER = 5;
+	
 	private Map<Point, InventoryField> inventoryFields = new HashMap<>();
 	private InventoryDialog inventoryDialog;
 
@@ -25,10 +28,10 @@ public class InventoryPage extends VerticalGroup
 		this.inventoryDialog = inventoryDialog;
 
 		space(0).pad(0).padRight(5).fill();
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < INVENTORY_FIELDS_HEIGHT_NUMBER; i++)
 		{
 			HorizontalGroup buttonRow = new HorizontalGroup().space(0).pad(0).fill();
-			for (int j = 0; j < 5; j++)
+			for (int j = 0; j < INVENTORY_FIELDS_WIDTH_NUMBER; j++)
 			{
 				Point cellPosition = new Point(i, j);
 				InventoryField button = createField(cellPosition);
@@ -116,5 +119,15 @@ public class InventoryPage extends VerticalGroup
 			}
 		}
 		return null;
+	}
+
+	public int getInventoryFieldsHeightNumber()
+	{
+		return INVENTORY_FIELDS_HEIGHT_NUMBER;
+	}
+
+	public int getInventoryFieldsWidthNumber()
+	{
+		return INVENTORY_FIELDS_WIDTH_NUMBER;
 	}
 }

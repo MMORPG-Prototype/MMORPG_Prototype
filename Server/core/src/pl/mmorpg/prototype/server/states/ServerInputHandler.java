@@ -4,7 +4,6 @@ import com.badlogic.gdx.InputAdapter;
 
 public class ServerInputHandler extends InputAdapter
 {
-
 	private PlayState playState;
 
 	public ServerInputHandler(PlayState playState)

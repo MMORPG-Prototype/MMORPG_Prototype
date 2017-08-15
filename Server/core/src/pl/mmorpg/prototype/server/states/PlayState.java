@@ -218,7 +218,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	public GameObject getObject(long id)
 	{
 		return gameObjects.get(id);
-	}
+	} 
 
 	@Override
 	public boolean has(long objectId)
