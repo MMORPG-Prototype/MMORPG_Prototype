@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0.0" orientation="orthogonal" renderorder="right-down" width="200" height="150" tilewidth="32" tileheight="32" nextobjectid="157">
+<map version="1.0.0" orientation="orthogonal" renderorder="right-down" width="200" height="150" tilewidth="32" tileheight="32" nextobjectid="162">
  <tileset firstgid="1" name="tileset (1)" tilewidth="32" tileheight="32" tilecount="256" columns="16">
   <image source="tileset (1).png" width="512" height="512"/>
   <terraintypes>
@@ -1385,6 +1385,13 @@
     <property name="MaximumMonsterAmount" type="int" value="2"/>
     <property name="MonsterType" value="Skeleton"/>
     <property name="spawnInterval" type="float" value="30"/>
+   </properties>
+  </object>
+  <object id="157" x="304" y="4539" width="303" height="179">
+   <properties>
+    <property name="MonsterMaximumAmount" type="int" value="2"/>
+    <property name="MonsterType" value="Gray Dragon"/>
+    <property name="spawnInterval" value="5"/>
    </properties>
   </object>
  </objectgroup>

@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.server.objects.monsters;
+package pl.mmorpg.prototype.server.objects.monsters.dragons;
 
 import com.badlogic.gdx.graphics.Texture;
 
@@ -6,6 +6,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.Monste
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.monsters.LootableMonster;
+import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public abstract class Dragon extends LootableMonster
