@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pl.mmorpg.prototype.server.commandUtils.actions.ChangeDatabaseConfigFilePathCommand;
+import pl.mmorpg.prototype.server.commandUtils.actions.CloseCommand;
 import pl.mmorpg.prototype.server.commandUtils.actions.CommandAction;
 import pl.mmorpg.prototype.server.commandUtils.actions.HelpCommand;
 import pl.mmorpg.prototype.server.commandUtils.actions.SetInternalExternalDatabaseConfigPath;
+import pl.mmorpg.prototype.server.commandUtils.actions.ShowRegisteredUsersCommand;
+import pl.mmorpg.prototype.server.commandUtils.actions.UserChangeRoleCommand;
 
 public class CommandHandler
 {
@@ -22,7 +25,9 @@ public class CommandHandler
 		addCommand(new HelpCommand(commands));
 		addCommand(new ChangeDatabaseConfigFilePathCommand());
 		addCommand(new SetInternalExternalDatabaseConfigPath());
-
+		addCommand(new UserChangeRoleCommand());
+		addCommand(new CloseCommand());
+		addCommand(new ShowRegisteredUsersCommand());
 	}
 	
 	private void addCommand(CommandAction command)
@@ -48,7 +53,7 @@ public class CommandHandler
 		if(commandAction != null)
 			commandAction.run(commandArgs);
 		else
-			System.out.println("Unrecognized command: " + command + ". You can type \"-help\" for help");
+			System.out.println("Unrecognized command: " + command + ". You can type \"help\" for help");
 	}
 
 }

@@ -39,7 +39,7 @@ public class SetInternalExternalDatabaseConfigPath implements CommandAction
 	@Override
 	public String getName()
 	{
-		return "-db-config-location";
+		return "db-config-location";
 	}
 
 }

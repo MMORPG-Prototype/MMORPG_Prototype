@@ -28,7 +28,7 @@ public class HelpCommand implements CommandAction
 	@Override
 	public String getName()
 	{
-		return "-help";
+		return "help";
 	}
 
 	
