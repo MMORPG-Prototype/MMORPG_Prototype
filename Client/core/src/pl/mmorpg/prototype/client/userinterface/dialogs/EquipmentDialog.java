@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import pl.mmorpg.prototype.client.states.helpers.Settings;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemInventoryField;
 
 public class EquipmentDialog extends Dialog
 {
@@ -15,27 +15,27 @@ public class EquipmentDialog extends Dialog
 		int padding = 10;
 		Table content = new Table(Settings.DEFAULT_SKIN);
 		content.add().pad(padding);
-		InventoryField helmetField = new InventoryField();
+		ItemInventoryField helmetField = new ItemInventoryField();
 		helmetField.setHeight(45);
 		helmetField.setWidth(45);
 		content.add(helmetField).pad(padding);;
 		content.add().pad(padding);;
 		content.row();
-		InventoryField weaponField = new InventoryField();
+		ItemInventoryField weaponField = new ItemInventoryField();
 		weaponField.setHeight(110);
 		weaponField.setWidth(45);
 		content.add(weaponField).pad(padding);;
-		InventoryField armorField = new InventoryField();
+		ItemInventoryField armorField = new ItemInventoryField();
 		armorField.setHeight(110);
 		armorField.setWidth(55);
 		content.add(armorField).pad(padding);;
-		InventoryField shieldField = new InventoryField();
+		ItemInventoryField shieldField = new ItemInventoryField();
 		shieldField.setHeight(45);
 		shieldField.setWidth(45);
 		content.add(shieldField).pad(padding);;
 		content.row();
 		content.add().pad(padding);
-		InventoryField bootsField = new InventoryField();
+		ItemInventoryField bootsField = new ItemInventoryField();
 		bootsField.setWidth(45);
 		bootsField.setHeight(45);
 		content.add(bootsField).pad(padding);

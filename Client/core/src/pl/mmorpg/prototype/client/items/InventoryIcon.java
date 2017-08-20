@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.items;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -28,6 +29,26 @@ public abstract class InventoryIcon extends Actor
 	{
 		return drawable;
 	}
+	
+    public Texture getTexture()
+    {
+        return sprite.getTexture();
+    }
+
+    protected float getMouseX()
+    {
+        return Gdx.input.getX();
+    }
+
+    protected float getMouseY()
+    {
+        return Gdx.graphics.getHeight() - Gdx.input.getY();
+    }
+ 
+    public void setTexture(Texture texture)
+    {
+        sprite.setTexture(texture);
+    }
 	
 	@Override
     public void draw(Batch batch, float parentAlpha)

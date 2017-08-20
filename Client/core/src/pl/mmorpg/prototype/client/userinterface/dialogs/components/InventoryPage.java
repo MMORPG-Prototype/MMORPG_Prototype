@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
-import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
@@ -22,7 +21,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 	private static final int INVENTORY_FIELDS_HEIGHT_NUMBER = 5;
 	private static final int INVENTORY_FIELDS_WIDTH_NUMBER = 5;
 	
-	private final Map<Point, InventoryField> inventoryFields = new HashMap<>();
+	private final Map<Point, ItemInventoryField> inventoryFields = new HashMap<>();
 	private final InventoryDialog inventoryDialog;
 
 	public InventoryPage(InventoryDialog inventoryDialog, int pageIndex)
@@ -37,7 +36,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 			{
 				Point cellPosition = new Point(j, i);
 				ItemInventoryPosition inventoryPosition = new ItemInventoryPosition(pageIndex, cellPosition);
-				InventoryField button = createField(inventoryPosition);
+				ItemInventoryField button = createField(inventoryPosition);
 				inventoryFields.put(cellPosition, button);
 				buttonRow.addActor(button);
 			}
@@ -46,9 +45,9 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 		padBottom(8);
 	}
 
-	private InventoryField createField(ItemInventoryPosition cellPosition)
+	private ItemInventoryField createField(ItemInventoryPosition cellPosition)
 	{
-		InventoryField button = new InventoryField();
+		ItemInventoryField button = new ItemInventoryField();
 		button.addListener(new ClickListener()
 		{
 			@Override
@@ -66,19 +65,19 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 		inventoryDialog.buttonClicked(cellPosition);
 	}
 
-	public InventoryField getField(Point point)
+	public ItemInventoryField getField(Point point)
 	{
 		return inventoryFields.get(point);
 	}
 
-	public Collection<InventoryField> getAllFields()
+	public Collection<ItemInventoryField> getAllFields()
 	{
 		return inventoryFields.values();
 	}
 
 	public boolean removeIfHas(Item item)
 	{
-		for (InventoryField field : inventoryFields.values())
+		for (ItemInventoryField field : inventoryFields.values())
 		{
 			Item fieldItem = field.getItem();
 			if (fieldItem == item)	
@@ -92,13 +91,13 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 	
 	public void put(Item item, Point position)
 	{
-		inventoryFields.get(position).put(new ItemReference(item));
+		inventoryFields.get(position).put(item);
 	}
 
 
 	public Item getItem(long itemId)
 	{
-		for (InventoryField field : inventoryFields.values())
+		for (ItemInventoryField field : inventoryFields.values())
 		{
 			Item item = field.getItem();
 			if (item != null && item.getId() == itemId)
@@ -109,7 +108,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 
 	public ItemUseable useIfHas(long itemId)
 	{
-		for (InventoryField field : inventoryFields.values())
+		for (ItemInventoryField field : inventoryFields.values())
 		{
 			Item item = field.getItem();
 			if (item != null && item.getId() == itemId)
@@ -128,7 +127,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 	public int countItems(String itemIdentifier)
 	{
 		int itemCounter = 0;
-		for (InventoryField field : inventoryFields.values())
+		for (ItemInventoryField field : inventoryFields.values())
 		{
 			Item item = field.getItem();
 			if (item != null && item.getIdentifier().equals(itemIdentifier))

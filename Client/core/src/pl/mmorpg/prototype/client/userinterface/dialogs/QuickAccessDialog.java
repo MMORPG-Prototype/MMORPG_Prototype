@@ -16,12 +16,12 @@ import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemInventoryField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryTextField;
 
 public class QuickAccessDialog extends Dialog
 {
-	private Map<Integer, InventoryField> quickAccessButtons = new TreeMap<>();
+	private Map<Integer, ItemInventoryField> quickAccessButtons = new TreeMap<>();
 	private UserInterface linkedState;
 
 	public QuickAccessDialog(UserInterface linkedInterface)
@@ -32,7 +32,7 @@ public class QuickAccessDialog extends Dialog
 		HorizontalGroup buttons = new HorizontalGroup().padBottom(8).space(4).padTop(0).fill();
 		for (int i = 0; i < 12; i++)
 		{
-			InventoryField button = createField(i);
+			ItemInventoryField button = createField(i);
 			quickAccessButtons.put(i, button);
 			buttons.addActor(button);
 		}
@@ -44,7 +44,7 @@ public class QuickAccessDialog extends Dialog
 		this.setMovable(false);
 	}
 
-	private InventoryField createField(int cellPosition)
+	private ItemInventoryField createField(int cellPosition)
 	{
 		InventoryTextField inventoryField = new InventoryTextField("F" + String.valueOf(cellPosition + 1));
 		inventoryField.setTextShiftX(-16);
@@ -78,7 +78,7 @@ public class QuickAccessDialog extends Dialog
 
 	public boolean hasItem(Item item)
 	{
-		for(InventoryField field : quickAccessButtons.values())
+		for(ItemInventoryField field : quickAccessButtons.values())
 			if(field.hasItem() && field.getItem() == item)
 				return true;
 		return false;
@@ -86,7 +86,7 @@ public class QuickAccessDialog extends Dialog
 
 	public void removeItem(Item usedItem)
 	{
-		for(InventoryField field : quickAccessButtons.values())
+		for(ItemInventoryField field : quickAccessButtons.values())
 			if(field.hasItem() && field.getItem() == usedItem)
 			{
 				field.removeItem();

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import pl.mmorpg.prototype.client.resources.Assets;
 
-public class InventoryTextField extends InventoryField
+public class InventoryTextField extends ItemInventoryField
 {
 	private static BitmapFont font = Assets.getFont();
 	private String text;

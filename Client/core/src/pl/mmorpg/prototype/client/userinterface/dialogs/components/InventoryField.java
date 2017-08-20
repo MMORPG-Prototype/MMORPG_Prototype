@@ -6,20 +6,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
-import pl.mmorpg.prototype.client.items.Item;
-import pl.mmorpg.prototype.client.items.ItemReference;
+import pl.mmorpg.prototype.client.items.InventoryIcon;
+import pl.mmorpg.prototype.client.items.Reference;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 
-public class InventoryField extends Button implements ItemContainer
+public class InventoryField<T extends InventoryIcon> extends Button implements Container<T>
 {
 	private static final Texture NULL_TEXTURE = Assets.get("nullTexture.png");
 
 	private SpriteDrawable drawable;
 	private final Image nullImage;
 
-	private ItemReference itemReference = null;
-
+	private Reference<T> itemReference = null;
+	
 	public InventoryField()
 	{
 		super(Settings.DEFAULT_SKIN);
@@ -31,7 +31,7 @@ public class InventoryField extends Button implements ItemContainer
 		drawable.setMinWidth(32);
 		drawable.setMinHeight(32);
 	}
-
+	
 	@Override
 	public void setWidth(float width)
 	{
@@ -45,15 +45,16 @@ public class InventoryField extends Button implements ItemContainer
 	}
 
 	@Override
-	public void put(ItemReference item)
+	public void put(T item)
 	{
+		Reference<T> reference = new Reference<T>(item);
 		this.removeActor(nullImage);
 		if (this.itemReference != null)
 			this.removeActor(this.itemReference);
-		this.itemReference = item;
+		this.itemReference = reference;
 		
-		add(item);
-		drawable = item.getDrawable();
+		add(reference);
+		drawable = reference.getDrawable();
 	}
 
 
@@ -64,13 +65,12 @@ public class InventoryField extends Button implements ItemContainer
 	}
 
 	@Override
-	public Item getItem()
+	public T getItem()
 	{
 		if(itemReference == null)
 			return null;
-		return itemReference.getItem();
+		return itemReference.getObject();
 	}
-
 
 	@Override
 	public void removeItem()
@@ -80,4 +80,5 @@ public class InventoryField extends Button implements ItemContainer
 		itemReference = null;
 		add(nullImage);
 	}
+
 }

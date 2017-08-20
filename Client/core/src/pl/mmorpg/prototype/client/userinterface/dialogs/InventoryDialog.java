@@ -15,15 +15,14 @@ import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchFieldException;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
-import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryPage;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryTextField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemInventoryField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLabel;
 
 public class InventoryDialog extends Dialog implements ItemCounter
@@ -34,7 +33,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	private final VerticalGroup currentPageButtons = new VerticalGroup();
 	private final List<InventoryTextField> switchPageButtons = new ArrayList<>(numberOfPages);
 	private final UserInterface linkedInterface;
-	private InventoryField lastFieldWithItemClicked = null;
+	private ItemInventoryField lastFieldWithItemClicked = null;
 	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
 
 	public InventoryDialog(UserInterface linkedInterface, Integer linkedFieldGold)
@@ -92,7 +91,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	public void buttonClicked(ItemInventoryPosition cellPosition)
 	{
-		InventoryField field = getField(cellPosition);
+		ItemInventoryField field = getField(cellPosition);
 		if (field.hasItem())
 			lastFieldWithItemClicked = field;
 		linkedInterface.inventoryFieldClicked(field, cellPosition);
@@ -111,7 +110,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	public Item getItem(Point position)
 	{
-		InventoryField field = inventoryPages.get(currentPageIndex).getField(position);
+		ItemInventoryField field = inventoryPages.get(currentPageIndex).getField(position);
 		return field.getItem();
 	}
 
@@ -119,7 +118,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	{
 		for (InventoryPage inventoryPage : inventoryPages)
 		{
-			for (InventoryField field : inventoryPage.getAllFields())
+			for (ItemInventoryField field : inventoryPage.getAllFields())
 			{
 				Item fieldItem = field.getItem();
 				if (fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
@@ -133,7 +132,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		addItem((Item) item);
 	}
 
-	private InventoryField getField(ItemInventoryPosition fieldPosition)
+	private ItemInventoryField getField(ItemInventoryPosition fieldPosition)
 	{
 		return inventoryPages.get(fieldPosition.getPageNumber()).getField(new Point(fieldPosition.getPosition().x, fieldPosition.getPosition().y));
 	}
@@ -141,13 +140,13 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	public void addItem(Item item)
 	{
 		ItemInventoryPosition freeFieldPosition = getFreeInventoryPosition();
-		InventoryField freeField = getField(freeFieldPosition);
-		freeField.put(new ItemReference(item));
+		ItemInventoryField freeField = getField(freeFieldPosition);
+		freeField.put(item);
 	}
 
 	public void addItem(Item newItem, ItemInventoryPosition inventoryPosition)
 	{
-		getField(inventoryPosition).put(new ItemReference(newItem));
+		getField(inventoryPosition).put(newItem);
 	}
 
 	public void updateGoldValue(int goldAmount)
@@ -167,7 +166,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		super.setVisible(visible);
 	}
 
-	public InventoryField getLastFieldWithItemClicked()
+	public ItemInventoryField getLastFieldWithItemClicked()
 	{
 		return lastFieldWithItemClicked;
 	}
@@ -198,7 +197,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 				for(int j=0; j<currentPage.getInventoryFieldsWidthNumber(); j++)
 				{
 					Point fieldPosition = new Point(j, i);
-					InventoryField field = currentPage.getField(fieldPosition);
+					ItemInventoryField field = currentPage.getField(fieldPosition);
 					if(!field.hasItem())
 						return new ItemInventoryPosition(pageNumber, fieldPosition);
 				}
@@ -234,7 +233,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			for(int j=0; j<currentPage.getInventoryFieldsWidthNumber(); j++)
 			{
 				Point fieldPosition = new Point(i, j);
-				InventoryField field = currentPage.getField(fieldPosition);
+				ItemInventoryField field = currentPage.getField(fieldPosition);
 				Item fieldItem = field.getItem();
 				if(fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
 					return new ItemInventoryPosition(0, fieldPosition);
@@ -244,21 +243,21 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	public void repositionItem(ItemInventoryPosition sourcePosition, ItemInventoryPosition destinationPosition)
 	{
-		InventoryField sourceField = getField(sourcePosition);
-		InventoryField destinationField = getField(destinationPosition);
+		ItemInventoryField sourceField = getField(sourcePosition);
+		ItemInventoryField destinationField = getField(destinationPosition);
 		Item targetItem = sourceField.getItem();
 		sourceField.removeItem();
-		destinationField.put(new ItemReference(targetItem));
+		destinationField.put(targetItem);
 	}
 
 	public void swapItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
 	{
-		InventoryField firstField = getField(firstPosition);
-		InventoryField secondField = getField(secondPosition);
+		ItemInventoryField firstField = getField(firstPosition);
+		ItemInventoryField secondField = getField(secondPosition);
 		Item firstItem = firstField.getItem();
 		Item secondItem = secondField.getItem();
-		firstField.put(new ItemReference(secondItem));
-		secondField.put(new ItemReference(firstItem));
+		firstField.put(secondItem);
+		secondField.put(firstItem);
 	}
 	
 	@Override

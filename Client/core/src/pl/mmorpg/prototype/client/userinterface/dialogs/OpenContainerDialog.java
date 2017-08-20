@@ -16,11 +16,10 @@ import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
-import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.AutoCleanupOnCloseButtonDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ButtonCreator;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemInventoryField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLabel;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
@@ -29,7 +28,7 @@ public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 {
 	private static final int ROW_LENGTH = 5;
 	private static final int BUTTON_SIZE = 32;
-	private final Map<Point, InventoryField> containerFields = new HashMap<>();
+	private final Map<Point, ItemInventoryField> containerFields = new HashMap<>();
 	private final StringValueLabel<Integer> goldLabel;
 
 	public OpenContainerDialog(CharacterItemDataPacket[] itemsToShow, int gold, String title,
@@ -64,23 +63,23 @@ public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 		HorizontalGroup buttonRow = new HorizontalGroup().space(0).pad(0).fill();
 		for (int j = 0; j < ROW_LENGTH; j++)
 		{
-			InventoryField field = createField(packetsSender, userInventoryTakeItemPositionSupplier);
+			ItemInventoryField field = createField(packetsSender, userInventoryTakeItemPositionSupplier);
 			int nextIndex = i * ROW_LENGTH + j;
 			buttonRow.addActor(field);
 			containerFields.put(new Point(j, i), field);
 			if (nextIndex < numberOfItems)
 			{
 				Item item = ItemFactory.produceItem(itemsToShow[nextIndex]);
-				field.put(new ItemReference(item));
+				field.put(item);
 			}
 		}
 		this.getContentTable().add(buttonRow);
 	}
 
-	private InventoryField createField(PacketsSender packetsSender,
+	private ItemInventoryField createField(PacketsSender packetsSender,
 			ItemPositionSupplier userInventoryTakeItemPositionSupplier)
 	{
-		InventoryField field = new InventoryField();
+		ItemInventoryField field = new ItemInventoryField();
 		field.addListener(new ClickListener()
 		{
 			@Override
@@ -101,7 +100,7 @@ public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 
 	public boolean removeItem(long itemId)
 	{
-		for (InventoryField field : containerFields.values())
+		for (ItemInventoryField field : containerFields.values())
 			if (field.hasItem() && field.getItem().getId() == itemId)
 			{
 				field.removeItem();

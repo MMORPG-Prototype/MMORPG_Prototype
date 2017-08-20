@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.communication.PacketsSender;
-import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShopBuyingDialog;
@@ -23,7 +22,7 @@ public class ShopPage extends VerticalGroup
 	private static final int BUTTON_ROW_LENGTH = 6;
 	private static final int BUTTON_COLUMN_LENGTH = 12;
 
-	private final Map<Point, InventoryField> inventoryFields = new HashMap<>();
+	private final Map<Point, ItemInventoryField> inventoryFields = new HashMap<>();
 
 	public ShopPage(ShopItem[] items, Stage stageForPopUpInfo, UserInterface linkedInterface,
 			PacketsSender packetSender, long shopId)
@@ -41,7 +40,7 @@ public class ShopPage extends VerticalGroup
 			for (int j = 0; j < BUTTON_ROW_LENGTH; j++)
 			{
 				Point cellPosition = new Point(j, i);
-				InventoryField field = new InventoryField();
+				ItemInventoryField field = new ItemInventoryField();
 				inventoryFields.put(cellPosition, field);
 				buttonRow.addActor(field);
 			}
@@ -56,22 +55,22 @@ public class ShopPage extends VerticalGroup
 		Point currentPosition = new Point(0, 0);
 		for (ShopItem item : items)
 		{
-			InventoryField field = inventoryFields.get(currentPosition);
-			field.put(new ItemReference(item.getItem()));
+			ItemInventoryField field = inventoryFields.get(currentPosition);
+			field.put(item.getItem());
 			addPopUpInfoListener(field, item, stageForPopUpInfo);
 			addListenerForUsingField(field, item, linkedInterface, packetSender, shopId);
 			currentPosition = nextPosition(currentPosition);
 		}
 	}
 
-	private void addPopUpInfoListener(InventoryField field, ShopItem item, Stage stageForPopUpInfo)
+	private void addPopUpInfoListener(ItemInventoryField field, ShopItem item, Stage stageForPopUpInfo)
 	{
 		PopUpInfo infoDialog = new PopUpInfo(item);
 		InputListener popUpHideListener = new ActorPopUpHideListener(stageForPopUpInfo, infoDialog);
 		field.addListener(popUpHideListener);
 	}
 
-	private void addListenerForUsingField(InventoryField field, ShopItem item, UserInterface linkedInterface, PacketsSender packetSender, long shopId)
+	private void addListenerForUsingField(ItemInventoryField field, ShopItem item, UserInterface linkedInterface, PacketsSender packetSender, long shopId)
 	{
 		field.addListener(new ClickListener()
 		{
