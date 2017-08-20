@@ -2,12 +2,12 @@ package pl.mmorpg.prototype.client.userinterface.dialogs.components;
 
 public interface Container<T>
 {
-	void put(T item);
+	void put(T content);
 
-	boolean hasItem();
+	boolean hasContent();
 
-	T getItem();
+	T getContent();
 
-	void removeItem();
+	void removeContent();
 
 }

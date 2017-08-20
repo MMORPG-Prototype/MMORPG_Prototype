@@ -167,8 +167,8 @@ public class UserInterface
 
 	public void inventoryFieldClicked(InventoryField<Item> inventoryField, ItemInventoryPosition cellPosition)
 	{
-		if (mousePointerToItem.item == null && inventoryField.hasItem())
-			mousePointerToItem.item = (DraggableItem)inventoryField.getItem();
+		if (mousePointerToItem.item == null && inventoryField.hasContent())
+			mousePointerToItem.item = (DraggableItem)inventoryField.getContent();
 		else if (mousePointerToItem.item != null)
 		{
 			InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
@@ -227,7 +227,7 @@ public class UserInterface
 
 	public void quickAccesButtonClicked(InventoryField<QuickAccesIcon> field)
 	{
-		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field);
+		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field, inventoryDialog);
 	}
 
 	public void userDistributedStatPoints()

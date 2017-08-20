@@ -59,13 +59,13 @@ public class InventoryField<T extends InventoryIcon> extends Button implements C
 
 
 	@Override
-	public boolean hasItem()
+	public boolean hasContent()
 	{
 		return itemReference != null;
 	}
 
 	@Override
-	public T getItem()
+	public T getContent()
 	{
 		if(itemReference == null)
 			return null;
@@ -73,7 +73,7 @@ public class InventoryField<T extends InventoryIcon> extends Button implements C
 	}
 
 	@Override
-	public void removeItem()
+	public void removeContent()
 	{
 		if (itemReference != null)
 			this.removeActor(itemReference);

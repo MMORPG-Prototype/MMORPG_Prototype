@@ -68,7 +68,7 @@ public class QuickAccessDialog extends Dialog
 
 	public void useButtonItem(int cellPosition, Monster target, PacketsSender packetSender)
 	{
-		QuickAccesIcon quickAccessIcon = quickAccessButtons.get(cellPosition).getItem();
+		QuickAccesIcon quickAccessIcon = quickAccessButtons.get(cellPosition).getContent();
 		String itemIdentifier = quickAccessIcon.getItemIdenfier();
 		Item item = linkedInterface.searchForItem(itemIdentifier);
 		if (item == null)
@@ -82,7 +82,7 @@ public class QuickAccessDialog extends Dialog
 	public boolean hasItem(QuickAccesIcon item)
 	{
 		for(InventoryField<QuickAccesIcon> field : quickAccessButtons.values())
-			if(field.hasItem() && field.getItem() == item)
+			if(field.hasContent() && field.getContent() == item)
 				return true;
 		return false;
 	}
@@ -90,9 +90,9 @@ public class QuickAccessDialog extends Dialog
 	public void removeItem(QuickAccesIcon usedItem)
 	{
 		for(InventoryField<QuickAccesIcon> field : quickAccessButtons.values())
-			if(field.hasItem() && field.getItem() == usedItem)
+			if(field.hasContent() && field.getContent() == usedItem)
 			{
-				field.removeItem();
+				field.removeContent();
 				return;
 			}
 		throw new NoSuchItemInQuickAccessBarException(usedItem);

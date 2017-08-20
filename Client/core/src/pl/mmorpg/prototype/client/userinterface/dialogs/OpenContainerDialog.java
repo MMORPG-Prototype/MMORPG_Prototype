@@ -85,9 +85,9 @@ public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				if (field.hasItem())
+				if (field.hasContent())
 				{
-					Item item = field.getItem();
+					Item item = field.getContent();
 					TakeItemFromContainerPacket packet = PacketsMaker.makeTakeItemFromContainerPacket(
 							OpenContainerDialog.this.getId(), item.getId(),
 							userInventoryTakeItemPositionSupplier.apply(item));
@@ -101,9 +101,9 @@ public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 	public boolean removeItem(long itemId)
 	{
 		for (InventoryField<Item> field : containerFields.values())
-			if (field.hasItem() && field.getItem().getId() == itemId)
+			if (field.hasContent() && field.getContent().getId() == itemId)
 			{
-				field.removeItem();
+				field.removeContent();
 				return true;
 			}
 		return false;

@@ -79,10 +79,10 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 	{
 		for (InventoryField<Item> field : inventoryFields.values())
 		{
-			Item fieldItem = field.getItem();
+			Item fieldItem = field.getContent();
 			if (fieldItem == item)	
 			{
-				field.removeItem();
+				field.removeContent();
 				return true;
 			}
 		}
@@ -99,7 +99,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 	{
 		for (InventoryField<Item> field : inventoryFields.values())
 		{
-			Item item = field.getItem();
+			Item item = field.getContent();
 			if (item != null && item.getId() == itemId)
 				return item;
 		}
@@ -110,13 +110,13 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 	{
 		for (InventoryField<Item> field : inventoryFields.values())
 		{
-			Item item = field.getItem();
+			Item item = field.getContent();
 			if (item != null && item.getId() == itemId)
 			{
 				ItemUseable itemUseable = (ItemUseable)item;
 				itemUseable.useIterfaceUpdate();
 				if(item.shouldBeRemoved())
-					field.removeItem();
+					field.removeContent();
 				return itemUseable;
 			}
 		}
@@ -129,7 +129,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 		int itemCounter = 0;
 		for (InventoryField<Item> field : inventoryFields.values())
 		{
-			Item item = field.getItem();
+			Item item = field.getContent();
 			if (item != null && item.getIdentifier().equals(itemIdentifier))
 				itemCounter++;
 		}
@@ -150,7 +150,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 	{
 		for (InventoryField<Item> field : inventoryFields.values())
 		{
-			Item item = field.getItem();
+			Item item = field.getContent();
 			if (item != null && item.getIdentifier().equals(itemIdentifier))
 				return item;
 		}

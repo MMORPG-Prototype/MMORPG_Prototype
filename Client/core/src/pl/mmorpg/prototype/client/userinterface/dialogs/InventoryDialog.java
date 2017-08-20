@@ -92,7 +92,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	public void buttonClicked(ItemInventoryPosition cellPosition)
 	{
 		InventoryField<Item> field = getField(cellPosition);
-		if (field.hasItem())
+		if (field.hasContent())
 			lastFieldWithItemClicked = field;
 		linkedInterface.inventoryFieldClicked(field, cellPosition);
 	}
@@ -111,7 +111,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	public Item getItem(Point position)
 	{
 		InventoryField<Item> field = inventoryPages.get(currentPageIndex).getField(position);
-		return field.getItem();
+		return field.getContent();
 	}
 
 	public void addItem(StackableItem item)
@@ -120,7 +120,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		{
 			for (InventoryField<Item> field : inventoryPage.getAllFields())
 			{
-				Item fieldItem = field.getItem();
+				Item fieldItem = field.getContent();
 				if (fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
 				{
 					((StackableItem) fieldItem).stackWith(item);
@@ -198,7 +198,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 				{
 					Point fieldPosition = new Point(j, i);
 					InventoryField<Item> field = currentPage.getField(fieldPosition);
-					if(!field.hasItem())
+					if(!field.hasContent())
 						return new ItemInventoryPosition(pageNumber, fieldPosition);
 				}
 		}
@@ -234,7 +234,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			{
 				Point fieldPosition = new Point(i, j);
 				InventoryField<Item> field = currentPage.getField(fieldPosition);
-				Item fieldItem = field.getItem();
+				Item fieldItem = field.getContent();
 				if(fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
 					return new ItemInventoryPosition(0, fieldPosition);
 			}
@@ -245,8 +245,8 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	{
 		InventoryField<Item> sourceField = getField(sourcePosition);
 		InventoryField<Item> destinationField = getField(destinationPosition);
-		Item targetItem = sourceField.getItem();
-		sourceField.removeItem();
+		Item targetItem = sourceField.getContent();
+		sourceField.removeContent();
 		destinationField.put(targetItem);
 	}
 
@@ -254,8 +254,8 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	{
 		InventoryField<Item> firstField = getField(firstPosition);
 		InventoryField<Item> secondField = getField(secondPosition);
-		Item firstItem = firstField.getItem();
-		Item secondItem = secondField.getItem();
+		Item firstItem = firstField.getContent();
+		Item secondItem = secondField.getContent();
 		firstField.put(secondItem);
 		secondField.put(firstItem);
 	}

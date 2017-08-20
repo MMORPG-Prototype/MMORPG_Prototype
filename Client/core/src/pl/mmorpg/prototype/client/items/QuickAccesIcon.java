@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 
-public abstract class QuickAccesIcon extends InventoryIcon
+public class QuickAccesIcon extends InventoryIcon
 {
     private final BitmapFont font = Assets.getFont();
     
