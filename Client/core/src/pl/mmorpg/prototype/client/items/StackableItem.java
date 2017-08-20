@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import pl.mmorpg.prototype.client.resources.Assets;
 
-public abstract class StackableItem extends Item
+public abstract class StackableItem extends DraggableItem
 {
     private Integer count = 1;
     private final BitmapFont font = Assets.getFont();

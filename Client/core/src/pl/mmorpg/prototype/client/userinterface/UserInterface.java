@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
+import pl.mmorpg.prototype.client.items.DraggableItem;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
@@ -166,7 +167,7 @@ public class UserInterface
 	public void inventoryFieldClicked(InventoryField inventoryField, ItemInventoryPosition cellPosition)
 	{
 		if (mousePointerToItem.item == null && inventoryField.hasItem())
-			mousePointerToItem.item = inventoryField.getItem();
+			mousePointerToItem.item = (DraggableItem)inventoryField.getItem();
 		else if (mousePointerToItem.item != null)
 		{
 			InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker

@@ -26,7 +26,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryPage
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryTextField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLabel;
 
-public class InventoryDialog extends Dialog
+public class InventoryDialog extends Dialog implements ItemCounter
 {
 	private static final int numberOfPages = 5;
 	private int currentPageIndex = 0;
@@ -259,6 +259,15 @@ public class InventoryDialog extends Dialog
 		Item secondItem = secondField.getItem();
 		firstField.put(new ItemReference(secondItem));
 		secondField.put(new ItemReference(firstItem));
+	}
+	
+	@Override
+	public int countItems(String itemIdentifier)
+	{
+		int itemCounter = 0;
+		for(InventoryPage inventoryPage : inventoryPages)
+			itemCounter += inventoryPage.countItems(itemIdentifier);
+		return itemCounter;
 	}
 
 }

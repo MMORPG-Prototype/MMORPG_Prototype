@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.states.helpers;
 
+import pl.mmorpg.prototype.client.items.DraggableItem;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.userinterface.ItemSources;
@@ -21,10 +22,10 @@ public class UserInterfaceManager
 			Item item = quickAccessField.getItem();
 			quickAccessField.removeItem();
 			quickAccessField.put(new ItemReference(mousePointerToItem.item));
-			mousePointerToItem.item = item;
+			mousePointerToItem.item = (DraggableItem)item;
 		} else if (mousePointerToItem.item == null && quickAccessField.hasItem())
 		{
-			mousePointerToItem.item = quickAccessField.getItem();
+			mousePointerToItem.item = (DraggableItem)quickAccessField.getItem();
 			quickAccessField.removeItem();
 		}
 		if (mousePointerToItem.item != null)

@@ -15,8 +15,9 @@ import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 
-public class InventoryPage extends VerticalGroup
+public class InventoryPage extends VerticalGroup implements ItemCounter
 {
 	private static final int INVENTORY_FIELDS_HEIGHT_NUMBER = 5;
 	private static final int INVENTORY_FIELDS_WIDTH_NUMBER = 5;
@@ -121,6 +122,19 @@ public class InventoryPage extends VerticalGroup
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public int countItems(String itemIdentifier)
+	{
+		int itemCounter = 0;
+		for (InventoryField field : inventoryFields.values())
+		{
+			Item item = field.getItem();
+			if (item != null && item.getIdentifier().equals(itemIdentifier))
+				itemCounter++;
+		}
+		return itemCounter;
 	}
 
 	public int getInventoryFieldsHeightNumber()
