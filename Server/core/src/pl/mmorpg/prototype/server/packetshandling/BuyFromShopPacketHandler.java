@@ -1,14 +1,10 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
-import java.util.Map;
-
 import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
-import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
@@ -21,15 +17,12 @@ import pl.mmorpg.prototype.server.states.PlayState;
 public class BuyFromShopPacketHandler extends PacketHandlerBase<BuyFromShopPacket>
 {
 	private PlayState playState;
-	private Map<Integer, UserInfo> loggedUsersKeyUserId;
-	private Map<Integer, User> authenticatedClientsKeyClientId;
+	private GameDataRetriever gameData;
 
-	public BuyFromShopPacketHandler(PlayState playState, Map<Integer, UserInfo> loggedUsersKeyUserId,
-			Map<Integer, User> authenticatedClientsKeyClientId)
+	public BuyFromShopPacketHandler(PlayState playState, GameDataRetriever gameData)
 	{
 		this.playState = playState;
-		this.loggedUsersKeyUserId = loggedUsersKeyUserId;
-		this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
+		this.gameData = gameData;
 	}
 
 	@Override
@@ -37,8 +30,7 @@ public class BuyFromShopPacketHandler extends PacketHandlerBase<BuyFromShopPacke
 	{
 		ShopNpc shopNpc = (ShopNpc) playState.getObject(packet.getShopId());
 		ShopItemWrapper itemWrapper = shopNpc.getItemWrapper(packet.getItemId());
-		UserCharacter userCharacter = PacketHandlingHelper.getUserCharacterByConnectionId(connection.getID(),
-				loggedUsersKeyUserId, authenticatedClientsKeyClientId);
+		UserCharacter userCharacter = gameData.getUserCharacterByConnectionId(connection.getID());
 		PlayerCharacter character = (PlayerCharacter) playState.getObject(userCharacter.getId());
 
 		int itemCount = packet.getAmount();

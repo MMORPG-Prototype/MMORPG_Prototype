@@ -7,11 +7,18 @@ import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.exceptions.UserIsNotInGameException;
 
-public class PacketHandlingHelper
-{	
-	public static UserCharacter getUserCharacterByConnectionId(int clientId,
-			Map<Integer, UserInfo> loggedUsersKeyUserId,
-			Map<Integer, User> authenticatedClientsKeyClientId)
+public class GameDataRetriever
+{
+	private final Map<Integer, UserInfo> loggedUsersKeyUserId;
+	private final Map<Integer, User> authenticatedClientsKeyClientId;
+	
+	public GameDataRetriever(Map<Integer, UserInfo> loggedUsersKeyUserId, Map<Integer, User> authenticatedClientsKeyClientId)
+	{
+		this.loggedUsersKeyUserId = loggedUsersKeyUserId;
+		this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
+	}
+	
+	public UserCharacter getUserCharacterByConnectionId(int clientId)
 	{
 		if(!authenticatedClientsKeyClientId.containsKey(clientId))
 			return null;
@@ -22,11 +29,9 @@ public class PacketHandlingHelper
 		return loggedUsersKeyUserId.get(userId).userCharacter;
 	}
 	
-	public static int getCharacterIdByConnectionId(int id, Map<Integer, UserInfo> loggedUsersKeyUserId,
-            Map<Integer, User> authenticatedClientsKeyClientId)
+	public int getCharacterIdByConnectionId(int id)
     {
-        User user = authenticatedClientsKeyClientId.get(id);
-        UserCharacter userCharacter = loggedUsersKeyUserId.get(user.getId()).userCharacter;
+        UserCharacter userCharacter = getUserCharacterByConnectionId(id);
         if (userCharacter == null)
             throw new UserIsNotInGameException();
 
