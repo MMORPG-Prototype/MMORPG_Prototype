@@ -19,13 +19,12 @@ public class ChatMessagePacketHandler extends PacketHandlerBase<ChatMessagePacke
 	private Server server;
 	private Map<Integer, User> authenticatedClientsKeyClientId;
 	private Map<Integer, UserInfo> loggedUsersKeyUserId;
+	private GameDataRetriever gameData;
 
-	public ChatMessagePacketHandler(Server server, Map<Integer, UserInfo> loggedUsersKeyUserId,
-			Map<Integer, User> authenticatedClientsKeyClientId)
+	public ChatMessagePacketHandler(Server server, GameDataRetriever gameData)
 	{
 		this.server = server;
-		this.loggedUsersKeyUserId = loggedUsersKeyUserId;
-		this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
+		this.gameData = gameData;
 	}
 
 	@Override
@@ -42,23 +41,18 @@ public class ChatMessagePacketHandler extends PacketHandlerBase<ChatMessagePacke
 			throw new RuntimeException(e);
 		}
 		ChatMessageReplyPacket newPacket = new ChatMessageReplyPacket();
-		String nickname = getUserCharacterNickname(connection.getID());
+		UserCharacter sender = gameData.getUserCharacterByConnectionId(connection.getID());
+		String nickname = sender.getNickname();
 		newPacket.setMessage(packet.getMessage());
 		newPacket.setNickname(nickname);
 		UserCharacter character;
 		for(Connection client : connections)		
-			if((character = PacketHandlingHelper.getUserCharacterByConnectionId
-			(connection.getID(), loggedUsersKeyUserId, authenticatedClientsKeyClientId)) != null)
+			if((character = gameData.getUserCharacterByConnectionId(client.getID())) != null)
 			{
 				newPacket.setSourceCharacterId(character.getId());
 				server.sendToTCP(client.getID(), newPacket);
 			}
 	}
 
-	private String getUserCharacterNickname(int clientId)
-	{
-		User user = authenticatedClientsKeyClientId.get(clientId);
-		UserInfo userInfo = loggedUsersKeyUserId.get(user.getId());
-		return userInfo.userCharacter.getNickname();
-	}
+
 }

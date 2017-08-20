@@ -225,8 +225,7 @@ public class UserInterface
 
 	public void quickAccesButtonClicked(InventoryField field)
 	{
-		InventoryField lastFieldClicked = inventoryDialog.getLastFieldWithItemClicked();
-		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field, lastFieldClicked);
+		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field);
 	}
 
 	public void userDistributedStatPoints()

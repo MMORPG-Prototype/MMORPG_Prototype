@@ -51,6 +51,9 @@ public class PacketHandlerFactory
 	public PacketHandlerFactory(Map<Integer, UserInfo> loggedUsersKeyUserId,
 			Map<Integer, User> authenticatedClientsKeyClientId, Server server, PlayState playState)
 	{
+		GameDataRetriever gameDataRetriever = new GameDataRetriever(loggedUsersKeyUserId,
+				authenticatedClientsKeyClientId);
+
 		packetHandlers.put(AuthenticationPacket.class,
 				new AuthenticationPacketHandler(loggedUsersKeyUserId, authenticatedClientsKeyClientId, server));
 		packetHandlers.put(CharacterCreationPacket.class,
@@ -68,25 +71,21 @@ public class PacketHandlerFactory
 		packetHandlers.put(MoveRightPacket.class, new MoveRightPacketHandler(playState));
 		packetHandlers.put(MoveUpPacket.class, new MoveUpPacketHandler(playState));
 		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(playState));
-		packetHandlers.put(ChatMessagePacket.class,
-				new ChatMessagePacketHandler(server, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
-		packetHandlers.put(BoardClickPacket.class,
-				new CharacterBoardClickPacketHandler(playState, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
-		packetHandlers.put(ItemUsagePacket.class,
-				new ItemUsagePacketHandler(loggedUsersKeyUserId, authenticatedClientsKeyClientId, playState, server));
-		packetHandlers.put(FireballSpellUsagePacket.class, new FireballSpellUsagePacketHandler(loggedUsersKeyUserId,
-				authenticatedClientsKeyClientId, server, playState));
+		packetHandlers.put(ChatMessagePacket.class, new ChatMessagePacketHandler(server, gameDataRetriever));
+		packetHandlers.put(BoardClickPacket.class, new CharacterBoardClickPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(ItemUsagePacket.class, new ItemUsagePacketHandler(gameDataRetriever, playState, server));
+		packetHandlers.put(FireballSpellUsagePacket.class,
+				new FireballSpellUsagePacketHandler(gameDataRetriever, server, playState));
 		packetHandlers.put(OpenContainterPacket.class, new OpenContainerPacketHandler(server, playState));
-		packetHandlers.put(TakeItemFromContainerPacket.class, new TakeItemFromContainerPacketHandler(
-				loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
-		packetHandlers.put(TakingGoldFromContainerPacket.class, new TakingGoldFromContainerPacketHandler(
-				loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
-		packetHandlers.put(BuyFromShopPacket.class,
-				new BuyFromShopPacketHandler(playState, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
+		packetHandlers.put(TakeItemFromContainerPacket.class,
+				new TakeItemFromContainerPacketHandler(gameDataRetriever, server, playState));
+		packetHandlers.put(TakingGoldFromContainerPacket.class,
+				new TakingGoldFromContainerPacketHandler(gameDataRetriever, server, playState));
+		packetHandlers.put(BuyFromShopPacket.class, new BuyFromShopPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(ScriptCodePacket.class,
 				new ScriptCodePacketHandler(playState, authenticatedClientsKeyClientId));
-		packetHandlers.put(InventoryItemRepositionRequestPacket.class, new InventoryItemRepositionRequestPacketHandler(
-				loggedUsersKeyUserId, authenticatedClientsKeyClientId, playState));
+		packetHandlers.put(InventoryItemRepositionRequestPacket.class,
+				new InventoryItemRepositionRequestPacketHandler(gameDataRetriever, playState));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

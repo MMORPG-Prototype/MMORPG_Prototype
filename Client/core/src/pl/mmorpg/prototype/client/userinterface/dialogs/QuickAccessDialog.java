@@ -95,4 +95,5 @@ public class QuickAccessDialog extends Dialog
 		throw new NoSuchItemInQuickAccessBarException(usedItem);
 	}
 	
+	
 }

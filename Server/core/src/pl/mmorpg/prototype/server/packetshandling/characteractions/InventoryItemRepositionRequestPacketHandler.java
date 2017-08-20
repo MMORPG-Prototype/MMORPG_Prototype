@@ -1,39 +1,31 @@
 package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
-import java.util.Map;
-
 import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
-import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.InventoryRepositionableItemsOwner;
+import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
-import pl.mmorpg.prototype.server.packetshandling.PacketHandlingHelper;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class InventoryItemRepositionRequestPacketHandler extends PacketHandlerBase<InventoryItemRepositionRequestPacket>
 {
-	private Map<Integer, User> authenticatedClientsKeyClientId;
-	private Map<Integer, UserInfo> loggedUsersKeyUserId;
 	private PlayState playState;
+	private GameDataRetriever gameData;
 
-	public InventoryItemRepositionRequestPacketHandler(Map<Integer, UserInfo> loggedUsersKeyUserId,
-			Map<Integer, User> authenticatedClientsKeyClientId, PlayState playState)
+	public InventoryItemRepositionRequestPacketHandler(GameDataRetriever gameData, PlayState playState)
 	{
-		this.loggedUsersKeyUserId = loggedUsersKeyUserId;
-		this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
+		this.gameData = gameData;
 		this.playState = playState;
 	}
 
 	@Override
 	public void handle(Connection connection, InventoryItemRepositionRequestPacket packet)
 	{
-		int characterId = PacketHandlingHelper.getCharacterIdByConnectionId(connection.getID(), loggedUsersKeyUserId,
-				authenticatedClientsKeyClientId);
+		int characterId = gameData.getCharacterIdByConnectionId(connection.getID());
 		InventoryRepositionableItemsOwner playerCharacter = (InventoryRepositionableItemsOwner) playState
 				.getObject(characterId);
 		Item item = playerCharacter.getItem(packet.getTargetItemId());
