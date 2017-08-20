@@ -1,12 +1,12 @@
 package pl.mmorpg.prototype.client.exceptions;
 
-import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.QuickAccesIcon;
 
 public class NoSuchItemInQuickAccessBarException extends GameException
 {
-	public NoSuchItemInQuickAccessBarException(Item usedItem)
+	public NoSuchItemInQuickAccessBarException(QuickAccesIcon usedItem)
 	{
-		super("Item: " + usedItem.getIdentifier());
+		super("Item: " + usedItem.getItemIdenfier());
 	}
 
 }

@@ -33,6 +33,11 @@ public abstract class QuickAccesIcon extends InventoryIcon
 		this.itemIdentifier = itemIdenfier;
 	}
 	
+	public String getItemIdenfier()
+	{
+		return itemIdentifier;
+	}
+	
 	@Override
 	public void draw(Batch batch, float x, float y)
     {
@@ -41,4 +46,6 @@ public abstract class QuickAccesIcon extends InventoryIcon
         if(numberOfItems > 1)
         	font.draw(batch, String.valueOf(numberOfItems), x + 22, y + 12);
     }
+
+	
 }

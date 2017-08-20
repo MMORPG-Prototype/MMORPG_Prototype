@@ -13,6 +13,7 @@ import pl.mmorpg.prototype.client.exceptions.CannotUseThisItemException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchItemInQuickAccessBarException;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemUseable;
+import pl.mmorpg.prototype.client.items.QuickAccesIcon;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
@@ -21,18 +22,18 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryText
 
 public class QuickAccessDialog extends Dialog
 {
-	private Map<Integer, InventoryField<Item>> quickAccessButtons = new TreeMap<>();
-	private UserInterface linkedState;
+	private Map<Integer, InventoryField<QuickAccesIcon>> quickAccessButtons = new TreeMap<>();
+	private UserInterface linkedInterface;
 
 	public QuickAccessDialog(UserInterface linkedInterface)
 	{
 		super("Quick access", Settings.DEFAULT_SKIN);
-		this.linkedState = linkedInterface;
+		this.linkedInterface = linkedInterface;
 
 		HorizontalGroup buttons = new HorizontalGroup().padBottom(8).space(4).padTop(0).fill();
 		for (int i = 0; i < 12; i++)
 		{
-			InventoryField<Item> button = createField(i);
+			InventoryField<QuickAccesIcon> button = createField(i);
 			quickAccessButtons.put(i, button);
 			buttons.addActor(button);
 		}
@@ -44,9 +45,9 @@ public class QuickAccessDialog extends Dialog
 		this.setMovable(false);
 	}
 
-	private InventoryField<Item> createField(int cellPosition)
+	private InventoryField<QuickAccesIcon> createField(int cellPosition)
 	{
-		InventoryTextField inventoryField = new InventoryTextField("F" + String.valueOf(cellPosition + 1));
+		InventoryTextField<QuickAccesIcon> inventoryField = new InventoryTextField<>("F" + String.valueOf(cellPosition + 1));
 		inventoryField.setTextShiftX(-16);
 		inventoryField.setTextShiftY(-4);
 		inventoryField.addListener(new ClickListener()
@@ -62,31 +63,33 @@ public class QuickAccessDialog extends Dialog
 
 	private void fieldClicked(int cellPosition)
 	{
-		linkedState.quickAccesButtonClicked(quickAccessButtons.get(cellPosition));
+		linkedInterface.quickAccesButtonClicked(quickAccessButtons.get(cellPosition));
 	}
 
 	public void useButtonItem(int cellPosition, Monster target, PacketsSender packetSender)
 	{
-		Item item = quickAccessButtons.get(cellPosition).getItem();
+		QuickAccesIcon quickAccessIcon = quickAccessButtons.get(cellPosition).getItem();
+		String itemIdentifier = quickAccessIcon.getItemIdenfier();
+		Item item = linkedInterface.searchForItem(itemIdentifier);
 		if (item == null)
 			return;
 		if (!(item instanceof ItemUseable))
-			throw new CannotUseThisItemException(item);
+			throw new CannotUseThisItemException((Item)item);
 
 		((ItemUseable) item).use(target, packetSender);
 	}
 
-	public boolean hasItem(Item item)
+	public boolean hasItem(QuickAccesIcon item)
 	{
-		for(InventoryField<Item> field : quickAccessButtons.values())
+		for(InventoryField<QuickAccesIcon> field : quickAccessButtons.values())
 			if(field.hasItem() && field.getItem() == item)
 				return true;
 		return false;
 	}
 
-	public void removeItem(Item usedItem)
+	public void removeItem(QuickAccesIcon usedItem)
 	{
-		for(InventoryField<Item> field : quickAccessButtons.values())
+		for(InventoryField<QuickAccesIcon> field : quickAccessButtons.values())
 			if(field.hasItem() && field.getItem() == usedItem)
 			{
 				field.removeItem();

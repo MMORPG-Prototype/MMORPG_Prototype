@@ -145,4 +145,15 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 	{
 		return INVENTORY_FIELDS_WIDTH_NUMBER;
 	}
+
+	public Item searchForItem(String itemIdentifier)
+	{
+		for (InventoryField<Item> field : inventoryFields.values())
+		{
+			Item item = field.getItem();
+			if (item != null && item.getIdentifier().equals(itemIdentifier))
+				return item;
+		}
+		return null;
+	}
 }

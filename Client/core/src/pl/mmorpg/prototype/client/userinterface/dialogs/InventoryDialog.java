@@ -31,7 +31,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	private int currentPageIndex = 0;
 	private final List<InventoryPage> inventoryPages = new ArrayList<>(numberOfPages);
 	private final VerticalGroup currentPageButtons = new VerticalGroup();
-	private final List<InventoryTextField> switchPageButtons = new ArrayList<>(numberOfPages);
+	private final List<InventoryTextField<Item>> switchPageButtons = new ArrayList<>(numberOfPages);
 	private final UserInterface linkedInterface;
 	private InventoryField<Item> lastFieldWithItemClicked = null;
 	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
@@ -55,7 +55,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 		for (int i = 0; i < numberOfPages; i++)
 		{
-			InventoryTextField switchButton = createSwitchButton(i);
+			InventoryTextField<Item> switchButton = createSwitchButton(i);
 			switchButtons.addActor(switchButton);
 			switchPageButtons.add(switchButton);
 		}
@@ -73,9 +73,9 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		this.pack();
 	}
 
-	private InventoryTextField createSwitchButton(int pageIndex)
+	private InventoryTextField<Item> createSwitchButton(int pageIndex)
 	{
-		InventoryTextField switchButton = new InventoryTextField(String.valueOf(pageIndex + 1));
+		InventoryTextField<Item> switchButton = new InventoryTextField<>(String.valueOf(pageIndex + 1));
 		switchButton.setTextShiftX(-4);
 		switchButton.setTextShiftY(6);
 		switchButton.addListener(new ClickListener()
@@ -99,7 +99,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	private void switchButtonClicked(int pageIndex)
 	{
-		for (InventoryTextField button : switchPageButtons)
+		for (InventoryTextField<Item> button : switchPageButtons)
 			button.setColor(1, 1, 1, 1);
 
 		switchPageButtons.get(pageIndex).setColor(0.5f, 0.5f, 0.5f, 1);
@@ -267,6 +267,17 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		for(InventoryPage inventoryPage : inventoryPages)
 			itemCounter += inventoryPage.countItems(itemIdentifier);
 		return itemCounter;
+	}
+
+	public Item searchForItem(String itemIdentifier)
+	{
+		for(InventoryPage inventoryPage : inventoryPages)
+		{
+			Item item = inventoryPage.searchForItem(itemIdentifier);
+			if(item != null)
+				return item;
+		}
+		return null;
 	}
 
 }

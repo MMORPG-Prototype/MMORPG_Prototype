@@ -19,6 +19,7 @@ import pl.mmorpg.prototype.client.items.DraggableItem;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
+import pl.mmorpg.prototype.client.items.QuickAccesIcon;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
@@ -224,7 +225,7 @@ public class UserInterface
 			inventoryDialog.addItem(newItem, position);
 	}
 
-	public void quickAccesButtonClicked(InventoryField<Item> field)
+	public void quickAccesButtonClicked(InventoryField<QuickAccesIcon> field)
 	{
 		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field);
 	}
@@ -268,8 +269,9 @@ public class UserInterface
 	{
 		Item usedItem = (Item) inventoryDialog.useItem(itemId);
 
-		if (usedItem.shouldBeRemoved() && quickAccessDialog.hasItem(usedItem))
-			quickAccessDialog.removeItem(usedItem);
+		//TODO
+		//if (usedItem.shouldBeRemoved() && quickAccessDialog.hasItem(usedItem))
+			//quickAccessDialog.removeItem(usedItem);
 
 	}
 
@@ -364,6 +366,11 @@ public class UserInterface
 	public void swapItemsInInventory(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
 	{
 		inventoryDialog.swapItems(firstPosition, secondPosition);
+	}
+
+	public Item searchForItem(String itemIdentifier)
+	{
+		return inventoryDialog.searchForItem(itemIdentifier);
 	}
 
 }
