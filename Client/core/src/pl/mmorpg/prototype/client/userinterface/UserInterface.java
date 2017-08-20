@@ -34,7 +34,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemInventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -164,7 +164,7 @@ public class UserInterface
 		return stage;
 	}
 
-	public void inventoryFieldClicked(ItemInventoryField inventoryField, ItemInventoryPosition cellPosition)
+	public void inventoryFieldClicked(InventoryField<Item> inventoryField, ItemInventoryPosition cellPosition)
 	{
 		if (mousePointerToItem.item == null && inventoryField.hasItem())
 			mousePointerToItem.item = (DraggableItem)inventoryField.getItem();
@@ -224,7 +224,7 @@ public class UserInterface
 			inventoryDialog.addItem(newItem, position);
 	}
 
-	public void quickAccesButtonClicked(ItemInventoryField field)
+	public void quickAccesButtonClicked(InventoryField<Item> field)
 	{
 		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field);
 	}

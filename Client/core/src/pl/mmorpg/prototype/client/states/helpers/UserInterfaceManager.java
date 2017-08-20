@@ -4,13 +4,13 @@ import pl.mmorpg.prototype.client.items.DraggableItem;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.userinterface.ItemSources;
 import pl.mmorpg.prototype.client.userinterface.MousePointerToItem;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemInventoryField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 
 public class UserInterfaceManager
 {
 
 	public static MousePointerToItem quickAccessFieldClicked(MousePointerToItem mousePointerToItem,
-			ItemInventoryField quickAccessField)
+			InventoryField<Item> quickAccessField)
 	{
 		if (mousePointerToItem.item != null && !quickAccessField.hasItem())
 		{
