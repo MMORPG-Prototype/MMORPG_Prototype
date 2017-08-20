@@ -468,4 +468,9 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		userInterface.repositionItemInInventory(sourcePosition, destinationPosition);
 	}
 
+	public void swapItemsInInventory(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
+	{
+		userInterface.swapItemsInInventory(firstPosition, secondPosition);
+	}
+
 }

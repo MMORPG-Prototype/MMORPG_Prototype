@@ -75,7 +75,7 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 	}
 
 	@Override
-	public Item getItemByPosition(InventoryPosition position)
+	public Item getItem(InventoryPosition position)
 	{
 		//Linear search, may need to improve
 		return getItems().stream()
@@ -86,7 +86,7 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 	@Override
 	public boolean hasItemInPosition(InventoryPosition position)
 	{
-		return getItemByPosition(position) != null;
+		return getItem(position) != null;
 	}
 	
 }

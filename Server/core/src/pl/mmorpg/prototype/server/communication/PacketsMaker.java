@@ -9,6 +9,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemSwapPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
@@ -327,6 +328,22 @@ public class PacketsMaker
 		packet.setDestinationPageNumber(destinationPosition.getInventoryPageNumber());
 		packet.setDestinationPageX(destinationPosition.getInventoryX());
 		packet.setDestinationPageY(destinationPosition.getInventoryY());
+		
+		return packet;
+	}
+
+	public static InventoryItemSwapPacket makeInventoryItemSwapPacket(InventoryPosition firstPosition,
+			InventoryPosition secondPosition)
+	{
+		InventoryItemSwapPacket packet = new InventoryItemSwapPacket();
+		
+		packet.setFirstPositionPageNumber(firstPosition.getInventoryPageNumber());
+		packet.setFirstPositionPageX(firstPosition.getInventoryX());
+		packet.setFirstPositionPageY(firstPosition.getInventoryY());
+		
+		packet.setSecondPositionPageNumber(secondPosition.getInventoryPageNumber());
+		packet.setSecondPositionPageX(secondPosition.getInventoryX());
+		packet.setSecondPositionPageY(secondPosition.getInventoryY());
 		
 		return packet;
 	}

@@ -34,18 +34,25 @@ public class InventoryItemRepositionRequestPacketHandler extends PacketHandlerBa
 	{
 		int characterId = PacketHandlingHelper.getCharacterIdByConnectionId(connection.getID(), loggedUsersKeyUserId,
 				authenticatedClientsKeyClientId);
-		InventoryRepositionableItemsOwner playerCharacter = (InventoryRepositionableItemsOwner)playState.getObject(characterId);
+		InventoryRepositionableItemsOwner playerCharacter = (InventoryRepositionableItemsOwner) playState
+				.getObject(characterId);
 		Item item = playerCharacter.getItem(packet.getTargetItemId());
-		InventoryPosition desiredPosition = new InventoryPosition(packet.getInventoryPageNumber(), packet.getInventoryPageX(), packet.getInventoryPageY());
-		if(!playerCharacter.hasItemInPosition(desiredPosition))
+		InventoryPosition desiredPosition = new InventoryPosition(packet.getInventoryPageNumber(),
+				packet.getInventoryPageX(), packet.getInventoryPageY());
+		InventoryPosition sourcePosition = item.getInventoryPosition();
+		Item itemInDestinationPosition = playerCharacter.getItem(desiredPosition);
+		if (itemInDestinationPosition == null)
 		{
-			connection.sendTCP(PacketsMaker.makeInventoryItemRepositionPacket(item.getInventoryPosition(), desiredPosition));
+			connection.sendTCP(
+					PacketsMaker.makeInventoryItemRepositionPacket(sourcePosition, desiredPosition));
+			item.setInventoryPosition(desiredPosition);
+		} else
+		{
+			connection.sendTCP(PacketsMaker.makeInventoryItemSwapPacket(sourcePosition, desiredPosition));
+			itemInDestinationPosition.setInventoryPosition(sourcePosition);;
 			item.setInventoryPosition(desiredPosition);
 		}
-		else
-			connection.sendTCP(PacketsMaker.makeUnacceptableOperationPacket("Not implemented yet"));
-			
-		
+
 	}
 
 }

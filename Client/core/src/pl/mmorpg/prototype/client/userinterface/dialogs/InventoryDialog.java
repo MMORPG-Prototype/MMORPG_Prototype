@@ -251,4 +251,14 @@ public class InventoryDialog extends Dialog
 		destinationField.put(new ItemReference(targetItem));
 	}
 
+	public void swapItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
+	{
+		InventoryField firstField = getField(firstPosition);
+		InventoryField secondField = getField(secondPosition);
+		Item firstItem = firstField.getItem();
+		Item secondItem = secondField.getItem();
+		firstField.put(new ItemReference(secondItem));
+		secondField.put(new ItemReference(firstItem));
+	}
+
 }

@@ -5,7 +5,7 @@ import pl.mmorpg.prototype.server.objects.items.Item;
 
 public interface InventoryRepositionableItemsOwner extends ItemsOwner
 {
-	Item getItemByPosition(InventoryPosition position);
+	Item getItem(InventoryPosition position);
 	
 	boolean hasItemInPosition(InventoryPosition position);
 }

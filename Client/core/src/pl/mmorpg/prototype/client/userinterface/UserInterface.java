@@ -18,7 +18,6 @@ import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
-import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
@@ -167,22 +166,38 @@ public class UserInterface
 	public void inventoryFieldClicked(InventoryField inventoryField, ItemInventoryPosition cellPosition)
 	{
 		if (mousePointerToItem.item == null && inventoryField.hasItem())
-		{
 			mousePointerToItem.item = inventoryField.getItem();
-		} else if (mousePointerToItem.item != null && inventoryField.hasItem())
-		{
-			Item newMouseItem = inventoryField.getItem();
-			inventoryField.put(new ItemReference(mousePointerToItem.item));
-			mousePointerToItem.item = newMouseItem;
-		} else if (mousePointerToItem.item != null && !inventoryField.hasItem())
+		else if (mousePointerToItem.item != null)
 		{
 			InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
 					.makeInventoryItemRepositionRequestPacket(mousePointerToItem.item.getId(), cellPosition);
 			((PacketsSender) linkedState).send(inventoryItemRepositionRequestPacket);
 			mousePointerToItem.item = null;
-		}
-		if (mousePointerToItem.item != null)
 			mousePointerToItem.itemSource = ItemSources.INVENTORY;
+		}
+
+		// if (mousePointerToItem.item == null && inventoryField.hasItem())
+		// {
+		// mousePointerToItem.item = inventoryField.getItem();
+		// } else if (mousePointerToItem.item != null &&
+		// inventoryField.hasItem())
+		// {
+		// Item newMouseItem = inventoryField.getItem();
+		// inventoryField.put(new ItemReference(mousePointerToItem.item));
+		// mousePointerToItem.item = newMouseItem;
+		// } else if (mousePointerToItem.item != null &&
+		// !inventoryField.hasItem())
+		// {
+		// InventoryItemRepositionRequestPacket
+		// inventoryItemRepositionRequestPacket = PacketsMaker
+		// .makeInventoryItemRepositionRequestPacket(mousePointerToItem.item.getId(),
+		// cellPosition);
+		// ((PacketsSender)
+		// linkedState).send(inventoryItemRepositionRequestPacket);
+		// mousePointerToItem.item = null;
+		// }
+		// if (mousePointerToItem.item != null)
+		// mousePointerToItem.itemSource = ItemSources.INVENTORY;
 	}
 
 	public void userWantsToDisconnect()
@@ -344,6 +359,11 @@ public class UserInterface
 			ItemInventoryPosition destinationPosition)
 	{
 		inventoryDialog.repositionItem(sourcePosition, destinationPosition);
+	}
+
+	public void swapItemsInInventory(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
+	{
+		inventoryDialog.swapItems(firstPosition, secondPosition);
 	}
 
 }
