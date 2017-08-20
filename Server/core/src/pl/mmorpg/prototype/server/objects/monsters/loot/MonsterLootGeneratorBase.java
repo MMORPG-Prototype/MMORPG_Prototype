@@ -49,7 +49,8 @@ public abstract class MonsterLootGeneratorBase implements MonsterLootGenerator
 	private Item convertToItem(ItemLootInfo itemLoot)
 	{
 		int numberOfItems = randomValueIn(itemLoot.getItemNumberRange());
-		Item newItem = GameItemsFactory.produce(itemLoot.getItemIdentifier(), numberOfItems, IdSupplier.getId());
+		//Warning, that null not sure
+		Item newItem = GameItemsFactory.produce(itemLoot.getItemIdentifier(), numberOfItems, IdSupplier.getId(), null);
 		return newItem;
 	}
 

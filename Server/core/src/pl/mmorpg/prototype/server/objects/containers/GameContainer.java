@@ -21,7 +21,7 @@ public class GameContainer implements Identifiable
 		this.id = id;
 		for (Item item : items)
 			this.items.put(item.getId(), item);
-		this.goldAmount = goldAmount;
+		this.goldAmount = goldAmount; 
 	}
 	
 	@Override

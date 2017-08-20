@@ -3,11 +3,14 @@ package pl.mmorpg.prototype.server.objects;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.PlayerPropertiesBuilder;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.server.objects.items.Item;
+import pl.mmorpg.prototype.server.objects.monsters.InventoryRepositionableItemsOwner;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
-public class PlayerCharacter extends Monster
+public class PlayerCharacter extends Monster implements InventoryRepositionableItemsOwner
 {
     private UserCharacter userCharacter;
 
@@ -69,6 +72,21 @@ public class PlayerCharacter extends Monster
 	{
 		getProperties().gold = gold;
 		userCharacter.setGold(gold);
+	}
+
+	@Override
+	public Item getItem(InventoryPosition position)
+	{
+		//Linear search, may need to improve
+		return getItems().stream()
+				.filter( item -> item.getInventoryPosition().equals(position))
+				.findAny().orElse(null);
+	}
+
+	@Override
+	public boolean hasItemInPosition(InventoryPosition position)
+	{
+		return getItem(position) != null;
 	}
 	
 }

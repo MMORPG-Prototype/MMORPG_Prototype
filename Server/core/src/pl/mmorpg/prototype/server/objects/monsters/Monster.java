@@ -18,6 +18,7 @@ import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.exceptions.CannotUseThisItemException;
 import pl.mmorpg.prototype.server.exceptions.CharacterDoesntHaveItemException;
 import pl.mmorpg.prototype.server.exceptions.NoSuchItemToRemoveException;
+import pl.mmorpg.prototype.server.exceptions.NoSuchItemToRetrieveException;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.objects.effects.Effect;
 import pl.mmorpg.prototype.server.objects.items.Item;
@@ -32,9 +33,9 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 	private static final float RELEASE_TARGET_DISTANCE = 400.0f;
 	private static final BitmapFont font = Assets.getFont();
 	
-	private Map<Long, Item> items = new ConcurrentHashMap<>();
-    private List<Ability> abilities = new LinkedList<>();
-    private Map<Class<? extends Effect>, Effect> ongoingEffects = new ConcurrentHashMap<>();
+	private final Map<Long, Item> items = new ConcurrentHashMap<>();
+    private final List<Ability> abilities = new LinkedList<>();
+    private final Map<Class<? extends Effect>, Effect> ongoingEffects = new ConcurrentHashMap<>();
 
     protected final MonsterProperties properties;
     private Monster targetedMonster = null;
@@ -242,6 +243,15 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     {
         return items.values();
     }
+    
+	@Override
+	public Item getItem(long itemId)
+	{
+		Item result = items.get(itemId);
+		if(result == null)
+			throw new NoSuchItemToRetrieveException(itemId);
+		return result;
+	}
     
     @Override
     public void removeItem(long id)

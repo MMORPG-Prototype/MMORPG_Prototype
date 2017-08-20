@@ -10,8 +10,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.reflections.Reflections;
 
-
-
 public class HibernateUtil
 {
 	private static SessionFactory sessionFactory = null;
@@ -33,6 +31,13 @@ public class HibernateUtil
 			System.err.println("Initial SessionFactory creation failed." + ex);
 			throw new ExceptionInInitializerError(ex);
 		}
+	}
+	
+	public static void recreateDatabase()
+	{
+		Configuration config = new Configuration().configure("hibernateRectreateDatabase.cfg.xml");
+		registerEntityTypes(config);
+		config.buildSessionFactory().openSession().close();
 	}
 
 	private static void registerEntityTypes(Configuration config)

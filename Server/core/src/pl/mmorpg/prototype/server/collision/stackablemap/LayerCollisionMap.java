@@ -26,6 +26,7 @@ public class LayerCollisionMap<T extends StackableCollisionObject> implements St
 		collisionMap = createCollisionMap(width, height); 
 	}
 
+	@SuppressWarnings("unchecked")
 	private CollisionObjectsContainer<T>[][] createCollisionMap(int width, int height)
 	{  
 		CollisionObjectsContainer<T>[][] collisionMap = new ObjectsContainer[width][];

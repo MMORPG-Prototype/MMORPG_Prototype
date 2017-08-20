@@ -9,7 +9,7 @@ public class ShopItemWrapper
 
 	public ShopItemWrapper(Item item, int price)
 	{
-		this.item = item;
+		this.item = item; 
 		this.price = price;
 	}
 

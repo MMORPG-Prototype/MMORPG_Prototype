@@ -11,14 +11,7 @@
 			com.mysql.cj.jdbc.Driver
 		</property>
 
-		<property name="hibernate.c3p0.min_size">5</property>
-		<property name="hibernate.c3p0.max_size">20</property>
-		<property name="hibernate.c3p0.timeout">300</property>
-		<property name="hibernate.c3p0.max_statements">50</property>
-		<property name="hibernate.c3p0.idle_test_period">3000</property>
-		<property name="hibernate.c3p0.au">3000</property>
-		<property name="hibernate.jdbc.lob.non_contextual_creation">true</property>
-
+		<!-- Assume test is the database name -->
 		<property name="hibernate.connection.url">
 			jdbc:mysql://localhost:3306/mmorpgprototype?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC
 		</property>
@@ -31,8 +24,8 @@
 
 		<!-- Echo all executed SQL to stdout -->
 		<property name="show_sql">true</property>
-
-		<property name="hbm2ddl.auto">update</property>
-
+		
+		<property name="hbm2ddl.auto">create</property>
+		
 	</session-factory>
 </hibernate-configuration>

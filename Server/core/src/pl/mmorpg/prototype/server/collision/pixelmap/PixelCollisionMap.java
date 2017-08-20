@@ -7,6 +7,7 @@ import pl.mmorpg.prototype.server.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.server.collision.interfaces.RectangleCollisionObject;
 import pl.mmorpg.prototype.server.resources.Assets;
 
+@SuppressWarnings("unchecked")
 public class PixelCollisionMap<T extends RectangleCollisionObject> implements CollisionMap<T>
 {
     private Object[][] collisionMap;

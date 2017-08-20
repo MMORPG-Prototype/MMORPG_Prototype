@@ -9,6 +9,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFrom
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.User;
+import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.objects.items.Item;
@@ -40,10 +41,10 @@ public class TakeItemFromContainerPacketHandler extends PacketHandlerBase<TakeIt
 		GameContainer container = playState.getContainer(packet.getContainerId());
 		Item item = container.removeItem(packet.getItemId());
 		server.sendToAllTCP(PacketsMaker.makeContainerItemRemovalPacket(packet.getContainerId(), packet.getItemId()));
+		InventoryPosition desiredPosition = new InventoryPosition(packet.getDesiredInventoryPage(), packet.getDesiredInventoryX(), packet.getDesiredInventoryY());
+		item.setInventoryPosition(desiredPosition);		
 		player.addItem(item);
 		connection.sendTCP(PacketsMaker.makeItemPacket(item));
-		
-		
 	}
 
 }

@@ -10,4 +10,7 @@ public class CharacterItemDataPacket
     private long id;
     private String identifier;
     private int count;
+    private int inventoryPageNumber;
+    private int inventoryX;
+    private int inventoryY;
 }

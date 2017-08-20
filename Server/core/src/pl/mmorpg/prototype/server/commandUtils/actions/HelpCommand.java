@@ -1,6 +1,8 @@
 package pl.mmorpg.prototype.server.commandUtils.actions;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.TreeSet;
 
 public class HelpCommand implements CommandAction
 {
@@ -14,8 +16,22 @@ public class HelpCommand implements CommandAction
 	@Override
 	public void run(String args)
 	{
-		for(CommandAction command : commands.values())
-			System.out.println(String.format("%20s\t\t%s ", command.getName(), command.getDescription()));
+		Collection<String> names = new TreeSet<String>(commands.keySet());
+		for(String commandName : names)
+		{
+			String formatedName = formatName(commandName);
+			CommandAction command = commands.get(commandName);
+			System.out.println("\t" + formatedName + command.getDescription());
+		}
+	}
+
+	private String formatName(String commandName)
+	{
+		StringBuilder strBuilder = new StringBuilder(commandName);
+		while(strBuilder.length() < 25)
+			strBuilder.append(' ');
+		String formatedName = strBuilder.toString();
+		return formatedName;
 	}
 
 

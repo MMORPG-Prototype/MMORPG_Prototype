@@ -33,7 +33,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
             PlayState playState)
     {
         this.loggedUsersKeyUserId = loggedUsersKeyUserId;
-        this.server = server;
+        this.server = server; 
         this.playState = playState;
     }
 

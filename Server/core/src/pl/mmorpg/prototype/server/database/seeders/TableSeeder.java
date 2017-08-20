@@ -6,15 +6,10 @@ import pl.mmorpg.prototype.server.database.HibernateUtil;
 
 public abstract class TableSeeder
 {
-	private Collection<Object> recordsToSeed;
-
-	public TableSeeder()
-	{
-		recordsToSeed = getRecords();
-	}
 
 	public void seed()
 	{
+		Collection<Object> recordsToSeed = getRecords();
 		HibernateUtil.makeOperation((session) ->
 		{
 			for (Object record : recordsToSeed)

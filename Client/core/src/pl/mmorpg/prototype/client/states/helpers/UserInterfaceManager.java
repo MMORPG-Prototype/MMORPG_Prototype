@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.client.states.helpers;
 
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.userinterface.ItemSources;
 import pl.mmorpg.prototype.client.userinterface.MousePointerToItem;
@@ -11,12 +12,11 @@ public class UserInterfaceManager
 {
 
 	public static MousePointerToItem inventoryFieldClicked(MousePointerToItem mousePointerToItem,
-			InventoryField inventoryField, InventoryDialog inventory)
+			InventoryField inventoryField, InventoryDialog inventory, ItemInventoryPosition inventoryFieldPosition)
 	{
 		if (mousePointerToItem.item == null && inventoryField.hasItem())
 		{
 			mousePointerToItem.item = inventoryField.getItem();
-			inventoryField.removeItem();
 		} else if (mousePointerToItem.item != null && inventoryField.hasItem())
 		{
 			Item newMouseItem = inventoryField.getItem();
@@ -25,8 +25,9 @@ public class UserInterfaceManager
 		} else if (mousePointerToItem.item != null && !inventoryField.hasItem())
 		{
 			inventory.removeIfHas(mousePointerToItem.item);
-			inventoryField.put(new ItemReference(mousePointerToItem.item));
-			mousePointerToItem.item = null;
+//			inventoryField.put(new ItemReference(mousePointerToItem.item));
+//			mousePointerToItem.item = null;
+			
 		}
 		if (mousePointerToItem.item != null)
 			mousePointerToItem.itemSource = ItemSources.INVENTORY;
