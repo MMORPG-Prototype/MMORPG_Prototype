@@ -7,12 +7,12 @@ import java.util.List;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchFieldException;
-import pl.mmorpg.prototype.client.exceptions.NoSuchInventoryFieldInPosition;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemReference;
@@ -46,11 +46,12 @@ public class InventoryDialog extends Dialog
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 
 		for (int i = 0; i < numberOfPages; i++)
-			inventoryPages.add(new InventoryPage(this));
+			inventoryPages.add(new InventoryPage(this, i));
 		currentPageButtons.addActor(inventoryPages.get(0));
 		addActor(currentPageButtons);
 
-		this.getContentTable().add(currentPageButtons);
+		Table contentTable = this.getContentTable();
+		contentTable.add(currentPageButtons);
 		VerticalGroup switchButtons = new VerticalGroup().space(0).pad(0).top().padTop(-8).fill();
 
 		for (int i = 0; i < numberOfPages; i++)
@@ -61,12 +62,12 @@ public class InventoryDialog extends Dialog
 		}
 		switchPageButtons.get(0).setColor(0.5f, 0.5f, 0.5f, 1);
 
-		this.getContentTable().add(switchButtons);
-		this.getContentTable().row();
+		contentTable.add(switchButtons);
+		contentTable.row();
 		goldLabel.setValue(linkedFieldGold);
 		goldLabel.update();
-		this.getContentTable().add(goldLabel).left();
-		this.getContentTable().row();
+		contentTable.add(goldLabel).left();
+		contentTable.row();
 
 		this.setX(1230);
 		this.setY(43);
@@ -80,22 +81,21 @@ public class InventoryDialog extends Dialog
 		switchButton.setTextShiftY(6);
 		switchButton.addListener(new ClickListener()
 		{
-
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
 				switchButtonClicked(pageIndex);
 			}
-
 		});
 		return switchButton;
 	}
 
-	public void buttonClicked(InventoryField field)
+	public void buttonClicked(ItemInventoryPosition cellPosition)
 	{
+		InventoryField field = getField(cellPosition);
 		if (field.hasItem())
 			lastFieldWithItemClicked = field;
-		linkedInterface.inventoryFieldClicked(field);
+		linkedInterface.inventoryFieldClicked(field, cellPosition);
 	}
 
 	private void switchButtonClicked(int pageIndex)
@@ -107,14 +107,6 @@ public class InventoryDialog extends Dialog
 		currentPageButtons.clear();
 		currentPageButtons.addActor(inventoryPages.get(pageIndex));
 		currentPageIndex = pageIndex;
-	}
-
-	public void put(Item item, Point position)
-	{
-		InventoryField field = inventoryPages.get(currentPageIndex).getField(position);
-		if (field == null)
-			throw new NoSuchInventoryFieldInPosition(position);
-		field.put(new ItemReference(item));
 	}
 
 	public Item getItem(Point position)
@@ -141,9 +133,9 @@ public class InventoryDialog extends Dialog
 		addItem((Item) item);
 	}
 
-	private InventoryField getField(ItemInventoryPosition freeFieldPosition)
+	private InventoryField getField(ItemInventoryPosition fieldPosition)
 	{
-		return inventoryPages.get(freeFieldPosition.getPageNumber()).getField(new Point(freeFieldPosition.getPosition().x, freeFieldPosition.getPosition().y));
+		return inventoryPages.get(fieldPosition.getPageNumber()).getField(new Point(fieldPosition.getPosition().x, fieldPosition.getPosition().y));
 	}
 
 	public void addItem(Item item)
@@ -205,7 +197,7 @@ public class InventoryDialog extends Dialog
 			for(int i=0; i<currentPage.getInventoryFieldsHeightNumber(); i++)
 				for(int j=0; j<currentPage.getInventoryFieldsWidthNumber(); j++)
 				{
-					Point fieldPosition = new Point(i, j);
+					Point fieldPosition = new Point(j, i);
 					InventoryField field = currentPage.getField(fieldPosition);
 					if(!field.hasItem())
 						return new ItemInventoryPosition(pageNumber, fieldPosition);
@@ -214,7 +206,7 @@ public class InventoryDialog extends Dialog
 		throw new NoFreeFieldException();
 	}
 
-	public ItemInventoryPosition getDesiredItemPosition(Item item)
+	public ItemInventoryPosition getDesiredItemPositionFor(Item item)
 	{
 		if(item instanceof StackableItem)
 			return getFieldWithSuiteTypeStackableItemFor(item);
@@ -248,6 +240,15 @@ public class InventoryDialog extends Dialog
 					return new ItemInventoryPosition(0, fieldPosition);
 			}
 		throw new NoSuchFieldException();
+	}
+
+	public void repositionItem(ItemInventoryPosition sourcePosition, ItemInventoryPosition destinationPosition)
+	{
+		InventoryField sourceField = getField(sourcePosition);
+		InventoryField destinationField = getField(destinationPosition);
+		Item targetItem = sourceField.getItem();
+		sourceField.removeItem();
+		destinationField.put(new ItemReference(targetItem));
 	}
 
 }

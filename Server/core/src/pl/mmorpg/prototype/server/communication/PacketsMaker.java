@@ -8,6 +8,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
@@ -125,11 +126,11 @@ public class PacketsMaker
 	}
 
 	public static CharacterItemDataPacket makeItemPacket(Item item)
-    {
+	{
 		InventoryPosition inventoryPosition = item.getInventoryPosition();
-        return makeItemPacket(item, inventoryPosition.getInventoryPageNumber(), 
-        		inventoryPosition.getInventoryX(), inventoryPosition.getInventoryY());
-    }
+		return makeItemPacket(item, inventoryPosition.getInventoryPageNumber(), inventoryPosition.getInventoryX(),
+				inventoryPosition.getInventoryY());
+	}
 
 	private static CharacterItemDataPacket makeItemPacket(Item item, int inventoryPage, int inventoryX, int inventoryY)
 	{
@@ -311,6 +312,22 @@ public class PacketsMaker
 	{
 		ScriptExecutionErrorPacket packet = new ScriptExecutionErrorPacket();
 		packet.setError(error);
+		return packet;
+	}
+
+	public static InventoryItemRepositionPacket makeInventoryItemRepositionPacket(InventoryPosition sourcePosition,
+			InventoryPosition destinationPosition)
+	{
+		InventoryItemRepositionPacket packet = new InventoryItemRepositionPacket();
+		
+		packet.setSourcePageNumber(sourcePosition.getInventoryPageNumber());
+		packet.setSourcePageX(sourcePosition.getInventoryX());
+		packet.setSourcePageY(sourcePosition.getInventoryY());
+		
+		packet.setDestinationPageNumber(destinationPosition.getInventoryPageNumber());
+		packet.setDestinationPageX(destinationPosition.getInventoryX());
+		packet.setDestinationPageY(destinationPosition.getInventoryY());
+		
 		return packet;
 	}
 

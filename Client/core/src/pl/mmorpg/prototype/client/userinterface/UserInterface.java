@@ -18,6 +18,7 @@ import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
+import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
@@ -38,6 +39,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 
 public class UserInterface
 {
@@ -46,7 +48,7 @@ public class UserInterface
 	private final MenuDialog menuDialog;
 	private final InventoryDialog inventoryDialog;
 	private final StatisticsDialog statisticsDialog;
-	private final ShortcutBarPane standardBarDialog; 
+	private final ShortcutBarPane standardBarDialog;
 	private final HitPointManaPointPane hpMpDialog;
 	private final QuickAccessDialog quickAccessDialog;
 	private final EquipmentDialog equipmentDialog;
@@ -71,7 +73,7 @@ public class UserInterface
 		chatDialog = new ChatDialog(this);
 		consoleDialog = new ConsoleDialog(this);
 		mapDialogsWithKeys();
-		addOtherDialogs(); 
+		addOtherDialogs();
 		showDialogs();
 		dialogs.hideKeyMappedDialogs();
 
@@ -162,10 +164,25 @@ public class UserInterface
 		return stage;
 	}
 
-	public void inventoryFieldClicked(InventoryField inventoryField)
+	public void inventoryFieldClicked(InventoryField inventoryField, ItemInventoryPosition cellPosition)
 	{
-		mousePointerToItem = UserInterfaceManager.inventoryFieldClicked(mousePointerToItem, inventoryField,
-				inventoryDialog);
+		if (mousePointerToItem.item == null && inventoryField.hasItem())
+		{
+			mousePointerToItem.item = inventoryField.getItem();
+		} else if (mousePointerToItem.item != null && inventoryField.hasItem())
+		{
+			Item newMouseItem = inventoryField.getItem();
+			inventoryField.put(new ItemReference(mousePointerToItem.item));
+			mousePointerToItem.item = newMouseItem;
+		} else if (mousePointerToItem.item != null && !inventoryField.hasItem())
+		{
+			InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
+					.makeInventoryItemRepositionRequestPacket(mousePointerToItem.item.getId(), cellPosition);
+			((PacketsSender) linkedState).send(inventoryItemRepositionRequestPacket);
+			mousePointerToItem.item = null;
+		}
+		if (mousePointerToItem.item != null)
+			mousePointerToItem.itemSource = ItemSources.INVENTORY;
 	}
 
 	public void userWantsToDisconnect()
@@ -182,11 +199,11 @@ public class UserInterface
 	{
 		linkedState.userWantsToChangeCharacter();
 	}
-	
+
 	public void addItemToInventory(Item newItem, ItemInventoryPosition position)
 	{
-		if(newItem instanceof StackableItem)
-			inventoryDialog.addItem((StackableItem)newItem, position);
+		if (newItem instanceof StackableItem)
+			inventoryDialog.addItem((StackableItem) newItem, position);
 		else
 			inventoryDialog.addItem(newItem, position);
 	}
@@ -241,7 +258,7 @@ public class UserInterface
 
 	}
 
-	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold,  long containerId)
+	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold, long containerId)
 	{
 		if (!dialogs.hasIdentifiableDialog(containerId))
 			Gdx.app.postRunnable(() -> createAndOpenContainerDialog(contentItems, gold, containerId));
@@ -249,7 +266,7 @@ public class UserInterface
 
 	private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, int gold, long containerId)
 	{
-		ItemPositionSupplier desiredItemPositionSupplier = inventoryDialog::getDesiredItemPosition; 
+		ItemPositionSupplier desiredItemPositionSupplier = inventoryDialog::getDesiredItemPositionFor;
 		Dialog containerDialog = new OpenContainerDialog(contentItems, gold, "Container", dialogs,
 				(PacketsSender) linkedState, containerId, desiredItemPositionSupplier);
 		positionDialogNearMouse(containerDialog);
@@ -265,12 +282,12 @@ public class UserInterface
 
 	public void removeContainerItem(long containerId, long itemId)
 	{
-		if(dialogs.hasIdentifiableDialog(containerId))
+		if (dialogs.hasIdentifiableDialog(containerId))
 		{
 			OpenContainerDialog dialog = dialogs.getIdentifiableDialog(containerId);
 			dialog.removeItem(itemId);
 		}
-		
+
 	}
 
 	public void showTimedErrorMessage(String errorMessage, float timeout)
@@ -279,7 +296,7 @@ public class UserInterface
 		label.setColor(Color.RED);
 		label.setX(960);
 		label.setY(55);
-		
+
 		stage.addActor(label);
 	}
 
@@ -287,24 +304,24 @@ public class UserInterface
 	{
 		if (dialogs.hasIdentifiableDialog(containerId))
 		{
-			OpenContainerDialog containerDialog = (OpenContainerDialog)dialogs.getIdentifiableDialog(containerId);
+			OpenContainerDialog containerDialog = (OpenContainerDialog) dialogs.getIdentifiableDialog(containerId);
 			containerDialog.updateGoldByDecreasingBy(goldAmount);
 		}
-		
+
 	}
 
 	public void updateGoldAmountInInventory(int goldAmount)
 	{
-		InventoryDialog inventory = (InventoryDialog)dialogs.searchForDialog(InventoryDialog.class);
+		InventoryDialog inventory = (InventoryDialog) dialogs.searchForDialog(InventoryDialog.class);
 		inventory.updateGoldValue(goldAmount);
 	}
-
 
 	public void openShopDialog(ShopItem[] shopItems, long shopId)
 	{
 		if (!dialogs.hasIdentifiableDialog(shopId))
 		{
-			ShopDialog shop = new ShopDialog("Shop", shopId, shopItems, popUpInfoStage, this, (PacketsSender)linkedState);
+			ShopDialog shop = new ShopDialog("Shop", shopId, shopItems, popUpInfoStage, this,
+					(PacketsSender) linkedState);
 			shop.setPosition(0, 100);
 			shop.pack();
 			dialogs.add(shop);
@@ -313,7 +330,7 @@ public class UserInterface
 	}
 
 	public void addDialog(Dialog dialog)
-	{	
+	{
 		dialogs.add(dialog);
 		stage.addActor(dialog);
 	}
@@ -323,5 +340,10 @@ public class UserInterface
 		linkedState.send(PacketsMaker.makeScriptCodePacket(command));
 	}
 
+	public void repositionItemInInventory(ItemInventoryPosition sourcePosition,
+			ItemInventoryPosition destinationPosition)
+	{
+		inventoryDialog.repositionItem(sourcePosition, destinationPosition);
+	}
 
 }

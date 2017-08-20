@@ -24,6 +24,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
@@ -32,6 +33,7 @@ import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.CharacterBoardClickPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.FireballSpellUsagePacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.InventoryItemRepositionRequestPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemUsagePacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveDownPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveLeftPacketHandler;
@@ -81,7 +83,10 @@ public class PacketHandlerFactory
 				loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
 		packetHandlers.put(BuyFromShopPacket.class,
 				new BuyFromShopPacketHandler(playState, loggedUsersKeyUserId, authenticatedClientsKeyClientId));
-		packetHandlers.put(ScriptCodePacket.class, new ScriptCodePacketHandler(playState, authenticatedClientsKeyClientId));
+		packetHandlers.put(ScriptCodePacket.class,
+				new ScriptCodePacketHandler(playState, authenticatedClientsKeyClientId));
+		packetHandlers.put(InventoryItemRepositionRequestPacket.class, new InventoryItemRepositionRequestPacketHandler(
+				loggedUsersKeyUserId, authenticatedClientsKeyClientId, playState));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

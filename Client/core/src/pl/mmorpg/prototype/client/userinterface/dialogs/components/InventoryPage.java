@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
@@ -20,10 +21,10 @@ public class InventoryPage extends VerticalGroup
 	private static final int INVENTORY_FIELDS_HEIGHT_NUMBER = 5;
 	private static final int INVENTORY_FIELDS_WIDTH_NUMBER = 5;
 	
-	private Map<Point, InventoryField> inventoryFields = new HashMap<>();
-	private InventoryDialog inventoryDialog;
+	private final Map<Point, InventoryField> inventoryFields = new HashMap<>();
+	private final InventoryDialog inventoryDialog;
 
-	public InventoryPage(InventoryDialog inventoryDialog)
+	public InventoryPage(InventoryDialog inventoryDialog, int pageIndex)
 	{
 		this.inventoryDialog = inventoryDialog;
 
@@ -33,8 +34,9 @@ public class InventoryPage extends VerticalGroup
 			HorizontalGroup buttonRow = new HorizontalGroup().space(0).pad(0).fill();
 			for (int j = 0; j < INVENTORY_FIELDS_WIDTH_NUMBER; j++)
 			{
-				Point cellPosition = new Point(i, j);
-				InventoryField button = createField(cellPosition);
+				Point cellPosition = new Point(j, i);
+				ItemInventoryPosition inventoryPosition = new ItemInventoryPosition(pageIndex, cellPosition);
+				InventoryField button = createField(inventoryPosition);
 				inventoryFields.put(cellPosition, button);
 				buttonRow.addActor(button);
 			}
@@ -43,7 +45,7 @@ public class InventoryPage extends VerticalGroup
 		padBottom(8);
 	}
 
-	private InventoryField createField(Point cellPosition)
+	private InventoryField createField(ItemInventoryPosition cellPosition)
 	{
 		InventoryField button = new InventoryField();
 		button.addListener(new ClickListener()
@@ -58,9 +60,9 @@ public class InventoryPage extends VerticalGroup
 		return button;
 	}
 
-	private void buttonClicked(Point cellPosition)
+	private void buttonClicked(ItemInventoryPosition cellPosition)
 	{
-		inventoryDialog.buttonClicked(inventoryFields.get(cellPosition));
+		inventoryDialog.buttonClicked(cellPosition);
 	}
 
 	public InventoryField getField(Point point)

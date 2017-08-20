@@ -463,4 +463,9 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		console.addMessage(error);
 	}
 
+	public void repositionItemInInventory(ItemInventoryPosition sourcePosition, ItemInventoryPosition destinationPosition)
+	{
+		userInterface.repositionItemInInventory(sourcePosition, destinationPosition);
+	}
+
 }

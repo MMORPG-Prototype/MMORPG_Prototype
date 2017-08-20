@@ -14,6 +14,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionP
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
@@ -21,58 +22,59 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFr
 public class PacketsMaker
 {
 
-    public static ObjectRemovePacket makeRemovalPacket(int id)
-    {
-        return new ObjectRemovePacket(id);
-    }
+	public static ObjectRemovePacket makeRemovalPacket(int id)
+	{
+		return new ObjectRemovePacket(id);
+	}
 
-    public static ObjectRepositionPacket makeRepositionPacket(long id, float x, float y)
-    {
-        ObjectRepositionPacket packet = new ObjectRepositionPacket();
-        packet.id = id;
-        packet.x = x;
-        packet.y = y;
-        return packet;
-    }
+	public static ObjectRepositionPacket makeRepositionPacket(long id, float x, float y)
+	{
+		ObjectRepositionPacket packet = new ObjectRepositionPacket();
+		packet.id = id;
+		packet.x = x;
+		packet.y = y;
+		return packet;
+	}
 
-    public static ChatMessagePacket makeChatMessagePacket(String message)
-    {
-        ChatMessagePacket packet = new ChatMessagePacket();
-        packet.setMessage(message);
-        return packet;
-    }
+	public static ChatMessagePacket makeChatMessagePacket(String message)
+	{
+		ChatMessagePacket packet = new ChatMessagePacket();
+		packet.setMessage(message);
+		return packet;
+	}
 
-    public static BoardClickPacket makeBoardClickPacket(float x, float y)
-    {
-        BoardClickPacket packet = new BoardClickPacket();
-        packet.gameX = (int) x;
-        packet.gameY = (int) y;
-        return packet;
-    }
+	public static BoardClickPacket makeBoardClickPacket(float x, float y)
+	{
+		BoardClickPacket packet = new BoardClickPacket();
+		packet.gameX = (int) x;
+		packet.gameY = (int) y;
+		return packet;
+	}
 
-    public static <T extends Item & ItemUseable> ItemUsagePacket makeItemUsagePacket(T item, Monster target)
-    {
-        ItemUsagePacket packet = new ItemUsagePacket();
-        packet.setItemId(item.getId());
-        packet.setTargetId(target.getId());
-        return packet;
-    }
+	public static <T extends Item & ItemUseable> ItemUsagePacket makeItemUsagePacket(T item, Monster target)
+	{
+		ItemUsagePacket packet = new ItemUsagePacket();
+		packet.setItemId(item.getId());
+		packet.setTargetId(target.getId());
+		return packet;
+	}
 
-    public static FireballSpellUsagePacket makeFireballSpellUsagePacket()
-    {
-        FireballSpellUsagePacket packet = new FireballSpellUsagePacket();
-        return packet;
-    }
+	public static FireballSpellUsagePacket makeFireballSpellUsagePacket()
+	{
+		FireballSpellUsagePacket packet = new FireballSpellUsagePacket();
+		return packet;
+	}
 
 	public static OpenContainterPacket makeContainterOpeningPacket(float x, float y)
 	{
 		OpenContainterPacket packet = new OpenContainterPacket();
-		packet.gameX = (int)x;
-		packet.gameY = (int)y;
+		packet.gameX = (int) x;
+		packet.gameY = (int) y;
 		return packet;
 	}
 
-	public static TakeItemFromContainerPacket makeTakeItemFromContainerPacket(long containerId, long itemId, ItemInventoryPosition position)
+	public static TakeItemFromContainerPacket makeTakeItemFromContainerPacket(long containerId, long itemId,
+			ItemInventoryPosition position)
 	{
 		TakeItemFromContainerPacket packet = new TakeItemFromContainerPacket();
 		packet.setContainerId(containerId);
@@ -90,7 +92,7 @@ public class PacketsMaker
 		packet.setContainerId(containerId);
 		return packet;
 	}
-	
+
 	public static BuyFromShopPacket makeBuyFromShopPacket(long shopId, long itemId, int amount)
 	{
 		BuyFromShopPacket packet = new BuyFromShopPacket();
@@ -104,6 +106,17 @@ public class PacketsMaker
 	{
 		ScriptCodePacket packet = new ScriptCodePacket();
 		packet.setCode(command);
+		return packet;
+	}
+
+	public static InventoryItemRepositionRequestPacket makeInventoryItemRepositionRequestPacket(long targetItemId,
+			ItemInventoryPosition desiredPosition)
+	{
+		InventoryItemRepositionRequestPacket packet = new InventoryItemRepositionRequestPacket();
+		packet.setTargetItemId(targetItemId);
+		packet.setInventoryPageNumber(desiredPosition.getPageNumber());
+		packet.setInventoryPageX(desiredPosition.getPosition().x);
+		packet.setInventoryPageY(desiredPosition.getPosition().y);
 		return packet;
 	}
 }

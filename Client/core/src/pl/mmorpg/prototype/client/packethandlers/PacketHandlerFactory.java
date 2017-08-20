@@ -16,6 +16,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
@@ -74,6 +75,7 @@ public class PacketHandlerFactory
         packetHandlers.put(ShopItemsPacket.class, new ShopItemsPacketHandler(playState));
         packetHandlers.put(GoldAmountChangePacket.class, new GoldAmountChangePacketHandler(playState));
         packetHandlers.put(ScriptExecutionErrorPacket.class, new ScriptExecutionErrorPacketHandler(playState));
+        packetHandlers.put(InventoryItemRepositionPacket.class, new InventoryItemRepositionPacketHandler(playState));
 
         // Ignore frameowrk keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
