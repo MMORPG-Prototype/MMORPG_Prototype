@@ -4,6 +4,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
+import pl.mmorpg.prototype.server.objects.monsters.dragons.GrayDragon;
+import pl.mmorpg.prototype.server.objects.monsters.dragons.GreenDragon;
+import pl.mmorpg.prototype.server.objects.monsters.dragons.RedDragon;
 
 public class MonsterIdentifier
 {
@@ -15,6 +18,7 @@ public class MonsterIdentifier
 		monsterTypes.put(ObjectsIdentifiers.RED_DRAGON, RedDragon.class);
 		monsterTypes.put(ObjectsIdentifiers.SKELETON, Skeleton.class);
 		monsterTypes.put(ObjectsIdentifiers.SNAKE, Snake.class);
+		monsterTypes.put(ObjectsIdentifiers.GRAY_DRAGON, GrayDragon.class);
 	}
 	
 	public static Class<? extends Monster> getMonsterType(String identifier)
