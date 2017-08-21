@@ -15,7 +15,6 @@ import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchFieldException;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
-import pl.mmorpg.prototype.client.items.ItemReference;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
@@ -26,15 +25,15 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryPage
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryTextField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLabel;
 
-public class InventoryDialog extends Dialog
+public class InventoryDialog extends Dialog implements ItemCounter
 {
 	private static final int numberOfPages = 5;
 	private int currentPageIndex = 0;
 	private final List<InventoryPage> inventoryPages = new ArrayList<>(numberOfPages);
 	private final VerticalGroup currentPageButtons = new VerticalGroup();
-	private final List<InventoryTextField> switchPageButtons = new ArrayList<>(numberOfPages);
+	private final List<InventoryTextField<Item>> switchPageButtons = new ArrayList<>(numberOfPages);
 	private final UserInterface linkedInterface;
-	private InventoryField lastFieldWithItemClicked = null;
+	private InventoryField<Item> lastFieldWithItemClicked = null;
 	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
 
 	public InventoryDialog(UserInterface linkedInterface, Integer linkedFieldGold)
@@ -56,7 +55,7 @@ public class InventoryDialog extends Dialog
 
 		for (int i = 0; i < numberOfPages; i++)
 		{
-			InventoryTextField switchButton = createSwitchButton(i);
+			InventoryTextField<Item> switchButton = createSwitchButton(i);
 			switchButtons.addActor(switchButton);
 			switchPageButtons.add(switchButton);
 		}
@@ -74,9 +73,9 @@ public class InventoryDialog extends Dialog
 		this.pack();
 	}
 
-	private InventoryTextField createSwitchButton(int pageIndex)
+	private InventoryTextField<Item> createSwitchButton(int pageIndex)
 	{
-		InventoryTextField switchButton = new InventoryTextField(String.valueOf(pageIndex + 1));
+		InventoryTextField<Item> switchButton = new InventoryTextField<>(String.valueOf(pageIndex + 1));
 		switchButton.setTextShiftX(-4);
 		switchButton.setTextShiftY(6);
 		switchButton.addListener(new ClickListener()
@@ -92,15 +91,15 @@ public class InventoryDialog extends Dialog
 
 	public void buttonClicked(ItemInventoryPosition cellPosition)
 	{
-		InventoryField field = getField(cellPosition);
-		if (field.hasItem())
+		InventoryField<Item> field = getField(cellPosition);
+		if (field.hasContent())
 			lastFieldWithItemClicked = field;
 		linkedInterface.inventoryFieldClicked(field, cellPosition);
 	}
 
 	private void switchButtonClicked(int pageIndex)
 	{
-		for (InventoryTextField button : switchPageButtons)
+		for (InventoryTextField<Item> button : switchPageButtons)
 			button.setColor(1, 1, 1, 1);
 
 		switchPageButtons.get(pageIndex).setColor(0.5f, 0.5f, 0.5f, 1);
@@ -111,17 +110,17 @@ public class InventoryDialog extends Dialog
 
 	public Item getItem(Point position)
 	{
-		InventoryField field = inventoryPages.get(currentPageIndex).getField(position);
-		return field.getItem();
+		InventoryField<Item> field = inventoryPages.get(currentPageIndex).getField(position);
+		return field.getContent();
 	}
 
 	public void addItem(StackableItem item)
 	{
 		for (InventoryPage inventoryPage : inventoryPages)
 		{
-			for (InventoryField field : inventoryPage.getAllFields())
+			for (InventoryField<Item> field : inventoryPage.getAllFields())
 			{
-				Item fieldItem = field.getItem();
+				Item fieldItem = field.getContent();
 				if (fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
 				{
 					((StackableItem) fieldItem).stackWith(item);
@@ -133,21 +132,34 @@ public class InventoryDialog extends Dialog
 		addItem((Item) item);
 	}
 
-	private InventoryField getField(ItemInventoryPosition fieldPosition)
+	private InventoryField<Item> getField(ItemInventoryPosition fieldPosition)
 	{
-		return inventoryPages.get(fieldPosition.getPageNumber()).getField(new Point(fieldPosition.getPosition().x, fieldPosition.getPosition().y));
+		return inventoryPages.get(fieldPosition.getPageNumber())
+				.getField(new Point(fieldPosition.getPosition().x, fieldPosition.getPosition().y));
 	}
 
 	public void addItem(Item item)
 	{
 		ItemInventoryPosition freeFieldPosition = getFreeInventoryPosition();
-		InventoryField freeField = getField(freeFieldPosition);
-		freeField.put(new ItemReference(item));
+		InventoryField<Item> freeField = getField(freeFieldPosition);
+		freeField.put(item);
+	}
+
+	public void addItem(StackableItem newItem, ItemInventoryPosition inventoryPosition)
+	{
+		InventoryField<Item> field = getField(inventoryPosition);
+		if (field.hasContent())
+		{
+			StackableItem item = (StackableItem) field.getContent();
+			item.stackWith(newItem);
+		}
+		else
+			field.put(newItem);
 	}
 
 	public void addItem(Item newItem, ItemInventoryPosition inventoryPosition)
 	{
-		getField(inventoryPosition).put(new ItemReference(newItem));
+		getField(inventoryPosition).put(newItem);
 	}
 
 	public void updateGoldValue(int goldAmount)
@@ -167,7 +179,7 @@ public class InventoryDialog extends Dialog
 		super.setVisible(visible);
 	}
 
-	public InventoryField getLastFieldWithItemClicked()
+	public InventoryField<Item> getLastFieldWithItemClicked()
 	{
 		return lastFieldWithItemClicked;
 	}
@@ -188,18 +200,18 @@ public class InventoryDialog extends Dialog
 				return item;
 		return item;
 	}
-	
+
 	public ItemInventoryPosition getFreeInventoryPosition()
 	{
-		for(int pageNumber=0; pageNumber<inventoryPages.size(); pageNumber++)
+		for (int pageNumber = 0; pageNumber < inventoryPages.size(); pageNumber++)
 		{
 			InventoryPage currentPage = inventoryPages.get(pageNumber);
-			for(int i=0; i<currentPage.getInventoryFieldsHeightNumber(); i++)
-				for(int j=0; j<currentPage.getInventoryFieldsWidthNumber(); j++)
+			for (int i = 0; i < currentPage.getInventoryFieldsHeightNumber(); i++)
+				for (int j = 0; j < currentPage.getInventoryFieldsWidthNumber(); j++)
 				{
 					Point fieldPosition = new Point(j, i);
-					InventoryField field = currentPage.getField(fieldPosition);
-					if(!field.hasItem())
+					InventoryField<Item> field = currentPage.getField(fieldPosition);
+					if (!field.hasContent())
 						return new ItemInventoryPosition(pageNumber, fieldPosition);
 				}
 		}
@@ -208,19 +220,18 @@ public class InventoryDialog extends Dialog
 
 	public ItemInventoryPosition getDesiredItemPositionFor(Item item)
 	{
-		if(item instanceof StackableItem)
+		if (item instanceof StackableItem)
 			return getFieldWithSuiteTypeStackableItemFor(item);
 		else
 			return getFreeInventoryPosition();
 	}
-	
+
 	public ItemInventoryPosition getFieldWithSuiteTypeStackableItemFor(Item item)
 	{
 		try
 		{
 			return getFieldWithSameTypeItemOnCurrentPage(item);
-		}
-		catch(NoSuchFieldException e)
+		} catch (NoSuchFieldException e)
 		{
 			return getFreeInventoryPosition();
 		}
@@ -228,15 +239,15 @@ public class InventoryDialog extends Dialog
 
 	private ItemInventoryPosition getFieldWithSameTypeItemOnCurrentPage(Item item)
 	{
-		// May want to change code to stack with items on other pages 
+		// May want to change code to stack with items on other pages
 		InventoryPage currentPage = inventoryPages.get(0);
-		for(int i=0; i<currentPage.getInventoryFieldsHeightNumber(); i++)
-			for(int j=0; j<currentPage.getInventoryFieldsWidthNumber(); j++)
+		for (int i = 0; i < currentPage.getInventoryFieldsHeightNumber(); i++)
+			for (int j = 0; j < currentPage.getInventoryFieldsWidthNumber(); j++)
 			{
 				Point fieldPosition = new Point(i, j);
-				InventoryField field = currentPage.getField(fieldPosition);
-				Item fieldItem = field.getItem();
-				if(fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
+				InventoryField<Item> field = currentPage.getField(fieldPosition);
+				Item fieldItem = field.getContent();
+				if (fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
 					return new ItemInventoryPosition(0, fieldPosition);
 			}
 		throw new NoSuchFieldException();
@@ -244,21 +255,41 @@ public class InventoryDialog extends Dialog
 
 	public void repositionItem(ItemInventoryPosition sourcePosition, ItemInventoryPosition destinationPosition)
 	{
-		InventoryField sourceField = getField(sourcePosition);
-		InventoryField destinationField = getField(destinationPosition);
-		Item targetItem = sourceField.getItem();
-		sourceField.removeItem();
-		destinationField.put(new ItemReference(targetItem));
+		InventoryField<Item> sourceField = getField(sourcePosition);
+		InventoryField<Item> destinationField = getField(destinationPosition);
+		Item targetItem = sourceField.getContent();
+		sourceField.removeContent();
+		destinationField.put(targetItem);
 	}
 
 	public void swapItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
 	{
-		InventoryField firstField = getField(firstPosition);
-		InventoryField secondField = getField(secondPosition);
-		Item firstItem = firstField.getItem();
-		Item secondItem = secondField.getItem();
-		firstField.put(new ItemReference(secondItem));
-		secondField.put(new ItemReference(firstItem));
+		InventoryField<Item> firstField = getField(firstPosition);
+		InventoryField<Item> secondField = getField(secondPosition);
+		Item firstItem = firstField.getContent();
+		Item secondItem = secondField.getContent();
+		firstField.put(secondItem);
+		secondField.put(firstItem);
+	}
+
+	@Override
+	public int countItems(String itemIdentifier)
+	{
+		int itemCounter = 0;
+		for (InventoryPage inventoryPage : inventoryPages)
+			itemCounter += inventoryPage.countItems(itemIdentifier);
+		return itemCounter;
+	}
+
+	public Item searchForItem(String itemIdentifier)
+	{
+		for (InventoryPage inventoryPage : inventoryPages)
+		{
+			Item item = inventoryPage.searchForItem(itemIdentifier);
+			if (item != null)
+				return item;
+		}
+		return null;
 	}
 
 }

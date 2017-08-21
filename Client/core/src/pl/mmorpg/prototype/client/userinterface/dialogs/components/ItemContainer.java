@@ -1,15 +1,7 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs.components;
 
 import pl.mmorpg.prototype.client.items.Item;
-import pl.mmorpg.prototype.client.items.ItemReference;
 
-public interface ItemContainer
+public interface ItemContainer extends Container<Item>
 {
-	void put(ItemReference item);
-
-	boolean hasItem();
-
-	Item getItem();
-
-	void removeItem();
 }

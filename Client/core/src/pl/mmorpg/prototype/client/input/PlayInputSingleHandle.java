@@ -31,9 +31,16 @@ public class PlayInputSingleHandle extends InputProcessorAdapter
         else if (keycode == Keys.NUM_1)
             packetSender.send(PacketsMaker.makeFireballSpellUsagePacket());
         else if (keycode >= Keys.F1 && keycode <= Keys.F12)
-            quickAccesDialog.useButtonItem(keycode - Keys.F1, player, packetSender);
+            quickAccessAction(keycode);
 
         return false;
     }
+
+	private void quickAccessAction(int keycode)
+	{
+		int cellPosition = keycode - Keys.F1;
+		if(quickAccesDialog.isFieldTaken(cellPosition))
+			quickAccesDialog.useButtonItem(cellPosition, player, packetSender);
+	}
 
 }

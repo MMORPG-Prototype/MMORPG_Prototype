@@ -15,9 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
+import pl.mmorpg.prototype.client.items.DraggableItem;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
+import pl.mmorpg.prototype.client.items.QuickAccessIcon;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
@@ -163,10 +165,10 @@ public class UserInterface
 		return stage;
 	}
 
-	public void inventoryFieldClicked(InventoryField inventoryField, ItemInventoryPosition cellPosition)
+	public void inventoryFieldClicked(InventoryField<Item> inventoryField, ItemInventoryPosition cellPosition)
 	{
-		if (mousePointerToItem.item == null && inventoryField.hasItem())
-			mousePointerToItem.item = inventoryField.getItem();
+		if (mousePointerToItem.item == null && inventoryField.hasContent())
+			mousePointerToItem.item = (DraggableItem)inventoryField.getContent();
 		else if (mousePointerToItem.item != null)
 		{
 			InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
@@ -223,9 +225,9 @@ public class UserInterface
 			inventoryDialog.addItem(newItem, position);
 	}
 
-	public void quickAccesButtonClicked(InventoryField field)
+	public void quickAccesButtonClicked(InventoryField<QuickAccessIcon> field)
 	{
-		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field);
+		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field, inventoryDialog);
 	}
 
 	public void userDistributedStatPoints()
@@ -265,11 +267,8 @@ public class UserInterface
 
 	public void itemUsed(long itemId)
 	{
-		Item usedItem = (Item) inventoryDialog.useItem(itemId);
-
-		if (usedItem.shouldBeRemoved() && quickAccessDialog.hasItem(usedItem))
-			quickAccessDialog.removeItem(usedItem);
-
+		Item item = (Item)inventoryDialog.useItem(itemId);
+		quickAccessDialog.decreaseNumberOfItems(item.getIdentifier());
 	}
 
 	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold, long containerId)
@@ -363,6 +362,23 @@ public class UserInterface
 	public void swapItemsInInventory(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
 	{
 		inventoryDialog.swapItems(firstPosition, secondPosition);
+	}
+
+	public Item searchForItem(String itemIdentifier)
+	{
+		return inventoryDialog.searchForItem(itemIdentifier);
+	}
+
+	public void increaseQuickAccessDialogNumbers(Item newItem)
+	{
+		quickAccessDialog.increaseNumbers(newItem.getIdentifier(), getItemCount(newItem));
+	}
+	
+	private int getItemCount(Item item)
+	{
+		if(item instanceof StackableItem)
+			return ((StackableItem)item).getItemCount();
+		return 1;
 	}
 
 }
