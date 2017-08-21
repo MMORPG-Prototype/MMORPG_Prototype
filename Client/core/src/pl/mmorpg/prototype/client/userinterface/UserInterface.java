@@ -19,7 +19,7 @@ import pl.mmorpg.prototype.client.items.DraggableItem;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
-import pl.mmorpg.prototype.client.items.QuickAccesIcon;
+import pl.mmorpg.prototype.client.items.QuickAccessIcon;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
@@ -225,7 +225,7 @@ public class UserInterface
 			inventoryDialog.addItem(newItem, position);
 	}
 
-	public void quickAccesButtonClicked(InventoryField<QuickAccesIcon> field)
+	public void quickAccesButtonClicked(InventoryField<QuickAccessIcon> field)
 	{
 		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field, inventoryDialog);
 	}
@@ -267,12 +267,8 @@ public class UserInterface
 
 	public void itemUsed(long itemId)
 	{
-		Item usedItem = (Item) inventoryDialog.useItem(itemId);
-
-		//TODO
-		//if (usedItem.shouldBeRemoved() && quickAccessDialog.hasItem(usedItem))
-			//quickAccessDialog.removeItem(usedItem);
-
+		Item item = (Item)inventoryDialog.useItem(itemId);
+		quickAccessDialog.decreaseNumberOfItems(item.getIdentifier());
 	}
 
 	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold, long containerId)
@@ -371,6 +367,18 @@ public class UserInterface
 	public Item searchForItem(String itemIdentifier)
 	{
 		return inventoryDialog.searchForItem(itemIdentifier);
+	}
+
+	public void increaseQuickAccessDialogNumbers(Item newItem)
+	{
+		quickAccessDialog.increaseNumbers(newItem.getIdentifier(), getItemCount(newItem));
+	}
+	
+	private int getItemCount(Item item)
+	{
+		if(item instanceof StackableItem)
+			return ((StackableItem)item).getItemCount();
+		return 1;
 	}
 
 }

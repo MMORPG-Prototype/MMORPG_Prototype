@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 
-public class QuickAccesIcon extends InventoryIcon
+public class QuickAccessIcon extends InventoryIcon
 {
     private final BitmapFont font = Assets.getFont();
     
@@ -14,7 +14,7 @@ public class QuickAccesIcon extends InventoryIcon
 	private ItemCounter itemCounter;
     private int numberOfItems;
 
-	public QuickAccesIcon(String itemIdentifier, ItemCounter itemCounter)
+	public QuickAccessIcon(String itemIdentifier, ItemCounter itemCounter)
 	{
 		super(ItemTextureRetriever.getTexture(itemIdentifier));
 		this.itemCounter = itemCounter;
@@ -26,6 +26,16 @@ public class QuickAccesIcon extends InventoryIcon
 	public void recalculateItemNumber()
 	{
 		numberOfItems = itemCounter.countItems(itemIdentifier);
+	}
+	
+	public void decreaseItemNumber()
+	{
+		numberOfItems--;
+	}
+	
+	public void increaseItemNumber(int howMany)
+	{
+		numberOfItems += howMany;
 	}
 
 	public void setItemIdenfier(String itemIdenfier)
@@ -43,7 +53,7 @@ public class QuickAccesIcon extends InventoryIcon
     {
 		super.draw(batch, x, y);
         font.getData().setScale(1.0f);
-        if(numberOfItems > 1)
+        if(numberOfItems > 0)
         	font.draw(batch, String.valueOf(numberOfItems), x + 22, y + 12);
     }
 

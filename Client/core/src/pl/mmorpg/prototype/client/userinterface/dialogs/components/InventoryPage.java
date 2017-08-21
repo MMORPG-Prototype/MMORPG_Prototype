@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
+import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 
@@ -131,9 +132,16 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 		{
 			Item item = field.getContent();
 			if (item != null && item.getIdentifier().equals(itemIdentifier))
-				itemCounter++;
+				itemCounter = getItemCount(item);
 		}
 		return itemCounter;
+	}
+
+	private int getItemCount(Item item)
+	{
+		if(item instanceof StackableItem)
+			return ((StackableItem)item).getItemCount();
+		return 1;
 	}
 
 	public int getInventoryFieldsHeightNumber()

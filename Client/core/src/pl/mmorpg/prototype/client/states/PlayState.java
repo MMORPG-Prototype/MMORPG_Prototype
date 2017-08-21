@@ -255,6 +255,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 				new Point(itemData.getInventoryX(), itemData.getInventoryY()));
 
 		userInterface.addItemToInventory(newItem, position);
+		userInterface.increaseQuickAccessDialogNumbers(newItem);
 	}
 
 	public void userWantsToSendMessage(String message)

@@ -134,7 +134,8 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	private InventoryField<Item> getField(ItemInventoryPosition fieldPosition)
 	{
-		return inventoryPages.get(fieldPosition.getPageNumber()).getField(new Point(fieldPosition.getPosition().x, fieldPosition.getPosition().y));
+		return inventoryPages.get(fieldPosition.getPageNumber())
+				.getField(new Point(fieldPosition.getPosition().x, fieldPosition.getPosition().y));
 	}
 
 	public void addItem(Item item)
@@ -142,6 +143,18 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		ItemInventoryPosition freeFieldPosition = getFreeInventoryPosition();
 		InventoryField<Item> freeField = getField(freeFieldPosition);
 		freeField.put(item);
+	}
+
+	public void addItem(StackableItem newItem, ItemInventoryPosition inventoryPosition)
+	{
+		InventoryField<Item> field = getField(inventoryPosition);
+		if (field.hasContent())
+		{
+			StackableItem item = (StackableItem) field.getContent();
+			item.stackWith(newItem);
+		}
+		else
+			field.put(newItem);
 	}
 
 	public void addItem(Item newItem, ItemInventoryPosition inventoryPosition)
@@ -187,18 +200,18 @@ public class InventoryDialog extends Dialog implements ItemCounter
 				return item;
 		return item;
 	}
-	
+
 	public ItemInventoryPosition getFreeInventoryPosition()
 	{
-		for(int pageNumber=0; pageNumber<inventoryPages.size(); pageNumber++)
+		for (int pageNumber = 0; pageNumber < inventoryPages.size(); pageNumber++)
 		{
 			InventoryPage currentPage = inventoryPages.get(pageNumber);
-			for(int i=0; i<currentPage.getInventoryFieldsHeightNumber(); i++)
-				for(int j=0; j<currentPage.getInventoryFieldsWidthNumber(); j++)
+			for (int i = 0; i < currentPage.getInventoryFieldsHeightNumber(); i++)
+				for (int j = 0; j < currentPage.getInventoryFieldsWidthNumber(); j++)
 				{
 					Point fieldPosition = new Point(j, i);
 					InventoryField<Item> field = currentPage.getField(fieldPosition);
-					if(!field.hasContent())
+					if (!field.hasContent())
 						return new ItemInventoryPosition(pageNumber, fieldPosition);
 				}
 		}
@@ -207,19 +220,18 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	public ItemInventoryPosition getDesiredItemPositionFor(Item item)
 	{
-		if(item instanceof StackableItem)
+		if (item instanceof StackableItem)
 			return getFieldWithSuiteTypeStackableItemFor(item);
 		else
 			return getFreeInventoryPosition();
 	}
-	
+
 	public ItemInventoryPosition getFieldWithSuiteTypeStackableItemFor(Item item)
 	{
 		try
 		{
 			return getFieldWithSameTypeItemOnCurrentPage(item);
-		}
-		catch(NoSuchFieldException e)
+		} catch (NoSuchFieldException e)
 		{
 			return getFreeInventoryPosition();
 		}
@@ -227,15 +239,15 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	private ItemInventoryPosition getFieldWithSameTypeItemOnCurrentPage(Item item)
 	{
-		// May want to change code to stack with items on other pages 
+		// May want to change code to stack with items on other pages
 		InventoryPage currentPage = inventoryPages.get(0);
-		for(int i=0; i<currentPage.getInventoryFieldsHeightNumber(); i++)
-			for(int j=0; j<currentPage.getInventoryFieldsWidthNumber(); j++)
+		for (int i = 0; i < currentPage.getInventoryFieldsHeightNumber(); i++)
+			for (int j = 0; j < currentPage.getInventoryFieldsWidthNumber(); j++)
 			{
 				Point fieldPosition = new Point(i, j);
 				InventoryField<Item> field = currentPage.getField(fieldPosition);
 				Item fieldItem = field.getContent();
-				if(fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
+				if (fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
 					return new ItemInventoryPosition(0, fieldPosition);
 			}
 		throw new NoSuchFieldException();
@@ -259,22 +271,22 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		firstField.put(secondItem);
 		secondField.put(firstItem);
 	}
-	
+
 	@Override
 	public int countItems(String itemIdentifier)
 	{
 		int itemCounter = 0;
-		for(InventoryPage inventoryPage : inventoryPages)
+		for (InventoryPage inventoryPage : inventoryPages)
 			itemCounter += inventoryPage.countItems(itemIdentifier);
 		return itemCounter;
 	}
 
 	public Item searchForItem(String itemIdentifier)
 	{
-		for(InventoryPage inventoryPage : inventoryPages)
+		for (InventoryPage inventoryPage : inventoryPages)
 		{
 			Item item = inventoryPage.searchForItem(itemIdentifier);
-			if(item != null)
+			if (item != null)
 				return item;
 		}
 		return null;
