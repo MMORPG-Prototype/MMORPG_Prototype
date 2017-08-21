@@ -18,3 +18,8 @@ hs_err_pid*
 *.csproj.*
 *.dll
 *.suo
+
+*.idea*
+*.eml
+*.MF
+*.iml
