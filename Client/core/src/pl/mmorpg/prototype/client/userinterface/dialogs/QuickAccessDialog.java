@@ -65,7 +65,7 @@ public class QuickAccessDialog extends Dialog
 
 	private void fieldClicked(int cellPosition)
 	{
-		linkedInterface.quickAccesButtonClicked(quickAccessButtons.get(cellPosition));
+		linkedInterface.quickAccessButtonClicked(quickAccessButtons.get(cellPosition));
 	}
 
 	public void useButtonItem(int cellPosition, Monster target, PacketsSender packetSender)

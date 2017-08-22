@@ -1,5 +1,8 @@
 package pl.mmorpg.prototype.server.database.entities;
 
+import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -14,7 +18,7 @@ import lombok.Data;
 @Entity(name = "UserCharacter")
 @Table(name = "User_Characters")
 @Data
-public class UserCharacter implements java.io.Serializable
+public class UserCharacter implements Serializable
 {
     @ManyToOne 
     @JoinColumn(nullable = false)
@@ -57,4 +61,7 @@ public class UserCharacter implements java.io.Serializable
     
     @Column(name = "last_location_y")
     private Integer lastLocationY = 96;
+    
+    @OneToMany(mappedBy="character")
+    private List<QuickAccessBarConfigurationElement> quickAccessBarConfig;
 }
