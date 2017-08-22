@@ -175,31 +175,7 @@ public class UserInterface
 					.makeInventoryItemRepositionRequestPacket(mousePointerToItem.item.getId(), cellPosition);
 			((PacketsSender) linkedState).send(inventoryItemRepositionRequestPacket);
 			mousePointerToItem.item = null;
-			mousePointerToItem.itemSource = ItemSources.INVENTORY;
 		}
-
-		// if (mousePointerToItem.item == null && inventoryField.hasItem())
-		// {
-		// mousePointerToItem.item = inventoryField.getItem();
-		// } else if (mousePointerToItem.item != null &&
-		// inventoryField.hasItem())
-		// {
-		// Item newMouseItem = inventoryField.getItem();
-		// inventoryField.put(new ItemReference(mousePointerToItem.item));
-		// mousePointerToItem.item = newMouseItem;
-		// } else if (mousePointerToItem.item != null &&
-		// !inventoryField.hasItem())
-		// {
-		// InventoryItemRepositionRequestPacket
-		// inventoryItemRepositionRequestPacket = PacketsMaker
-		// .makeInventoryItemRepositionRequestPacket(mousePointerToItem.item.getId(),
-		// cellPosition);
-		// ((PacketsSender)
-		// linkedState).send(inventoryItemRepositionRequestPacket);
-		// mousePointerToItem.item = null;
-		// }
-		// if (mousePointerToItem.item != null)
-		// mousePointerToItem.itemSource = ItemSources.INVENTORY;
 	}
 
 	public void userWantsToDisconnect()
