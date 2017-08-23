@@ -1,14 +1,19 @@
 package pl.mmorpg.prototype.server.database.managers;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pl.mmorpg.prototype.SpringApplicationContext;
 import pl.mmorpg.prototype.server.database.HibernateUtil;
 import pl.mmorpg.prototype.server.database.entities.User;
+import pl.mmorpg.prototype.server.database.repositories.UserRepository;
 
 public class UserTableManager
 {
@@ -33,10 +38,13 @@ public class UserTableManager
 	
 	public static Collection<User> getAllUsers()
 	{
-		Session session = HibernateUtil.openSession();
-		Query<User> getAllUsersQuery = session.createQuery("from User as user", User.class);
-		Collection<User> users = getAllUsersQuery.getResultList();
-		return users;
+		UserRepository repository = (UserRepository)SpringApplicationContext.getBean("userRepository");
+		List<User> collect = StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+		return collect; 
+//		Session session = HibernateUtil.openSession();  
+//		Query<User> getAllUsersQuery = session.createQuery("from User as user", User.class);
+//		Collection<User> users = getAllUsersQuery.getResultList();
+//		return users;
 	}
 	
 	public static boolean hasUser(String username)
