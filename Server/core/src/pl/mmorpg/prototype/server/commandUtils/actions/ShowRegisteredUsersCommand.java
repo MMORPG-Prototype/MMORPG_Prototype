@@ -1,9 +1,7 @@
 package pl.mmorpg.prototype.server.commandUtils.actions;
 
-import java.util.Collection;
-
-import pl.mmorpg.prototype.server.database.entities.User;
-import pl.mmorpg.prototype.server.database.managers.UserTableManager;
+import pl.mmorpg.prototype.SpringApplicationContext;
+import pl.mmorpg.prototype.server.database.repositories.UserRepository;
 
 public class ShowRegisteredUsersCommand implements CommandAction
 {
@@ -11,9 +9,8 @@ public class ShowRegisteredUsersCommand implements CommandAction
 	@Override
 	public void run(String args)
 	{
-		Collection<User> allUsers = UserTableManager.getAllUsers();
-		for(User user : allUsers)
-			System.out.println(user);
+		UserRepository characterRepo = SpringApplicationContext.getBean(UserRepository.class);
+		characterRepo.findAll().forEach(user -> System.out.println(user));
 	}
 
 	@Override

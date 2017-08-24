@@ -8,14 +8,15 @@ import java.util.stream.Collectors;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
+import pl.mmorpg.prototype.SpringApplicationContext;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
-import pl.mmorpg.prototype.server.database.managers.CharacterItemTableManager;
-import pl.mmorpg.prototype.server.database.managers.UserCharacterTableManager;
+import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
+import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
@@ -45,7 +46,8 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 
     private void userChoosenCharcter(int userCharacterId, int clientId)
     {
-        UserCharacter character = UserCharacterTableManager.getUserCharacter(userCharacterId);
+    	UserCharacterRepository characterRepo = SpringApplicationContext.getBean(UserCharacterRepository.class);
+        UserCharacter character = characterRepo.findOne(userCharacterId);
 
         UserInfo info = loggedUsersKeyUserId.get(character.getUser().getId());
         info.userCharacter = character;
@@ -61,8 +63,9 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 
     private Collection<Item> getPlayerItems(PlayerCharacter newPlayer)
 	{
+    	CharacterItemRepository itemRepo = SpringApplicationContext.getBean(CharacterItemRepository.class);
     	List<Item> characterItems = 
-    			CharacterItemTableManager.getCharacterItems((int)newPlayer.getId())
+    			itemRepo.findByCharacter_Id((int)newPlayer.getId())
     			.stream()
     			.map(dbItem -> convertToGameItem(dbItem))
     			.collect(Collectors.toList());

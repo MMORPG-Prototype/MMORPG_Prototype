@@ -4,11 +4,12 @@ import java.util.Map;
 
 import javax.persistence.NoResultException;
 
+import pl.mmorpg.prototype.SpringApplicationContext;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
-import pl.mmorpg.prototype.server.database.managers.UserTableManager;
+import pl.mmorpg.prototype.server.database.repositories.UserRepository;
 import pl.mmorpg.prototype.server.exceptions.NotAuthenticatedException;
 
 public class Authenticator
@@ -32,7 +33,8 @@ public class Authenticator
 		User user = null;
 		try
 		{
-			user = UserTableManager.getUser(packet.username);
+			UserRepository userRepo = SpringApplicationContext.getBean(UserRepository.class);
+			user = userRepo.findByUsername(packet.username);
 		}
 		catch(NoResultException e)
 		{

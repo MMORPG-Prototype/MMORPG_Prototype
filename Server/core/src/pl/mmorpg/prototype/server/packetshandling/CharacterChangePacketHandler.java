@@ -38,7 +38,7 @@ public class CharacterChangePacketHandler extends PacketHandlerBase<CharacterCha
 		if(playState.has(characterId))
 		{
 			PlayerCharacter removedCharacter = (PlayerCharacter)playState.remove(characterId);
-			CharacterDatabaseSaver.save(removedCharacter);
+			new CharacterDatabaseSaver().save(removedCharacter);
 		} 
 		userInfo.userCharacter = null;
 		server.sendToAllExceptTCP(connection.getID(), PacketsMaker.makeRemovalPacket(characterId));

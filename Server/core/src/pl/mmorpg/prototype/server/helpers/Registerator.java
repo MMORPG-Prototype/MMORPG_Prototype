@@ -1,14 +1,17 @@
 package pl.mmorpg.prototype.server.helpers;
 
+import pl.mmorpg.prototype.SpringApplicationContext;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
 import pl.mmorpg.prototype.server.database.entities.User;
-import pl.mmorpg.prototype.server.database.managers.UserTableManager;
+import pl.mmorpg.prototype.server.database.repositories.UserRepository;
 
 public class Registerator
 {
+	private final UserRepository userRepo = SpringApplicationContext.getBean(UserRepository.class);
+	
 	public RegisterationReplyPacket tryToRegister(RegisterationPacket packet)
-	{
+	{	
 		RegisterationReplyPacket replyPacket = new RegisterationReplyPacket();
 		if (packet.username.length() == 0)
 			replyPacket.errorMessage = "Username field cannot be empty";
@@ -16,7 +19,7 @@ public class Registerator
 			replyPacket.errorMessage = "Password cannot be empty";
 		else if (!packet.password.equals(packet.passwordRepeat))
 			replyPacket.errorMessage = "Passwords are not the same!";
-		else if (UserTableManager.hasUser(packet.getUsername()))
+		else if (userRepo.findByUsername(packet.getUsername()) != null)
 			replyPacket.errorMessage = "User '" + packet.getUsername() + "' already exists!";
 		else
 		{
@@ -31,6 +34,6 @@ public class Registerator
 		User user = new User();
 		user.setUsername(packet.getUsername());
 		user.setPassword(packet.getPassword());
-		UserTableManager.addUser(user);
+		userRepo.save(user);
 	}
 }
