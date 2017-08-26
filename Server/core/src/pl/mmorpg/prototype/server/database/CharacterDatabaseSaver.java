@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 
 import pl.mmorpg.prototype.SpringApplicationContext;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
+import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
+import pl.mmorpg.prototype.server.database.repositories.QuickAccessBarConfigurationElementRepository;
 import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.Item;
@@ -18,11 +20,14 @@ public class CharacterDatabaseSaver
 	private final UserCharacterRepository characterRepo = SpringApplicationContext
 			.getBean(UserCharacterRepository.class);
 	private final CharacterItemRepository itemRepo = SpringApplicationContext.getBean(CharacterItemRepository.class);
+	private final QuickAccessBarConfigurationElementRepository quickAccessBarConfigRepo = SpringApplicationContext
+			.getBean(QuickAccessBarConfigurationElementRepository.class);
 
 	public void save(PlayerCharacter character)
 	{
 		saveCharacterItems(character);
 		saveCharacterProperties(character);
+		saveCharacterQuickAccessBarConfig(character);
 	}
 
 	private void saveCharacterItems(PlayerCharacter character)
@@ -56,5 +61,13 @@ public class CharacterDatabaseSaver
 	{
 		character.updateUserCharacterData();
 		characterRepo.save(character.getUserCharacterData());
+	}
+	
+	private void saveCharacterQuickAccessBarConfig(PlayerCharacter character)
+	{
+		UserCharacter userCharacterData = character.getUserCharacterData();
+		quickAccessBarConfigRepo.delete(quickAccessBarConfigRepo.findByCharacter(userCharacterData));
+		Collection<QuickAccessBarConfigurationElement> configElements = userCharacterData.getQuickAccessBarConfig().values();
+		quickAccessBarConfigRepo.save(configElements);
 	}
 }

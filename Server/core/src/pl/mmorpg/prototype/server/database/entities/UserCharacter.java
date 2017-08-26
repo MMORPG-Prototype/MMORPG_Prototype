@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.server.database.entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -63,5 +64,6 @@ public class UserCharacter implements Serializable
     private Integer lastLocationY = 96;
     
     @OneToMany(mappedBy="character")
-    private List<QuickAccessBarConfigurationElement> quickAccessBarConfig;
+    @MapKey(name="fieldPosition")
+    private Map<Integer, QuickAccessBarConfigurationElement> quickAccessBarConfig;
 }

@@ -201,17 +201,21 @@ public class UserInterface
 			inventoryDialog.addItem(newItem, position);
 	}
 
-	public void quickAccessButtonClicked(InventoryField<QuickAccessIcon> field)
+	public void quickAccessButtonClicked(InventoryField<QuickAccessIcon> field, int cellPosition)
 	{
 		DraggableItem heldItem = mousePointerToItem.item;
 		if (heldItem != null)
 		{
 			QuickAccessIcon icon = new QuickAccessIcon(heldItem.getIdentifier(), (ItemCounter)inventoryDialog);
 			field.put(icon);
+			((PacketsSender)linkedState).send(PacketsMaker.makeItemPutInQuickAccessBarPacket(heldItem.getIdentifier(), cellPosition));
 			mousePointerToItem.item = null;
 		}
 		else if(field.hasContent())
+		{
 			field.removeContent();
+			((PacketsSender)linkedState).send(PacketsMaker.makeItemRemovedFromQuickAccessBarPacket(cellPosition));
+		}
 	}
 
 	public void userDistributedStatPoints()
@@ -363,6 +367,11 @@ public class UserInterface
 		if(item instanceof StackableItem)
 			return ((StackableItem)item).getItemCount();
 		return 1;
+	}
+
+	public void putItemInQuickAccessBar(String itemIdentifier, int cellPosition)
+	{
+		quickAccessDialog.putItem(itemIdentifier, cellPosition, (ItemCounter)inventoryDialog);
 	}
 
 }

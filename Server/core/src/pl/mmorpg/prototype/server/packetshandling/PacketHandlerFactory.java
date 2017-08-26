@@ -25,6 +25,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedFromQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
@@ -34,6 +36,8 @@ import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.CharacterBoardClickPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.FireballSpellUsagePacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.InventoryItemRepositionRequestPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemPutInQuickAccessBarPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemRemovedFromQuickAccessBarPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemUsagePacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveDownPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveLeftPacketHandler;
@@ -86,6 +90,10 @@ public class PacketHandlerFactory
 				new ScriptCodePacketHandler(playState, authenticatedClientsKeyClientId));
 		packetHandlers.put(InventoryItemRepositionRequestPacket.class,
 				new InventoryItemRepositionRequestPacketHandler(gameDataRetriever, playState));
+		packetHandlers.put(ItemPutInQuickAccessBarPacket.class,
+				new ItemPutInQuickAccessBarPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(ItemRemovedFromQuickAccessBarPacket.class,
+				new ItemRemovedFromQuickAccessBarPacketHandler(playState, gameDataRetriever));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

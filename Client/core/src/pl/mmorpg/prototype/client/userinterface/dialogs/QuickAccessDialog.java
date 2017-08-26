@@ -65,7 +65,7 @@ public class QuickAccessDialog extends Dialog
 
 	private void fieldClicked(int cellPosition)
 	{
-		linkedInterface.quickAccessButtonClicked(quickAccessButtons.get(cellPosition));
+		linkedInterface.quickAccessButtonClicked(quickAccessButtons.get(cellPosition), cellPosition);
 	}
 
 	public void useButtonItem(int cellPosition, Monster target, PacketsSender packetSender)
@@ -121,7 +121,14 @@ public class QuickAccessDialog extends Dialog
 
 	public boolean isFieldTaken(int cellPosition)
 	{
-		return quickAccessButtons.containsKey(cellPosition);
+		return quickAccessButtons.get(cellPosition).hasChildren();
+	}
+
+	public void putItem(String itemIdentifier, int cellPosition, ItemCounter itemCounter)
+	{
+		QuickAccessIcon icon = new QuickAccessIcon(itemIdentifier, itemCounter);
+		InventoryField<QuickAccessIcon> quickAccessField = quickAccessButtons.get(cellPosition);
+		quickAccessField.put(icon);
 	}
 	
 }

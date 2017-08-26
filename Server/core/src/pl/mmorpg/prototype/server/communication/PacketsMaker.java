@@ -28,9 +28,11 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionP
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
+import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.GameObject;
@@ -345,6 +347,14 @@ public class PacketsMaker
 		packet.setSecondPositionPageX(secondPosition.getInventoryX());
 		packet.setSecondPositionPageY(secondPosition.getInventoryY());
 		
+		return packet;
+	}
+
+	public static ItemPutInQuickAccessBarPacket makeQuickAccessBarConfigElementPacket(QuickAccessBarConfigurationElement element)
+	{
+		ItemPutInQuickAccessBarPacket packet = new ItemPutInQuickAccessBarPacket();
+		packet.setCellPosition(element.getFieldPosition());
+		packet.setItemIdentifier(element.getItemIdentifier().toString());
 		return packet;
 	}
 

@@ -1,7 +1,6 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -10,15 +9,11 @@ import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
-import pl.mmorpg.prototype.server.UserInfo;
-import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 
 public class ChatMessagePacketHandler extends PacketHandlerBase<ChatMessagePacket>
 {
 	private Server server;
-	private Map<Integer, User> authenticatedClientsKeyClientId;
-	private Map<Integer, UserInfo> loggedUsersKeyUserId;
 	private GameDataRetriever gameData;
 
 	public ChatMessagePacketHandler(Server server, GameDataRetriever gameData)

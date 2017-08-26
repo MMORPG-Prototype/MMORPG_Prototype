@@ -32,14 +32,14 @@ public class QuickAccessBarConfigurationElement
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "item_identifier", nullable = false)
 	private ItemIdentifiers itemIdentifier;
-	
+
 	@Column(name = "field_position", nullable = false)
 	private Integer fieldPosition;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "character_id", nullable = false)
 	private UserCharacter character;
