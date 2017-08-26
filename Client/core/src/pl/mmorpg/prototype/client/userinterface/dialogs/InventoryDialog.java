@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchFieldException;
-import pl.mmorpg.prototype.client.exceptions.NoSuchItemInInventoryException;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
@@ -239,12 +238,12 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	private ItemInventoryPosition getFieldWithSameTypeItem(Item item)
 	{
-		for(int pageIntex=0; pageIntex<numberOfPages; pageIntex++)
+		for(int pageIndex=0; pageIndex<numberOfPages; pageIndex++)
 			try{
-				return getFieldWithSameTypeItem(item, pageIntex);
-			}catch(NoSuchItemInInventoryException e){}
+				return getFieldWithSameTypeItem(item, pageIndex);
+			}catch(NoSuchFieldException e){}
 		
-		throw new NoSuchItemInInventoryException(item.getId());
+		throw new NoSuchFieldException();
 	}
 
 	private ItemInventoryPosition getFieldWithSameTypeItem(Item item, int pageIndex)
