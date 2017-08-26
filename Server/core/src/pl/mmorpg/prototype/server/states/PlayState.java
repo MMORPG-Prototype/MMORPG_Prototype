@@ -277,9 +277,9 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		return gameContainers.get(containerId);
 	}
 
-	public void executeCode(String code) throws ScriptException
+	public Object executeCode(String code) throws ScriptException
 	{
-		gameCommandsHandler.execute(code);
+		return gameCommandsHandler.execute(code);
 	}
 
 }

@@ -34,7 +34,10 @@ public class ScriptCodePacketHandler extends PacketHandlerBase<ScriptCodePacket>
 		}
 		try
 		{
-			playState.executeCode(packet.getCode());			
+			Object result = playState.executeCode(packet.getCode());
+			if(result != null)
+				connection.sendTCP(PacketsMaker.makeScriptResultInfoPacket(result.toString()));
+			
 		}catch(ScriptException e)
 		{
 			connection.sendTCP(PacketsMaker.makeScriptExecutionErrorPacket(e.getMessage()));

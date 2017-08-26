@@ -55,6 +55,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
@@ -462,7 +463,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void scriptExecutionErrorReceived(String error)
 	{
 		ConsoleDialog console = userInterface.getDialogs().searchForDialog(ConsoleDialog.class);
-		console.addMessage(error);
+		console.addErrorMessage(error);
 	}
 
 	public void repositionItemInInventory(ItemInventoryPosition sourcePosition, ItemInventoryPosition destinationPosition)
@@ -478,6 +479,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void putItemInQuickAccessBarPacketReceived(ItemPutInQuickAccessBarPacket packet)
 	{
 		userInterface.putItemInQuickAccessBar(packet.getItemIdentifier(), packet.getCellPosition());		
+	}
+
+	public void scriptResultInfoPacketReceived(ScriptResultInfoPacket packet)
+	{
+		userInterface.addInfoMessageToConsole(packet.getMessage());
 	}
 
 }

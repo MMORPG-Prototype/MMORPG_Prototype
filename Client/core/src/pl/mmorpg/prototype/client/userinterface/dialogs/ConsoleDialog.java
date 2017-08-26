@@ -83,4 +83,9 @@ public class ConsoleDialog extends Dialog
 		super.setVisible(visible);
 	}
 
+	public void addErrorMessage(String error)
+	{
+		consolePane.addErrorMessage(error);
+	}
+
 }

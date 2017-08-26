@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs.components;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 
 public class ConsolePane extends ScrollPane
@@ -19,6 +20,12 @@ public class ConsolePane extends ScrollPane
 	public void addMessage(String message)
 	{
 		consoleList.addMessage(message);
+		Gdx.app.postRunnable(scrollingTask);
+	}
+	
+	public void addErrorMessage(String message)
+	{
+		consoleList.addMessage(message, Color.RED);
 		Gdx.app.postRunnable(scrollingTask);
 	}
 }

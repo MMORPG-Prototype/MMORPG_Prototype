@@ -28,6 +28,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
@@ -80,6 +81,7 @@ public class PacketHandlerFactory
         packetHandlers.put(InventoryItemRepositionPacket.class, new InventoryItemRepositionPacketHandler(playState));
         packetHandlers.put(InventoryItemSwapPacket.class, new InventoryItemSwapPacketHandler(playState));
         packetHandlers.put(ItemPutInQuickAccessBarPacket.class, new ItemPutInQuickAccessBarPacketHandler(playState));
+        packetHandlers.put(ScriptResultInfoPacket.class, new ScriptResultInfoPacketHandler(playState));
 
         // Ignore frameowrk keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

@@ -379,4 +379,9 @@ public class UserInterface
 		return inventoryDialog.getDesiredItemPositionFor(item.getItem());
 	}
 
+	public void addInfoMessageToConsole(String message)
+	{
+		consoleDialog.addMessage(message);
+	}
+
 }

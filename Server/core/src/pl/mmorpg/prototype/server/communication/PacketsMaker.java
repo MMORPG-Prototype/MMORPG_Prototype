@@ -18,6 +18,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
@@ -355,6 +356,13 @@ public class PacketsMaker
 		ItemPutInQuickAccessBarPacket packet = new ItemPutInQuickAccessBarPacket();
 		packet.setCellPosition(element.getFieldPosition());
 		packet.setItemIdentifier(element.getItemIdentifier().toString());
+		return packet;
+	}
+
+	public static ScriptResultInfoPacket makeScriptResultInfoPacket(String message)
+	{
+		ScriptResultInfoPacket packet = new ScriptResultInfoPacket();
+		packet.setMessage(message);
 		return packet;
 	}
 
