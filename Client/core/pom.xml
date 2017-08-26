@@ -33,9 +33,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>uk.com.robust-it</groupId>
-			<artifactId>cloning</artifactId>
-			<version>1.9.2</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.5.8</version>
 		</dependency>
 
 		<dependency>
@@ -48,12 +48,6 @@
 			<groupId>com.opengamma.strata</groupId>
 			<artifactId>strata-collect</artifactId>
 			<version>1.2.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.22</version>
 		</dependency>
 
 	</dependencies>

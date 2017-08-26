@@ -1,22 +1,20 @@
 package pl.mmorpg.prototype.server.database.seeders;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
+import pl.mmorpg.prototype.SpringApplicationContext;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserRole;
+import pl.mmorpg.prototype.server.database.repositories.UserRepository;
 
-public class UsersTableSeeder extends TableSeeder
+public class UsersTableSeeder implements TableSeeder
 {
-
+	private final UserRepository userRepo = SpringApplicationContext.getBean(UserRepository.class);
+	
 	@Override
-	public Collection<Object> getRecords()
+	public void seed()
 	{
-		Collection<Object> records = new LinkedList<>();
-		records.add(createUser("Pankiev", "password123", UserRole.USER));
-		records.add(createUser("Smyk", "bro", UserRole.USER));
-		records.add(createUser("admin", "admin", UserRole.ADMIN));
-		return records;
+		userRepo.save(createUser("Pankiev", "password123", UserRole.USER));
+		userRepo.save(createUser("Smyk", "bro", UserRole.USER));
+		userRepo.save(createUser("admin", "admin", UserRole.ADMIN));
 	}
 
 	private User createUser(String username, String password, UserRole role)

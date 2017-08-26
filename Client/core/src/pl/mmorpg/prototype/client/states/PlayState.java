@@ -64,6 +64,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.Monste
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
@@ -472,6 +473,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void swapItemsInInventory(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
 	{
 		userInterface.swapItemsInInventory(firstPosition, secondPosition);
+	}
+
+	public void putItemInQuickAccessBarPacketReceived(ItemPutInQuickAccessBarPacket packet)
+	{
+		userInterface.putItemInQuickAccessBar(packet.getItemIdentifier(), packet.getCellPosition());		
 	}
 
 }

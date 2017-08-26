@@ -1,55 +1,73 @@
 package pl.mmorpg.prototype.server.database;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import pl.mmorpg.prototype.SpringApplicationContext;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
+import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
-import pl.mmorpg.prototype.server.database.managers.CharacterItemTableManager;
-import pl.mmorpg.prototype.server.database.managers.UserCharacterTableManager;
+import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
+import pl.mmorpg.prototype.server.database.repositories.QuickAccessBarConfigurationElementRepository;
+import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 
 public class CharacterDatabaseSaver
 {
-	public static void save(PlayerCharacter character)
+	private final UserCharacterRepository characterRepo = SpringApplicationContext
+			.getBean(UserCharacterRepository.class);
+	private final CharacterItemRepository itemRepo = SpringApplicationContext.getBean(CharacterItemRepository.class);
+	private final QuickAccessBarConfigurationElementRepository quickAccessBarConfigRepo = SpringApplicationContext
+			.getBean(QuickAccessBarConfigurationElementRepository.class);
+
+	public void save(PlayerCharacter character)
 	{
 		saveCharacterItems(character);
 		saveCharacterProperties(character);
+		saveCharacterQuickAccessBarConfig(character);
 	}
 
-	private static void saveCharacterItems(PlayerCharacter character)
+	private void saveCharacterItems(PlayerCharacter character)
 	{
 		Collection<Item> items = character.getItems();
 		Collection<CharacterItem> databaseItems = items.stream()
-				.map((item) -> toDatabaseEquiv(item, (int)character.getId()))
-				.collect(Collectors.toList());
+				.map((item) -> toDatabaseEquiv(item, (int) character.getId())).collect(Collectors.toList());
 		saveCharacterItems(character.getUserCharacterData(), databaseItems);
 	}
-	
-	private static CharacterItem toDatabaseEquiv(Item item, int ownerId)
+
+	private void saveCharacterItems(UserCharacter toSave, Collection<CharacterItem> items)
+	{
+		List<CharacterItem> oldItems = itemRepo.findByCharacter(toSave);
+		itemRepo.delete(oldItems);
+		itemRepo.save(items);
+	}
+
+	private CharacterItem toDatabaseEquiv(Item item, int ownerId)
 	{
 		CharacterItem characterItem = new CharacterItem();
-		UserCharacter character = UserCharacterTableManager.getUserCharacter(ownerId);
+		UserCharacter character = characterRepo.findOne(ownerId);
 		characterItem.setCharacter(character);
 		characterItem.setIdentifier(item.getIdentifier());
 		characterItem.setInventoryPosition(item.getInventoryPosition());
-		if(item instanceof StackableItem)
+		if (item instanceof StackableItem)
 			characterItem.setCount(((StackableItem) item).getCount());
 		return characterItem;
 	}
-	    
-    private static void saveCharacterItems(UserCharacter toSave, Collection<CharacterItem> items)
-    {
-        CharacterItemTableManager.deleteAllCharacterItems(toSave);
-        items.forEach((item) -> CharacterItemTableManager.save(item));
-    }
-    
-	private static void saveCharacterProperties(PlayerCharacter character)
+
+	private void saveCharacterProperties(PlayerCharacter character)
 	{
 		character.updateUserCharacterData();
+		characterRepo.save(character.getUserCharacterData());
+	}
+	
+	private void saveCharacterQuickAccessBarConfig(PlayerCharacter character)
+	{
 		UserCharacter userCharacterData = character.getUserCharacterData();
-		HibernateUtil.makeOperation( session -> session.update(userCharacterData));
+		quickAccessBarConfigRepo.delete(quickAccessBarConfigRepo.findByCharacter(userCharacterData));
+		Collection<QuickAccessBarConfigurationElement> configElements = userCharacterData.getQuickAccessBarConfig().values();
+		quickAccessBarConfigRepo.save(configElements);
 	}
 }

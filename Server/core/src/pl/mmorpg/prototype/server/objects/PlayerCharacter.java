@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.server.objects;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.PlayerPropertiesBuilder;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.items.Item;
@@ -87,6 +88,16 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 	public boolean hasItemInPosition(InventoryPosition position)
 	{
 		return getItem(position) != null;
+	}
+
+	public void putNewConfigElemetInQuickAccessBar(QuickAccessBarConfigurationElement quickAccessConfigElement)
+	{
+		userCharacter.getQuickAccessBarConfig().put(quickAccessConfigElement.getFieldPosition(), quickAccessConfigElement);
+	}
+	
+	public void removeConfigElementFromQuickAccessBar(int cellPosition)
+	{
+		userCharacter.getQuickAccessBarConfig().remove(cellPosition);
 	}
 	
 }

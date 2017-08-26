@@ -1,48 +1,36 @@
 package pl.mmorpg.prototype.server.database.seeders;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
+import pl.mmorpg.prototype.SpringApplicationContext;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
-import pl.mmorpg.prototype.server.database.HibernateUtil;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
+import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
 
-public class CharacterItemsTableSeeder extends TableSeeder
+public class CharacterItemsTableSeeder implements TableSeeder
 {
+	private final CharacterItemRepository itemRepo = SpringApplicationContext.getBean(CharacterItemRepository.class);
+	private final UserCharacterRepository characterRepo = SpringApplicationContext.getBean(UserCharacterRepository.class);
 
 	@Override
-	public Collection<Object> getRecords()
+	public void seed()
 	{
-		Collection<Object> records = new LinkedList<>();
-		records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_HP_POTION, 5, new InventoryPosition(2, 1, 1)));
-		records.add(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_MP_POTION, 1, new InventoryPosition(1, 1, 1)));
-		records.add(createCharacterItem("SmykChar", ItemIdentifiers.SMALL_MP_POTION, 7, new InventoryPosition(1, 1, 1)));
-		return records;
+		itemRepo.save(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_HP_POTION, 5, new InventoryPosition(2, 1, 1)));
+		itemRepo.save(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_MP_POTION, 1, new InventoryPosition(1, 1, 1)));
+		itemRepo.save(createCharacterItem("SmykChar", ItemIdentifiers.SMALL_MP_POTION, 7, new InventoryPosition(1, 1, 1)));
 	}
 
 	private CharacterItem createCharacterItem(String characterName, ItemIdentifiers identifier, int count,
 			InventoryPosition inventoryPosition)
 	{
-		Session session = HibernateUtil.openSession();
-		Transaction tx = session.beginTransaction();
-		Query<UserCharacter> getChar = session
-				.createQuery("from " + UserCharacter.class.getName() + " as char where char.nickname=:nickname",
-						UserCharacter.class)
-				.setParameter("nickname", characterName);
-		UserCharacter character = getChar.getSingleResult();
+		UserCharacter character = characterRepo.findByNickname(characterName);	
 		CharacterItem item = new CharacterItem();
 		item.setCharacter(character);
 		item.setIdentifier(identifier);
 		item.setCount(count);
 		item.setInventoryPosition(inventoryPosition);
-		tx.commit();
-		session.close();
+		itemRepo.save(item);
 		return item;
 	}
 

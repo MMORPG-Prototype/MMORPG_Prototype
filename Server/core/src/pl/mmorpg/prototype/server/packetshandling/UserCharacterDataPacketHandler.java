@@ -8,14 +8,16 @@ import java.util.stream.Collectors;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
+import pl.mmorpg.prototype.SpringApplicationContext;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
+import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
-import pl.mmorpg.prototype.server.database.managers.CharacterItemTableManager;
-import pl.mmorpg.prototype.server.database.managers.UserCharacterTableManager;
+import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
+import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
@@ -25,10 +27,12 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharacterDataPacket>
 {
+	private final UserCharacterRepository characterRepo = SpringApplicationContext.getBean(UserCharacterRepository.class);
+	
     private Map<Integer, UserInfo> loggedUsersKeyUserId;
     private PlayState playState;
     private Server server;
-
+    
     public UserCharacterDataPacketHandler(Map<Integer, UserInfo> loggedUsersKeyUserId, Server server,
             PlayState playState)
     {
@@ -45,7 +49,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 
     private void userChoosenCharcter(int userCharacterId, int clientId)
     {
-        UserCharacter character = UserCharacterTableManager.getUserCharacter(userCharacterId);
+        UserCharacter character = characterRepo.findOneAndFetchQuickAccessBarConfig(userCharacterId);
 
         UserInfo info = loggedUsersKeyUserId.get(character.getUser().getId());
         info.userCharacter = character;
@@ -57,12 +61,15 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
         playState.add(newPlayer);
         server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
         sendItemsDataToClient(playerItems, clientId);
+
+        sendQuickAccessBarConfigToClient(character.getQuickAccessBarConfig().values(), clientId);
     }
 
-    private Collection<Item> getPlayerItems(PlayerCharacter newPlayer)
+	private Collection<Item> getPlayerItems(PlayerCharacter newPlayer)
 	{
+    	CharacterItemRepository itemRepo = SpringApplicationContext.getBean(CharacterItemRepository.class);
     	List<Item> characterItems = 
-    			CharacterItemTableManager.getCharacterItems((int)newPlayer.getId())
+    			itemRepo.findByCharacter_Id((int)newPlayer.getId())
     			.stream()
     			.map(dbItem -> convertToGameItem(dbItem))
     			.collect(Collectors.toList());
@@ -95,4 +102,10 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
     {
     	playerItems.forEach((item) -> server.sendToTCP(clientId, PacketsMaker.makeItemPacket(item)));
     }
+    
+    private void sendQuickAccessBarConfigToClient(Collection<QuickAccessBarConfigurationElement> quickAccessBarConfig, int clientId)
+	{
+		quickAccessBarConfig.forEach(
+				element -> server.sendToTCP(clientId, PacketsMaker.makeQuickAccessBarConfigElementPacket(element)));
+	}
 }

@@ -45,9 +45,9 @@ public class InventoryField<T extends InventoryIcon> extends Button implements C
 	}
 
 	@Override
-	public void put(T item)
+	public void put(T content)
 	{
-		Reference<T> reference = new Reference<T>(item);
+		Reference<T> reference = new Reference<T>(content);
 		this.removeActor(nullImage);
 		if (this.itemReference != null)
 			this.removeActor(this.itemReference);

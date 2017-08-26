@@ -23,12 +23,12 @@ import pl.mmorpg.prototype.client.items.QuickAccessIcon;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
-import pl.mmorpg.prototype.client.states.helpers.UserInterfaceManager;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ConsoleDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.OpenContainerDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
@@ -175,31 +175,7 @@ public class UserInterface
 					.makeInventoryItemRepositionRequestPacket(mousePointerToItem.item.getId(), cellPosition);
 			((PacketsSender) linkedState).send(inventoryItemRepositionRequestPacket);
 			mousePointerToItem.item = null;
-			mousePointerToItem.itemSource = ItemSources.INVENTORY;
 		}
-
-		// if (mousePointerToItem.item == null && inventoryField.hasItem())
-		// {
-		// mousePointerToItem.item = inventoryField.getItem();
-		// } else if (mousePointerToItem.item != null &&
-		// inventoryField.hasItem())
-		// {
-		// Item newMouseItem = inventoryField.getItem();
-		// inventoryField.put(new ItemReference(mousePointerToItem.item));
-		// mousePointerToItem.item = newMouseItem;
-		// } else if (mousePointerToItem.item != null &&
-		// !inventoryField.hasItem())
-		// {
-		// InventoryItemRepositionRequestPacket
-		// inventoryItemRepositionRequestPacket = PacketsMaker
-		// .makeInventoryItemRepositionRequestPacket(mousePointerToItem.item.getId(),
-		// cellPosition);
-		// ((PacketsSender)
-		// linkedState).send(inventoryItemRepositionRequestPacket);
-		// mousePointerToItem.item = null;
-		// }
-		// if (mousePointerToItem.item != null)
-		// mousePointerToItem.itemSource = ItemSources.INVENTORY;
 	}
 
 	public void userWantsToDisconnect()
@@ -225,9 +201,21 @@ public class UserInterface
 			inventoryDialog.addItem(newItem, position);
 	}
 
-	public void quickAccesButtonClicked(InventoryField<QuickAccessIcon> field)
+	public void quickAccessButtonClicked(InventoryField<QuickAccessIcon> field, int cellPosition)
 	{
-		mousePointerToItem = UserInterfaceManager.quickAccessFieldClicked(mousePointerToItem, field, inventoryDialog);
+		DraggableItem heldItem = mousePointerToItem.item;
+		if (heldItem != null)
+		{
+			QuickAccessIcon icon = new QuickAccessIcon(heldItem.getIdentifier(), (ItemCounter)inventoryDialog);
+			field.put(icon);
+			((PacketsSender)linkedState).send(PacketsMaker.makeItemPutInQuickAccessBarPacket(heldItem.getIdentifier(), cellPosition));
+			mousePointerToItem.item = null;
+		}
+		else if(field.hasContent())
+		{
+			field.removeContent();
+			((PacketsSender)linkedState).send(PacketsMaker.makeItemRemovedFromQuickAccessBarPacket(cellPosition));
+		}
 	}
 
 	public void userDistributedStatPoints()
@@ -379,6 +367,11 @@ public class UserInterface
 		if(item instanceof StackableItem)
 			return ((StackableItem)item).getItemCount();
 		return 1;
+	}
+
+	public void putItemInQuickAccessBar(String itemIdentifier, int cellPosition)
+	{
+		quickAccessDialog.putItem(itemIdentifier, cellPosition, (ItemCounter)inventoryDialog);
 	}
 
 }

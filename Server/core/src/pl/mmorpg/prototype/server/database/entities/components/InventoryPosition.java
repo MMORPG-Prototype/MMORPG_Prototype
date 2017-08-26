@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InventoryPosition
 {
-	@Column(name = "inventoryPageNumber", nullable = false)
+	@Column(name = "inventory_page_number", nullable = false)
 	private Integer inventoryPageNumber;
 
-	@Column(name = "inventoryX", nullable = false)
+	@Column(name = "inventory_x", nullable = false)
 	private Integer inventoryX;
 
-	@Column(name = "inventoryY", nullable = false)
+	@Column(name = "inventory_y", nullable = false)
 	private Integer inventoryY;
 	
 	

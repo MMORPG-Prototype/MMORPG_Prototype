@@ -7,27 +7,26 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
-import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 
-@Entity(name = "CharacterItem")
+@Entity(name = "QuickAccessBarConfigurationElement")
 @Table(
-		name = "Character_Items", 
-		uniqueConstraints=
+		name = "character_quick_access_bar_configuration_elements", 
+		uniqueConstraints = 
 		@UniqueConstraint(columnNames={
 				"character_id", 
-				"inventory_page_number", 
-				"inventory_x", 
-				"inventory_y"
+				"item_identifier", 
+				"field_position"
 				})
 )
 @Data
-public class CharacterItem
+public class QuickAccessBarConfigurationElement
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,16 +34,13 @@ public class CharacterItem
 	private Integer id;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "identifier", nullable = false)
-	private ItemIdentifiers identifier;
+	@Column(name = "item_identifier", nullable = false)
+	private ItemIdentifiers itemIdentifier;
 
-	//Used for stackable items
-	@Column(name = "count", nullable = false)
-	private Integer count = 1;
-	
+	@Column(name = "field_position", nullable = false)
+	private Integer fieldPosition;
+
 	@ManyToOne
+	@JoinColumn(name = "character_id", nullable = false)
 	private UserCharacter character;
-	
-	private InventoryPosition inventoryPosition;
-	
 }

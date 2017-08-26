@@ -15,6 +15,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedFromQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
@@ -117,6 +119,21 @@ public class PacketsMaker
 		packet.setInventoryPageNumber(desiredPosition.getPageNumber());
 		packet.setInventoryPageX(desiredPosition.getPosition().x);
 		packet.setInventoryPageY(desiredPosition.getPosition().y);
+		return packet;
+	}
+
+	public static ItemPutInQuickAccessBarPacket makeItemPutInQuickAccessBarPacket(String itemIdentifier, int cellPosition)
+	{
+		ItemPutInQuickAccessBarPacket packet = new ItemPutInQuickAccessBarPacket();
+		packet.setCellPosition(cellPosition);
+		packet.setItemIdentifier(itemIdentifier);
+		return packet;
+	}
+
+	public static ItemRemovedFromQuickAccessBarPacket makeItemRemovedFromQuickAccessBarPacket(int cellPosition)
+	{
+		ItemRemovedFromQuickAccessBarPacket packet = new ItemRemovedFromQuickAccessBarPacket();
+		packet.setCellPosition(cellPosition);
 		return packet;
 	}
 }

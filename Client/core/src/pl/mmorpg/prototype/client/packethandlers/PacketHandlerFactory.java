@@ -37,6 +37,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionP
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 
@@ -78,6 +79,7 @@ public class PacketHandlerFactory
         packetHandlers.put(ScriptExecutionErrorPacket.class, new ScriptExecutionErrorPacketHandler(playState));
         packetHandlers.put(InventoryItemRepositionPacket.class, new InventoryItemRepositionPacketHandler(playState));
         packetHandlers.put(InventoryItemSwapPacket.class, new InventoryItemSwapPacketHandler(playState));
+        packetHandlers.put(ItemPutInQuickAccessBarPacket.class, new ItemPutInQuickAccessBarPacketHandler(playState));
 
         // Ignore frameowrk keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

@@ -8,11 +8,9 @@ public class DatabaseEntityCreatorLauncher
 {
     public static void main(String[] args)
     {
-        HibernateUtil.openSession().close();
         new UsersTableSeeder().seed();
         new UserCharactersTableSeeder().seed();
         new CharacterItemsTableSeeder().seed();
-        HibernateUtil.getSessionFactory().close();
     }
 
 }

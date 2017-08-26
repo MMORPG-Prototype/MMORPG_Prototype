@@ -16,7 +16,6 @@ import lombok.Data;
 @Data
 public class User implements java.io.Serializable
 {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")

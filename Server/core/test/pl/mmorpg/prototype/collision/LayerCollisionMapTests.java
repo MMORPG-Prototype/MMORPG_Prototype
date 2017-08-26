@@ -25,7 +25,6 @@ public class LayerCollisionMapTests
 	private static final int containerWidth = 10;
 	private static final int containerHeight = 10;
 	
-	
 	@Mock
 	private StackableCollisionObject object;
 
