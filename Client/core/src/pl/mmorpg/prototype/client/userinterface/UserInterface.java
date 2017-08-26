@@ -374,4 +374,9 @@ public class UserInterface
 		quickAccessDialog.putItem(itemIdentifier, cellPosition, (ItemCounter)inventoryDialog);
 	}
 
+	public ItemInventoryPosition getSuitePositionInInventoryFor(ShopItem item)
+	{
+		return inventoryDialog.getDesiredItemPositionFor(item.getItem());
+	}
+
 }

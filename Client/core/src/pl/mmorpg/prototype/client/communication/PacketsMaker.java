@@ -95,12 +95,16 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static BuyFromShopPacket makeBuyFromShopPacket(long shopId, long itemId, int amount)
+	public static BuyFromShopPacket makeBuyFromShopPacket(long shopId, long itemId, int amount,
+			ItemInventoryPosition suitePosition)
 	{
 		BuyFromShopPacket packet = new BuyFromShopPacket();
 		packet.setShopId(shopId);
 		packet.setItemId(itemId);
 		packet.setAmount(amount);
+		packet.setDesiredInventoryPage(suitePosition.getPageNumber());
+		packet.setDesiredInventoryX(suitePosition.getPosition().x);
+		packet.setDesiredInventoryY(suitePosition.getPosition().y);
 		return packet;
 	}
 
@@ -122,7 +126,8 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static ItemPutInQuickAccessBarPacket makeItemPutInQuickAccessBarPacket(String itemIdentifier, int cellPosition)
+	public static ItemPutInQuickAccessBarPacket makeItemPutInQuickAccessBarPacket(String itemIdentifier,
+			int cellPosition)
 	{
 		ItemPutInQuickAccessBarPacket packet = new ItemPutInQuickAccessBarPacket();
 		packet.setCellPosition(cellPosition);

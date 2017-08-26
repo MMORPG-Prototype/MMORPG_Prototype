@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Align;
 
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
+import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
@@ -37,7 +38,7 @@ public class ShopBuyingDialog extends AutoCleanupOnCloseButtonDialog
 		this.getContentTable().row();
 		this.getContentTable().add(totalPrice);
 		this.getContentTable().row();
-		Button buyButton = ButtonCreator.createTextButton("Buy", () -> tryToBuyAction(packetsSender, shopId));
+		Button buyButton = ButtonCreator.createTextButton("Buy", () -> tryToBuyAction(packetsSender, shopId, linkedInterface));
 		this.getContentTable().add(buyButton);
 		pack();
 		DialogUtils.centerPosition(this);
@@ -71,10 +72,11 @@ public class ShopBuyingDialog extends AutoCleanupOnCloseButtonDialog
 		}
 	}
 
-	private void tryToBuyAction(PacketsSender packetsSender, long shopId)
+	private void tryToBuyAction(PacketsSender packetsSender, long shopId, UserInterface linkedInterface)
 	{
 		int wantedAmount = numberOfItemsField.getValue();
-		packetsSender.send(PacketsMaker.makeBuyFromShopPacket(shopId, item.getItem().getId(), wantedAmount));
+		ItemInventoryPosition suitePosition = linkedInterface.getSuitePositionInInventoryFor(item);
+		packetsSender.send(PacketsMaker.makeBuyFromShopPacket(shopId, item.getItem().getId(), wantedAmount, suitePosition));
 	}
 
 }
