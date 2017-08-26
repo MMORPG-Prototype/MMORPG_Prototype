@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchFieldException;
+import pl.mmorpg.prototype.client.exceptions.NoSuchItemInInventoryException;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
@@ -152,8 +153,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		{
 			StackableItem item = (StackableItem) field.getContent();
 			item.stackWith(newItem);
-		}
-		else
+		} else
 			field.put(newItem);
 	}
 
@@ -230,17 +230,26 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	{
 		try
 		{
-			return getFieldWithSameTypeItemOnCurrentPage(item);
+			return getFieldWithSameTypeItem(item);
 		} catch (NoSuchFieldException e)
 		{
 			return getFreeInventoryPosition();
 		}
 	}
 
-	private ItemInventoryPosition getFieldWithSameTypeItemOnCurrentPage(Item item)
+	private ItemInventoryPosition getFieldWithSameTypeItem(Item item)
 	{
-		// May want to change code to stack with items on other pages
-		InventoryPage currentPage = inventoryPages.get(0);
+		for(int pageIntex=0; pageIntex<numberOfPages; pageIntex++)
+			try{
+				return getFieldWithSameTypeItem(item, pageIntex);
+			}catch(NoSuchItemInInventoryException e){}
+		
+		throw new NoSuchItemInInventoryException(item.getId());
+	}
+
+	private ItemInventoryPosition getFieldWithSameTypeItem(Item item, int pageIndex)
+	{
+		InventoryPage currentPage = inventoryPages.get(pageIndex);
 		for (int i = 0; i < currentPage.getInventoryFieldsHeightNumber(); i++)
 			for (int j = 0; j < currentPage.getInventoryFieldsWidthNumber(); j++)
 			{
@@ -248,7 +257,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 				InventoryField<Item> field = currentPage.getField(fieldPosition);
 				Item fieldItem = field.getContent();
 				if (fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
-					return new ItemInventoryPosition(0, fieldPosition);
+					return new ItemInventoryPosition(pageIndex, fieldPosition);
 			}
 		throw new NoSuchFieldException();
 	}
