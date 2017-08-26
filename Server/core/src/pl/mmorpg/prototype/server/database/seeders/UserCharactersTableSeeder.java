@@ -1,41 +1,29 @@
 package pl.mmorpg.prototype.server.database.seeders;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
-import org.hibernate.Session;
-
-import pl.mmorpg.prototype.server.database.HibernateUtil;
+import pl.mmorpg.prototype.SpringApplicationContext;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
+import pl.mmorpg.prototype.server.database.repositories.UserRepository;
 
-public class UserCharactersTableSeeder extends TableSeeder
+public class UserCharactersTableSeeder implements TableSeeder
 {
-
+	private final UserCharacterRepository characterRepo = SpringApplicationContext.getBean(UserCharacterRepository.class);
+	private final UserRepository userRepo = SpringApplicationContext.getBean(UserRepository.class);
+	
 	@Override
-	public Collection<Object> getRecords()
+	public void seed()
 	{
-		Collection<Object> records = new LinkedList<>();
-		records.add(createUserCharacter("Pankiev", "PankievChar"));
-		records.add(createUserCharacter("Smyk", "SmykChar"));
-		return records;
+		characterRepo.save(createUserCharacter("Pankiev", "PankievChar"));
+		characterRepo.save(createUserCharacter("Smyk", "SmykChar"));
 	}
 
-	private Object createUserCharacter(String username, String characterName)
+	private UserCharacter createUserCharacter(String username, String characterName)
 	{
-		Session session = HibernateUtil.openSession();
-		session.beginTransaction();
-		
-
-		User user = session
-				.createQuery("from " + User.class.getName() + " as U where U.username = :username", User.class)
-				.setParameter("username", username)
-				.getSingleResult();
+		User user = userRepo.findByUsername(username);
 		UserCharacter character = new UserCharacter();
 		character.setUser(user);
 		character.setNickname(characterName);
-		session.getTransaction().commit();
-		session.close();
 		return character;
 	}
 
