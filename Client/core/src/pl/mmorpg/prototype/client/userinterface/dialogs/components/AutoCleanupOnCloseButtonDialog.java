@@ -15,7 +15,14 @@ public class AutoCleanupOnCloseButtonDialog extends Dialog implements Identifiab
 		super(title, Settings.DEFAULT_SKIN);
 		this.id = id;
 		
-		CloseButton closeButton = new AutoCleanupCloseButton(this, linkedContainer);
+		CloseButton closeButton = new AutoCleanupCloseButton(this, linkedContainer) 
+		{
+			@Override
+			public void onPress()
+			{
+				onClose();
+			}
+		};
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 		
 	}
@@ -24,6 +31,10 @@ public class AutoCleanupOnCloseButtonDialog extends Dialog implements Identifiab
 	public long getId()
 	{
 		return id;
+	}
+	
+	public void onClose()
+	{
 	}
 
 }

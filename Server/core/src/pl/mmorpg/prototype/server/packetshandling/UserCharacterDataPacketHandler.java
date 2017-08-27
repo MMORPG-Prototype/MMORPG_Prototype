@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
-import pl.mmorpg.prototype.SpringApplicationContext;
+import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
@@ -27,7 +27,7 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharacterDataPacket>
 {
-	private final UserCharacterRepository characterRepo = SpringApplicationContext.getBean(UserCharacterRepository.class);
+	private final UserCharacterRepository characterRepo = SpringContext.getBean(UserCharacterRepository.class);
 	
     private Map<Integer, UserInfo> loggedUsersKeyUserId;
     private PlayState playState;
@@ -67,7 +67,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 
 	private Collection<Item> getPlayerItems(PlayerCharacter newPlayer)
 	{
-    	CharacterItemRepository itemRepo = SpringApplicationContext.getBean(CharacterItemRepository.class);
+    	CharacterItemRepository itemRepo = SpringContext.getBean(CharacterItemRepository.class);
     	List<Item> characterItems = 
     			itemRepo.findByCharacter_Id((int)newPlayer.getId())
     			.stream()

@@ -20,9 +20,13 @@ public class AutoCleanupCloseButton extends CloseButton
 			public void clicked(InputEvent event, float x, float y)
 			{ 
 				linkedDialogs.removeDialog(dialogToClose);
+				onPress();
 			}
 		});
 	}
 	
+	public void onPress()
+	{
+	}
 
 }

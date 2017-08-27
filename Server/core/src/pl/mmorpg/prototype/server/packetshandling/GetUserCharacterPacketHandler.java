@@ -5,7 +5,7 @@ import java.util.List;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
-import pl.mmorpg.prototype.SpringApplicationContext;
+import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
@@ -24,7 +24,7 @@ public class GetUserCharacterPacketHandler extends PacketHandlerBase<GetUserChar
 	@Override
 	public void handle(Connection connection, GetUserCharactersPacket packet)
 	{
-		UserCharacterRepository characterRepo = (UserCharacterRepository) SpringApplicationContext
+		UserCharacterRepository characterRepo = (UserCharacterRepository) SpringContext
 				.getBean("userCharacterRepository");
 		List<UserCharacter> userCharacters = characterRepo.findByUser_Username(packet.username);
 		UserCharacterDataPacket[] charactersPackets = new UserCharacterDataPacket[userCharacters.size()];

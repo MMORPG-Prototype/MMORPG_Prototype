@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.server.helpers;
 
-import pl.mmorpg.prototype.SpringApplicationContext;
+import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
@@ -13,8 +13,8 @@ public class CharacterCreator
 
 	public static CharacterCreationReplyPacket tryCreatingCharacter(CharacterCreationPacket packet, int userId)
 	{
-		UserCharacterRepository characterRepo = SpringApplicationContext.getBean(UserCharacterRepository.class);
-		UserRepository userRepo = SpringApplicationContext.getBean(UserRepository.class);
+		UserCharacterRepository characterRepo = SpringContext.getBean(UserCharacterRepository.class);
+		UserRepository userRepo = SpringContext.getBean(UserRepository.class);
 		CharacterCreationReplyPacket replyPacket = new CharacterCreationReplyPacket();
 		if (characterRepo.findByNickname(packet.getNickname()) == null)
 		{

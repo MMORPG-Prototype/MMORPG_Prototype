@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import pl.mmorpg.prototype.SpringApplicationContext;
+import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
@@ -17,10 +17,10 @@ import pl.mmorpg.prototype.server.objects.items.StackableItem;
 
 public class CharacterDatabaseSaver
 {
-	private final UserCharacterRepository characterRepo = SpringApplicationContext
+	private final UserCharacterRepository characterRepo = SpringContext
 			.getBean(UserCharacterRepository.class);
-	private final CharacterItemRepository itemRepo = SpringApplicationContext.getBean(CharacterItemRepository.class);
-	private final QuickAccessBarConfigurationElementRepository quickAccessBarConfigRepo = SpringApplicationContext
+	private final CharacterItemRepository itemRepo = SpringContext.getBean(CharacterItemRepository.class);
+	private final QuickAccessBarConfigurationElementRepository quickAccessBarConfigRepo = SpringContext
 			.getBean(QuickAccessBarConfigurationElementRepository.class);
 
 	public void save(PlayerCharacter character)

@@ -55,6 +55,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
@@ -484,6 +485,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void scriptResultInfoPacketReceived(ScriptResultInfoPacket packet)
 	{
 		userInterface.addInfoMessageToConsole(packet.getMessage());
+	}
+
+	public void questBoardInfoPacketReceived(QuestBoardInfoPacket packet)
+	{	
+		userInterface.questBoardClicked(packet.getQuests(), packet.getQuestBoardId());
 	}
 
 }

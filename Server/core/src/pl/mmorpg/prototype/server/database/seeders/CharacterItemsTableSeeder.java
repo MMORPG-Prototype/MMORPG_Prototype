@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.server.database.seeders;
 
-import pl.mmorpg.prototype.SpringApplicationContext;
+import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
@@ -10,8 +10,8 @@ import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
 
 public class CharacterItemsTableSeeder implements TableSeeder
 {
-	private final CharacterItemRepository itemRepo = SpringApplicationContext.getBean(CharacterItemRepository.class);
-	private final UserCharacterRepository characterRepo = SpringApplicationContext.getBean(UserCharacterRepository.class);
+	private final CharacterItemRepository itemRepo = SpringContext.getBean(CharacterItemRepository.class);
+	private final UserCharacterRepository characterRepo = SpringContext.getBean(UserCharacterRepository.class);
 
 	@Override
 	public void seed()

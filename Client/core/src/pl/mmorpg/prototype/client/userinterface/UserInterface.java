@@ -31,6 +31,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.OpenContainerDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.QuestBoardDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
@@ -39,6 +40,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryFiel
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 
@@ -308,7 +310,6 @@ public class UserInterface
 			OpenContainerDialog containerDialog = (OpenContainerDialog) dialogs.getIdentifiableDialog(containerId);
 			containerDialog.updateGoldByDecreasingBy(goldAmount);
 		}
-
 	}
 
 	public void updateGoldAmountInInventory(int goldAmount)
@@ -382,6 +383,20 @@ public class UserInterface
 	public void addInfoMessageToConsole(String message)
 	{
 		consoleDialog.addMessage(message);
+	}
+
+	public void questBoardClicked(QuestDataPacket[] quests, long questBoardId)
+	{
+		if(!dialogs.hasIdentifiableDialog(questBoardId))
+			showQuestDialog(quests, questBoardId);
+	}
+
+	private void showQuestDialog(QuestDataPacket[] quests, long questBoardId)
+	{
+		QuestBoardDialog questDialog = new QuestBoardDialog(dialogs, questBoardId, quests, stage);
+		positionDialogNearMouse(questDialog);
+		stage.addActor(questDialog);
+		dialogs.add(questDialog);
 	}
 
 }

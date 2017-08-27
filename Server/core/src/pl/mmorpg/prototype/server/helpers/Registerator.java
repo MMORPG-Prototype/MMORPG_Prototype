@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.server.helpers;
 
-import pl.mmorpg.prototype.SpringApplicationContext;
+import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
 import pl.mmorpg.prototype.server.database.entities.User;
@@ -8,7 +8,7 @@ import pl.mmorpg.prototype.server.database.repositories.UserRepository;
 
 public class Registerator
 {
-	private final UserRepository userRepo = SpringApplicationContext.getBean(UserRepository.class);
+	private final UserRepository userRepo = SpringContext.getBean(UserRepository.class);
 	
 	public RegisterationReplyPacket tryToRegister(RegisterationPacket packet)
 	{	

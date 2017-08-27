@@ -17,6 +17,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
@@ -24,6 +25,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerGoldRemovalPacket;
@@ -33,12 +35,14 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQui
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
+import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
+import pl.mmorpg.prototype.server.objects.ineractivestaticobjects.QuestBoard;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -363,6 +367,31 @@ public class PacketsMaker
 	{
 		ScriptResultInfoPacket packet = new ScriptResultInfoPacket();
 		packet.setMessage(message);
+		return packet;
+	}
+
+	public static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestBoard questBoard)
+	{
+		QuestDataPacket[] quests = questBoard.getQuests().stream()
+							.map(PacketsMaker::makeQuestDataPacket)
+							.toArray(QuestDataPacket[]::new);
+		
+		return makeQuestBoardInfoPacket(quests, questBoard.getId());
+	}
+	
+	public static QuestDataPacket makeQuestDataPacket(Quest quest)
+	{
+		QuestDataPacket packet = new QuestDataPacket();
+		packet.setDescription(quest.getDescription());
+		packet.setName(quest.getName());
+		return packet;
+	}
+	
+	private static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestDataPacket[] quests, long questBoardId)
+	{
+		QuestBoardInfoPacket packet = new QuestBoardInfoPacket();
+		packet.setQuests(quests);
+		packet.setQuestBoardId(questBoardId);
 		return packet;
 	}
 

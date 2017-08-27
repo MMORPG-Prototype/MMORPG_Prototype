@@ -18,6 +18,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Server;
 
+import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.ServerSettings;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionMap;
 import pl.mmorpg.prototype.server.collision.pixelmap.IntegerRectangle;
@@ -81,6 +82,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		Gdx.input.setInputProcessor(inputHandler);
 
 		addNpcs();
+		addGameObject(ObjectsIdentifiers.QUEST_BOARD, 100, 100);
 	}
 
 	private TiledMap loadMap()

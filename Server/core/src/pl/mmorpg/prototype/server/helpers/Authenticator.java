@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.persistence.NoResultException;
 
-import pl.mmorpg.prototype.SpringApplicationContext;
+import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.server.UserInfo;
@@ -33,7 +33,7 @@ public class Authenticator
 		User user = null;
 		try
 		{
-			UserRepository userRepo = SpringApplicationContext.getBean(UserRepository.class);
+			UserRepository userRepo = SpringContext.getBean(UserRepository.class);
 			user = userRepo.findByUsername(packet.username);
 		}
 		catch(NoResultException e)

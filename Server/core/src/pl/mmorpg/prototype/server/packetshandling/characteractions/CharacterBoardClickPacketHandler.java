@@ -2,6 +2,8 @@ package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import java.util.Collection;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
@@ -11,6 +13,7 @@ import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.exceptions.CannotTargetItselfException;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.ineractivestaticobjects.QuestBoard;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopItemWrapper;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopNpc;
@@ -33,22 +36,26 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
     public void handle(Connection connection, BoardClickPacket packet)
     {
         GameObject target = playState.getCollisionMap().getTopObject(packet.gameX, packet.gameY);
-        if (target != null && target instanceof Monster)
+        if (target != null)
         {
             UserCharacter userCharacter = gameData.getUserCharacterByConnectionId(connection.getID());
             PlayerCharacter source = (PlayerCharacter)playState.getObject(userCharacter.getId());
              
-            clientBoardClickProperHandle(connection, (Monster)target, source);
+            clientBoardClickProperHandle(connection, target, source);
 
         }
     }
 
-	private void clientBoardClickProperHandle(Connection connection, Monster target, PlayerCharacter source)
+	private void clientBoardClickProperHandle(Connection connection, GameObject target, PlayerCharacter source)
 	{
 		if(target instanceof ShopNpc)
 			sendShopItemsInfo(connection, (ShopNpc)target);
+		else if(target instanceof Monster)
+			tryToTargetMonster(connection, (Monster)target, source);
+		else if(target instanceof QuestBoard)
+			sendQuestBoardInfo(connection, (QuestBoard)target);
 		else
-			tryToTargetMonster(connection, target, source);
+			throw new NotImplementedException("Not implemented");
 		
 	}
 
@@ -70,6 +77,11 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 		{
 			connection.sendTCP(PacketsMaker.makeUnacceptableOperationPacket("Cannot target itself"));
 		}
+	}
+	
+	private void sendQuestBoardInfo(Connection connection, QuestBoard questBoard)
+	{
+		connection.sendTCP(PacketsMaker.makeQuestBoardInfoPacket(questBoard));
 	}
 
 }

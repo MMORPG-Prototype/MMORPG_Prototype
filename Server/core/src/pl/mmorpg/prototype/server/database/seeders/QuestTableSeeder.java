@@ -1,12 +1,12 @@
 package pl.mmorpg.prototype.server.database.seeders;
 
-import pl.mmorpg.prototype.SpringApplicationContext;
+import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.repositories.QuestRepository;
 
 public class QuestTableSeeder implements TableSeeder
 {
-	private final QuestRepository questRepository = SpringApplicationContext.getBean(QuestRepository.class);
+	private final QuestRepository questRepository = SpringContext.getBean(QuestRepository.class);
 
 	@Override
 	public void seed()
