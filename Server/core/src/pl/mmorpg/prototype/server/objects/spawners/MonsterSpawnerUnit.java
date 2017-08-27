@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.util.Random;
 
 import pl.mmorpg.prototype.server.collision.pixelmap.IntegerRectangle;
+import pl.mmorpg.prototype.server.objects.monsters.GameObjectsFactory;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
-import pl.mmorpg.prototype.server.objects.monsters.MonstersFactory;
 
 public class MonsterSpawnerUnit
 {
@@ -49,9 +49,9 @@ public class MonsterSpawnerUnit
 		return false;
 	}
 
-	public Monster getNewMonster(MonstersFactory factory, long id)
+	public Monster getNewMonster(GameObjectsFactory factory, long id)
 	{
-		Monster monster = factory.produce(monsterType, id);
+		Monster monster = (Monster) factory.produce(monsterType, id);
 		Point randomSpawnLocation = getRandomSpawnLocation();
 		monster.setPosition(randomSpawnLocation.x, randomSpawnLocation.y);
 		currentAmount++;

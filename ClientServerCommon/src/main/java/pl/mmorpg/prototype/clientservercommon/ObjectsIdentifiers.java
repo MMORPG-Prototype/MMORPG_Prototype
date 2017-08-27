@@ -15,5 +15,6 @@ public class ObjectsIdentifiers
 	public static final String GROCERY_NPC = "Grocery npc";
 	public static final String SNAKE = "Snake";
 	public static final String SNAKE_DEAD = "Snake dead";
+	public static final String QUEST_BOARD = "Quest board";
 
 }

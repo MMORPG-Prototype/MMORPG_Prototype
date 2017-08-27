@@ -42,17 +42,22 @@ public class GameCommandsHandler
 
 	public void addMonster(String identifier, int x, int y)
 	{
-		game.addMonster(identifier, x, y);
+		game.addGameObject(identifier, x, y);
 	}
 
 	public void addGreenDragon(int x, int y)
 	{
-		game.addMonster(ObjectsIdentifiers.GREEN_DRAGON, x, y);
+		game.addGameObject(ObjectsIdentifiers.GREEN_DRAGON, x, y);
 	}
 
 	public void addRedDragon(int x, int y)
 	{
-		game.addMonster(ObjectsIdentifiers.RED_DRAGON, x, y);
+		game.addGameObject(ObjectsIdentifiers.RED_DRAGON, x, y);
+	}
+	
+	public void addQuestBoard(int x, int y)
+	{
+		game.addGameObject(ObjectsIdentifiers.QUEST_BOARD, x, y);
 	}
 
 	public String help()

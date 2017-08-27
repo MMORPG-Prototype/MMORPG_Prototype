@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
+import pl.mmorpg.prototype.server.objects.ineractivestaticobjects.QuestBoard;
 import pl.mmorpg.prototype.server.objects.monsters.Skeleton;
 import pl.mmorpg.prototype.server.objects.monsters.Snake;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.GrayDragonBody;
@@ -36,6 +37,7 @@ public class ObjectsIdentifier
         identifiers.put(GroceryShopNpc.class, ObjectsIdentifiers.GROCERY_NPC);
         identifiers.put(Snake.class, ObjectsIdentifiers.SNAKE);
         identifiers.put(SnakeBody.class, ObjectsIdentifiers.SNAKE_DEAD);
+        identifiers.put(QuestBoard.class, ObjectsIdentifiers.QUEST_BOARD);
     }
 
     public static String getObjectIdentifier(Class<?> type)

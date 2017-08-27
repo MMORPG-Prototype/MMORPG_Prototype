@@ -32,9 +32,9 @@ import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
+import pl.mmorpg.prototype.server.objects.monsters.GameObjectsFactory;
+import pl.mmorpg.prototype.server.objects.monsters.GameObjectsIdentifier;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
-import pl.mmorpg.prototype.server.objects.monsters.MonsterIdentifier;
-import pl.mmorpg.prototype.server.objects.monsters.MonstersFactory;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
 import pl.mmorpg.prototype.server.objects.monsters.dragons.GreenDragon;
 import pl.mmorpg.prototype.server.objects.monsters.dragons.RedDragon;
@@ -55,8 +55,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private final Map<Long, GameContainer> gameContainers = new ConcurrentHashMap<>();
 	private final TiledMapRenderer mapRenderer;
 	private final ServerInputHandler inputHandler = new ServerInputHandler(this);
-	private final MonstersFactory monsterFactory = new MonstersFactory(collisionMap, this);
-	private final MonsterSpawner monsterSpawner = new MonsterSpawner(monsterFactory);
+	private final GameObjectsFactory objectsFactory = new GameObjectsFactory(collisionMap, this);
+	private final MonsterSpawner monsterSpawner = new MonsterSpawner(objectsFactory);
 	private final GameCommandsHandler gameCommandsHandler = new GameCommandsHandler(this);
 
 	private OrthographicCamera camera = new OrthographicCamera(6400, 4800);
@@ -109,7 +109,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	{
 		MapProperties properties = spawnerElement.getProperties();
 		String monsterIdentifier = (String) properties.get("MonsterType");
-		Class<? extends Monster> monsterType = MonsterIdentifier.getMonsterType(monsterIdentifier);
+		@SuppressWarnings("unchecked")
+		Class<? extends Monster> monsterType = (Class<? extends Monster>) GameObjectsIdentifier.getObjectType(monsterIdentifier);
 		float spawnInterval = (float) properties.get("spawnInterval");
 		int maximumMonsterAmount = (int) properties.get("MaximumMonsterAmount");
 		IntegerRectangle spawnArea = new IntegerRectangle(spawnerElement.getRectangle());
@@ -132,21 +133,24 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	{
 		GroceryShopNpc groceryShop = new GroceryShopNpc(IdSupplier.getId(), collisionMap, this);
 		groceryShop.setPosition(400, 400);
-		addMonster(groceryShop);
+		addGameObject(groceryShop);
 	}
 
-	void addMonster(String identifier, int x, int y)
+	void addGameObject(String identifier, int x, int y)
 	{
-		Monster monster = monsterFactory.produce(MonsterIdentifier.getMonsterType(identifier), IdSupplier.getId());
-		monster.setPosition(x, y);
-		addMonster(monster);
+		GameObject gameObject = objectsFactory.produce(GameObjectsIdentifier.getObjectType(identifier), IdSupplier.getId());
+		gameObject.setPosition(x, y);
+		addGameObject(gameObject);
 	}
 	
-	void addMonster(Monster monster)
+	void addGameObject(GameObject gameObject)
 	{
-		collisionMap.insert(monster);
-		add(monster);
-		server.sendToAllTCP(PacketsMaker.makeCreationPacket(monster));
+		collisionMap.insert(gameObject);
+		add(gameObject);
+		if(gameObject instanceof Monster)
+			server.sendToAllTCP(PacketsMaker.makeCreationPacket((Monster)gameObject));
+		else
+			server.sendToAllTCP(PacketsMaker.makeCreationPacket(gameObject));
 	}
 
 	@Override
@@ -175,7 +179,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		monsterSpawner.updateSpawners(deltaTime);
 		Monster spawnedMonster = monsterSpawner.getNewMonster(IdSupplier.getId());
 		if (spawnedMonster != null)
-			addMonster(spawnedMonster);
+			addGameObject(spawnedMonster);
 	}
 
 	@Override

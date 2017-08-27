@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.client.objects;
 
 import pl.mmorpg.prototype.client.exceptions.GameException;
+import pl.mmorpg.prototype.client.objects.interactive.QuestBoard;
 import pl.mmorpg.prototype.client.objects.monsters.Skeleton;
 import pl.mmorpg.prototype.client.objects.monsters.Snake;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.GrayDragonBody;
@@ -51,6 +52,8 @@ public class ObjectsFactory
         	object = new Snake(id); 
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SnakeBody.class)))
         	object = new SnakeBody(id);
+        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(QuestBoard.class)))
+        	object = new QuestBoard(id);
         else
             throw new ObjectIdentifierNotFoundException(identifier);
 
