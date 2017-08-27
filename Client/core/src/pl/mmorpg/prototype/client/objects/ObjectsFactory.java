@@ -1,6 +1,5 @@
 package pl.mmorpg.prototype.client.objects;
 
-
 import pl.mmorpg.prototype.client.exceptions.GameException;
 import pl.mmorpg.prototype.client.objects.monsters.Skeleton;
 import pl.mmorpg.prototype.client.objects.monsters.Snake;
