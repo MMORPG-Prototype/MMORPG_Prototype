@@ -9,6 +9,7 @@ import org.reflections.Reflections;
 import com.esotericsoftware.minlog.Log;
 
 import pl.mmorpg.prototype.server.database.seeders.CharacterItemsTableSeeder;
+import pl.mmorpg.prototype.server.database.seeders.QuestTableSeeder;
 import pl.mmorpg.prototype.server.database.seeders.TableSeeder;
 import pl.mmorpg.prototype.server.database.seeders.UserCharactersTableSeeder;
 import pl.mmorpg.prototype.server.database.seeders.UsersTableSeeder;
@@ -20,11 +21,11 @@ public class DatabaseSeedCommand implements CommandAction
 	public void run(String args)
 	{
 		Collection<TableSeeder> seeders = getAllSeeders();
-		assertAllSeedersAreCreated(seeders);
+		assertAllSeedersAreUsed(seeders);
 		seeders.forEach( seeder -> seeder.seed());
 	}
 
-	private void assertAllSeedersAreCreated(Collection<TableSeeder> seeders)
+	private void assertAllSeedersAreUsed(Collection<TableSeeder> seeders)
 	{
 		Reflections reflections = new Reflections(TableSeeder.class.getPackage().getName());
 		Set<Class<? extends TableSeeder>> subTypes = reflections.getSubTypesOf(TableSeeder.class);
@@ -38,6 +39,7 @@ public class DatabaseSeedCommand implements CommandAction
 		seeders.add(new UsersTableSeeder());
 		seeders.add(new UserCharactersTableSeeder());
 		seeders.add(new CharacterItemsTableSeeder());
+		seeders.add(new QuestTableSeeder());
 		return seeders;
 	}
 
