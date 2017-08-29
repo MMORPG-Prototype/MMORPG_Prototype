@@ -4,7 +4,7 @@
 	<groupId>mmorpg-maker</groupId>
 	<artifactId>mmorpg-maker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
+	<packaging>pom</packaging>
 
 	<modules>
 		<module>/ClientServerCommon</module>
