@@ -12,7 +12,7 @@ import pl.mmorpg.prototype.server.GameServer;
 @SpringBootApplication(scanBasePackages="pl.mmorpg.prototype")
 public class ServerLauncher
 {
-	public static void main(String[] args) 
+	public static void main(String[] args)  
 	{
 		SpringApplication.run(ServerLauncher.class, args);
 		
