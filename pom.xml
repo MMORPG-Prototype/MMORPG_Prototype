@@ -10,6 +10,8 @@
 		<module>/ClientServerCommon</module>
 		<module>/Server/core</module>
 		<module>/Server/desktop</module>
+		<module>/Cleint/core</module>
+		<module>/Cleint/desktop</module>
 	</modules>
 	
 	<build>
