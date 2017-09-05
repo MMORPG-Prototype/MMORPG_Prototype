@@ -102,15 +102,10 @@
 
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
-			<artifactId>gdx</artifactId>
-			<version>1.9.6</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx-platform</artifactId>
 			<version>1.9.6</version>
 			<classifier>natives-desktop</classifier>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
