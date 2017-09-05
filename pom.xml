@@ -10,6 +10,7 @@
 		<module>/ClientServerCommon</module>
 		<module>/Server/core</module>
 		<module>/Server/desktop</module>
+		<module>/Server/desktopHeadless</module>
 		<module>/Client/core</module>
 		<module>/Client/desktop</module>
 	</modules>
