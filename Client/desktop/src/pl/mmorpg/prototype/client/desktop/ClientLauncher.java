@@ -14,6 +14,7 @@ public class ClientLauncher
         config.width = Settings.GAME_WIDTH;
         config.height = Settings.GAME_HEIGHT;
         config.vSyncEnabled = false;
-        new LwjglApplication(new GameClient(), config);    
+        new LwjglApplication(new GameClient(), config);
+        System.out.println("Jar file hash test");
     }
 }
