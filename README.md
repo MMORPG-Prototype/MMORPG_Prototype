@@ -1,4 +1,4 @@
-# MMORPG Mediaval Game
+# MMORPG Medieval Game
 
 	The game server is constantly running. Client app can be downloaded here: 
 	https://www.dropbox.com/sh/jm1w0ius1jts77m/AADd6ZvCNKdR7Dgh01qwwMOna?dl=0
