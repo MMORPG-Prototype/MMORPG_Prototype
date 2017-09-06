@@ -24,111 +24,114 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryText
 
 public class QuickAccessDialog extends Dialog
 {
-	private Map<Integer, InventoryField<QuickAccessIcon>> quickAccessButtons = new TreeMap<>();
-	private UserInterface linkedInterface;
+    private Map<Integer, InventoryField<QuickAccessIcon>> quickAccessButtons = new TreeMap<>();
+    private UserInterface linkedInterface;
 
-	public QuickAccessDialog(UserInterface linkedInterface)
-	{
-		super("Quick access", Settings.DEFAULT_SKIN);
-		this.linkedInterface = linkedInterface;
+    public QuickAccessDialog(UserInterface linkedInterface)
+    {
+        super("Quick access", Settings.DEFAULT_SKIN);
+        this.linkedInterface = linkedInterface;
 
-		HorizontalGroup buttons = new HorizontalGroup().padBottom(8).space(4).padTop(0).fill();
-		for (int i = 0; i < 12; i++)
-		{
-			InventoryField<QuickAccessIcon> field = createField(i);
-			quickAccessButtons.put(i, field);
-			buttons.addActor(field);
-		}
-		add(buttons);
-		row();
-		pack();
-		this.setHeight(80);
-		this.setX(430);
-		this.setMovable(false);
-	}
+        HorizontalGroup buttons = new HorizontalGroup().padBottom(8).space(4).padTop(0).fill();
+        for (int i = 0; i < 12; i++)
+        {
+            InventoryField<QuickAccessIcon> field = createField(i);
+            quickAccessButtons.put(i, field);
+            buttons.addActor(field);
+        }
+        add(buttons);
+        row();
+        pack();
+        this.setHeight(80);
+        this.setX(430);
+        this.setMovable(false);
+    }
 
-	private InventoryField<QuickAccessIcon> createField(int cellPosition)
-	{
-		InventoryTextField<QuickAccessIcon> inventoryField = new InventoryTextField<>("F" + String.valueOf(cellPosition + 1));
-		inventoryField.setTextShiftX(-16);
-		inventoryField.setTextShiftY(-4);
-		inventoryField.addListener(new ClickListener()
-		{
-			@Override
-			public void clicked(InputEvent event, float x, float y)
-			{
-				fieldClicked(cellPosition);
-			}
-		});
-		return inventoryField;
-	}
+    private InventoryField<QuickAccessIcon> createField(int cellPosition)
+    {
+        InventoryTextField<QuickAccessIcon> inventoryField = new InventoryTextField<>(
+                "F" + String.valueOf(cellPosition + 1));
+        inventoryField.setTextShiftX(-16);
+        inventoryField.setTextShiftY(-4);
+        inventoryField.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                fieldClicked(cellPosition);
+            }
+        });
+        return inventoryField;
+    }
 
-	private void fieldClicked(int cellPosition)
-	{
-		linkedInterface.quickAccessButtonClicked(quickAccessButtons.get(cellPosition), cellPosition);
-	}
+    private void fieldClicked(int cellPosition)
+    {
+        linkedInterface.quickAccessButtonClicked(quickAccessButtons.get(cellPosition), cellPosition);
+    }
 
-	public void useButtonItem(int cellPosition, Monster target, PacketsSender packetSender)
-	{
-		InventoryField<QuickAccessIcon> fieldWithIcon = quickAccessButtons.get(cellPosition);
-		QuickAccessIcon quickAccessIcon = fieldWithIcon.getContent();
-		String itemIdentifier = quickAccessIcon.getItemIdenfier();
-		Item item = linkedInterface.searchForItem(itemIdentifier);
-		if (item == null)
-			return;
-		if (!(item instanceof ItemUseable))
-			throw new CannotUseThisItemException((Item)item);
+    public void useButtonItem(int cellPosition, Monster target, PacketsSender packetSender)
+    {
+        InventoryField<QuickAccessIcon> fieldWithIcon = quickAccessButtons.get(cellPosition);
+        if (fieldWithIcon.hasContent())
+        {
+            QuickAccessIcon quickAccessIcon = fieldWithIcon.getContent();
+            String itemIdentifier = quickAccessIcon.getItemIdenfier();
+            Item item = linkedInterface.searchForItem(itemIdentifier);
+            if (item == null)
+                return;
+            if (!(item instanceof ItemUseable))
+                throw new CannotUseThisItemException((Item) item);
 
-		((ItemUseable) item).use(target, packetSender);
-	}
+            ((ItemUseable) item).use(target, packetSender);
+        }
 
-	public boolean hasItem(QuickAccessIcon item)
-	{
-		for(InventoryField<QuickAccessIcon> field : quickAccessButtons.values())
-			if(field.hasContent() && field.getContent() == item)
-				return true;
-		return false;
-	}
+    }
 
-	public void removeItem(QuickAccessIcon usedItem)
-	{
-		for(InventoryField<QuickAccessIcon> field : quickAccessButtons.values())
-			if(field.hasContent() && field.getContent() == usedItem)
-			{
-				field.removeContent();
-				return;
-			}
-		throw new NoSuchItemInQuickAccessBarException(usedItem);
-	}
+    public boolean hasItem(QuickAccessIcon item)
+    {
+        for (InventoryField<QuickAccessIcon> field : quickAccessButtons.values())
+            if (field.hasContent() && field.getContent() == item)
+                return true;
+        return false;
+    }
 
-	public void decreaseNumberOfItems(String identifier)
-	{
-		getValidIcons(identifier).forEach(QuickAccessIcon::decreaseItemNumber);
-	}
+    public void removeItem(QuickAccessIcon usedItem)
+    {
+        for (InventoryField<QuickAccessIcon> field : quickAccessButtons.values())
+            if (field.hasContent() && field.getContent() == usedItem)
+            {
+                field.removeContent();
+                return;
+            }
+        throw new NoSuchItemInQuickAccessBarException(usedItem);
+    }
 
-	private Stream<QuickAccessIcon> getValidIcons(String identifier)
-	{
-		return quickAccessButtons.values().stream()
-				.map(InventoryField::getContent)
-				.filter(Objects::nonNull)
-				.filter(icon -> icon.getItemIdenfier().equals(identifier));
-	}
+    public void decreaseNumberOfItems(String identifier)
+    {
+        getValidIcons(identifier).forEach(QuickAccessIcon::decreaseItemNumber);
+    }
 
-	public void increaseNumbers(String identifier, int itemCount)
-	{
-		getValidIcons(identifier).forEach( icon -> icon.increaseItemNumber(itemCount));	
-	}
+    private Stream<QuickAccessIcon> getValidIcons(String identifier)
+    {
+        return quickAccessButtons.values().stream().map(InventoryField::getContent).filter(Objects::nonNull)
+                .filter(icon -> icon.getItemIdenfier().equals(identifier));
+    }
 
-	public boolean isFieldTaken(int cellPosition)
-	{
-		return quickAccessButtons.get(cellPosition).hasChildren();
-	}
+    public void increaseNumbers(String identifier, int itemCount)
+    {
+        getValidIcons(identifier).forEach(icon -> icon.increaseItemNumber(itemCount));
+    }
 
-	public void putItem(String itemIdentifier, int cellPosition, ItemCounter itemCounter)
-	{
-		QuickAccessIcon icon = new QuickAccessIcon(itemIdentifier, itemCounter);
-		InventoryField<QuickAccessIcon> quickAccessField = quickAccessButtons.get(cellPosition);
-		quickAccessField.put(icon);
-	}
-	
+    public boolean isFieldTaken(int cellPosition)
+    {
+        return quickAccessButtons.get(cellPosition).hasChildren();
+    }
+
+    public void putItem(String itemIdentifier, int cellPosition, ItemCounter itemCounter)
+    {
+        QuickAccessIcon icon = new QuickAccessIcon(itemIdentifier, itemCounter);
+        InventoryField<QuickAccessIcon> quickAccessField = quickAccessButtons.get(cellPosition);
+        quickAccessField.put(icon);
+    }
+
 }

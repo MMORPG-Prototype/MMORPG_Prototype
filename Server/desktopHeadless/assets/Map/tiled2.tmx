@@ -1389,7 +1389,7 @@
   </object>
   <object id="157" x="304" y="4539" width="303" height="179">
    <properties>
-    <property name="MonsterMaximumAmount" type="int" value="2"/>
+    <property name="MaximumMonsterAmount" type="int" value="2"/>
     <property name="MonsterType" value="Gray Dragon"/>
     <property name="spawnInterval" type="float" value="5"/>
    </properties>

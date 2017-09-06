@@ -1,6 +1,9 @@
 package pl.mmorpg.protptype.server.desktop;
 
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
@@ -15,10 +18,13 @@ import pl.mmorpg.prototype.server.ServerSettings;
 import pl.mmorpg.prototype.server.headless.NullGL20;
 import pl.mmorpg.prototype.server.headless.NullGL30;
 
+@SpringBootApplication(scanBasePackages="pl.mmorpg.prototype")
 public class HeadlessServerLauncher
 {
-    public static void main(String[] arg)
+    public static void main(String[] args)
     {
+		SpringApplication.run(HeadlessServerLauncher.class, args);
+    	
     	ServerSettings.isHeadless = true;
     	LwjglNativesLoader.load();
 		Gdx.files = new LwjglFiles();

@@ -18,7 +18,17 @@
 		</plugins>
 	</build>
 
-	<dependencies>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies> 
+
+		<dependency>
+			<groupId>mmorpgClientServerCommon</groupId>
+			<artifactId>mmorpgClientServerCommon</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.esotericsoftware</groupId>
