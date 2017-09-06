@@ -1,6 +1,6 @@
 # MMORPG Mediaval Game
 
-	The game server is constantly running. Client app can be downloaded from link:https://www.dropbox.com/sh/jm1w0ius1jts77m/AADd6ZvCNKdR7Dgh01qwwMOna?dl=0[here].
+	The game server is constantly running. Client app can be downloaded from [here](https://www.dropbox.com/sh/jm1w0ius1jts77m/AADd6ZvCNKdR7Dgh01qwwMOna?dl=0).
 	It is always the lastest version as is is updated via CI server.
 	To connect enter "pankiev.myddns.me" in adress field. You can also obviously run server locally.
 	MMORPG game where player can connect to server, register, log in, and create character. The information about this is saved in mysql database.   
@@ -21,5 +21,5 @@
 	- Google's Reflections 
 
 #### Note: 
-	I am using Kryonet Library, which license can be found link:https://github.com/EsotericSoftware/kryonet/blob/master/license.txt[here].
+	I am using Kryonet Library, which license can be found [here](https://github.com/EsotericSoftware/kryonet/blob/master/license.txt).
 	I do not have any of it's source code nor the binary form here.
