@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import pl.mmorpg.prototype.SpringContext;
 
-public abstract class JsonUserType<T> implements UserType
+public abstract class JsonUserType implements UserType
 {
 
     @Override

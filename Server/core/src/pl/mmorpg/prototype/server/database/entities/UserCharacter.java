@@ -74,10 +74,5 @@ public class UserCharacter implements Serializable
 
     @OneToMany(mappedBy = "key.character", cascade=CascadeType.ALL)
     private Set<CharactersQuests> quests;
-    // @ManyToMany
-    // @JoinTable(name = "user_characters_quests", joinColumns =
-    // @JoinColumn(name = "character_id"), inverseJoinColumns = @JoinColumn(name
-    // = "quest_id"))
-    // @MapKey(name = "name")
-    // private Map<String, Quest> quests;
+
 }
