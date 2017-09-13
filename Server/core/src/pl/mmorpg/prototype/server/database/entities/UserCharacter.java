@@ -2,7 +2,9 @@ package pl.mmorpg.prototype.server.database.entities;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,13 +17,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 
 @Entity(name = "UserCharacter")
 @Table(name = "User_Characters")
 @Data
+@EqualsAndHashCode(of="id")
 public class UserCharacter implements Serializable
 {
-    @ManyToOne 
+    @ManyToOne
     @JoinColumn(nullable = false)
     private User user;
 
@@ -56,14 +61,23 @@ public class UserCharacter implements Serializable
 
     @Column(name = "gold", nullable = false)
     private Integer gold = 100;
-   
+
     @Column(name = "last_location_x")
     private Integer lastLocationX = 96;
-    
+
     @Column(name = "last_location_y")
     private Integer lastLocationY = 96;
-    
-    @OneToMany(mappedBy="character")
-    @MapKey(name="fieldPosition")
+
+    @OneToMany(mappedBy = "character")
+    @MapKey(name = "fieldPosition")
     private Map<Integer, QuickAccessBarConfigurationElement> quickAccessBarConfig;
+
+    @OneToMany(mappedBy = "key.character", cascade=CascadeType.ALL)
+    private Set<CharactersQuests> quests;
+    // @ManyToMany
+    // @JoinTable(name = "user_characters_quests", joinColumns =
+    // @JoinColumn(name = "character_id"), inverseJoinColumns = @JoinColumn(name
+    // = "quest_id"))
+    // @MapKey(name = "name")
+    // private Map<String, Quest> quests;
 }

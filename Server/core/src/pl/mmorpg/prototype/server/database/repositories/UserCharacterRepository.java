@@ -20,4 +20,5 @@ public interface UserCharacterRepository extends CrudRepository<UserCharacter, I
 		result.getQuickAccessBarConfig().size();
 		return result;
 	}
+
 }

@@ -50,7 +50,7 @@ public class ServerListener extends Listener
     {
         PacketHandler packetHandler = packetHandlersFactory.produce(object);
         packetHandler.handle(object, connection);
-
+        
         Log.info("Packet received, client id: " + connection.getID() + ", packet: " + object);
     }
 

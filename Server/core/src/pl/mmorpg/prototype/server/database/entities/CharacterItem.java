@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 
@@ -27,6 +28,7 @@ import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition
 				})
 )
 @Data
+@EqualsAndHashCode(of="id")
 public class CharacterItem
 {
 	@Id

@@ -10,10 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity(name = "User")
 @Table(name = "Users")
 @Data
+@EqualsAndHashCode(of="id")
 public class User implements java.io.Serializable
 {
 	@Id
