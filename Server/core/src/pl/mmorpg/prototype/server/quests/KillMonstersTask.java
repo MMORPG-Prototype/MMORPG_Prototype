@@ -2,18 +2,18 @@ package pl.mmorpg.prototype.server.quests;
 
 import pl.mmorpg.prototype.server.quests.events.MonsterKilledEvent;
 
-public class KillMonsterTask extends QuestTaskBase<MonsterKilledEvent>
+public class KillMonstersTask extends QuestTaskBase<MonsterKilledEvent>
 {
     private final String monsterIdentifier;
     private int monstersToKill;
 
-    private KillMonsterTask()
+    private KillMonstersTask()
     {
         super(MonsterKilledEvent.class);
         monsterIdentifier = null;
     }
 
-    public KillMonsterTask(String monsterIdentifier, int monstersToKill)
+    public KillMonstersTask(String monsterIdentifier, int monstersToKill)
     {
         super(MonsterKilledEvent.class);
         this.monsterIdentifier = monsterIdentifier;

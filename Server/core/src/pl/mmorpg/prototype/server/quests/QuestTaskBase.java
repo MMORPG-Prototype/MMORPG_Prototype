@@ -3,10 +3,13 @@ package pl.mmorpg.prototype.server.quests;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import pl.mmorpg.prototype.server.quests.events.Event;
 
 public abstract class QuestTaskBase<T extends Event> implements QuestTask
 {
+    @JsonProperty
     private Collection<QuestTask> nextTasks = new ArrayList<>(1);
     
     private Class<T> desiredEventType;
@@ -26,6 +29,12 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
     public boolean isLastTaskInQuest()
     {
         return nextTasks.isEmpty();
+    }
+    
+    @Override
+    public Collection<QuestTask> getNextTasks()
+    {
+        return nextTasks;
     }
     
     @SuppressWarnings("unchecked")

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -72,7 +71,7 @@ public class UserCharacter implements Serializable
     @MapKey(name = "fieldPosition")
     private Map<Integer, QuickAccessBarConfigurationElement> quickAccessBarConfig;
 
-    @OneToMany(mappedBy = "key.character", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "key.character")
     private Set<CharactersQuests> quests;
 
 }

@@ -7,7 +7,8 @@ import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.repositories.QuestRepository;
-import pl.mmorpg.prototype.server.quests.KillMonsterTask;
+import pl.mmorpg.prototype.server.quests.AcceptQuestTask;
+import pl.mmorpg.prototype.server.quests.KillMonstersTask;
 
 public class QuestTableSeeder implements TableSeeder
 {
@@ -27,7 +28,10 @@ public class QuestTableSeeder implements TableSeeder
 		Quest quest = new Quest();
 		quest.setName(name);
 		quest.setDescription(description);
-		quest.setQuestTask(new KillMonsterTask(ObjectsIdentifiers.GREEN_DRAGON, 3));
+		AcceptQuestTask rootTask = new AcceptQuestTask(name);
+		KillMonstersTask killMonsterTask = new KillMonstersTask(ObjectsIdentifiers.GREEN_DRAGON, 3);
+		rootTask.addNextTask(killMonsterTask);
+		quest.setQuestTask(rootTask);
 		quest.setGoldReward(100);
 		quest.setItemsReward(Arrays.asList(ItemIdentifiers.SMALL_HP_POTION, ItemIdentifiers.SMALL_MP_POTION));
 		return quest;

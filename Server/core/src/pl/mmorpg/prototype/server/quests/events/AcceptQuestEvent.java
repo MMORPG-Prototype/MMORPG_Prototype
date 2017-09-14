@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MonsterKilledEvent implements Event
+public class AcceptQuestEvent implements Event
 {
-    private final String monsterIdentifier;
+    private final String questName;
 }

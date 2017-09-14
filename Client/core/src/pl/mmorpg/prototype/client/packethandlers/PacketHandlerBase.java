@@ -5,11 +5,13 @@ public abstract class PacketHandlerBase<T> implements PacketHandler
 	@Override
 	public void handle(Object object)
 	{
-		T packet = (T) object;
+		@SuppressWarnings("unchecked")
+        T packet = (T) object;
 		handlePacket(packet);
 	}
 
-	@Override
+    @SuppressWarnings("unchecked")
+    @Override
 	public boolean canBeHandled(Object packet)
 	{
 		return canHandle((T)packet);

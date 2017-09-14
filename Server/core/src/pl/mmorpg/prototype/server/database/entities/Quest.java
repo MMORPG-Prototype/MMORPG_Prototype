@@ -42,7 +42,7 @@ public class Quest
 	private String description;
 
 	@Type(type = "pl.mmorpg.prototype.server.database.jsonconfig.QuestTaskJsonUserType")
-	@Column(name="quest_task")
+	@Column(name="quest_task", nullable = false, length = 10000)
 	private QuestTask questTask;
 	
 	@Column(name="gold_reward")
