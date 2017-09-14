@@ -4,7 +4,8 @@ import pl.mmorpg.prototype.server.exceptions.DifferentTypeEffectException;
 
 public abstract class EffectBase<T> implements Effect
 {
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public void stackWithSameTypeEffect(Effect effect)
 	{
 		if(!isSameType(effect))

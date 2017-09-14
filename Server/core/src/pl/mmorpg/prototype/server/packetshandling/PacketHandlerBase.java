@@ -1,18 +1,22 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
 
+import java.util.Collection;
+
 import com.esotericsoftware.kryonet.Connection;
+
+import pl.mmorpg.prototype.server.quests.events.Event;
 
 public abstract class PacketHandlerBase<T> implements PacketHandler
 {
 	@Override
-	public void handle(Object object, Connection connection)
+	public Collection<Event> handle(Object object, Connection connection)
 	{
 		@SuppressWarnings("unchecked")
 		T packet = (T) object;
-		handle(connection, packet);
+		return handle(connection, packet);
 	}
 	
-	public abstract void handle(Connection connection, T packet);
+	public abstract Collection<Event> handle(Connection connection, T packet);
 
 }

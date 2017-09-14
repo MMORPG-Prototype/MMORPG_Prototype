@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 
 @Entity(name = "QuickAccessBarConfigurationElement")
@@ -26,6 +27,7 @@ import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 				})
 )
 @Data
+@EqualsAndHashCode(of="id")
 public class QuickAccessBarConfigurationElement
 {
 	@Id

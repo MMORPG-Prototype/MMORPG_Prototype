@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -11,6 +13,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.helpers.Authenticator;
+import pl.mmorpg.prototype.server.quests.events.Event;
 
 public class AuthenticationPacketHandler extends PacketHandlerBase<AuthenticationPacket>
 {
@@ -28,7 +31,7 @@ public class AuthenticationPacketHandler extends PacketHandlerBase<Authenticatio
 	}
 
 	@Override
-	public void handle(Connection connection, AuthenticationPacket packet)
+	public Collection<Event> handle(Connection connection, AuthenticationPacket packet)
 	{
 		Authenticator authenticator = new Authenticator(loggedUsersKeyUserId, packet);
 		try
@@ -41,7 +44,7 @@ public class AuthenticationPacketHandler extends PacketHandlerBase<Authenticatio
 			AuthenticationReplyPacket replyPacket = new AuthenticationReplyPacket();
 			replyPacket.message = "Database connection problem";
 			server.sendToTCP(connection.getID(), replyPacket);
-			return;
+			return Collections.emptyList();
 		}
 		
 		if (authenticator.isAuthenticated())
@@ -54,5 +57,6 @@ public class AuthenticationPacketHandler extends PacketHandlerBase<Authenticatio
 		}
 		AuthenticationReplyPacket replyPacket = authenticator.getReplyPacket();
 		server.sendToTCP(connection.getID(), replyPacket);
+		return Collections.emptyList();
 	}
 }

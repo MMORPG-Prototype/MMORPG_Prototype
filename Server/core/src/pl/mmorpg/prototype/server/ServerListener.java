@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.server;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -12,16 +12,20 @@ import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerFactory;
+import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class ServerListener extends Listener
 {
-    private final Map<Integer, UserInfo> loggedUsersKeyUserId = new ConcurrentHashMap<>();
-    private final Map<Integer, User> authenticatedClientsKeyClientId = new ConcurrentHashMap<>();
     private final PacketHandlerFactory packetHandlersFactory;
+    private Map<Integer, User> authenticatedClientsKeyClientId;
+    private PlayState playState;
 
-    public ServerListener(Server server, PlayState playState)
+    public ServerListener(Map<Integer, UserInfo> loggedUsersKeyUserId,
+            Map<Integer, User> authenticatedClientsKeyClientId, Server server, PlayState playState)
     {
+        this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
+        this.playState = playState;
         packetHandlersFactory = new PacketHandlerFactory(loggedUsersKeyUserId, authenticatedClientsKeyClientId, server,
                 playState);
     }
@@ -49,8 +53,8 @@ public class ServerListener extends Listener
     public void received(Connection connection, Object object)
     {
         PacketHandler packetHandler = packetHandlersFactory.produce(object);
-        packetHandler.handle(object, connection);
-
+        Collection<Event> events = packetHandler.handle(object, connection);
+        playState.handle(events, connection.getID());
         Log.info("Packet received, client id: " + connection.getID() + ", packet: " + object);
     }
 

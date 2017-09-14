@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -13,6 +15,7 @@ import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class LogoutPacketHandler extends PacketHandlerBase<LogoutPacket>
@@ -32,9 +35,10 @@ public class LogoutPacketHandler extends PacketHandlerBase<LogoutPacket>
     }
 
     @Override
-    public void handle(Connection connection, LogoutPacket packet)
+    public Collection<Event> handle(Connection connection, LogoutPacket packet)
     {
         userLoggedOut(connection);
+        return Collections.emptyList();
     }
 
     private void userLoggedOut(Connection connection)

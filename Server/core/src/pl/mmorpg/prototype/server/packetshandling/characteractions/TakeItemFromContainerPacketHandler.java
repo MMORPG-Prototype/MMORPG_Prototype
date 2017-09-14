@@ -1,5 +1,8 @@
 package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
@@ -11,6 +14,7 @@ import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
+import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class TakeItemFromContainerPacketHandler extends PacketHandlerBase<TakeItemFromContainerPacket>
@@ -27,7 +31,7 @@ public class TakeItemFromContainerPacketHandler extends PacketHandlerBase<TakeIt
 	}
 	
 	@Override
-	public void handle(Connection connection, TakeItemFromContainerPacket packet)
+	public Collection<Event> handle(Connection connection, TakeItemFromContainerPacket packet)
 	{
 		long characterId = gameData.getCharacterIdByConnectionId(connection.getID());
 		PlayerCharacter player = (PlayerCharacter)playState.getObject(characterId);
@@ -38,6 +42,7 @@ public class TakeItemFromContainerPacketHandler extends PacketHandlerBase<TakeIt
 		item.setInventoryPosition(desiredPosition);		
 		player.addItem(item);
 		connection.sendTCP(PacketsMaker.makeItemPacket(item));
+		return Collections.emptyList();
 	}
 
 }

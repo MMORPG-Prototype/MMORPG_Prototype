@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -11,6 +13,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterData
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
+import pl.mmorpg.prototype.server.quests.events.Event;
 
 public class GetUserCharacterPacketHandler extends PacketHandlerBase<GetUserCharactersPacket>
 {
@@ -22,7 +25,7 @@ public class GetUserCharacterPacketHandler extends PacketHandlerBase<GetUserChar
 	}
 
 	@Override
-	public void handle(Connection connection, GetUserCharactersPacket packet)
+	public Collection<Event> handle(Connection connection, GetUserCharactersPacket packet)
 	{
 		UserCharacterRepository characterRepo = (UserCharacterRepository) SpringContext
 				.getBean("userCharacterRepository");
@@ -35,6 +38,7 @@ public class GetUserCharacterPacketHandler extends PacketHandlerBase<GetUserChar
 			i++;
 		}
 		server.sendToTCP(connection.getID(), charactersPackets);
+        return Collections.emptyList();
 	}
 
 }
