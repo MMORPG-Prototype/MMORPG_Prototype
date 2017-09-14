@@ -12,7 +12,7 @@ public class KillMonstersTask extends QuestTaskBase<MonsterKilledEvent>
         super(MonsterKilledEvent.class);
         monsterIdentifier = null;
     }
-
+ 
     public KillMonstersTask(String monsterIdentifier, int monstersToKill)
     {
         super(MonsterKilledEvent.class);
@@ -49,5 +49,4 @@ public class KillMonstersTask extends QuestTaskBase<MonsterKilledEvent>
     {
         return monstersToKill;
     }
-    
 }

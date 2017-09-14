@@ -1,8 +1,8 @@
 package pl.mmorpg.prototype.server.database.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -72,6 +72,6 @@ public class UserCharacter implements Serializable
     private Map<Integer, QuickAccessBarConfigurationElement> quickAccessBarConfig;
 
     @OneToMany(mappedBy = "key.character")
-    private Set<CharactersQuests> quests;
+    private Collection<CharactersQuests> quests;
 
 }

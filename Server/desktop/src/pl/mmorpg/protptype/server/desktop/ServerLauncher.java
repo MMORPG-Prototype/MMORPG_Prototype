@@ -7,7 +7,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import pl.mmorpg.prototype.clientservercommon.Settings;
-import pl.mmorpg.prototype.server.quests.events.GameServer;
+import pl.mmorpg.prototype.server.GameServer;
 
 @SpringBootApplication(scanBasePackages="pl.mmorpg.prototype")
 public class ServerLauncher

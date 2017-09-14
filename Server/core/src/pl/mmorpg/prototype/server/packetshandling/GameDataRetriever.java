@@ -1,12 +1,11 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import pl.mmorpg.prototype.server.UserInfo;
+import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
@@ -45,7 +44,7 @@ public class GameDataRetriever
         return characterId;
     }
 	
-	public Set<CharactersQuests> getCharacterQuestsByConnectionId(int id)
+	public Collection<CharactersQuests> getCharacterQuestsByConnectionId(int id)
 	{
 	    UserCharacter userCharacter = getUserCharacterByConnectionId(id);
         if (userCharacter == null)
@@ -53,17 +52,31 @@ public class GameDataRetriever
         return userCharacter.getQuests();
 	}
 	
-	public List<QuestTask> getCharacterQuestTasksByConnectionId(int id)
+	public Collection<QuestTask> getCharacterQuestTasksByConnectionId(int id)
     {
-        Set<CharactersQuests> quests = getCharacterQuestsByConnectionId(id);
+        Collection<CharactersQuests> quests = getCharacterQuestsByConnectionId(id);
         return getQuestTasks(quests);
     }
 	
-	private List<QuestTask> getQuestTasks(Set<CharactersQuests> quests)
+	private Collection<QuestTask> getQuestTasks(Collection<CharactersQuests> quests)
     {
         return quests.stream()
             .map(CharactersQuests::getQuestTasks)
             .flatMap(Collection::stream)
+            .map(QuestTaskWrapper::getQuestTask)
             .collect(Collectors.toList());
+    }
+
+    public int getConnectionIdByCharacterId(int characterId)
+    {
+        // TODO WARN! : linear search, may need to improve 
+        User user = loggedUsersKeyUserId.values().stream()
+            .map(e -> e.user)
+            .filter( e -> e.getId() == characterId)
+            .findAny().get();
+        return authenticatedClientsKeyClientId.entrySet().stream()
+                .filter(e -> e.getValue().getId() == user.getId())
+                .map(e -> e.getKey())
+                .findAny().get();
     }
 }

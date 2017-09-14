@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.server.quests.events;
+package pl.mmorpg.prototype.server;
 
 import java.io.IOException;
 import java.util.Map;
@@ -15,8 +15,6 @@ import com.esotericsoftware.minlog.Log;
 
 import pl.mmorpg.prototype.clientservercommon.Settings;
 import pl.mmorpg.prototype.clientservercommon.registering.PacketsRegisterer;
-import pl.mmorpg.prototype.server.ServerListener;
-import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.commandUtils.CommandHandler;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.CannotBindServerException;
@@ -43,9 +41,9 @@ public class GameServer extends ApplicationAdapter
         states = new StateManager();
         batch = Assets.getBatch();
         server = initializeServer();
-        QuestTaskEventHandler questTaskEventHandler = new QuestTaskEventHandler(
+
+        playState = new PlayState(server, states,
                 new GameDataRetriever(loggedUsersKeyUserId, authenticatedClientsKeyClientId));
-        playState = new PlayState(server, states, questTaskEventHandler);
         server.addListener(
                 new ServerListener(loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
         bindServer();

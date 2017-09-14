@@ -14,10 +14,11 @@ public interface UserCharacterRepository extends CrudRepository<UserCharacter, I
 	List<UserCharacter> findByUser_Username(String username);
 	
 	@Transactional
-	default UserCharacter findOneAndFetchQuickAccessBarConfig(Integer id)
+	default UserCharacter findOneAndFetchQuickAccessBarConfigAndQuests(Integer id)
 	{
 		UserCharacter result = findOne(id);
 		result.getQuickAccessBarConfig().size();
+		result.getQuests().forEach(q -> q.getQuestTasks().size());
 		return result;
 	}
 

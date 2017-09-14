@@ -1,11 +1,11 @@
 package pl.mmorpg.prototype.server.quests.events;
 
 import java.util.Collection;
-import java.util.List;
 
 import pl.mmorpg.prototype.server.exceptions.UserIsNotInGameException;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.quests.QuestTask;
+import pl.mmorpg.prototype.server.quests.observers.QuestFinishedObserver;
 
 public class QuestTaskEventHandler implements EventHandler
 {
@@ -17,9 +17,9 @@ public class QuestTaskEventHandler implements EventHandler
     }
 
     @Override
-    public void handle(Event event, int connectionId)
+    public void handle(Event event, int connectionId, QuestFinishedObserver observer)
     {
-        List<QuestTask> questTasks;
+        Collection<QuestTask> questTasks;
         try
         {
             questTasks = gameDataRetriever.getCharacterQuestTasksByConnectionId(connectionId);
@@ -28,15 +28,15 @@ public class QuestTaskEventHandler implements EventHandler
             return;
         }
 
-        handle(questTasks, event);
+        handle(questTasks, event, observer);
     }
 
     @Override
-    public void handle(Collection<Event> events, int connectionId)
+    public void handle(Collection<Event> events, int connectionId, QuestFinishedObserver observer)
     {
         if (!events.isEmpty())
         {
-            List<QuestTask> questTasks;
+            Collection<QuestTask> questTasks;
             try
             {
                 questTasks = gameDataRetriever.getCharacterQuestTasksByConnectionId(connectionId);
@@ -45,24 +45,7 @@ public class QuestTaskEventHandler implements EventHandler
                 return;
             }
 
-            handle(questTasks, events);
+            handle(questTasks, events, observer);
         }
     }
-
-    private void handle(List<QuestTask> questTasks, Collection<Event> events)
-    {
-        events.forEach(e -> handle(questTasks, e));
-    }
-
-    private void handle(List<QuestTask> questTasks, Event e)
-    {
-        questTasks.forEach(task -> handle(task, e));
-    }
-
-    private void handle(QuestTask task, Event e)
-    {
-        if (task.shouldProcess(e))
-            task.process(e);
-    }
-
 }

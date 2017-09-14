@@ -52,7 +52,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 
     private void userChoosenCharcter(int userCharacterId, int clientId)
     {
-        UserCharacter character = characterRepo.findOneAndFetchQuickAccessBarConfig(userCharacterId);
+        UserCharacter character = characterRepo.findOneAndFetchQuickAccessBarConfigAndQuests(userCharacterId);
 
         UserInfo info = loggedUsersKeyUserId.get(character.getUser().getId());
         info.userCharacter = character;

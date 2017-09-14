@@ -18,9 +18,9 @@ public class QuestTableSeeder implements TableSeeder
 	public void seed()
 	{
 		questRepository.save(createQuest("Green dragon epidemy",
-				"There is to many green dragons in the area, they are eating all crops, please help us, kill 10 of them"));
-		questRepository.save(createQuest("Some quest",
-				"Weclome, i hope the application won't crash for you in a second :)"));
+				"There is to many green dragons in the area, they are eating all crops, please help us, kill 3 of them"));
+//		questRepository.save(createQuest("Some quest",
+//				"Weclome, i hope the application won't crash for you in a second :)"));
 	}
 
 	private Quest createQuest(String name, String description)

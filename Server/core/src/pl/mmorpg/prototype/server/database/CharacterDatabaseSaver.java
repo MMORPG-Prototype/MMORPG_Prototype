@@ -6,9 +6,13 @@ import java.util.stream.Collectors;
 
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
+import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
 import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
+import pl.mmorpg.prototype.server.database.repositories.CharactersQuestsRepository;
+import pl.mmorpg.prototype.server.database.repositories.QuestTaskWrapperRepository;
 import pl.mmorpg.prototype.server.database.repositories.QuickAccessBarConfigurationElementRepository;
 import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
@@ -17,57 +21,72 @@ import pl.mmorpg.prototype.server.objects.items.StackableItem;
 
 public class CharacterDatabaseSaver
 {
-	private final UserCharacterRepository characterRepo = SpringContext
-			.getBean(UserCharacterRepository.class);
-	private final CharacterItemRepository itemRepo = SpringContext.getBean(CharacterItemRepository.class);
-	private final QuickAccessBarConfigurationElementRepository quickAccessBarConfigRepo = SpringContext
-			.getBean(QuickAccessBarConfigurationElementRepository.class);
+    private final UserCharacterRepository characterRepo = SpringContext.getBean(UserCharacterRepository.class);
+    private final CharacterItemRepository itemRepo = SpringContext.getBean(CharacterItemRepository.class);
+    private final QuickAccessBarConfigurationElementRepository quickAccessBarConfigRepo = SpringContext
+            .getBean(QuickAccessBarConfigurationElementRepository.class);
+    private final CharactersQuestsRepository charactersQuestsRepo = SpringContext
+            .getBean(CharactersQuestsRepository.class);
+    private final QuestTaskWrapperRepository questTaskWrapperRepo = SpringContext
+            .getBean(QuestTaskWrapperRepository.class);
 
-	public void save(PlayerCharacter character)
-	{
-		saveCharacterItems(character);
-		saveCharacterProperties(character);
-		saveCharacterQuickAccessBarConfig(character);
-	}
+    public void save(PlayerCharacter character)
+    {
+        saveCharacterItems(character);
+        saveCharacterProperties(character);
+        saveCharacterQuestStates(character);
+        saveCharacterQuickAccessBarConfig(character);
+    }
 
-	private void saveCharacterItems(PlayerCharacter character)
-	{
-		Collection<Item> items = character.getItems();
-		Collection<CharacterItem> databaseItems = items.stream()
-				.map((item) -> toDatabaseEquiv(item, (int) character.getId())).collect(Collectors.toList());
-		saveCharacterItems(character.getUserCharacterData(), databaseItems);
-	}
+    private void saveCharacterItems(PlayerCharacter character)
+    {
+        Collection<Item> items = character.getItems();
+        Collection<CharacterItem> databaseItems = items.stream()
+                .map((item) -> toDatabaseEquiv(item, (int) character.getId())).collect(Collectors.toList());
+        saveCharacterItems(character.getUserCharacterData(), databaseItems);
+    }
 
-	private void saveCharacterItems(UserCharacter toSave, Collection<CharacterItem> items)
-	{
-		List<CharacterItem> oldItems = itemRepo.findByCharacter(toSave);
-		itemRepo.delete(oldItems);
-		itemRepo.save(items);
-	}
+    private void saveCharacterItems(UserCharacter toSave, Collection<CharacterItem> items)
+    {
+        List<CharacterItem> oldItems = itemRepo.findByCharacter(toSave);
+        itemRepo.delete(oldItems);
+        itemRepo.save(items);
+    }
 
-	private CharacterItem toDatabaseEquiv(Item item, int ownerId)
-	{
-		CharacterItem characterItem = new CharacterItem();
-		UserCharacter character = characterRepo.findOne(ownerId);
-		characterItem.setCharacter(character);
-		characterItem.setIdentifier(item.getIdentifier());
-		characterItem.setInventoryPosition(item.getInventoryPosition());
-		if (item instanceof StackableItem)
-			characterItem.setCount(((StackableItem) item).getCount());
-		return characterItem;
-	}
+    private CharacterItem toDatabaseEquiv(Item item, int ownerId)
+    {
+        CharacterItem characterItem = new CharacterItem();
+        UserCharacter character = characterRepo.findOne(ownerId);
+        characterItem.setCharacter(character);
+        characterItem.setIdentifier(item.getIdentifier());
+        characterItem.setInventoryPosition(item.getInventoryPosition());
+        if (item instanceof StackableItem)
+            characterItem.setCount(((StackableItem) item).getCount());
+        return characterItem;
+    }
 
-	private void saveCharacterProperties(PlayerCharacter character)
-	{
-		character.updateUserCharacterData();
-		characterRepo.save(character.getUserCharacterData());
-	}
-	
-	private void saveCharacterQuickAccessBarConfig(PlayerCharacter character)
-	{
-		UserCharacter userCharacterData = character.getUserCharacterData();
-		quickAccessBarConfigRepo.delete(quickAccessBarConfigRepo.findByCharacter(userCharacterData));
-		Collection<QuickAccessBarConfigurationElement> configElements = userCharacterData.getQuickAccessBarConfig().values();
-		quickAccessBarConfigRepo.save(configElements);
-	}
+    private void saveCharacterProperties(PlayerCharacter character)
+    {
+        character.updateUserCharacterData();
+        characterRepo.save(character.getUserCharacterData());
+    }
+
+    private void saveCharacterQuestStates(PlayerCharacter character)
+    {
+        Collection<CharactersQuests> quests = character.getUserCharacterData().getQuests();
+        Collection<QuestTaskWrapper> toDelete = questTaskWrapperRepo.findByCharactersQuests(quests);
+        //TODO fix this
+        toDelete.stream().map(QuestTaskWrapper::getId).forEach(questTaskWrapperRepo::delete);
+
+        charactersQuestsRepo.save(quests);
+    }
+
+    private void saveCharacterQuickAccessBarConfig(PlayerCharacter character)
+    {
+        UserCharacter userCharacterData = character.getUserCharacterData();
+        quickAccessBarConfigRepo.delete(quickAccessBarConfigRepo.findByCharacter(userCharacterData));
+        Collection<QuickAccessBarConfigurationElement> configElements = userCharacterData.getQuickAccessBarConfig()
+                .values();
+        quickAccessBarConfigRepo.save(configElements);
+    }
 }
