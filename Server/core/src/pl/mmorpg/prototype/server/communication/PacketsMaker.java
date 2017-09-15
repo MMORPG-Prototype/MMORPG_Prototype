@@ -2,6 +2,8 @@ package pl.mmorpg.prototype.server.communication;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
@@ -10,6 +12,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemSwapPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ItemRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
@@ -18,6 +21,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
@@ -39,6 +43,7 @@ import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.server.database.entities.components.ItemReward;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
@@ -394,5 +399,25 @@ public class PacketsMaker
 		packet.setQuestBoardId(questBoardId);
 		return packet;
 	}
+
+    public static QuestRewardPacket makeQuestRewardPacket(Quest quest)
+    {   
+        QuestRewardPacket packet = new QuestRewardPacket();
+        packet.setGoldReward(quest.getGoldReward());
+        packet.setQuestName(quest.getName());
+        List<ItemRewardPacket> itemReward = quest.getItemsReward().stream()
+            .map(PacketsMaker::makeItemRewardPacket)
+            .collect(Collectors.toList());
+        packet.setItemReward(itemReward);
+        return packet;
+    }
+    
+    public static ItemRewardPacket makeItemRewardPacket(ItemReward itemReward)
+    {
+        ItemRewardPacket packet = new ItemRewardPacket();
+        packet.setItemIdentifier(itemReward.getItemIdentifier().toString());
+        packet.setNumberOfItems(itemReward.getNumberOfItems());
+        return packet;
+    }
 
 }

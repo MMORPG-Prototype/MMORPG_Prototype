@@ -24,11 +24,11 @@ public class RewardForFinishedQuestObserver implements QuestFinishedObserver
     public void playerFinishedQuest(int characterId, Quest quest)
     {
         PlayerCharacter playerCharacter = (PlayerCharacter) gameObjectsContainer.getObject(characterId);
-        Integer goldReward = quest.getGoldReward();
         int connectionId = gameDataRetriever.getConnectionIdByCharacterId(characterId);
-        playerCharacter.addGold(goldReward);
-        packetsSender.sendTo(connectionId, PacketsMaker.makeGoldReceivePacket(goldReward));
+        packetsSender.sendTo(connectionId, PacketsMaker.makeQuestRewardPacket(quest));
+        
         //TODO item rewards
+        
         //Collection<ItemIdentifiers> itemsReward = quest.getItemsReward();
         //GameItemsFactory.produce(itemsReward, 1, IdSupplier.getId(), new InventoryPosition(-1, -1, -1));
     }

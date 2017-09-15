@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
-import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
 import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
@@ -74,10 +73,6 @@ public class CharacterDatabaseSaver
     private void saveCharacterQuestStates(PlayerCharacter character)
     {
         Collection<CharactersQuests> quests = character.getUserCharacterData().getQuests();
-        Collection<QuestTaskWrapper> toDelete = questTaskWrapperRepo.findByCharactersQuests(quests);
-        //TODO fix this
-        toDelete.stream().map(QuestTaskWrapper::getId).forEach(questTaskWrapperRepo::delete);
-
         charactersQuestsRepo.save(quests);
     }
 

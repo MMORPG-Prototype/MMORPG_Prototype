@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.server.database.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -7,8 +8,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,12 +19,12 @@ import org.hibernate.annotations.Type;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
+import pl.mmorpg.prototype.server.database.entities.components.ItemReward;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.quests.QuestTask;
 
 @Entity(name = "Quest")
-@Table(name = "Quests")
+@Table(name = "quests")
 @Data
 @EqualsAndHashCode(of="id")
 public class Quest
@@ -49,10 +48,8 @@ public class Quest
     private Integer goldReward = 0;
 
     @ElementCollection
-    @CollectionTable(name="items_rewards", joinColumns=@JoinColumn(name="quest_id"))
-    @Column(name="item_identifier", nullable=true)
-    @Enumerated(EnumType.STRING)
-    private Collection<ItemIdentifiers> itemsReward;
+    @CollectionTable(name="quest_defined_item_rewards", joinColumns=@JoinColumn(name="quest_id"))
+    private Collection<ItemReward> itemsReward = new ArrayList<ItemReward>();
 	
 	@OneToMany(mappedBy="key.quest")
     private Set<CharactersQuests> characters;
