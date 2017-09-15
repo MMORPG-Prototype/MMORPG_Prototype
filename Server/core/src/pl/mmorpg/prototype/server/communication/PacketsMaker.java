@@ -2,8 +2,6 @@ package pl.mmorpg.prototype.server.communication;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
@@ -21,7 +19,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestRewardPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
@@ -400,14 +398,14 @@ public class PacketsMaker
 		return packet;
 	}
 
-    public static QuestRewardPacket makeQuestRewardPacket(Quest quest)
+    public static QuestFinishedRewardPacket makeQuestFinishedRewardPacket(Quest quest)
     {   
-        QuestRewardPacket packet = new QuestRewardPacket();
+        QuestFinishedRewardPacket packet = new QuestFinishedRewardPacket();
         packet.setGoldReward(quest.getGoldReward());
         packet.setQuestName(quest.getName());
-        List<ItemRewardPacket> itemReward = quest.getItemsReward().stream()
+        ItemRewardPacket[] itemReward = quest.getItemsReward().stream()
             .map(PacketsMaker::makeItemRewardPacket)
-            .collect(Collectors.toList());
+            .toArray(ItemRewardPacket[]::new);
         packet.setItemReward(itemReward);
         return packet;
     }
