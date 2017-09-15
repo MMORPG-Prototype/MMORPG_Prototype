@@ -6,7 +6,7 @@ import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.database.entities.Quest;
-import pl.mmorpg.prototype.server.database.entities.components.ItemReward;
+import pl.mmorpg.prototype.server.database.entities.QuestItemReward;
 import pl.mmorpg.prototype.server.database.repositories.QuestRepository;
 import pl.mmorpg.prototype.server.quests.AcceptQuestTask;
 import pl.mmorpg.prototype.server.quests.KillMonstersTask;
@@ -35,8 +35,8 @@ public class QuestTableSeeder implements TableSeeder
 		quest.setQuestTask(rootTask);
 		quest.setGoldReward(100);
 		quest.setItemsReward(Arrays.asList(
-                new ItemReward(ItemIdentifiers.SMALL_HP_POTION, 2), 
-                new ItemReward(ItemIdentifiers.SMALL_MP_POTION, 1)
+                new QuestItemReward(ItemIdentifiers.SMALL_HP_POTION, 2, quest), 
+                new QuestItemReward(ItemIdentifiers.SMALL_MP_POTION, 1, quest)
                 ));
 		return quest;
 	}

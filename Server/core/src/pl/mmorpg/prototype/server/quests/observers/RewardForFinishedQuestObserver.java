@@ -26,7 +26,6 @@ public class RewardForFinishedQuestObserver implements QuestFinishedObserver
         PlayerCharacter playerCharacter = (PlayerCharacter) gameObjectsContainer.getObject(characterId);
         int connectionId = gameDataRetriever.getConnectionIdByCharacterId(characterId);
         packetsSender.sendTo(connectionId, PacketsMaker.makeQuestRewardPacket(quest));
-        
         //TODO item rewards
         
         //Collection<ItemIdentifiers> itemsReward = quest.getItemsReward();
