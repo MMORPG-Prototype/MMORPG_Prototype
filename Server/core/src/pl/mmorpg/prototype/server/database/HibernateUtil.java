@@ -18,13 +18,7 @@ public class HibernateUtil
 	{
 		try
 		{
-			Configuration config = new Configuration();
-			if(Settings.HIBERNATE_CONFIG_INTERNAL_PATH)
-				config.configure(Settings.HIBERNATE_CONFIG_FILE_PATH);
-			else
-				config.configure(new File(Settings.HIBERNATE_CONFIG_FILE_PATH));
-			
-			registerEntityTypes(config);
+			Configuration config = createConfig();
 			sessionFactory = config.buildSessionFactory();
 		} catch (Throwable ex)
 		{
@@ -32,6 +26,17 @@ public class HibernateUtil
 			throw new ExceptionInInitializerError(ex);
 		}
 	}
+
+    private static Configuration createConfig()
+    {
+        Configuration config = new Configuration();
+        if(Settings.HIBERNATE_CONFIG_INTERNAL_PATH)
+        	config.configure(Settings.HIBERNATE_CONFIG_FILE_PATH);
+        else
+        	config.configure(new File(Settings.HIBERNATE_CONFIG_FILE_PATH));
+        registerEntityTypes(config);
+        return config;
+    }
 	
 	public static void recreateDatabase()
 	{
