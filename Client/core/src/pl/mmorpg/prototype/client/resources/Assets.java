@@ -95,16 +95,23 @@ public class Assets
 		Set<String> skinPaths = getClasspathResources(Sets.newHashSet("json"));
 		for (String path : skinPaths)
 			skins.put(path, new Skin(Gdx.files.classpath(path)));
-
 	}
 
 	private static Set<String> getClasspathResources(Set<String> filesExtensions)
-	{
-		return new Reflections(new ConfigurationBuilder()
-				.setUrls(ClasspathHelper.forManifest())
-				.setScanners(new ResourcesScanner()))
-					.getResources(Pattern.compile("(.*?)." + getCombinedExtensions(filesExtensions)));
-	}
+    {
+        ConfigurationBuilder configuration = new ConfigurationBuilder()
+                .setUrls(ClasspathHelper.forManifest())
+                .setScanners(new ResourcesScanner());
+        configuration.setInputsFilter(Assets::isValidResourcePath);
+        Reflections reflections = new Reflections(configuration);
+        Set<String> resources = reflections.getResources(getResourcePattern(filesExtensions));
+        return resources;
+    }
+	
+	private static Pattern getResourcePattern(Set<String> filesExtensions)
+    {
+        return Pattern.compile(".+\\." + getCombinedExtensions(filesExtensions));
+    }
 
 	private static String getCombinedExtensions(Set<String> filesExtensions)
 	{
@@ -116,6 +123,15 @@ public class Assets
 		strBuilder.append(')');
 		return strBuilder.toString();
 	}
+	
+	private static boolean isValidResourcePath(String resourcePath)
+    {
+        return !resourcePath.startsWith("com") && 
+               !resourcePath.startsWith("org") && 
+               !resourcePath.startsWith("junit") &&
+               !resourcePath.startsWith("lombok") &&
+               (!resourcePath.startsWith("UISkins") || resourcePath.endsWith("json"));
+    }
 
 	public static void loadOthers()
 	{
@@ -126,7 +142,6 @@ public class Assets
 
 		assets.finishLoading();
 	}
-
 
 	private static Class<?> getClassFromPath(String path)
 	{

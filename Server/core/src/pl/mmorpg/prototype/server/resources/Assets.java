@@ -69,11 +69,27 @@ public class Assets
 	
 	private static Set<String> getClasspathResources(Set<String> filesExtensions)
 	{
-		return new Reflections(new ConfigurationBuilder()
+		ConfigurationBuilder configuration = new ConfigurationBuilder()
 				.setUrls(ClasspathHelper.forManifest())
-				.setScanners(new ResourcesScanner()))
-					.getResources(Pattern.compile("(.*?)." + getCombinedExtensions(filesExtensions)));
+				.setScanners(new ResourcesScanner());
+		configuration.setInputsFilter(Assets::isValidResourcePath);
+        Reflections reflections = new Reflections(configuration);
+        Set<String> resources = reflections.getResources(getResourcePattern(filesExtensions));
+        return resources;
 	}
+	
+	private static boolean isValidResourcePath(String resourcePath)
+	{
+	    return !resourcePath.startsWith("com") && 
+	           !resourcePath.startsWith("org") && 
+               !resourcePath.startsWith("junit") &&
+	           !resourcePath.startsWith("lombok");
+	}
+	
+	private static Pattern getResourcePattern(Set<String> filesExtensions)
+    {
+        return Pattern.compile(".+\\." + getCombinedExtensions(filesExtensions));
+    }
 	
 	private static String getCombinedExtensions(Set<String> filesExtensions)
 	{
