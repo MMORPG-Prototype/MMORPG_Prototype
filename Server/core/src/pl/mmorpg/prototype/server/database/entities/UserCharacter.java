@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 
 @Entity(name = "UserCharacter")
-@Table(name = "user_Characters")
+@Table(name = "user_characters")
 @Data
 @EqualsAndHashCode(of="id")
 public class UserCharacter implements Serializable
