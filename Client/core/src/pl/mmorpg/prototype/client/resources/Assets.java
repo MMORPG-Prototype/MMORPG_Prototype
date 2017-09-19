@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -36,7 +35,6 @@ import pl.mmorpg.prototype.clientservercommon.Settings;
 public class Assets
 {
 	private static Map<String, Class<?>> classTypes = new HashMap<String, Class<?>>();
-	private static Set<String> ignoredExtensions = new TreeSet<>();
 	private static AssetManager assets = new AssetManager();
 	private static BitmapFont font = new BitmapFont();
 	private static Map<String, Skin> skins = new HashMap<>();
@@ -48,7 +46,6 @@ public class Assets
 		loadSeveralStages();
 		assets.setLoader(TiledMap.class, new TmxMapLoader());
 		addClassTypes();
-		addIgnoredExtendsions();
 		loadSkins();
 		loadOthers();
 	}
@@ -72,22 +69,6 @@ public class Assets
 		classTypes.put("mp3", Music.class);
 		classTypes.put("ogg", Sound.class);
 		classTypes.put("tmx", TiledMap.class);
-	}
-
-	private static void addIgnoredExtendsions()
-	{
-		ignoredExtensions.add("atlas");
-		ignoredExtensions.add("fnt");
-		ignoredExtensions.add("txt");
-		ignoredExtensions.add("md");
-		ignoredExtensions.add("gitignore");
-		ignoredExtensions.add("lml");
-		ignoredExtensions.add("usl");
-		ignoredExtensions.add("xcf");
-		ignoredExtensions.add("svg");
-		ignoredExtensions.add("ttf");
-		ignoredExtensions.add("hiero");
-		ignoredExtensions.add("json");
 	}
 
 	private static void loadSkins()
