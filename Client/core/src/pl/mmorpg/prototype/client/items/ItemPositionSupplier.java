@@ -1,7 +1,13 @@
 package pl.mmorpg.prototype.client.items;
 
-import java.util.function.Function;
-
-public interface ItemPositionSupplier extends Function<Item, ItemInventoryPosition>
+public interface ItemPositionSupplier
 {
+    ItemInventoryPosition get(String itemIdentifier, int numberOfItems);
+    
+    default ItemInventoryPosition get(Item item)
+    {
+        if(item instanceof StackableItem)
+            return get(item.getIdentifier(), 1);
+        return get(item.getIdentifier(), ((StackableItem)item).getItemCount());
+    }
 }

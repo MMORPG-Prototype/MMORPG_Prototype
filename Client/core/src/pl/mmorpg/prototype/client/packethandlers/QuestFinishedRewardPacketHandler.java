@@ -15,8 +15,7 @@ public class QuestFinishedRewardPacketHandler extends PacketHandlerBase<QuestFin
     @Override
     public void handlePacket(QuestFinishedRewardPacket packet)
     {
-        int debug = 0;
-        debug++;
+        playState.questFinishedRewardPacketReceived(packet);
     }
 
 }

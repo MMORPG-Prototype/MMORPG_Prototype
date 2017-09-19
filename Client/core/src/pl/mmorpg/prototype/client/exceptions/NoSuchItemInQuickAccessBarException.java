@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.client.exceptions;
 
-import pl.mmorpg.prototype.client.items.QuickAccessIcon;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.QuickAccessIcon;
 
 public class NoSuchItemInQuickAccessBarException extends GameException
 {

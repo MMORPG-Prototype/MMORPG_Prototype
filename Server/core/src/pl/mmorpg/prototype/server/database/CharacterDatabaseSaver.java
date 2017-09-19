@@ -11,7 +11,6 @@ import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
 import pl.mmorpg.prototype.server.database.repositories.CharactersQuestsRepository;
-import pl.mmorpg.prototype.server.database.repositories.QuestTaskWrapperRepository;
 import pl.mmorpg.prototype.server.database.repositories.QuickAccessBarConfigurationElementRepository;
 import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
@@ -26,8 +25,6 @@ public class CharacterDatabaseSaver
             .getBean(QuickAccessBarConfigurationElementRepository.class);
     private final CharactersQuestsRepository charactersQuestsRepo = SpringContext
             .getBean(CharactersQuestsRepository.class);
-    private final QuestTaskWrapperRepository questTaskWrapperRepo = SpringContext
-            .getBean(QuestTaskWrapperRepository.class);
 
     public void save(PlayerCharacter character)
     {

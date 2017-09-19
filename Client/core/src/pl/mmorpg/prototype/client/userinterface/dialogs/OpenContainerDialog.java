@@ -90,7 +90,7 @@ public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 					Item item = field.getContent();
 					TakeItemFromContainerPacket packet = PacketsMaker.makeTakeItemFromContainerPacket(
 							OpenContainerDialog.this.getId(), item.getId(),
-							userInventoryTakeItemPositionSupplier.apply(item));
+							userInventoryTakeItemPositionSupplier.get(item));
 					packetsSender.send(packet);
 				}
 			}

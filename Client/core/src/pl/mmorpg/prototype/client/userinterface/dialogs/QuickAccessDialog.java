@@ -15,12 +15,12 @@ import pl.mmorpg.prototype.client.exceptions.CannotUseThisItemException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchItemInQuickAccessBarException;
 import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemUseable;
-import pl.mmorpg.prototype.client.items.QuickAccessIcon;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryTextField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.QuickAccessIcon;
 
 public class QuickAccessDialog extends Dialog
 {
