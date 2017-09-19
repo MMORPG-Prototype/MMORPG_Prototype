@@ -25,7 +25,7 @@ import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.quests.QuestTask;
 
 @Entity(name = "Quest")
-@Table(name = "Quests")
+@Table(name = "quests")
 @Data
 @EqualsAndHashCode(of="id")
 public class Quest

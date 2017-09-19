@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity(name = "User")
-@Table(name = "Users")
+@Table(name = "users")
 @Data
 @EqualsAndHashCode(of="id")
 public class User implements java.io.Serializable

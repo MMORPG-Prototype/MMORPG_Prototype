@@ -18,7 +18,7 @@ import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition
 
 @Entity(name = "CharacterItem")
 @Table(
-		name = "Character_Items", 
+		name = "character_Items", 
 		uniqueConstraints=
 		@UniqueConstraint(columnNames={
 				"character_id", 
