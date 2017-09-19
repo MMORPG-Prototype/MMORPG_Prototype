@@ -23,6 +23,11 @@
 				<directory>resources</directory>
 				<filtering>true</filtering>
 			</resource>
+			
+			<resource>
+                <directory>assets</directory>
+                <filtering>true</filtering>
+            </resource>
 		</resources>
 
 		<sourceDirectory>src</sourceDirectory>

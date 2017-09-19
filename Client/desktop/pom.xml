@@ -6,13 +6,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<build>
 
-		<resources>
-			<resource>
-				<directory>assets</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 

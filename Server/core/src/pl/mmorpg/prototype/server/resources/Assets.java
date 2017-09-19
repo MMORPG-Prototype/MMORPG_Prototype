@@ -70,7 +70,7 @@ public class Assets
 	private static Set<String> getClasspathResources(Set<String> filesExtensions)
 	{
 		return new Reflections(new ConfigurationBuilder()
-				.setUrls(ClasspathHelper.forJavaClassPath())
+				.setUrls(ClasspathHelper.forManifest())
 				.setScanners(new ResourcesScanner()))
 					.getResources(Pattern.compile("(.*?)." + getCombinedExtensions(filesExtensions)));
 	}

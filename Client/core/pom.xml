@@ -5,6 +5,19 @@
 	<artifactId>mmorpgClient-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<build>
+
+		<resources>
+			<resource>
+				<directory>assets</directory>
+				<filtering>true</filtering>
+			</resource>
+
+			<resource>
+				<directory>resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
@@ -22,7 +35,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<dependencies> 
+	<dependencies>
 
 		<dependency>
 			<groupId>mmorpgClientServerCommon</groupId>

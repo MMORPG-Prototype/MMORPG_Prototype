@@ -19,13 +19,6 @@
 
 	<build>
 
-		<resources>
-			<resource>
-				<directory>assets</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 
