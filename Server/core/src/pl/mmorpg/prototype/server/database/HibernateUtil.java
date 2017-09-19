@@ -40,7 +40,7 @@ public class HibernateUtil
 	
 	public static void recreateDatabase()
 	{
-		Configuration config = new Configuration().configure("hibernateRectreateDatabase.cfg.xml");
+		Configuration config = new Configuration().configure("hibernateRecreateDatabase.cfg.xml");
 		registerEntityTypes(config);
 		config.buildSessionFactory().openSession().close();
 	}
