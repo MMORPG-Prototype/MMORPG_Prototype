@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.quest.QuestRewardIcon;
 
 public class QuickAccessIcon extends QuestRewardIcon
 {

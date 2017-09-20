@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.userinterface.dialogs.components;
+package pl.mmorpg.prototype.client.userinterface.dialogs.components.chat;
 
 import java.util.ArrayList;
 import java.util.List;

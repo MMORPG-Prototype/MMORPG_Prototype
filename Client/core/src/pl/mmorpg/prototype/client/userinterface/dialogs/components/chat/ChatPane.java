@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.userinterface.dialogs.components;
+package pl.mmorpg.prototype.client.userinterface.dialogs.components.chat;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -22,7 +22,6 @@ public class ChatPane extends ScrollPane
 	{
 		chatList.addMessage(packet.getNickname(), packet.getMessage());
 		Gdx.app.postRunnable(scrollingTask);
-		
 	}
 
 }

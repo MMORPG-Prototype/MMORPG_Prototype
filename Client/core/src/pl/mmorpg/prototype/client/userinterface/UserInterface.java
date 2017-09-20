@@ -31,6 +31,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuestBoardDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.QuestListDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuestRewardDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
@@ -60,6 +61,7 @@ public class UserInterface
     private final EquipmentDialog equipmentDialog;
     private final ChatDialog chatDialog;
     private final ConsoleDialog consoleDialog;
+    private final QuestListDialog questListDialog;
     private final ActorManipulator dialogs = new ActorManipulator();
     private final DialogIdSupplier dialogIdSupplier = new DialogIdSupplier();
 
@@ -79,6 +81,7 @@ public class UserInterface
         equipmentDialog = new EquipmentDialog();
         chatDialog = new ChatDialog(this);
         consoleDialog = new ConsoleDialog(this);
+        questListDialog = new QuestListDialog();
         mapDialogsWithKeys();
         addOtherDialogs();
         showDialogs();
@@ -116,6 +119,7 @@ public class UserInterface
         dialogs.map(Keys.I, inventoryDialog);
         dialogs.map(Keys.C, statisticsDialog);
         dialogs.map(Keys.L, consoleDialog);
+        dialogs.map(Keys.Q, questListDialog);
     }
 
     private void addOtherDialogs()
@@ -136,6 +140,7 @@ public class UserInterface
         stage.addActor(statisticsDialog);
         stage.addActor(equipmentDialog);
         stage.addActor(consoleDialog);
+        stage.addActor(questListDialog);
     }
 
     public void draw(SpriteBatch batch)
