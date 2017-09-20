@@ -70,6 +70,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
 {
@@ -503,6 +504,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
     public void itemRewardRemovePacketReceived(ItemRewardRemovePacket packet)
     {
         userInterface.removeItemFromQuestRewardContainer(packet);
+    }
+
+    public void questRewardGoldRemovalPacketReceived(QuestRewardGoldRemovalPacket packet)
+    {
+        userInterface.removeGoldFromQuestRewardDialog(packet.getQuestFinishedDialogId(), packet.getGoldAmount());
     }
 
 }

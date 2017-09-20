@@ -59,7 +59,8 @@ public class RetrieveItemRewardPacketHandler extends PacketHandlerBase<RetrieveI
 
     private CharactersQuests findSuiteQuest(Collection<CharactersQuests> quests, String questName)
     {
-        return quests.stream().filter(characterQuest -> characterQuest.getQuest().getName().equals(questName)).findAny()
+        return quests.stream()
+                .filter(characterQuest -> characterQuest.getQuest().getName().equals(questName)).findAny()
                 .get();
     }
 

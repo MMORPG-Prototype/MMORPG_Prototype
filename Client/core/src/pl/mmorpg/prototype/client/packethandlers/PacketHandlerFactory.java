@@ -43,6 +43,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 
 public class PacketHandlerFactory
@@ -88,6 +89,7 @@ public class PacketHandlerFactory
         packetHandlers.put(QuestBoardInfoPacket.class, new QuestBoardInfoPacketHandler(playState));
         packetHandlers.put(QuestFinishedRewardPacket.class, new QuestFinishedRewardPacketHandler(playState));
         packetHandlers.put(ItemRewardRemovePacket.class, new ItemRewardRemovePacketHandler(playState));
+        packetHandlers.put(QuestRewardGoldRemovalPacket.class, new QuestRewardGoldRemovalPacketHandler(playState));
         
         // Ignore framework keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

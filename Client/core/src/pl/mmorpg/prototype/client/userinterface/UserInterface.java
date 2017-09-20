@@ -24,12 +24,12 @@ import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ConsoleDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ContainerDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.OpenContainerDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuestBoardDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuestRewardDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
@@ -274,7 +274,7 @@ public class UserInterface
     private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, int gold, long containerId)
     {
         ItemPositionSupplier desiredItemPositionSupplier = inventoryDialog::getDesiredItemPositionFor;
-        Dialog containerDialog = new OpenContainerDialog(contentItems, gold, "Container", dialogs,
+        Dialog containerDialog = new ContainerDialog(contentItems, gold, "Container", dialogs,
                 (PacketsSender) linkedState, containerId, desiredItemPositionSupplier);
         positionDialogNearMouse(containerDialog);
         stage.addActor(containerDialog);
@@ -291,7 +291,7 @@ public class UserInterface
     {
         if (dialogs.hasIdentifiableDialog(containerId))
         {
-            OpenContainerDialog dialog = dialogs.getIdentifiableDialog(containerId);
+            ContainerDialog dialog = dialogs.getIdentifiableDialog(containerId);
             dialog.removeItem(itemId);
         }
 
@@ -311,7 +311,7 @@ public class UserInterface
     {
         if (dialogs.hasIdentifiableDialog(containerId))
         {
-            OpenContainerDialog containerDialog = (OpenContainerDialog) dialogs.getIdentifiableDialog(containerId);
+            ContainerDialog containerDialog = (ContainerDialog) dialogs.getIdentifiableDialog(containerId);
             containerDialog.updateGoldByDecreasingBy(goldAmount);
         }
     }
@@ -417,6 +417,12 @@ public class UserInterface
     {
         QuestRewardDialog dialog = dialogs.getIdentifiableDialog(packet.getQuestFinishedDialogId());
         dialog.removeItem(packet.getItemIdentifier(), packet.getNumberOfItems());
+    }
+
+    public void removeGoldFromQuestRewardDialog(long dialogId, int goldAmount)
+    {
+        QuestRewardDialog dialog = dialogs.getIdentifiableDialog(dialogId);
+        dialog.updateGoldByDecreasingBy(goldAmount);
     }
 
 }

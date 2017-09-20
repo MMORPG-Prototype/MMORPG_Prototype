@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -39,11 +40,15 @@ public class CharactersQuests
     @OneToMany(mappedBy = "charactersQuests", orphanRemoval = true, cascade = CascadeType.ALL)
     private Collection<CharactersQuestsItemReward> itemsReward = new ArrayList<>();
 
+    @Column(name = "gold_reward", nullable = false)
+    private Integer goldReward;
+
     public CharactersQuests(UserCharacter character, Quest quest)
     {
         setCharacter(character);
         setQuest(quest);
         initializeItemsReward(quest.getItemsReward());
+        goldReward = quest.getGoldReward();
         Collection<QuestTask> nextTasks = quest.getQuestTask().getNextTasks();
         initalizeCurrentQuestTasks(nextTasks);
     }
@@ -51,8 +56,8 @@ public class CharactersQuests
     private void initializeItemsReward(Collection<QuestItemReward> itemsReward)
     {
         Collection<CharactersQuestsItemReward> convertedItemsReward = itemsReward.stream()
-            .map(item -> new CharactersQuestsItemReward(item.getItemIdentifier(), item.getNumberOfItems(), this))
-            .collect(Collectors.toList());
+                .map(item -> new CharactersQuestsItemReward(item.getItemIdentifier(), item.getNumberOfItems(), this))
+                .collect(Collectors.toList());
         this.itemsReward.addAll(convertedItemsReward);
     }
 

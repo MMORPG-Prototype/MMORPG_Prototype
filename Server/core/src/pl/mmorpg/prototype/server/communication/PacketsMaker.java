@@ -36,6 +36,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.ItemReward;
@@ -425,6 +426,14 @@ public class PacketsMaker
         ItemRewardRemovePacket packet = new ItemRewardRemovePacket();
         packet.setItemIdentifier(itemIdentifier);
         packet.setNumberOfItems(numberOfItems);
+        packet.setQuestFinishedDialogId(questFinishedDialogId);
+        return packet;
+    }
+
+    public static QuestRewardGoldRemovalPacket makeQuestRewardGoldRemovalPacket(int howMuchGold, long questFinishedDialogId)
+    {
+        QuestRewardGoldRemovalPacket packet = new QuestRewardGoldRemovalPacket();
+        packet.setGoldAmount(howMuchGold);
         packet.setQuestFinishedDialogId(questFinishedDialogId);
         return packet;
     }

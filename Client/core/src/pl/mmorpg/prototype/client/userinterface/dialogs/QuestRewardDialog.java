@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
@@ -11,16 +12,20 @@ import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
+import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.AutoCleanupOnCloseButtonDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.ButtonCreator;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.QuestRewardIcon;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLabel;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
 
 public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
 {
-    private Map<String, InventoryField<QuestRewardIcon>> rewardFields = new HashMap<>();
+    private final Map<String, InventoryField<QuestRewardIcon>> rewardFields = new HashMap<>();
+    private final StringValueLabel<Integer> goldLabel;
 
     public QuestRewardDialog(ActorManipulator linkedManipulator, long id, QuestFinishedRewardPacket questReward,
             ItemPositionSupplier desiredItemPositionSupplier, PacketsSender packetsSender)
@@ -37,7 +42,13 @@ public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
             rewardFields.put(itemReward.getItemIdentifier(), rewardField);
             this.add(rewardField);
         }
-
+        this.row();
+        goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN,
+                questReward.getGoldReward());
+        Button takeGoldButton = ButtonCreator.createTextButton("Take",
+                () -> packetsSender.send(PacketsMaker.makeRetrieveGoldRewardPacket(questReward.getQuestName(), id)));
+        this.add(goldLabel);
+        this.add(takeGoldButton);
         this.pack();
     }
 
@@ -78,5 +89,11 @@ public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
         questReward.decreaseNumberOfItems(numberOfItems);
         if (questReward.getNumberOfItems() == 0)
             rewardField.removeContent();
+    }
+
+    public void updateGoldByDecreasingBy(int goldAmount)
+    {
+        goldLabel.setValue(goldLabel.getValue() - goldAmount);
+        goldLabel.update();
     }
 }
