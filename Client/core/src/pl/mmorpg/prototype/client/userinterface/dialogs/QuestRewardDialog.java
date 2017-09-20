@@ -1,5 +1,8 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -17,6 +20,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItem
 
 public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
 {
+    private Map<String, InventoryField<QuestRewardIcon>> rewardFields = new HashMap<>();
 
     public QuestRewardDialog(ActorManipulator linkedManipulator, long id, QuestFinishedRewardPacket questReward,
             ItemPositionSupplier desiredItemPositionSupplier, PacketsSender packetsSender)
@@ -25,10 +29,12 @@ public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
 
         for (ItemRewardPacket itemReward : questReward.getItemReward())
         {
-            InventoryField<QuestRewardIcon> rewardField = createRewardField(desiredItemPositionSupplier, packetsSender);
+            InventoryField<QuestRewardIcon> rewardField = createRewardField(desiredItemPositionSupplier, packetsSender,
+                    questReward.getQuestName());
             QuestRewardIcon questRewardIcon = new QuestRewardIcon(itemReward.getItemIdentifier(),
                     itemReward.getNumberOfItems());
             rewardField.put(questRewardIcon);
+            rewardFields.put(itemReward.getItemIdentifier(), rewardField);
             this.add(rewardField);
         }
 
@@ -36,7 +42,7 @@ public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
     }
 
     private InventoryField<QuestRewardIcon> createRewardField(ItemPositionSupplier desiredItemPositionSupplier,
-            PacketsSender packetsSender)
+            PacketsSender packetsSender, String questName)
     {
         InventoryField<QuestRewardIcon> rewardField = new InventoryField<>();
         rewardField.addListener(new ClickListener()
@@ -44,14 +50,14 @@ public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                rewardFieldButtonClicked(rewardField, desiredItemPositionSupplier, packetsSender);
+                rewardFieldButtonClicked(rewardField, desiredItemPositionSupplier, packetsSender, questName);
             }
         });
         return rewardField;
     }
 
     private void rewardFieldButtonClicked(InventoryField<QuestRewardIcon> rewardField,
-            ItemPositionSupplier desiredItemPositionSupplier, PacketsSender packetsSender)
+            ItemPositionSupplier desiredItemPositionSupplier, PacketsSender packetsSender, String questName)
     {
         if (rewardField.hasContent())
         {
@@ -59,9 +65,18 @@ public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
             String itemIdentifier = questRewardIcon.getItemIdentifier();
             int numberOfItems = questRewardIcon.getNumberOfItems();
             ItemInventoryPosition desiredItemPosition = desiredItemPositionSupplier.get(itemIdentifier, numberOfItems);
-            RetrieveItemRewardPacket retrieveItemRewardPacket = PacketsMaker
-                    .makeRetrieveItemRewardPacket(itemIdentifier, numberOfItems, desiredItemPosition);
+            RetrieveItemRewardPacket retrieveItemRewardPacket = PacketsMaker.makeRetrieveItemRewardPacket(
+                    itemIdentifier, numberOfItems, desiredItemPosition, getId(), questName);
             packetsSender.send(retrieveItemRewardPacket);
         }
+    }
+
+    public void removeItem(String itemIdentifier, int numberOfItems)
+    {
+        InventoryField<QuestRewardIcon> rewardField = rewardFields.get(itemIdentifier);
+        QuestRewardIcon questReward = rewardField.getContent();
+        questReward.decreaseNumberOfItems(numberOfItems);
+        if (questReward.getNumberOfItems() == 0)
+            rewardField.removeContent();
     }
 }

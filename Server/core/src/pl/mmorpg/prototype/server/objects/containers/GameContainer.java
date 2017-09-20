@@ -1,15 +1,12 @@
 package pl.mmorpg.prototype.server.objects.containers;
 
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import pl.mmorpg.prototype.clientservercommon.Identifiable;
-import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 import pl.mmorpg.prototype.server.objects.items.Item;
 
-@Registerable
 public class GameContainer implements Identifiable
 {
 	private long id;

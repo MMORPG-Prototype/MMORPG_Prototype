@@ -68,6 +68,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
@@ -497,6 +498,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
     public void questFinishedRewardPacketReceived(QuestFinishedRewardPacket packet)
     {
         userInterface.openNewQuestRewardDialog(packet);
+    }
+
+    public void itemRewardRemovePacketReceived(ItemRewardRemovePacket packet)
+    {
+        userInterface.removeItemFromQuestRewardContainer(packet);
     }
 
 }

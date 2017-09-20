@@ -45,6 +45,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemData
 import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 
 public class UserInterface
 {
@@ -410,6 +411,12 @@ public class UserInterface
         positionDialogNearMouse(questRewardDialog);
         stage.addActor(questRewardDialog);
         dialogs.add(questRewardDialog);
+    }
+
+    public void removeItemFromQuestRewardContainer(ItemRewardRemovePacket packet)
+    {
+        QuestRewardDialog dialog = dialogs.getIdentifiableDialog(packet.getQuestFinishedDialogId());
+        dialog.removeItem(packet.getItemIdentifier(), packet.getNumberOfItems());
     }
 
 }

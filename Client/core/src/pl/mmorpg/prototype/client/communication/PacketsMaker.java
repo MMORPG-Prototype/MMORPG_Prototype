@@ -144,7 +144,7 @@ public class PacketsMaker
 	}
 
     public static RetrieveItemRewardPacket makeRetrieveItemRewardPacket(String itemIdentifier, int numberOfItems,
-            ItemInventoryPosition desiredItemPosition)
+            ItemInventoryPosition desiredItemPosition, long packetId, String questName)
     {
         RetrieveItemRewardPacket packet = new RetrieveItemRewardPacket();
         packet.setDesiredInventoryPage(desiredItemPosition.getPageNumber());
@@ -152,6 +152,8 @@ public class PacketsMaker
         packet.setDesiredInventoryY(desiredItemPosition.getPosition().y);
         packet.setItemIdentifier(itemIdentifier);
         packet.setNumberOfItems(numberOfItems);
+        packet.setRetrieveItemDialogId(packetId);
+        packet.setQuestName(questName);
         return packet;
     }
 }

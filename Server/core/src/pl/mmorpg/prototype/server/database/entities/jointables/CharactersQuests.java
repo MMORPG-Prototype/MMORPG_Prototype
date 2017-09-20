@@ -15,7 +15,7 @@ import javax.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import pl.mmorpg.prototype.server.database.entities.CharactesQuestsItemReward;
+import pl.mmorpg.prototype.server.database.entities.CharactersQuestsItemReward;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.QuestItemReward;
 import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
@@ -37,7 +37,7 @@ public class CharactersQuests
     private Collection<QuestTaskWrapper> questTasks = new LinkedList<QuestTaskWrapper>();
 
     @OneToMany(mappedBy = "charactersQuests", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Collection<CharactesQuestsItemReward> itemsReward = new ArrayList<>();
+    private Collection<CharactersQuestsItemReward> itemsReward = new ArrayList<>();
 
     public CharactersQuests(UserCharacter character, Quest quest)
     {
@@ -50,8 +50,8 @@ public class CharactersQuests
 
     private void initializeItemsReward(Collection<QuestItemReward> itemsReward)
     {
-        Collection<CharactesQuestsItemReward> convertedItemsReward = itemsReward.stream()
-            .map(item -> new CharactesQuestsItemReward(item.getItemIdentifier(), item.getNumberOfItems(), this))
+        Collection<CharactersQuestsItemReward> convertedItemsReward = itemsReward.stream()
+            .map(item -> new CharactersQuestsItemReward(item.getItemIdentifier(), item.getNumberOfItems(), this))
             .collect(Collectors.toList());
         this.itemsReward.addAll(convertedItemsReward);
     }

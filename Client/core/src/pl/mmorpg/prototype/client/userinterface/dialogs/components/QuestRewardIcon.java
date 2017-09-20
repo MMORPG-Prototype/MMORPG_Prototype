@@ -28,6 +28,11 @@ public class QuestRewardIcon extends InventoryIcon
         font.getData().setScale(1.0f);
         font.draw(batch, String.valueOf(getNumberOfItems()), x + 22, y + 12);
     }
+    
+    public void decreaseNumberOfItems(int howMany)
+    {
+        numberOfItems -= howMany;
+    }
 
     public String getItemIdentifier()
     {

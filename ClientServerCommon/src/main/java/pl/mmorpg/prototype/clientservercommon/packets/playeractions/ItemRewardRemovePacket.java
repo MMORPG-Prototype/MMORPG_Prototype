@@ -5,13 +5,9 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
 @Data
-public class RetrieveItemRewardPacket
+public class ItemRewardRemovePacket
 {
     private String itemIdentifier;
     private int numberOfItems;
-    private int desiredInventoryX;
-    private int desiredInventoryY;
-    private int desiredInventoryPage;
-    private String questName;
-    private long retrieveItemDialogId;
+    private long questFinishedDialogId;
 }

@@ -22,7 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<dependencies> 
+	<dependencies>
 
 		<dependency>
 			<groupId>mmorpgClientServerCommon</groupId>
@@ -34,6 +34,12 @@
 			<groupId>com.esotericsoftware</groupId>
 			<artifactId>kryonet</artifactId>
 			<version>2.22.0-RC1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.1</version>
 		</dependency>
 
 		<dependency>

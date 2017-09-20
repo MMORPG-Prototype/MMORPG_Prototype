@@ -19,7 +19,7 @@ import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 @NoArgsConstructor
 @Entity(name="CharactersQuestsItemReward")
 @Table(name="characters_quests_item_reward")
-public class CharactesQuestsItemReward extends ItemReward
+public class CharactersQuestsItemReward extends ItemReward
 {
     @ManyToOne
     @JoinColumns({
@@ -28,7 +28,7 @@ public class CharactesQuestsItemReward extends ItemReward
         })
     private CharactersQuests charactersQuests;
     
-    public CharactesQuestsItemReward(ItemIdentifiers itemIdentifier, Integer numberOfItems, CharactersQuests charactersQuests)
+    public CharactersQuestsItemReward(ItemIdentifiers itemIdentifier, Integer numberOfItems, CharactersQuests charactersQuests)
     {
         super(itemIdentifier, numberOfItems);
         setCharactersQuests(charactersQuests);
