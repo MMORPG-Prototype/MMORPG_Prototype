@@ -6,6 +6,7 @@ import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.database.entities.Quest;
+import pl.mmorpg.prototype.server.database.entities.QuestItemReward;
 import pl.mmorpg.prototype.server.database.repositories.QuestRepository;
 import pl.mmorpg.prototype.server.quests.AcceptQuestTask;
 import pl.mmorpg.prototype.server.quests.KillMonstersTask;
@@ -19,8 +20,8 @@ public class QuestTableSeeder implements TableSeeder
 	{
 		questRepository.save(createQuest("Green dragon epidemy",
 				"There is to many green dragons in the area, they are eating all crops, please help us, kill 3 of them"));
-//		questRepository.save(createQuest("Some quest",
-//				"Weclome, i hope the application won't crash for you in a second :)"));
+		questRepository.save(createQuest("Green dragon epidemy 2",
+				"Debug quest"));
 	}
 
 	private Quest createQuest(String name, String description)
@@ -33,7 +34,10 @@ public class QuestTableSeeder implements TableSeeder
 		rootTask.addNextTask(killMonsterTask);
 		quest.setQuestTask(rootTask);
 		quest.setGoldReward(100);
-		quest.setItemsReward(Arrays.asList(ItemIdentifiers.SMALL_HP_POTION, ItemIdentifiers.SMALL_MP_POTION));
+		quest.setItemsReward(Arrays.asList(
+                new QuestItemReward(ItemIdentifiers.SMALL_HP_POTION, 2, quest), 
+                new QuestItemReward(ItemIdentifiers.SMALL_MP_POTION, 1, quest)
+                ));
 		return quest;
 	}
 

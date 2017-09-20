@@ -31,8 +31,10 @@ public class QuestTaskWrapper
     private QuestTask questTask;
 
     @ManyToOne
-    @JoinColumns({ @JoinColumn(name = "character_id", referencedColumnName = "character_id"),
-            @JoinColumn(name = "quest_id", referencedColumnName = "quest_id") })
+    @JoinColumns({ 
+            @JoinColumn(name = "character_id", referencedColumnName = "character_id"),
+            @JoinColumn(name = "quest_id", referencedColumnName = "quest_id") 
+            })
     private CharactersQuests charactersQuests;
     
     public QuestTask getQuestTask()

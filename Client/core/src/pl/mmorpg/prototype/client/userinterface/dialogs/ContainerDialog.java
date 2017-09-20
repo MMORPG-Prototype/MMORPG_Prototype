@@ -24,14 +24,14 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLa
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 
-public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
+public class ContainerDialog extends AutoCleanupOnCloseButtonDialog
 {
 	private static final int ROW_LENGTH = 5;
 	private static final int BUTTON_SIZE = 32;
 	private final Map<Point, InventoryField<Item>> containerFields = new HashMap<>();
 	private final StringValueLabel<Integer> goldLabel;
 
-	public OpenContainerDialog(CharacterItemDataPacket[] itemsToShow, int gold, String title,
+	public ContainerDialog(CharacterItemDataPacket[] itemsToShow, int gold, String title,
 			ActorManipulator linkedContainer, PacketsSender packetsSender, long containerId,
 			ItemPositionSupplier userInventoryTakeItemPositionSupplier)
 	{
@@ -89,8 +89,8 @@ public class OpenContainerDialog extends AutoCleanupOnCloseButtonDialog
 				{
 					Item item = field.getContent();
 					TakeItemFromContainerPacket packet = PacketsMaker.makeTakeItemFromContainerPacket(
-							OpenContainerDialog.this.getId(), item.getId(),
-							userInventoryTakeItemPositionSupplier.apply(item));
+							ContainerDialog.this.getId(), item.getId(),
+							userInventoryTakeItemPositionSupplier.get(item));
 					packetsSender.send(packet);
 				}
 			}

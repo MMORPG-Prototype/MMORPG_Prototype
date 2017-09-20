@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.items;
+package pl.mmorpg.prototype.client.userinterface.dialogs.components;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -6,21 +6,18 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 
-public class QuickAccessIcon extends InventoryIcon
+public class QuickAccessIcon extends QuestRewardIcon
 {
     private final BitmapFont font = Assets.getFont();
     
-	private String itemIdentifier;
+	private final String itemIdentifier;
 	private ItemCounter itemCounter;
-    private int numberOfItems;
 
 	public QuickAccessIcon(String itemIdentifier, ItemCounter itemCounter)
 	{
-		super(ItemTextureRetriever.getTexture(itemIdentifier));
+		super(itemIdentifier, itemCounter.countItems(itemIdentifier));
 		this.itemCounter = itemCounter;
-		this.setItemIdenfier(itemIdentifier);
-		numberOfItems = 0;
-		recalculateItemNumber();
+		this.itemIdentifier = itemIdentifier;
 	}
 	
 	public void recalculateItemNumber()
@@ -37,11 +34,6 @@ public class QuickAccessIcon extends InventoryIcon
 	{
 		numberOfItems += howMany;
 	}
-
-	public void setItemIdenfier(String itemIdenfier)
-	{
-		this.itemIdentifier = itemIdenfier;
-	}
 	
 	public String getItemIdenfier()
 	{
@@ -56,6 +48,5 @@ public class QuickAccessIcon extends InventoryIcon
         if(numberOfItems > 0)
         	font.draw(batch, String.valueOf(numberOfItems), x + 22, y + 12);
     }
-
 	
 }

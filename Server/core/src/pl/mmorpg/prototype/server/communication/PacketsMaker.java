@@ -10,6 +10,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemSwapPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ItemRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
@@ -18,6 +19,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
@@ -32,9 +34,12 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerGol
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
+import pl.mmorpg.prototype.server.database.entities.ItemReward;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
@@ -394,5 +399,43 @@ public class PacketsMaker
 		packet.setQuestBoardId(questBoardId);
 		return packet;
 	}
+
+    public static QuestFinishedRewardPacket makeQuestFinishedRewardPacket(Quest quest)
+    {   
+        QuestFinishedRewardPacket packet = new QuestFinishedRewardPacket();
+        packet.setGoldReward(quest.getGoldReward());
+        packet.setQuestName(quest.getName());
+        ItemRewardPacket[] itemReward = quest.getItemsReward().stream()
+            .map(PacketsMaker::makeItemRewardPacket)
+            .toArray(ItemRewardPacket[]::new);
+        packet.setItemReward(itemReward);
+        return packet;
+    }
+    
+    public static ItemRewardPacket makeItemRewardPacket(ItemReward itemReward)
+    {
+        ItemRewardPacket packet = new ItemRewardPacket();
+        packet.setItemIdentifier(itemReward.getItemIdentifier().toString());
+        packet.setNumberOfItems(itemReward.getNumberOfItems());
+        return packet;
+    }
+
+    public static ItemRewardRemovePacket makeItemRewardRemovePacket(String itemIdentifier, int numberOfItems,
+            long questFinishedDialogId)
+    {
+        ItemRewardRemovePacket packet = new ItemRewardRemovePacket();
+        packet.setItemIdentifier(itemIdentifier);
+        packet.setNumberOfItems(numberOfItems);
+        packet.setQuestFinishedDialogId(questFinishedDialogId);
+        return packet;
+    }
+
+    public static QuestRewardGoldRemovalPacket makeQuestRewardGoldRemovalPacket(int howMuchGold, long questFinishedDialogId)
+    {
+        QuestRewardGoldRemovalPacket packet = new QuestRewardGoldRemovalPacket();
+        packet.setGoldAmount(howMuchGold);
+        packet.setQuestFinishedDialogId(questFinishedDialogId);
+        return packet;
+    }
 
 }

@@ -18,6 +18,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryIte
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedFromQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveGoldRewardPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
 
@@ -141,4 +143,26 @@ public class PacketsMaker
 		packet.setCellPosition(cellPosition);
 		return packet;
 	}
+
+    public static RetrieveItemRewardPacket makeRetrieveItemRewardPacket(String itemIdentifier, int numberOfItems,
+            ItemInventoryPosition desiredItemPosition, long packetId, String questName)
+    {
+        RetrieveItemRewardPacket packet = new RetrieveItemRewardPacket();
+        packet.setDesiredInventoryPage(desiredItemPosition.getPageNumber());
+        packet.setDesiredInventoryX(desiredItemPosition.getPosition().x);
+        packet.setDesiredInventoryY(desiredItemPosition.getPosition().y);
+        packet.setItemIdentifier(itemIdentifier);
+        packet.setNumberOfItems(numberOfItems);
+        packet.setRetrieveItemDialogId(packetId);
+        packet.setQuestName(questName);
+        return packet;
+    }
+
+    public static RetrieveGoldRewardPacket makeRetrieveGoldRewardPacket(String questName, long retrieveItemDialogId)
+    {
+        RetrieveGoldRewardPacket packet = new RetrieveGoldRewardPacket();
+        packet.setQuestName(questName);
+        packet.setRetrieveItemDialogId(retrieveItemDialogId);
+        return packet;
+    }
 }

@@ -10,12 +10,12 @@ public class AutoCleanupOnCloseButtonDialog extends Dialog implements Identifiab
 {
 	private long id;
 
-	public AutoCleanupOnCloseButtonDialog(String title, ActorManipulator linkedContainer, long id)
+	public AutoCleanupOnCloseButtonDialog(String title, ActorManipulator linkedManipulator, long id)
 	{
 		super(title, Settings.DEFAULT_SKIN);
 		this.id = id;
 		
-		CloseButton closeButton = new AutoCleanupCloseButton(this, linkedContainer) 
+		CloseButton closeButton = new AutoCleanupCloseButton(this, linkedManipulator) 
 		{
 			@Override
 			public void onPress()

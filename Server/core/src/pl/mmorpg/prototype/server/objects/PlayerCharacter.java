@@ -99,5 +99,5 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 	{
 		userCharacter.getQuickAccessBarConfig().remove(cellPosition);
 	}
-	
+	 
 }

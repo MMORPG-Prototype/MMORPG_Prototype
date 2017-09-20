@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchFieldException;
 import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.items.StackableItem;
@@ -24,6 +25,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryFiel
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryPage;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryTextField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLabel;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 
 public class InventoryDialog extends Dialog implements ItemCounter
 {
@@ -216,37 +218,54 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		}
 		throw new NoFreeFieldException();
 	}
+	
+    public ItemInventoryPosition getDesiredItemPositionFor(Item item)
+    {
+        if (item instanceof StackableItem)
+            return getFieldWithSuiteTypeStackableItemFor(item.getIdentifier());
+        else
+            return getFreeInventoryPosition();
+    }
 
-	public ItemInventoryPosition getDesiredItemPositionFor(Item item)
+	public ItemInventoryPosition getDesiredItemPositionFor(String itemIdentifier, int numberOfItems)
 	{
-		if (item instanceof StackableItem)
-			return getFieldWithSuiteTypeStackableItemFor(item);
+		if (isStackableType(itemIdentifier))
+			return getFieldWithSuiteTypeStackableItemFor(itemIdentifier);
 		else
 			return getFreeInventoryPosition();
 	}
 
-	public ItemInventoryPosition getFieldWithSuiteTypeStackableItemFor(Item item)
+	private boolean isStackableType(String itemIdentifier)
+    {
+	    // TODO: Should refactor
+	    CharacterItemDataPacket packet = new CharacterItemDataPacket();
+	    packet.setIdentifier(itemIdentifier);
+	    Item item = ItemFactory.produceItem(packet);
+	    return item instanceof StackableItem;
+    }
+
+    public ItemInventoryPosition getFieldWithSuiteTypeStackableItemFor(String itemIdentifier)
 	{
 		try
 		{
-			return getFieldWithSameTypeItem(item);
+			return getFieldWithSameTypeItem(itemIdentifier);
 		} catch (NoSuchFieldException e)
 		{
 			return getFreeInventoryPosition();
 		}
 	}
 
-	private ItemInventoryPosition getFieldWithSameTypeItem(Item item)
+	private ItemInventoryPosition getFieldWithSameTypeItem(String itemIdentifier)
 	{
 		for(int pageIndex=0; pageIndex<numberOfPages; pageIndex++)
 			try{
-				return getFieldWithSameTypeItem(item, pageIndex);
+				return getFieldWithSameTypeItem(itemIdentifier, pageIndex);
 			}catch(NoSuchFieldException e){}
 		
 		throw new NoSuchFieldException();
 	}
 
-	private ItemInventoryPosition getFieldWithSameTypeItem(Item item, int pageIndex)
+	private ItemInventoryPosition getFieldWithSameTypeItem(String itemIdentifier, int pageIndex)
 	{
 		InventoryPage currentPage = inventoryPages.get(pageIndex);
 		for (int i = 0; i < currentPage.getInventoryFieldsHeightNumber(); i++)
@@ -255,7 +274,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 				Point fieldPosition = new Point(i, j);
 				InventoryField<Item> field = currentPage.getField(fieldPosition);
 				Item fieldItem = field.getContent();
-				if (fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
+				if (fieldItem != null && fieldItem.getIdentifier().equals(itemIdentifier))
 					return new ItemInventoryPosition(pageIndex, fieldPosition);
 			}
 		throw new NoSuchFieldException();

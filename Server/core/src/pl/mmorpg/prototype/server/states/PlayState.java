@@ -71,7 +71,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     {
         this.server = server;
         this.states = states;
-        rewardForFisnishedQuestObserver = new RewardForFinishedQuestObserver(this, this, gameDataRetriever);
+        rewardForFisnishedQuestObserver = new RewardForFinishedQuestObserver(this, gameDataRetriever);
         this.questTaskEventHandler = new QuestTaskEventHandler(gameDataRetriever);
         camera.setToOrtho(false);
 

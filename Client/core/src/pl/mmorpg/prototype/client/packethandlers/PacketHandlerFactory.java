@@ -27,6 +27,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
@@ -40,7 +41,9 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerGol
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 
 public class PacketHandlerFactory
@@ -84,8 +87,11 @@ public class PacketHandlerFactory
         packetHandlers.put(ItemPutInQuickAccessBarPacket.class, new ItemPutInQuickAccessBarPacketHandler(playState));
         packetHandlers.put(ScriptResultInfoPacket.class, new ScriptResultInfoPacketHandler(playState));
         packetHandlers.put(QuestBoardInfoPacket.class, new QuestBoardInfoPacketHandler(playState));
-
-        // Ignore frameowrk keepAliveMessage
+        packetHandlers.put(QuestFinishedRewardPacket.class, new QuestFinishedRewardPacketHandler(playState));
+        packetHandlers.put(ItemRewardRemovePacket.class, new ItemRewardRemovePacketHandler(playState));
+        packetHandlers.put(QuestRewardGoldRemovalPacket.class, new QuestRewardGoldRemovalPacketHandler(playState));
+        
+        // Ignore framework keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
     }
 

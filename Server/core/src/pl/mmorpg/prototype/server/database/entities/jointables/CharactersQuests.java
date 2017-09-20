@@ -1,9 +1,12 @@
 package pl.mmorpg.prototype.server.database.entities.jointables;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -13,7 +16,9 @@ import javax.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import pl.mmorpg.prototype.server.database.entities.CharactersQuestsItemReward;
 import pl.mmorpg.prototype.server.database.entities.Quest;
+import pl.mmorpg.prototype.server.database.entities.QuestItemReward;
 import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.components.keys.CharactersQuestsKey;
@@ -29,27 +34,31 @@ public class CharactersQuests
     @EmbeddedId
     private CharactersQuestsKey key = new CharactersQuestsKey();
 
-    // @ElementCollection
-    // @CollectionTable(name = "quests_tasks", joinColumns = {
-    // @JoinColumn(name = "character_id", referencedColumnName =
-    // "character_id"),
-    // @JoinColumn(name = "quest_id", referencedColumnName = "quest_id") },
-    // uniqueConstraints = @UniqueConstraint(columnNames = {
-    // "character_id", "quest_id", "quest_task" }))
-    // @Column(name = "quest_task")
-    // @Type(type =
-    // "pl.mmorpg.prototype.server.database.jsonconfig.QuestTaskJsonUserType")
-    // private Collection<QuestTask> questTasks = new ArrayList<>(1);
-
-    @OneToMany(mappedBy="charactersQuests", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "charactersQuests", orphanRemoval = true, cascade = CascadeType.ALL)
     private Collection<QuestTaskWrapper> questTasks = new LinkedList<QuestTaskWrapper>();
+
+    @OneToMany(mappedBy = "charactersQuests", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Collection<CharactersQuestsItemReward> itemsReward = new ArrayList<>();
+
+    @Column(name = "gold_reward", nullable = false)
+    private Integer goldReward;
 
     public CharactersQuests(UserCharacter character, Quest quest)
     {
         setCharacter(character);
         setQuest(quest);
+        initializeItemsReward(quest.getItemsReward());
+        goldReward = quest.getGoldReward();
         Collection<QuestTask> nextTasks = quest.getQuestTask().getNextTasks();
         initalizeCurrentQuestTasks(nextTasks);
+    }
+
+    private void initializeItemsReward(Collection<QuestItemReward> itemsReward)
+    {
+        Collection<CharactersQuestsItemReward> convertedItemsReward = itemsReward.stream()
+                .map(item -> new CharactersQuestsItemReward(item.getItemIdentifier(), item.getNumberOfItems(), this))
+                .collect(Collectors.toList());
+        this.itemsReward.addAll(convertedItemsReward);
     }
 
     private void initalizeCurrentQuestTasks(Collection<QuestTask> nextTasks)
