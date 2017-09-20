@@ -13,6 +13,7 @@ import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.exceptions.CannotTargetItselfException;
 import pl.mmorpg.prototype.server.objects.GameObject;
+import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.ineractivestaticobjects.QuestBoard;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -38,7 +39,7 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
     public Collection<Event> handle(Connection connection, BoardClickPacket packet)
     {
         GameObject target = playState.getCollisionMap().getTopObject(packet.gameX, packet.gameY);
-        if (target != null)
+        if (target != null && !(target instanceof MapCollisionUnknownObject))
         {
             UserCharacter userCharacter = gameData.getUserCharacterByConnectionId(connection.getID());
             PlayerCharacter source = (PlayerCharacter)playState.getObject(userCharacter.getId());
