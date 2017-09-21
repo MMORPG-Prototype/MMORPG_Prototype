@@ -1,23 +1,29 @@
 package pl.mmorpg.prototype.server.quests;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import pl.mmorpg.prototype.server.quests.events.MonsterKilledEvent;
 
 public class KillMonstersTask extends QuestTaskBase<MonsterKilledEvent>
 {
     private final String monsterIdentifier;
-    private int monstersToKill;
+    @JsonProperty
+    private final int totalMonstersToKill;
+    private int monstersLeftToKill;
 
     private KillMonstersTask()
     {
         super(MonsterKilledEvent.class);
         monsterIdentifier = null;
+        totalMonstersToKill = 0;
     }
- 
+
     public KillMonstersTask(String monsterIdentifier, int monstersToKill)
     {
         super(MonsterKilledEvent.class);
         this.monsterIdentifier = monsterIdentifier;
-        this.monstersToKill = monstersToKill;
+        this.totalMonstersToKill = monstersToKill;
+        this.monstersLeftToKill = monstersToKill;
     }
 
     @Override
@@ -29,15 +35,15 @@ public class KillMonstersTask extends QuestTaskBase<MonsterKilledEvent>
     @Override
     public void apply(MonsterKilledEvent event)
     {
-        monstersToKill--;
-        if(monstersToKill < 0)
-            monstersToKill = 0;
+        monstersLeftToKill--;
+        if (monstersLeftToKill < 0)
+            monstersLeftToKill = 0;
     }
-    
+
     @Override
     public boolean isFinished()
     {
-        return monstersToKill <= 0;
+        return monstersLeftToKill <= 0;
     }
 
     public String getMonsterIdentifier()
@@ -45,8 +51,20 @@ public class KillMonstersTask extends QuestTaskBase<MonsterKilledEvent>
         return monsterIdentifier;
     }
 
-    public Integer getMonstersToKill()
+    public Integer getMonstersLeftToKill()
     {
-        return monstersToKill;
+        return monstersLeftToKill;
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Kill " + monstersLeftToKill + ' ' + monsterIdentifier;
+    }
+
+    @Override
+    public float getPercentFinished()
+    {
+        return (float) (totalMonstersToKill - monstersLeftToKill) / (float) totalMonstersToKill * 100.0f;
     }
 }

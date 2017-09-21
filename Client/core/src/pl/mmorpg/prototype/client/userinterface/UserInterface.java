@@ -20,6 +20,7 @@ import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
 import pl.mmorpg.prototype.client.items.StackableItem;
+import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
@@ -428,6 +429,11 @@ public class UserInterface
     {
         QuestRewardDialog dialog = dialogs.getIdentifiableDialog(dialogId);
         dialog.updateGoldByDecreasingBy(goldAmount);
+    }
+
+    public void addQuestToQuestListDialog(Quest quest)
+    {
+        questListDialog.addQuest(quest);
     }
 
 }

@@ -1,15 +1,21 @@
 package pl.mmorpg.prototype.client.quests;
 
-import java.util.ArrayList;
 import java.util.Collection;
+
+import pl.mmorpg.prototype.client.exceptions.QuestFinishedException;
 
 public class Progress
 {
-    private final Collection<ProgressStep> progressSteps = new ArrayList<>();
+    private final Collection<QuestTask> questTasks;
+    
+    public Progress(Collection<QuestTask> questTasks)
+    {
+        this.questTasks = questTasks;
+    }
     
     public boolean isEveryStepsFinished()
     {
-        for(ProgressStep step : progressSteps)
+        for(QuestTask step : questTasks)
             if(!step.isFinished())
                 return false;
         return true;
@@ -18,13 +24,21 @@ public class Progress
     public String getHumanReadableInfo()
     {
         int finishedSteps = getNumberOfFinishedSteps();
-        return finishedSteps + " / " + progressSteps.size();
+        return finishedSteps + " / " + questTasks.size();
     }
     
     private int getNumberOfFinishedSteps()
     {
-        return (int)progressSteps.stream()
+        return (int)questTasks.stream()
                     .filter(step -> step.isFinished())
                     .count();
+    }
+    
+    public QuestTask getCurrentTask()
+    {
+        return questTasks.stream()
+                .filter(q -> !q.isFinished())
+                .findFirst()
+                .orElseThrow(QuestFinishedException::new);
     }
 }

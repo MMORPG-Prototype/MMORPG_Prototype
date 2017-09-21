@@ -40,4 +40,16 @@ public class AcceptQuestTask extends QuestTaskBase<AcceptQuestEvent>
         return finished;
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Accept quest";
+    }
+
+    @Override
+    public float getPercentFinished()
+    {
+        return finished ? 100.0f : 0.0f;
+    }
+
 }

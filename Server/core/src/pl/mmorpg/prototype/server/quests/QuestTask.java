@@ -24,10 +24,7 @@ public interface QuestTask extends Serializable
     boolean shouldProcess(Event e);
 
     void process(Event e);
-
-    @JsonIgnore
-    boolean isFinished();
-
+    
     Collection<QuestTask> getNextTasks();
 
     void setSourceTask(CharactersQuests sourceTask);
@@ -47,4 +44,17 @@ public interface QuestTask extends Serializable
     }
 
     void questFinished(QuestFinishedObserver observer);
+
+    @JsonIgnore
+    String getDescription();
+
+    @JsonIgnore
+    float getPercentFinished();
+    
+    @JsonIgnore
+    default boolean isFinished()
+    {
+        return getPercentFinished() >= 100.0f;
+    }
+
 }

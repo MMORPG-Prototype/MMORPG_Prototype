@@ -41,6 +41,7 @@ import pl.mmorpg.prototype.client.objects.graphic.HealLabel;
 import pl.mmorpg.prototype.client.objects.graphic.ManaReplenishLabel;
 import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
+import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
@@ -509,6 +510,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
     public void questRewardGoldRemovalPacketReceived(QuestRewardGoldRemovalPacket packet)
     {
         userInterface.removeGoldFromQuestRewardDialog(packet.getQuestFinishedDialogId(), packet.getGoldAmount());
+    }
+
+    public void questInfoReceived(Quest quest)
+    {
+        userInterface.addQuestToQuestListDialog(quest);       
     }
 
 }
