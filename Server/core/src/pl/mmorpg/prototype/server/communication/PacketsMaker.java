@@ -300,8 +300,8 @@ public class PacketsMaker
 
     public static ShopItemsPacket makeShopItemsPacket(Collection<ShopItemWrapper> availableItems, long shopId)
     {
-
-        ShopItemPacket[] itemsArray = availableItems.stream().map(PacketsMaker::makeShopItemPacket)
+        ShopItemPacket[] itemsArray = availableItems.stream()
+                .map(PacketsMaker::makeShopItemPacket)
                 .toArray(ShopItemPacket[]::new);
 
         ShopItemsPacket packet = new ShopItemsPacket();
@@ -383,7 +383,8 @@ public class PacketsMaker
 
     public static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestBoard questBoard)
     {
-        QuestDataPacket[] quests = questBoard.getQuests().stream().map(PacketsMaker::makeQuestDataPacket)
+        QuestDataPacket[] quests = questBoard.getQuests().stream()
+                .map(PacketsMaker::makeQuestDataPacket)
                 .toArray(QuestDataPacket[]::new);
 
         return makeQuestBoardInfoPacket(quests, questBoard.getId());
@@ -410,7 +411,8 @@ public class PacketsMaker
         QuestFinishedRewardPacket packet = new QuestFinishedRewardPacket();
         packet.setGoldReward(quest.getGoldReward());
         packet.setQuestName(quest.getName());
-        ItemRewardPacket[] itemReward = quest.getItemsReward().stream().map(PacketsMaker::makeItemRewardPacket)
+        ItemRewardPacket[] itemReward = quest.getItemsReward().stream()
+                .map(PacketsMaker::makeItemRewardPacket)
                 .toArray(ItemRewardPacket[]::new);
         packet.setItemReward(itemReward);
         return packet;
@@ -445,7 +447,9 @@ public class PacketsMaker
 
     public static QuestStateInfoPacket[] makeQuestStateInfoPackets(Collection<CharactersQuests> quests)
     {
-        return quests.stream().map(PacketsMaker::makeQuestStateInfoPacket).toArray(QuestStateInfoPacket[]::new);
+        return quests.stream()
+                .map(PacketsMaker::makeQuestStateInfoPacket)
+                .toArray(QuestStateInfoPacket[]::new);
     }
 
     public static QuestStateInfoPacket makeQuestStateInfoPacket(CharactersQuests characterQuest)
