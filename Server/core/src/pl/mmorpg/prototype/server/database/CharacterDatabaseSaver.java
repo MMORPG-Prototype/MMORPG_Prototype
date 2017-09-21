@@ -29,8 +29,8 @@ public class CharacterDatabaseSaver
     public void save(PlayerCharacter character)
     {
         saveCharacterItems(character);
-        saveCharacterProperties(character);
         saveCharacterQuestStates(character);
+        saveCharacterProperties(character);
         saveCharacterQuickAccessBarConfig(character);
     }
 

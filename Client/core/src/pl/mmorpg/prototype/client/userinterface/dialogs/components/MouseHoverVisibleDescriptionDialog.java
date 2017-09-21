@@ -1,25 +1,24 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs.components;
 
-import java.util.Collection;
+import org.apache.commons.text.WordUtils;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-import pl.mmorpg.prototype.client.userinterface.dialogs.DialogUtils;
-
 public class MouseHoverVisibleDescriptionDialog extends MouseHoverVisibleDialog
 {
-	
-	public MouseHoverVisibleDescriptionDialog(Actor sourceActor, String name, String description)
-	{
-		super(sourceActor, name);
-		Collection<Label> descriptionLabels = DialogUtils.divideIntoPieces(description, 10);
-		descriptionLabels.forEach(label -> 
-		{
-			add(label);
-			row();
-		});
-		this.pack();
-	}
-	
+
+    public MouseHoverVisibleDescriptionDialog(Actor sourceActor, String name, String description)
+    {
+        super(sourceActor, name);
+        String[] descriptionLines = WordUtils.wrap(description, 20).split(System.lineSeparator());
+        for(String descriptionLine : descriptionLines)
+        {
+            Label descriptionLabel = new Label(descriptionLine, getSkin());
+            getContentTable().add(descriptionLabel);
+            getContentTable().row();   
+        }
+        this.pack();
+    }
+
 }

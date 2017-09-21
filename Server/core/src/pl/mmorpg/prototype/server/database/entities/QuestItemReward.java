@@ -13,7 +13,7 @@ import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude="quest")
 @NoArgsConstructor
 @Entity(name = "QuestItemReward")
 @Table(name = "quest_item_reward")

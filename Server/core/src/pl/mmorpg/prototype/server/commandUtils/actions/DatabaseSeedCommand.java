@@ -11,7 +11,6 @@ import com.esotericsoftware.minlog.Log;
 import pl.mmorpg.prototype.server.database.seeders.CharacterItemsTableSeeder;
 import pl.mmorpg.prototype.server.database.seeders.QuestTableSeeder;
 import pl.mmorpg.prototype.server.database.seeders.TableSeeder;
-import pl.mmorpg.prototype.server.database.seeders.UserCharactersQuestsTableSeeder;
 import pl.mmorpg.prototype.server.database.seeders.UserCharactersTableSeeder;
 import pl.mmorpg.prototype.server.database.seeders.UsersTableSeeder;
 
@@ -41,7 +40,7 @@ public class DatabaseSeedCommand implements CommandAction
 		seeders.add(new UserCharactersTableSeeder());
 		seeders.add(new CharacterItemsTableSeeder());
 		seeders.add(new QuestTableSeeder());
-		seeders.add(new UserCharactersQuestsTableSeeder());
+		//seeders.add(new UserCharactersQuestsTableSeeder());
 		return seeders;
 	}
 

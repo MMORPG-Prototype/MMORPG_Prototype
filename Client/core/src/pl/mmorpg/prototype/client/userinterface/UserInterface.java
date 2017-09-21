@@ -403,7 +403,7 @@ public class UserInterface
 
     private void showQuestDialog(QuestDataPacket[] quests, long questBoardId)
     {
-        QuestBoardDialog questDialog = new QuestBoardDialog(dialogs, questBoardId, quests, stage);
+        QuestBoardDialog questDialog = new QuestBoardDialog(dialogs, questBoardId, quests, stage, linkedState);
         positionDialogNearMouse(questDialog);
         stage.addActor(questDialog);
         dialogs.add(questDialog);
@@ -413,7 +413,7 @@ public class UserInterface
     {
         ItemPositionSupplier desiredItemPositionSupplier = inventoryDialog::getDesiredItemPositionFor;
         QuestRewardDialog questRewardDialog = new QuestRewardDialog(dialogs, dialogIdSupplier.getId(), rewardPacket,
-                desiredItemPositionSupplier, (PacketsSender)linkedState);
+                desiredItemPositionSupplier, (PacketsSender) linkedState);
         positionDialogNearMouse(questRewardDialog);
         stage.addActor(questRewardDialog);
         dialogs.add(questRewardDialog);

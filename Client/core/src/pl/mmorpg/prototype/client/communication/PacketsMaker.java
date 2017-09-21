@@ -11,6 +11,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
@@ -163,6 +164,13 @@ public class PacketsMaker
         RetrieveGoldRewardPacket packet = new RetrieveGoldRewardPacket();
         packet.setQuestName(questName);
         packet.setRetrieveItemDialogId(retrieveItemDialogId);
+        return packet;
+    }
+
+    public static AcceptQuestPacket makeAcceptQuestPacket(String questName)
+    {
+        AcceptQuestPacket packet = new AcceptQuestPacket();
+        packet.setQuestName(questName);
         return packet;
     }
 }

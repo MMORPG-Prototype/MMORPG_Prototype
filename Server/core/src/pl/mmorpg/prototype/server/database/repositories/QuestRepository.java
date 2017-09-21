@@ -6,5 +6,5 @@ import pl.mmorpg.prototype.server.database.entities.Quest;
 
 public interface QuestRepository extends CrudRepository<Quest, Integer>
 {
-
+    Quest findByName(String questName);
 }

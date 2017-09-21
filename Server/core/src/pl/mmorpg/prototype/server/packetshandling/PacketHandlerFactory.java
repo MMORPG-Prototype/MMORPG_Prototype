@@ -21,6 +21,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveDownPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveLeftPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveRightPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
@@ -35,6 +36,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFr
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.AcceptQuestPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.CharacterBoardClickPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.FireballSpellUsagePacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.InventoryItemRepositionRequestPacketHandler;
@@ -102,6 +104,7 @@ public class PacketHandlerFactory
                 new RetrieveItemRewardPacketHandler(gameDataRetriever, playState));
         packetHandlers.put(RetrieveGoldRewardPacket.class,
                 new RetrieveGoldRewardPacketHandler(gameDataRetriever, playState));
+        packetHandlers.put(AcceptQuestPacket.class, new AcceptQuestPacketHandler(gameDataRetriever));
 
         // Ignore framework packets
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
