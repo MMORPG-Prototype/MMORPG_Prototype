@@ -7,5 +7,5 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 @Data
 public class QuestAcceptedPacket
 {
-    private String questName;
+    private QuestStateInfoPacket questStatePacket;
 }

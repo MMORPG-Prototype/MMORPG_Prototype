@@ -483,10 +483,10 @@ public class PacketsMaker
         return packet;
     }
 
-    public static QuestAcceptedPacket makeQuestAcceptedPacket(String questName)
+    public static QuestAcceptedPacket makeQuestAcceptedPacket(CharactersQuests characterQuest)
     {
         QuestAcceptedPacket packet = new QuestAcceptedPacket();
-        packet.setQuestName(questName);
+        packet.setQuestStatePacket(makeQuestStateInfoPacket(characterQuest));
         return packet;
     }
 

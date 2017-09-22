@@ -42,6 +42,7 @@ import pl.mmorpg.prototype.client.objects.graphic.ManaReplenishLabel;
 import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.quests.Quest;
+import pl.mmorpg.prototype.client.quests.QuestCreator;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
@@ -59,6 +60,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
@@ -520,7 +522,10 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
     public void questAcceptedPacketReceived(QuestAcceptedPacket packet)
     {
-        userInterface.removeQuestPositionFromQuestBoardDialog(packet.getQuestName());
+        QuestStateInfoPacket questStatePacket = packet.getQuestStatePacket();
+        userInterface.removeQuestPositionFromQuestBoardDialog(questStatePacket.getQuestName());
+        Quest quest = QuestCreator.create(questStatePacket);
+        questInfoReceived(quest);
     }
 
 }
