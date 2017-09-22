@@ -26,6 +26,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
@@ -92,6 +93,7 @@ public class PacketHandlerFactory
         packetHandlers.put(ItemRewardRemovePacket.class, new ItemRewardRemovePacketHandler(playState));
         packetHandlers.put(QuestRewardGoldRemovalPacket.class, new QuestRewardGoldRemovalPacketHandler(playState));
         packetHandlers.put(QuestStateInfoPacket[].class, new QuestStateInfoPacketArrayHandler(playState));
+        packetHandlers.put(QuestAcceptedPacket.class, new QuestAcceptedPacketHandler(playState));
         
         // Ignore framework keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

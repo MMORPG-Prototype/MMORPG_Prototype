@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.server.communication;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
@@ -18,6 +19,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
@@ -380,10 +382,17 @@ public class PacketsMaker
         packet.setMessage(message);
         return packet;
     }
+    
+    public static QuestBoardInfoPacket makeQUestBoardInfoPacket(QuestBoard questBoard)
+    {
+        Predicate<Quest> shouldIncludeQuest = q -> true;
+        return makeQuestBoardInfoPacket(questBoard, shouldIncludeQuest);
+    }
 
-    public static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestBoard questBoard)
+    public static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestBoard questBoard, Predicate<Quest> shouldBeIncluded)
     {
         QuestDataPacket[] quests = questBoard.getQuests().stream()
+                .filter(shouldBeIncluded)
                 .map(PacketsMaker::makeQuestDataPacket)
                 .toArray(QuestDataPacket[]::new);
 
@@ -471,6 +480,13 @@ public class PacketsMaker
         QuestTaskInfoPacket packet = new QuestTaskInfoPacket();
         packet.setDescription(questTask.getDescription());
         packet.setPercentFinished(questTask.getPercentFinished());
+        return packet;
+    }
+
+    public static QuestAcceptedPacket makeQuestAcceptedPacket(String questName)
+    {
+        QuestAcceptedPacket packet = new QuestAcceptedPacket();
+        packet.setQuestName(questName);
         return packet;
     }
 

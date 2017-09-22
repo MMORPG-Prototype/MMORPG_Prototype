@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
@@ -32,6 +33,7 @@ public class AcceptQuestPacketHandler extends PacketHandlerBase<AcceptQuestPacke
         Quest quest = questRepository.findByName(packet.getQuestName());
         CharactersQuests characterQuest = new CharactersQuests(character, quest);
         character.getQuests().add(characterQuest);
+        connection.sendTCP(PacketsMaker.makeQuestAcceptedPacket(quest.getName()));
         return Collections.emptyList();
     }
 

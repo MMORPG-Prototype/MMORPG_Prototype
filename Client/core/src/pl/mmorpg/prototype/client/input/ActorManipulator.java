@@ -78,7 +78,7 @@ public class ActorManipulator
 	{
 		boolean dialogFound = dialogs.removeIf(
 				d -> d.getClass().equals(dialog.getClass()) && ((Identifiable) d).getId() == dialog.getId());
-
+		
 		if (!dialogFound)
 			throw new CannotFindSpecifiedDialogTypeException();
 	}

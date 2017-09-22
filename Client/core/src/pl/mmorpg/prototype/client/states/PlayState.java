@@ -56,6 +56,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
@@ -515,6 +516,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
     public void questInfoReceived(Quest quest)
     {
         userInterface.addQuestToQuestListDialog(quest);       
+    }
+
+    public void questAcceptedPacketReceived(QuestAcceptedPacket packet)
+    {
+        userInterface.removeQuestPositionFromQuestBoardDialog(packet.getQuestName());
     }
 
 }

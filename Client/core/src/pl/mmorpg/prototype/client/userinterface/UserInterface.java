@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
+import pl.mmorpg.prototype.client.exceptions.CannotFindSpecifiedDialogTypeException;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.DraggableItem;
 import pl.mmorpg.prototype.client.items.Item;
@@ -434,6 +435,16 @@ public class UserInterface
     public void addQuestToQuestListDialog(Quest quest)
     {
         questListDialog.addQuest(quest);
+    }
+
+    public void removeQuestPositionFromQuestBoardDialog(String questName)
+    {   
+       try
+       {
+           QuestBoardDialog questBoardDialog = dialogs.searchForDialog(QuestBoardDialog.class);
+           questBoardDialog.removeQuestPosition(questName);
+       }
+       catch(CannotFindSpecifiedDialogTypeException e) {}
     }
 
 }

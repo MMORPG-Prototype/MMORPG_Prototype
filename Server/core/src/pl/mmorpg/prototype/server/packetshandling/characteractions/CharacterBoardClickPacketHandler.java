@@ -2,6 +2,9 @@ package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -10,7 +13,9 @@ import com.esotericsoftware.kryonet.Connection;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.exceptions.CannotTargetItselfException;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
@@ -85,7 +90,12 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 	
 	private void sendQuestBoardInfo(Connection connection, QuestBoard questBoard)
 	{
-		connection.sendTCP(PacketsMaker.makeQuestBoardInfoPacket(questBoard));
+	    Collection<CharactersQuests> characterQuests = gameData.getCharacterQuestsByConnectionId(connection.getID());
+	    List<Quest> quests = characterQuests.stream()
+	        .map(CharactersQuests::getQuest)
+	        .collect(Collectors.toList());
+	    Predicate<Quest> shouldQuestBeIncluded = quest -> !quests.contains(quest);
+		connection.sendTCP(PacketsMaker.makeQuestBoardInfoPacket(questBoard, shouldQuestBeIncluded));
 	}
 
 }
