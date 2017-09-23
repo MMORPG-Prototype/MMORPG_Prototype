@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MonsterKilledEvent implements Event
+public class MonsterKilledEvent extends EventBase
 {
     private final String monsterIdentifier;
 }

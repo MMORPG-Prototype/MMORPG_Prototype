@@ -1,6 +1,5 @@
 package pl.mmorpg.prototype.server;
 
-import java.util.Collection;
 import java.util.Map;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -12,7 +11,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerFactory;
-import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class ServerListener extends Listener
@@ -53,8 +51,7 @@ public class ServerListener extends Listener
     public void received(Connection connection, Object object)
     {
         PacketHandler packetHandler = packetHandlersFactory.produce(object);
-        Collection<Event> events = packetHandler.handle(object, connection);
-        playState.handle(events, connection.getID());
+        packetHandler.handle(object, connection);
         Log.info("Packet received, client id: " + connection.getID() + ", packet: " + object);
     }
 

@@ -18,7 +18,6 @@ import pl.mmorpg.prototype.clientservercommon.registering.PacketsRegisterer;
 import pl.mmorpg.prototype.server.commandUtils.CommandHandler;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.CannotBindServerException;
-import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 import pl.mmorpg.prototype.server.states.StateManager;
@@ -42,8 +41,7 @@ public class GameServer extends ApplicationAdapter
         batch = Assets.getBatch();
         server = initializeServer();
 
-        playState = new PlayState(server, states,
-                new GameDataRetriever(loggedUsersKeyUserId, authenticatedClientsKeyClientId));
+        playState = new PlayState(server, states);
         server.addListener(
                 new ServerListener(loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
         bindServer();

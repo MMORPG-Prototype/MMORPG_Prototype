@@ -14,12 +14,14 @@ import pl.mmorpg.prototype.server.states.PlayState;
 public class PlayerCharacter extends Monster implements InventoryRepositionableItemsOwner
 {
     private UserCharacter userCharacter;
+    private final int connectionId;
 
-    public PlayerCharacter(UserCharacter userCharacter, PlayState linkedState)
+    public PlayerCharacter(UserCharacter userCharacter, PlayState linkedState, int connectionId)
     {
         super(Assets.get("MainChar.png"), userCharacter.getId(), linkedState,
                 new PlayerPropertiesBuilder(PacketsMaker.makeCharacterPacket(userCharacter)).build());
         this.userCharacter = userCharacter;
+        this.connectionId = connectionId;
         setPacketSendingInterval(0.0f);
         setPosition(userCharacter.getLastLocationX(), userCharacter.getLastLocationY());
     }
@@ -99,5 +101,10 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 	{
 		userCharacter.getQuickAccessBarConfig().remove(cellPosition);
 	}
+
+    public int getConnectionId()
+    {
+        return connectionId;
+    }
 	 
 }

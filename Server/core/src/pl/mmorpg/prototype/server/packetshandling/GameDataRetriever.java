@@ -66,17 +66,4 @@ public class GameDataRetriever
             .map(QuestTaskWrapper::getQuestTask)
             .collect(Collectors.toList());
     }
-
-    public int getConnectionIdByCharacterId(int characterId)
-    {
-        // TODO WARN! : linear search, may need to improve 
-        User user = loggedUsersKeyUserId.values().stream()
-            .map(e -> e.user)
-            .filter( e -> e.getId() == characterId)
-            .findAny().get();
-        return authenticatedClientsKeyClientId.entrySet().stream()
-                .filter(e -> e.getValue().getId() == user.getId())
-                .map(e -> e.getKey())
-                .findAny().get();
-    }
 }

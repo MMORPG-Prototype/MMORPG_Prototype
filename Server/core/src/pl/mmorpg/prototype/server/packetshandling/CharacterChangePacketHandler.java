@@ -1,7 +1,5 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -13,7 +11,6 @@ import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.CharacterDatabaseSaver;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
-import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class CharacterChangePacketHandler extends PacketHandlerBase<CharacterChangePacket>
@@ -33,7 +30,7 @@ public class CharacterChangePacketHandler extends PacketHandlerBase<CharacterCha
 	}
 
 	@Override
-	public Collection<Event> handle(Connection connection, CharacterChangePacket packet)
+	public void handle(Connection connection, CharacterChangePacket packet)
 	{
 		int userId = authenticatedClientsKeyClientId.get(connection.getID()).getId();
 		UserInfo userInfo = loggedUsersKeyUserId.get(userId);
@@ -45,7 +42,6 @@ public class CharacterChangePacketHandler extends PacketHandlerBase<CharacterCha
 		} 
 		userInfo.userCharacter = null;
 		server.sendToAllExceptTCP(connection.getID(), PacketsMaker.makeRemovalPacket(characterId));
-		return Collections.emptyList();
 	}
 
 }

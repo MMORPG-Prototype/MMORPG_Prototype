@@ -1,7 +1,6 @@
 package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -20,7 +19,6 @@ import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
-import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.GameObjectsContainer;
 
 public class RetrieveItemRewardPacketHandler extends PacketHandlerBase<RetrieveItemRewardPacket>
@@ -35,7 +33,7 @@ public class RetrieveItemRewardPacketHandler extends PacketHandlerBase<RetrieveI
     }
 
     @Override
-    public Collection<Event> handle(Connection connection, RetrieveItemRewardPacket packet)
+    public void handle(Connection connection, RetrieveItemRewardPacket packet)
     {
         UserCharacter character = gameDataRetreiver.getUserCharacterByConnectionId(connection.getID());
         CharactersQuests quest = findSuiteQuest(character.getQuests(), packet.getQuestName());
@@ -54,7 +52,6 @@ public class RetrieveItemRewardPacketHandler extends PacketHandlerBase<RetrieveI
         connection.sendTCP(PacketsMaker.makeItemRewardRemovePacket(packet.getItemIdentifier(),
                 itemReward.getNumberOfItems(), packet.getRetrieveItemDialogId()));
         connection.sendTCP(PacketsMaker.makeItemPacket(gameItem));
-        return Collections.emptyList();
     }
 
     private CharactersQuests findSuiteQuest(Collection<CharactersQuests> quests, String questName)

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AcceptQuestEvent implements Event
+public class AcceptQuestEvent extends EventBase
 {
     private final String questName;
 }

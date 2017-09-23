@@ -1,7 +1,5 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -11,7 +9,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.helpers.CharacterCreator;
-import pl.mmorpg.prototype.server.quests.events.Event;
 
 public class CharacterCreationPacketHandler extends PacketHandlerBase<CharacterCreationPacket>
 {
@@ -26,12 +23,11 @@ public class CharacterCreationPacketHandler extends PacketHandlerBase<CharacterC
 	}
 	
 	@Override
-	public Collection<Event> handle(Connection connection, CharacterCreationPacket packet)
+	public void handle(Connection connection, CharacterCreationPacket packet)
 	{
 		User user = authenticatedClientsKeyClientId.get(connection.getID());
 		CharacterCreationReplyPacket replyPacket = CharacterCreator.tryCreatingCharacter(packet, user.getId());
 		server.sendToAllTCP(replyPacket);
-        return Collections.emptyList();
 	}
 
 }

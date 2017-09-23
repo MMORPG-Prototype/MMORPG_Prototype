@@ -1,7 +1,6 @@
 package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import com.esotericsoftware.kryonet.Connection;
 
@@ -12,7 +11,6 @@ import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
-import pl.mmorpg.prototype.server.quests.events.Event;
 
 public class RetrieveGoldRewardPacketHandler extends PacketHandlerBase<RetrieveGoldRewardPacket>
 {
@@ -26,7 +24,7 @@ public class RetrieveGoldRewardPacketHandler extends PacketHandlerBase<RetrieveG
     }
 
     @Override
-    public Collection<Event> handle(Connection connection, RetrieveGoldRewardPacket packet)
+    public void handle(Connection connection, RetrieveGoldRewardPacket packet)
     {
         UserCharacter character = gameDataRetriever.getUserCharacterByConnectionId(connection.getID());
         CharactersQuests quest = findSuiteQuest(character.getQuests(), packet.getQuestName());
@@ -42,7 +40,6 @@ public class RetrieveGoldRewardPacketHandler extends PacketHandlerBase<RetrieveG
             packetsSender.sendTo(connection.getID(),
                     PacketsMaker.makeUnacceptableOperationPacket("There is no gold left!"));
 
-        return Collections.emptyList();
     }
 
     private CharactersQuests findSuiteQuest(Collection<CharactersQuests> quests, String questName)

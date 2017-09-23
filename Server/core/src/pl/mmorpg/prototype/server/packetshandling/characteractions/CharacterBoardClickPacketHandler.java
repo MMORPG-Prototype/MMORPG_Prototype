@@ -1,7 +1,6 @@
 package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -26,7 +25,6 @@ import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopItemWrapper;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopNpc;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
-import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardClickPacket>
@@ -41,7 +39,7 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
     }
 
     @Override 
-    public Collection<Event> handle(Connection connection, BoardClickPacket packet)
+    public void handle(Connection connection, BoardClickPacket packet)
     {
         GameObject target = playState.getCollisionMap().getTopObject(packet.gameX, packet.gameY);
         if (target != null && !(target instanceof MapCollisionUnknownObject))
@@ -52,7 +50,6 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
             clientBoardClickProperHandle(connection, target, source);
 
         }
-        return Collections.emptyList();
     }
 
 	private void clientBoardClickProperHandle(Connection connection, GameObject target, PlayerCharacter source)

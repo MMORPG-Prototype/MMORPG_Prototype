@@ -1,8 +1,5 @@
 package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
@@ -12,7 +9,6 @@ import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.InventoryRepositionableItemsOwner;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
-import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class InventoryItemRepositionRequestPacketHandler extends PacketHandlerBase<InventoryItemRepositionRequestPacket>
@@ -27,7 +23,7 @@ public class InventoryItemRepositionRequestPacketHandler extends PacketHandlerBa
 	}
 
 	@Override
-	public Collection<Event> handle(Connection connection, InventoryItemRepositionRequestPacket packet)
+	public void handle(Connection connection, InventoryItemRepositionRequestPacket packet)
 	{
 		int characterId = gameData.getCharacterIdByConnectionId(connection.getID());
 		InventoryRepositionableItemsOwner playerCharacter = (InventoryRepositionableItemsOwner) playState
@@ -48,7 +44,6 @@ public class InventoryItemRepositionRequestPacketHandler extends PacketHandlerBa
 			itemInDestinationPosition.setInventoryPosition(sourcePosition);;
 			item.setInventoryPosition(desiredPosition);
 		}
-		return Collections.emptyList();
 	}
 
 }

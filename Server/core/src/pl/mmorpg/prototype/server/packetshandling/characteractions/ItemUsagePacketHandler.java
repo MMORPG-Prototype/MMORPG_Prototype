@@ -1,8 +1,5 @@
 package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
@@ -15,7 +12,6 @@ import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
-import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
@@ -30,7 +26,7 @@ public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
 	}
 	
 	@Override
-	public Collection<Event> handle(Connection connection, ItemUsagePacket packet)
+	public void handle(Connection connection, ItemUsagePacket packet)
 	{
 		int characterId = gameData.getCharacterIdByConnectionId(connection.getID());
 		PlayerCharacter itemUser = (PlayerCharacter)playState.getObject(characterId);
@@ -46,7 +42,6 @@ public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
 		{
 			connection.sendTCP(PacketsMaker.makeUnacceptableOperationPacket("Your item stack was depleted"));
 		}
-		return Collections.emptyList();
 	}
 
 }

@@ -41,10 +41,9 @@ import pl.mmorpg.prototype.server.objects.monsters.npcs.GroceryShopNpc;
 import pl.mmorpg.prototype.server.objects.monsters.spells.Fireball;
 import pl.mmorpg.prototype.server.objects.spawners.MonsterSpawner;
 import pl.mmorpg.prototype.server.objects.spawners.MonsterSpawnerUnit;
-import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.quests.events.Event;
+import pl.mmorpg.prototype.server.quests.events.EventsHandler;
 import pl.mmorpg.prototype.server.quests.events.MonsterKilledEvent;
-import pl.mmorpg.prototype.server.quests.events.QuestTaskEventHandler;
 import pl.mmorpg.prototype.server.quests.observers.RewardForFinishedQuestObserver;
 import pl.mmorpg.prototype.server.resources.Assets;
 
@@ -52,7 +51,6 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 {
     private final Server server;
     private final StateManager states;
-    private final QuestTaskEventHandler questTaskEventHandler;
     private final PixelCollisionMap<GameObject> collisionMap = new PixelCollisionMap<>(6400, 4800,
             GameObject.NULL_OBJECT);
     private final StackableCollisionMap<MonsterBody> deadBodiesCollisionMap = new LayerCollisionMap<>(214, 160, 30, 30);
@@ -64,15 +62,16 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
     private final MonsterSpawner monsterSpawner = new MonsterSpawner(objectsFactory);
     private final GameCommandsHandler gameCommandsHandler = new GameCommandsHandler(this);
     private final RewardForFinishedQuestObserver rewardForFisnishedQuestObserver;
+    private final EventsHandler questEventsHandler;
 
     private OrthographicCamera camera = new OrthographicCamera(6400, 4800);
 
-    public PlayState(Server server, StateManager states, GameDataRetriever gameDataRetriever)
+    public PlayState(Server server, StateManager states)
     {
         this.server = server;
         this.states = states;
-        rewardForFisnishedQuestObserver = new RewardForFinishedQuestObserver(this, gameDataRetriever);
-        this.questTaskEventHandler = new QuestTaskEventHandler(gameDataRetriever);
+        rewardForFisnishedQuestObserver = new RewardForFinishedQuestObserver(this, this);
+        questEventsHandler = new EventsHandler(rewardForFisnishedQuestObserver);
         camera.setToOrtho(false);
 
         collisionMap.setScale(1);
@@ -171,6 +170,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         for (GameObject object : gameObjects.values())
             object.update(deltaTime);
         handleSpawner(deltaTime);
+        questEventsHandler.processEvents();
     }
 
     private void handleSpawner(float deltaTime)
@@ -253,7 +253,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         sendToAll(
                 PacketsMaker.makeExperienceGainPacket(playerCharacter.getId(), target.getProperties().experienceGain));
         Event monsterKilledEvent = new MonsterKilledEvent(target.getIdentifier());
-        questTaskEventHandler.handle(playerCharacter, monsterKilledEvent, rewardForFisnishedQuestObserver);
+        monsterKilledEvent.addReceiver(playerCharacter);
+        questEventsHandler.enqueueEvent(monsterKilledEvent);
     }
 
     public void createFireball(PlayerCharacter source, Monster targetedMonster)
@@ -287,9 +288,5 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
         return gameCommandsHandler.execute(code);
     }
 
-    public void handle(Collection<Event> events, int connectionId)
-    {
-        questTaskEventHandler.handle(events, connectionId, rewardForFisnishedQuestObserver);
-    }
 
 }

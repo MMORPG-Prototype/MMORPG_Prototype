@@ -1,8 +1,5 @@
 package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
@@ -12,7 +9,6 @@ import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
-import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class TakingGoldFromContainerPacketHandler extends PacketHandlerBase<TakingGoldFromContainerPacket>
@@ -30,7 +26,7 @@ public class TakingGoldFromContainerPacketHandler extends PacketHandlerBase<Taki
 	
 	
 	@Override 
-	public Collection<Event> handle(Connection connection, TakingGoldFromContainerPacket packet)
+	public void handle(Connection connection, TakingGoldFromContainerPacket packet)
 	{
 		long characterId = gameData.getCharacterIdByConnectionId(connection.getID());
 		PlayerCharacter player = (PlayerCharacter)playState.getObject(characterId);
@@ -46,7 +42,6 @@ public class TakingGoldFromContainerPacketHandler extends PacketHandlerBase<Taki
 		else
 			connection.sendTCP(PacketsMaker.makeUnacceptableOperationPacket("There is no gold left in this container"));
 		
-		return Collections.emptyList();
 	}
 
 }

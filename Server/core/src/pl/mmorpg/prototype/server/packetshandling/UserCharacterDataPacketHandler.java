@@ -1,7 +1,6 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,7 +25,6 @@ import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
-import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharacterDataPacket>
@@ -46,10 +44,9 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
     }
 
     @Override
-    public Collection<Event> handle(Connection connection, UserCharacterDataPacket packet)
+    public void handle(Connection connection, UserCharacterDataPacket packet)
     {
         userChoosenCharcter(packet.getId(), connection.getID());
-        return Collections.emptyList();
     }
 
     private void userChoosenCharcter(int userCharacterId, int clientId)
@@ -60,7 +57,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
         info.userCharacter = character;
 
         sendCurrentGameObjectsInfo(clientId);
-        PlayerCharacter newPlayer = new PlayerCharacter(character, playState);
+        PlayerCharacter newPlayer = new PlayerCharacter(character, playState, clientId);
         Collection<Item> playerItems = getPlayerItems(newPlayer);
         playerItems.forEach((item) -> newPlayer.addItem(item));
         playState.add(newPlayer);

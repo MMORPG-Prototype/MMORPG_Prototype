@@ -1,8 +1,5 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
@@ -15,7 +12,6 @@ import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopItemWrapper;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopNpc;
-import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class BuyFromShopPacketHandler extends PacketHandlerBase<BuyFromShopPacket>
@@ -30,7 +26,7 @@ public class BuyFromShopPacketHandler extends PacketHandlerBase<BuyFromShopPacke
 	}
 
 	@Override
-	public Collection<Event> handle(Connection connection, BuyFromShopPacket packet)
+	public void handle(Connection connection, BuyFromShopPacket packet)
 	{
 		ShopNpc shopNpc = (ShopNpc) playState.getObject(packet.getShopId());
 		ShopItemWrapper itemWrapper = shopNpc.getItemWrapper(packet.getItemId());
@@ -50,7 +46,6 @@ public class BuyFromShopPacketHandler extends PacketHandlerBase<BuyFromShopPacke
 					packet.getDesiredInventoryX(), packet.getDesiredInventoryY());
 			handleItemPart(connection, itemWrapper, character, itemCount, position);
 		}
-		return Collections.emptyList();
 	}
 
 	private void handleGoldPart(Connection connection, int totalPrice, PlayerCharacter buyer)
