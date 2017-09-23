@@ -26,7 +26,7 @@ public class AcceptQuestPacketHandler extends PacketHandlerBase<AcceptQuestPacke
     public void handle(Connection connection, AcceptQuestPacket packet)
     {
         UserCharacter character = gameDataRetriever.getUserCharacterByConnectionId(connection.getID());
-        Quest quest = questRepository.findByName(packet.getQuestName());
+        Quest quest = questRepository.findByNameFetchItemsReward(packet.getQuestName());
         CharactersQuests characterQuest = new CharactersQuests(character, quest);
         character.getQuests().add(characterQuest);
         connection.sendTCP(PacketsMaker.makeQuestAcceptedPacket(characterQuest));

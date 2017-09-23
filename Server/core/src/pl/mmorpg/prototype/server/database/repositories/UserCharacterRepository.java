@@ -1,11 +1,14 @@
 package pl.mmorpg.prototype.server.database.repositories;
 
+import java.util.Collection;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 
 public interface UserCharacterRepository extends CrudRepository<UserCharacter, Integer> 
 {
@@ -18,8 +21,11 @@ public interface UserCharacterRepository extends CrudRepository<UserCharacter, I
 	{
 		UserCharacter result = findOne(id);
 		result.getQuickAccessBarConfig().size();
-		result.getQuests().forEach(q -> q.getQuestTasks().size());
-        result.getQuests().forEach(q -> q.getQuest().getId());
+		Collection<CharactersQuests> quests = result.getQuests();
+        quests.forEach(q -> q.getQuestTasks().size());
+        quests.forEach(q -> q.getQuest().getId());
+        quests.forEach(q -> q.getQuest().getItemsReward().size());
+        quests.forEach(q -> q.getItemsReward().size());
 		return result;
 	}
 
