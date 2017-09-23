@@ -93,8 +93,6 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	public void buttonClicked(ItemInventoryPosition cellPosition)
 	{
 		InventoryField<Item> field = getField(cellPosition);
-		if (field.hasContent())
-			lastFieldWithItemClicked = field;
 		linkedInterface.inventoryFieldClicked(field, cellPosition);
 	}
 
