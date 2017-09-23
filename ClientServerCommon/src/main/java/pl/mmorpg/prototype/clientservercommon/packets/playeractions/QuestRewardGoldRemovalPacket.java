@@ -8,5 +8,4 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 public class QuestRewardGoldRemovalPacket
 {
     private int goldAmount;
-    private long questFinishedDialogId;
 }

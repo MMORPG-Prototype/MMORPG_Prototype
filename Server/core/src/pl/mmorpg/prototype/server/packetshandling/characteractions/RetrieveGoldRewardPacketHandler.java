@@ -35,7 +35,7 @@ public class RetrieveGoldRewardPacketHandler extends PacketHandlerBase<RetrieveG
             character.setGold(character.getGold() + goldReward);
             packetsSender.sendTo(connection.getID(), PacketsMaker.makeGoldReceivePacket(goldReward));
             packetsSender.sendTo(connection.getID(),
-                    PacketsMaker.makeQuestRewardGoldRemovalPacket(goldReward, packet.getRetrieveItemDialogId()));
+                    PacketsMaker.makeQuestRewardGoldRemovalPacket(goldReward));
         } else
             packetsSender.sendTo(connection.getID(),
                     PacketsMaker.makeUnacceptableOperationPacket("There is no gold left!"));

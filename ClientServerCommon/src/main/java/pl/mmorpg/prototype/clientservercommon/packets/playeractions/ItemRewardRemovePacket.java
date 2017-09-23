@@ -9,5 +9,4 @@ public class ItemRewardRemovePacket
 {
     private String itemIdentifier;
     private int numberOfItems;
-    private long questFinishedDialogId;
 }

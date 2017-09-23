@@ -46,7 +46,7 @@ public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
         goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN,
                 questReward.getGoldReward());
         Button takeGoldButton = ButtonCreator.createTextButton("Take",
-                () -> packetsSender.send(PacketsMaker.makeRetrieveGoldRewardPacket(questReward.getQuestName(), id)));
+                () -> packetsSender.send(PacketsMaker.makeRetrieveGoldRewardPacket(questReward.getQuestName())));
         this.add(goldLabel);
         this.add(takeGoldButton);
         this.pack();
@@ -77,7 +77,7 @@ public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
             int numberOfItems = questRewardIcon.getNumberOfItems();
             ItemInventoryPosition desiredItemPosition = desiredItemPositionSupplier.get(itemIdentifier, numberOfItems);
             RetrieveItemRewardPacket retrieveItemRewardPacket = PacketsMaker.makeRetrieveItemRewardPacket(
-                    itemIdentifier, numberOfItems, desiredItemPosition, getId(), questName);
+                    itemIdentifier, numberOfItems, desiredItemPosition, questName);
             packetsSender.send(retrieveItemRewardPacket);
         }
     }

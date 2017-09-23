@@ -422,13 +422,13 @@ public class UserInterface
 
     public void removeItemFromQuestRewardContainer(ItemRewardRemovePacket packet)
     {
-        QuestRewardDialog dialog = dialogs.getIdentifiableDialog(packet.getQuestFinishedDialogId());
+        QuestRewardDialog dialog = dialogs.searchForDialog(QuestRewardDialog.class);
         dialog.removeItem(packet.getItemIdentifier(), packet.getNumberOfItems());
     }
 
-    public void removeGoldFromQuestRewardDialog(long dialogId, int goldAmount)
+    public void removeGoldFromQuestRewardDialog(int goldAmount)
     {
-        QuestRewardDialog dialog = dialogs.getIdentifiableDialog(dialogId);
+        QuestRewardDialog dialog = dialogs.searchForDialog(QuestRewardDialog.class);
         dialog.updateGoldByDecreasingBy(goldAmount);
     }
 

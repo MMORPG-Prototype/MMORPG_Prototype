@@ -8,5 +8,4 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 public class RetrieveGoldRewardPacket
 {
     private String questName;
-    private long retrieveItemDialogId;
 }

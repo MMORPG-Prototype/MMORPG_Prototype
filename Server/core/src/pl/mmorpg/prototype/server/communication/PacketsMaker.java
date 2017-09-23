@@ -435,22 +435,18 @@ public class PacketsMaker
         return packet;
     }
 
-    public static ItemRewardRemovePacket makeItemRewardRemovePacket(String itemIdentifier, int numberOfItems,
-            long questFinishedDialogId)
+    public static ItemRewardRemovePacket makeItemRewardRemovePacket(String itemIdentifier, int numberOfItems)
     {
         ItemRewardRemovePacket packet = new ItemRewardRemovePacket();
         packet.setItemIdentifier(itemIdentifier);
         packet.setNumberOfItems(numberOfItems);
-        packet.setQuestFinishedDialogId(questFinishedDialogId);
         return packet;
     }
 
-    public static QuestRewardGoldRemovalPacket makeQuestRewardGoldRemovalPacket(int howMuchGold,
-            long questFinishedDialogId)
+    public static QuestRewardGoldRemovalPacket makeQuestRewardGoldRemovalPacket(int howMuchGold)
     {
         QuestRewardGoldRemovalPacket packet = new QuestRewardGoldRemovalPacket();
         packet.setGoldAmount(howMuchGold);
-        packet.setQuestFinishedDialogId(questFinishedDialogId);
         return packet;
     }
 

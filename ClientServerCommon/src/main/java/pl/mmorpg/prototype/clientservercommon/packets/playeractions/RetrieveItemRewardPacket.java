@@ -13,5 +13,4 @@ public class RetrieveItemRewardPacket
     private int desiredInventoryY;
     private int desiredInventoryPage;
     private String questName;
-    private long retrieveItemDialogId;
 }

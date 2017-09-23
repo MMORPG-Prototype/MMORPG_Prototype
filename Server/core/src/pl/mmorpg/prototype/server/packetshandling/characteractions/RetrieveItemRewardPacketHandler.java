@@ -50,7 +50,7 @@ public class RetrieveItemRewardPacketHandler extends PacketHandlerBase<RetrieveI
 
         player.addItem(gameItem);
         connection.sendTCP(PacketsMaker.makeItemRewardRemovePacket(packet.getItemIdentifier(),
-                itemReward.getNumberOfItems(), packet.getRetrieveItemDialogId()));
+                itemReward.getNumberOfItems()));
         connection.sendTCP(PacketsMaker.makeItemPacket(gameItem));
     }
 

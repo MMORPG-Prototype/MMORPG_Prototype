@@ -512,7 +512,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
     public void questRewardGoldRemovalPacketReceived(QuestRewardGoldRemovalPacket packet)
     {
-        userInterface.removeGoldFromQuestRewardDialog(packet.getQuestFinishedDialogId(), packet.getGoldAmount());
+        userInterface.removeGoldFromQuestRewardDialog(packet.getGoldAmount());
     }
 
     public void questInfoReceived(Quest quest)
