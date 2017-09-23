@@ -35,7 +35,6 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	private final VerticalGroup currentPageButtons = new VerticalGroup();
 	private final List<InventoryTextField<Item>> switchPageButtons = new ArrayList<>(numberOfPages);
 	private final UserInterface linkedInterface;
-	private InventoryField<Item> lastFieldWithItemClicked = null;
 	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
 
 	public InventoryDialog(UserInterface linkedInterface, Integer linkedFieldGold)
@@ -178,11 +177,6 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			this.setY(43);
 		}
 		super.setVisible(visible);
-	}
-
-	public InventoryField<Item> getLastFieldWithItemClicked()
-	{
-		return lastFieldWithItemClicked;
 	}
 
 	public boolean removeIfHas(Item item)

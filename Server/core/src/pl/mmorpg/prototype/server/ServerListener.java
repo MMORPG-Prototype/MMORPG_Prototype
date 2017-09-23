@@ -17,13 +17,11 @@ public class ServerListener extends Listener
 {
     private final PacketHandlerFactory packetHandlersFactory;
     private Map<Integer, User> authenticatedClientsKeyClientId;
-    private PlayState playState;
 
     public ServerListener(Map<Integer, UserInfo> loggedUsersKeyUserId,
             Map<Integer, User> authenticatedClientsKeyClientId, Server server, PlayState playState)
     {
         this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
-        this.playState = playState;
         packetHandlersFactory = new PacketHandlerFactory(loggedUsersKeyUserId, authenticatedClientsKeyClientId, server,
                 playState);
     }
