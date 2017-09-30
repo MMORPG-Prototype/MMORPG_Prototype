@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.server.objects.containers.bodies;
 import java.util.Collection;
 
 import pl.mmorpg.prototype.server.objects.items.Item;
+import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
 import pl.mmorpg.prototype.server.resources.Assets;
 
 public class RedDragonBody extends MonsterBody

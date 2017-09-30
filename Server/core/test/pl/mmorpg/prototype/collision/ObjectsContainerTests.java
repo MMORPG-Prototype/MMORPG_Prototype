@@ -48,7 +48,7 @@ public class ObjectsContainerTests
 		.when(object.getCollisionContainerId())
 		.thenReturn(1);
 		container.insertObject(object);
-		container.removeOrThrow((object));
+		container.removeOrThrow(object);
 		assertTrue(container.getObjects().isEmpty());
 	}
 	
