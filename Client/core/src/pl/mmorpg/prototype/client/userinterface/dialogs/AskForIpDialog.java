@@ -16,6 +16,7 @@ public class AskForIpDialog extends Dialog
 	private final SettingsChoosingState linkedState;
 	private final IntegerField tcpPortField;
 	private final IntegerField udpPortField;
+	private static final int MAX_PORT_DIGITS = 5;
 
 	public AskForIpDialog(SettingsChoosingState state, ConnectionInfo defaultConnection)
 	{
@@ -26,11 +27,11 @@ public class AskForIpDialog extends Dialog
 		this.getContentTable().add(ipField);
 		this.getContentTable().row();
 		text("Tcp port: ");
-		tcpPortField = new IntegerField(defaultConnection.getTcpPort(), getSkin());
+		tcpPortField = new IntegerField(defaultConnection.getTcpPort(), getSkin(), MAX_PORT_DIGITS);
 		this.getContentTable().add(tcpPortField);
 		this.getContentTable().row();
 		text("Udp port: ");
-		udpPortField = new IntegerField(defaultConnection.getUdpPort(), getSkin());
+		udpPortField = new IntegerField(defaultConnection.getUdpPort(), getSkin(), MAX_PORT_DIGITS);
 		this.getContentTable().add(udpPortField);
 		this.getContentTable().row();
 		

@@ -9,6 +9,11 @@ public class IntegerField extends TextField
 	
 	public IntegerField(Integer value, Skin skin)
 	{
+		this(value, skin, 4);
+	}
+	
+	public IntegerField(Integer value, Skin skin, Integer maxDigits)
+	{
 		super(value.toString(), skin);
 		addListener(new TextFieldClickListener()
 		{
@@ -27,12 +32,21 @@ public class IntegerField extends TextField
 			private String getNewText()
 			{
 				String currentText = getText();
-				return currentText.length() >= 5 ? "9999" : currentText.substring(0, currentText.length() - 1);
+				return currentText.length() > maxDigits ? getMaxValue() : currentText.substring(0, currentText.length() - 1);
+			}
+
+			private String getMaxValue()
+			{
+				StringBuilder maxValue = new StringBuilder();
+				for(int i=0; i<maxDigits; i++)
+					maxValue.append('9');
+				
+				return maxValue.toString();
 			}
 
 			private boolean shouldCutLastLetter(char character)
 			{
-				return getText().length() >= 5 || 
+				return getText().length() > maxDigits || 
 						(!Character.isDigit(character) && isWordCharacter(character));
 			}
 		});
