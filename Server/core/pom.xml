@@ -116,9 +116,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.opengamma.strata</groupId>
-			<artifactId>strata-collect</artifactId>
-			<version>1.2.0</version>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>23.0</version>
 		</dependency>
 
 		<dependency>

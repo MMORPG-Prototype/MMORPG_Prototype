@@ -7,6 +7,8 @@ import pl.mmorpg.prototype.server.objects.ineractivestaticobjects.QuestBoard;
 import pl.mmorpg.prototype.server.objects.monsters.dragons.GrayDragon;
 import pl.mmorpg.prototype.server.objects.monsters.dragons.GreenDragon;
 import pl.mmorpg.prototype.server.objects.monsters.dragons.RedDragon;
+import pl.mmorpg.prototype.server.objects.monsters.npcs.GroceryShopNpc;
+import pl.mmorpg.prototype.server.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class GameObjectsFactory
@@ -34,6 +36,10 @@ public class GameObjectsFactory
 			return new GrayDragon(id, collisionMap, linkedState);
 		else if(objectClass.equals(QuestBoard.class))
 			return new QuestBoard(id);
+		else if(objectClass.equals(QuestDialogNpc.class))
+			return new QuestDialogNpc(id, collisionMap, linkedState);
+		else if(objectClass.equals(GroceryShopNpc.class))
+			return new GroceryShopNpc(id, collisionMap, linkedState);
 		
 		throw new ObjectClassIsntSupportedException(objectClass);		
 	}

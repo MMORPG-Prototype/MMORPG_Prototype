@@ -15,6 +15,7 @@ import pl.mmorpg.prototype.client.objects.monsters.dragons.GrayDragon;
 import pl.mmorpg.prototype.client.objects.monsters.dragons.GreenDragon;
 import pl.mmorpg.prototype.client.objects.monsters.dragons.RedDragon;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.GroceryShopNpc;
+import pl.mmorpg.prototype.client.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.client.objects.spells.FireBall;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 
@@ -38,6 +39,7 @@ public class ObjectsIdentifier
         identifiers.put(Snake.class, ObjectsIdentifiers.SNAKE);
         identifiers.put(SnakeBody.class, ObjectsIdentifiers.SNAKE_DEAD);
         identifiers.put(QuestBoard.class, ObjectsIdentifiers.QUEST_BOARD);
+        identifiers.put(QuestDialogNpc.class, ObjectsIdentifiers.QUEST_DIALOG_NPC);
     }
 
     public static String getObjectIdentifier(Class<?> type)

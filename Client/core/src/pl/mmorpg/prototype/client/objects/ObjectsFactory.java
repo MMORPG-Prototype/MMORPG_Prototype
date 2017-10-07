@@ -13,6 +13,7 @@ import pl.mmorpg.prototype.client.objects.monsters.dragons.GrayDragon;
 import pl.mmorpg.prototype.client.objects.monsters.dragons.GreenDragon;
 import pl.mmorpg.prototype.client.objects.monsters.dragons.RedDragon;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.GroceryShopNpc;
+import pl.mmorpg.prototype.client.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.client.objects.spells.FireBall;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 
@@ -54,6 +55,8 @@ public class ObjectsFactory
         	object = new SnakeBody(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(QuestBoard.class)))
         	object = new QuestBoard(id);
+        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(QuestDialogNpc.class)))
+        	object = new QuestDialogNpc(id);
         else
             throw new ObjectIdentifierNotFoundException(identifier);
 

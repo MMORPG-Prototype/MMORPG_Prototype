@@ -13,10 +13,10 @@ public abstract class ShopNpc extends Npc
 {
 	private Map<Long, ShopItemWrapper> availableItems;
 
-	public ShopNpc(long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState,
+	public ShopNpc(String name, long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState,
 			Collection<ShopItemWrapper> availableItems)
 	{
-		super(id, collisionMap, playState);
+		super(name, id, collisionMap, playState);
 		this.availableItems = availableItems.stream()
 				.collect(Collectors.toMap((ShopItemWrapper wrapper) -> wrapper.getItem().getId(), Function.identity()));
 	}

@@ -9,10 +9,18 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public abstract class Npc extends WalkingMonster
 {
+	private final String name;
 
-	public Npc(long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState)
+	public Npc(String name, long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState)
 	{
 		super(Assets.get("npc.png"), id, new NpcDefaultPropertiesBuilder().build(), collisionMap, playState);
+		this.name = name;
+		setSize(32, 32);
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 
 }

@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.server.objects;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.objects.ineractivestaticobjects.QuestBoard;
@@ -16,11 +16,12 @@ import pl.mmorpg.prototype.server.objects.monsters.dragons.GrayDragon;
 import pl.mmorpg.prototype.server.objects.monsters.dragons.GreenDragon;
 import pl.mmorpg.prototype.server.objects.monsters.dragons.RedDragon;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.GroceryShopNpc;
+import pl.mmorpg.prototype.server.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.server.objects.monsters.spells.Fireball;
 
 public class ObjectsIdentifier
 {
-    private static Map<Class<?>, String> identifiers = new HashMap<>();
+    private static BiMap<Class<? extends GameObject>, String> identifiers = HashBiMap.create();
 
     static
     {
@@ -35,6 +36,7 @@ public class ObjectsIdentifier
         identifiers.put(Skeleton.class, ObjectsIdentifiers.SKELETON);
         identifiers.put(SkeletonBody.class, ObjectsIdentifiers.SKELETON_DEAD);
         identifiers.put(GroceryShopNpc.class, ObjectsIdentifiers.GROCERY_NPC);
+        identifiers.put(QuestDialogNpc.class, ObjectsIdentifiers.QUEST_DIALOG_NPC);
         identifiers.put(Snake.class, ObjectsIdentifiers.SNAKE);
         identifiers.put(SnakeBody.class, ObjectsIdentifiers.SNAKE_DEAD);
         identifiers.put(QuestBoard.class, ObjectsIdentifiers.QUEST_BOARD);
@@ -43,5 +45,10 @@ public class ObjectsIdentifier
     public static String getObjectIdentifier(Class<?> type)
     {
         return identifiers.get(type);
+    }
+    
+    public static Class<? extends GameObject> getObjectType(String objectIdentifier)
+    {
+    	return identifiers.inverse().get(objectIdentifier);
     }
 }

@@ -14,7 +14,7 @@ public class GroceryShopNpc extends ShopNpc
 {
 	public GroceryShopNpc(long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState)
 	{
-		super(id, collisionMap, playState, getShopItems());
+		super(NpcNames.GROCERY_NPC, id, collisionMap, playState, getShopItems());
 	}
 
 	private static Collection<ShopItemWrapper> getShopItems()
