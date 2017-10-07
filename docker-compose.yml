@@ -1,0 +1,18 @@
+version: '3'
+services:
+  mmorpg_headless_server:
+    image: pankiev/mmorpgheadlessserver
+    ports:
+      - 8000:8000/tcp
+      - 8001:8001/udp
+    depends_on:
+      - mmorpg_db
+    restart: on-failure
+    
+  mmorpg_db:
+    image: pankiev/mmorpgdb
+    ports:
+      - 3306:3306
+    restart: on-failure
+      
+    
