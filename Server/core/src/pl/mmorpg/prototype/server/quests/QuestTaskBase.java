@@ -61,7 +61,7 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
     @Override
     public boolean shouldProcess(Event e)
     {
-        return e.getClass().equals(desiredEventType) && isApplicable((T)e);
+        return desiredEventType.isInstance(e) && isApplicable((T)e);
     }
     
     @SuppressWarnings("unchecked")

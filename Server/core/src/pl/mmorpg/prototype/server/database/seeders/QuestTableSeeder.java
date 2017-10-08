@@ -4,13 +4,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.thedeanda.lorem.LoremIpsum;
+
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
+import pl.mmorpg.prototype.clientservercommon.NpcNames;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.QuestItemReward;
 import pl.mmorpg.prototype.server.database.repositories.QuestRepository;
-import pl.mmorpg.prototype.server.objects.monsters.npcs.NpcNames;
 import pl.mmorpg.prototype.server.quests.AcceptQuestTask;
 import pl.mmorpg.prototype.server.quests.KillMonstersTask;
 import pl.mmorpg.prototype.server.quests.dialog.DialogStep;
@@ -69,7 +71,8 @@ public class QuestTableSeeder implements TableSeeder
 		Map<String, DialogStep> furtherDialogs = new HashMap<>();
 		furtherDialogs.put("Anwser option 1", new DialogStep("I agree with you, here is the reward!"));
 		furtherDialogs.put("Anwser option 2", new DialogStep("I disagre, but here is the reward anyway..."));
-		DialogStep dialogEntryPoint = new DialogStep("Some speach", furtherDialogs);
+		String speech = new LoremIpsum().getWords(50);
+		DialogStep dialogEntryPoint = new DialogStep(speech, furtherDialogs);
 		return dialogEntryPoint;
 	}
 

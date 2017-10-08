@@ -8,14 +8,15 @@ import pl.mmorpg.prototype.clientservercommon.Identifiable;
 
 public class AutoCleanupOnCloseButtonDialog extends Dialog implements Identifiable
 {
-	private long id;
+	private final long id;
+	private final AutoCleanupCloseButton<AutoCleanupOnCloseButtonDialog> closeButton;
 
 	public AutoCleanupOnCloseButtonDialog(String title, ActorManipulator linkedManipulator, long id)
 	{
 		super(title, Settings.DEFAULT_SKIN);
 		this.id = id;
 		
-		CloseButton closeButton = new AutoCleanupCloseButton(this, linkedManipulator) 
+		closeButton = new AutoCleanupCloseButton<AutoCleanupOnCloseButtonDialog>(this, linkedManipulator) 
 		{
 			@Override
 			public void onPress()
@@ -31,6 +32,11 @@ public class AutoCleanupOnCloseButtonDialog extends Dialog implements Identifiab
 	public long getId()
 	{
 		return id;
+	}
+	
+	public void cleanUpItself()
+	{
+		closeButton.cleanUpDialog();
 	}
 	
 	public void onClose()

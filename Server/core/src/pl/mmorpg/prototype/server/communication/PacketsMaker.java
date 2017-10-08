@@ -40,6 +40,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
@@ -486,4 +487,20 @@ public class PacketsMaker
         return packet;
     }
 
+
+	public static NpcStartDialogPacket makeNpcStartDialogPacket(long npcId, String speech, Collection<String> possibleAnswers)
+	{
+		String[] possibleAnswersInArray = possibleAnswers.stream()
+			.toArray(String[]::new);
+		return makeNpcStartDialogPacket(npcId, speech, possibleAnswersInArray);
+	}
+	
+	public static NpcStartDialogPacket makeNpcStartDialogPacket(long npcId, String speech, String[] possibleAnswers)
+	{
+		NpcStartDialogPacket packet = new NpcStartDialogPacket();
+		packet.setNpcId(npcId);
+		packet.setSpeech(speech);
+		packet.setPossibleAnswers(possibleAnswers);
+		return packet;
+	}
 }

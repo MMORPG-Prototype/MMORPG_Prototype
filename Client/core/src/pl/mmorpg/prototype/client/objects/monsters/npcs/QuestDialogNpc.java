@@ -3,13 +3,14 @@ package pl.mmorpg.prototype.client.objects.monsters.npcs;
 import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo;
 import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo.Builder;
 import pl.mmorpg.prototype.client.resources.Assets;
+import pl.mmorpg.prototype.clientservercommon.NpcNames;
 
 public class QuestDialogNpc extends Npc
 {
 
 	public QuestDialogNpc(long id)
 	{
-		super(getSheetInfo(), id);
+		super(NpcNames.QUEST_DIALOG_NPC, getSheetInfo(), id);
 	}
 	
 	private static TextureSheetAnimationInfo getSheetInfo()

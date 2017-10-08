@@ -45,6 +45,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 
@@ -94,6 +95,7 @@ public class PacketHandlerFactory
         packetHandlers.put(QuestRewardGoldRemovalPacket.class, new QuestRewardGoldRemovalPacketHandler(playState));
         packetHandlers.put(QuestStateInfoPacket[].class, new QuestStateInfoPacketArrayHandler(playState));
         packetHandlers.put(QuestAcceptedPacket.class, new QuestAcceptedPacketHandler(playState));
+        packetHandlers.put(NpcStartDialogPacket.class, new NpcStartDialogPacketHandler(playState));
         
         // Ignore framework keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

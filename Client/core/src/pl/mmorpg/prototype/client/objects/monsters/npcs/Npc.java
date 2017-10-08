@@ -6,9 +6,16 @@ import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.NpcDef
 
 public abstract class Npc extends Monster
 {
-	protected Npc(TextureSheetAnimationInfo sheetInfo, long id)
+	private final String name;
+	
+	protected Npc(String name, TextureSheetAnimationInfo sheetInfo, long id)
 	{
 		super(sheetInfo, id, new NpcDefaultPropertiesBuilder().build());
+		this.name = name;
 	}
 
+	public String getName()
+	{
+		return name;
+	}
 }

@@ -27,6 +27,7 @@ public class Player extends HealthBarMonster
 				.textureTileYOffset(0)
 				.build(), 
 				id, new MonsterProperties.Builder().build());
+        disableSliding();
     }
 
     public void initialize(UserCharacterDataPacket characterData)

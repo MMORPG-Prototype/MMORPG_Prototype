@@ -21,6 +21,7 @@ import pl.mmorpg.prototype.client.items.Item;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
 import pl.mmorpg.prototype.client.items.StackableItem;
+import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
@@ -32,6 +33,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.NpcConversationDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuestBoardDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuestListDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuestRewardDialog;
@@ -446,5 +448,18 @@ public class UserInterface
        }
        catch(CannotFindSpecifiedDialogTypeException e) {}
     }
+
+	public void openNpcConversationDialog(Npc npc, String speech, String[] possibleAnswers)
+	{
+		if(dialogs.hasIdentifiableDialog(npc.getId()))
+		{
+			NpcConversationDialog npcConversationDialog = dialogs.getIdentifiableDialog(npc.getId());
+			npcConversationDialog.cleanUpItself();
+		}
+					
+		NpcConversationDialog newDialog = new NpcConversationDialog(npc, speech, possibleAnswers, (PacketsSender)linkedState, dialogs);
+        stage.addActor(newDialog);
+        dialogs.add(newDialog);
+	}
 
 }

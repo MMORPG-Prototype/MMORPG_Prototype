@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.communication.PacketsSender;
+import pl.mmorpg.prototype.server.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.server.quests.QuestTaskBase;
 import pl.mmorpg.prototype.server.quests.events.NpcDialogEvent;
 
@@ -31,15 +34,31 @@ public class NpcDialogTask extends QuestTaskBase<NpcDialogEvent>
 	public boolean isApplicable(NpcDialogEvent event)
 	{
 		return event.getNpc().getName().equals(npcName)
-				&& currentDialogStep.getPossibleAnswers().contains(event.getAnwser());
+				&& (event.isDialogStarting() || currentDialogStep.getPossibleAnswers().contains(event.getAnwser()));
 	}
 
 	@Override
 	public void apply(NpcDialogEvent event)
 	{
-		currentDialogStep = currentDialogStep.getNextDialogStep(event.getAnwser());
-		if (currentDialogStep.isLastStep())
-			isFinished = true;
+		int connectionId = event.getReceivers().get(0).getConnectionId();
+		if (event.isDialogStarting())
+		{
+			currentDialogStep = dialogEntryPoint;
+			sendPacket(event.getPacketsSender(), connectionId, event.getNpc(), dialogEntryPoint);
+		}
+		else
+		{
+			currentDialogStep = currentDialogStep.getNextDialogStep(event.getAnwser());
+			if (currentDialogStep.isLastStep())
+				isFinished = true;
+			sendPacket(event.getPacketsSender(), connectionId, event.getNpc(), currentDialogStep);
+		}
+	}
+
+	private void sendPacket(PacketsSender packetsSender, int connectionId, Npc npc, DialogStep dialogStep)
+	{
+		packetsSender.sendTo(connectionId, PacketsMaker.makeNpcStartDialogPacket(npc.getId(), dialogStep.getSpeech(),
+				dialogStep.getPossibleAnswers()));
 	}
 
 	@Override

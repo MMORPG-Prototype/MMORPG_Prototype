@@ -11,6 +11,7 @@ public abstract class MovableGameObject extends GameObject
     private float stepSpeed = 150.0f;
     private float targetX = 100.0f;
     private float targetY = 100.0f;
+    private boolean slidingActive = true;
     private float lastDeltaTime;
     private int lastMoveDirection = Directions.NONE;
 
@@ -52,6 +53,8 @@ public abstract class MovableGameObject extends GameObject
     {
         float deltaX = targetX - getX();
         float stepValue = stepSpeed * deltaTime;
+        if(slidingActive)
+        	stepValue *= (Math.abs(deltaX) / 30);
         if (deltaX < 0)
             stepValue = -stepValue;
         if (Math.abs(deltaX) > Math.abs(stepValue))
@@ -64,6 +67,8 @@ public abstract class MovableGameObject extends GameObject
     {
         float deltaY = targetY - getY();
         float stepValue = stepSpeed * deltaTime;
+        if(slidingActive)
+        	stepValue *= (Math.abs(deltaY) / 30);
         if (deltaY < 0)
             stepValue = -stepValue;
         if (Math.abs(deltaY) > Math.abs(stepValue))
@@ -110,6 +115,11 @@ public abstract class MovableGameObject extends GameObject
         float deltaY = targetY - getY();
         float deltaX = targetX - getX();
         return Math.abs(deltaY) <= stepValue && Math.abs(deltaX) <= stepValue;
+    }
+    
+    public void disableSliding()
+    {
+    	slidingActive = false;
     }
     
     public void setStepSpeed(float stepSpeed)

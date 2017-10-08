@@ -17,6 +17,13 @@ public class PacketsRegisterer
     private final static Class<? extends Annotation> defaultAnnotationType = Registerable.class;
     private final static Class<? extends Annotation> defaultAnnotationBase = RegisterableBase.class;
 
+    public static Kryo registerPackets(Kryo destination)
+    {
+    	destination = registerAllAnnotated(destination);
+    	destination = registerDefaults(destination);
+    	return destination;
+    }
+    
     public static Kryo registerAllAnnotated(Kryo destination)
     {
         destination = registerAllAnnotated(destination, defaultAnnotationType);
@@ -105,5 +112,11 @@ public class PacketsRegisterer
         Set<Class<?>> subtypes = (Set<Class<?>>) (Set<?>) reflections.getSubTypesOf(baseType);
         registerCollection(destination, subtypes);
         return destination;
+    }
+    
+    public static Kryo registerDefaults(Kryo destination)
+    {
+    	destination.register(String[].class);
+		return destination;
     }
 }

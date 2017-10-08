@@ -70,7 +70,7 @@ public class GameServer extends ApplicationAdapter
     {
         server = new Server();
         Kryo serverKryo = server.getKryo();
-        serverKryo = PacketsRegisterer.registerAllAnnotated(serverKryo);
+        serverKryo = PacketsRegisterer.registerPackets(serverKryo);
         return server;
     }
 

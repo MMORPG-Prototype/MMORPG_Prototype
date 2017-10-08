@@ -8,7 +8,7 @@ import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public abstract class Npc extends WalkingMonster
-{
+{ 
 	private final String name;
 
 	public Npc(String name, long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState)

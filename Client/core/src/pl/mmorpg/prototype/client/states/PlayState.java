@@ -41,6 +41,7 @@ import pl.mmorpg.prototype.client.objects.graphic.HealLabel;
 import pl.mmorpg.prototype.client.objects.graphic.ManaReplenishLabel;
 import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
+import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.quests.QuestCreator;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -73,6 +74,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerIte
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 
@@ -527,5 +529,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         Quest quest = QuestCreator.create(questStatePacket);
         questInfoReceived(quest);
     }
+
+	public void npcStartDialogPacketReceived(NpcStartDialogPacket packet)
+	{
+		Npc npc = (Npc) gameObjects.get(packet.getNpcId());	
+		userInterface.openNpcConversationDialog(npc, packet.getSpeech(), packet.getPossibleAnswers());
+	}
 
 }

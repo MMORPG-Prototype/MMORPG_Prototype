@@ -138,11 +138,11 @@ public class ActorManipulator
 				.filter((d) -> d.isVisible() && mouseHovers(d)).findAny().isPresent();
 	}
 
-	public boolean hasIdentifiableDialog(long containerId)
+	public boolean hasIdentifiableDialog(long dialogId)
 	{
 		Optional<Actor> searchedElement = dialogs.stream()
 				.filter( d -> d instanceof Identifiable && 
-						((Identifiable) d).getId() == containerId).findFirst();
+						((Identifiable) d).getId() == dialogId).findFirst();
 		return searchedElement.isPresent();
 	}
 

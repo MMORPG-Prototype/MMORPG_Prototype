@@ -167,7 +167,11 @@
 			<version>1.9.0.RELEASE</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>com.thedeanda</groupId>
+			<artifactId>lorem</artifactId>
+			<version>2.1</version>
+		</dependency>
 
 	</dependencies>
 </project>

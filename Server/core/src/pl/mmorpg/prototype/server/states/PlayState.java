@@ -251,7 +251,12 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 				PacketsMaker.makeExperienceGainPacket(playerCharacter.getId(), target.getProperties().experienceGain));
 		Event monsterKilledEvent = new MonsterKilledEvent(target.getIdentifier());
 		monsterKilledEvent.addReceiver(playerCharacter);
-		questEventsHandler.enqueueEvent(monsterKilledEvent);
+		enqueueEvent(monsterKilledEvent);
+	}
+	
+	public void enqueueEvent(Event event)
+	{
+		questEventsHandler.enqueueEvent(event);
 	}
 
 	public void createFireball(PlayerCharacter source, Monster targetedMonster)
