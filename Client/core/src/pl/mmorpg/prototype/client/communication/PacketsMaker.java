@@ -8,6 +8,7 @@ import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.NpcConversationAnwserChoosenPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
@@ -171,4 +172,12 @@ public class PacketsMaker
         packet.setQuestName(questName);
         return packet;
     }
+
+	public static NpcConversationAnwserChoosenPacket makeNpcConversationAnwserChoosenPacket(long npcId, String anwser)
+	{
+		NpcConversationAnwserChoosenPacket packet = new NpcConversationAnwserChoosenPacket();
+		packet.setNpcId(npcId);
+		packet.setAnwser(anwser);
+		return packet;
+	}
 }

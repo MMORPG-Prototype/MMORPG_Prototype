@@ -74,6 +74,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerIte
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
@@ -534,6 +535,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		Npc npc = (Npc) gameObjects.get(packet.getNpcId());	
 		userInterface.openNpcConversationDialog(npc, packet.getSpeech(), packet.getPossibleAnswers());
+	}
+
+	public void continueNpcConversation(NpcContinueDialogPacket packet)
+	{
+		userInterface.continueNpcConversation(packet);
 	}
 
 }

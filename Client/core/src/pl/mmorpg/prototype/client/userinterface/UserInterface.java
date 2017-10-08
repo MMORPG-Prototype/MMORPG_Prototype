@@ -51,6 +51,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
 
 public class UserInterface
 {
@@ -460,6 +461,12 @@ public class UserInterface
 		NpcConversationDialog newDialog = new NpcConversationDialog(npc, speech, possibleAnswers, (PacketsSender)linkedState, dialogs);
         stage.addActor(newDialog);
         dialogs.add(newDialog);
+	}
+
+	public void continueNpcConversation(NpcContinueDialogPacket packet)
+	{
+		NpcConversationDialog npcConversationDialog = dialogs.getIdentifiableDialog(packet.getNpcId());
+		npcConversationDialog.update(packet.getSpeech(), packet.getPossibleAnswers());
 	}
 
 }

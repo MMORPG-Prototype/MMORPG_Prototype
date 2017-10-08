@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.server.quests.QuestTaskBase;
 import pl.mmorpg.prototype.server.quests.events.NpcDialogEvent;
 
@@ -44,22 +42,19 @@ public class NpcDialogTask extends QuestTaskBase<NpcDialogEvent>
 		if (event.isDialogStarting())
 		{
 			currentDialogStep = dialogEntryPoint;
-			sendPacket(event.getPacketsSender(), connectionId, event.getNpc(), dialogEntryPoint);
-		}
-		else
+			event.getPacketsSender().sendTo(connectionId, PacketsMaker.makeNpcStartDialogPacket(event.getNpc().getId(),
+					dialogEntryPoint.getSpeech(), dialogEntryPoint.getPossibleAnswers()));
+		} else
 		{
 			currentDialogStep = currentDialogStep.getNextDialogStep(event.getAnwser());
-			if (currentDialogStep.isLastStep())
+			if (currentDialogStep.isLastStep()) 
 				isFinished = true;
-			sendPacket(event.getPacketsSender(), connectionId, event.getNpc(), currentDialogStep);
+			Object npcDialogPacket = PacketsMaker.makeNpcContinueDialogPacket(event.getNpc().getId(),
+					currentDialogStep.getSpeech(), currentDialogStep.getPossibleAnswers());
+			event.getPacketsSender().sendTo(connectionId, npcDialogPacket);
 		}
 	}
 
-	private void sendPacket(PacketsSender packetsSender, int connectionId, Npc npc, DialogStep dialogStep)
-	{
-		packetsSender.sendTo(connectionId, PacketsMaker.makeNpcStartDialogPacket(npc.getId(), dialogStep.getSpeech(),
-				dialogStep.getPossibleAnswers()));
-	}
 
 	@Override
 	public String getDescription()
