@@ -50,6 +50,7 @@ public class LogoutPacketHandler extends PacketHandlerBase<LogoutPacket>
     			new CharacterDatabaseSaver().save((PlayerCharacter)removedCharacter);
     			server.sendToAllExceptTCP(connection.getID(), PacketsMaker.makeRemovalPacket(characterId));
     		}
+    		playState.removeGameCommandsHandler(user.getId());
     	}
     }
 

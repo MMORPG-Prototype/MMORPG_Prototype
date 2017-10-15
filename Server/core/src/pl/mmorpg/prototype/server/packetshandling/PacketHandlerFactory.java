@@ -48,6 +48,7 @@ import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveDownPacke
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveLeftPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveRightPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveUpPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.NpcConversationAnwserChoosenPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.OpenContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.RetrieveGoldRewardPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.RetrieveItemRewardPacketHandler;
@@ -65,8 +66,8 @@ public class PacketHandlerFactory
 		GameDataRetriever gameDataRetriever = new GameDataRetriever(loggedUsersKeyUserId,
 				authenticatedClientsKeyClientId);
 
-		packetHandlers.put(AuthenticationPacket.class,
-				new AuthenticationPacketHandler(loggedUsersKeyUserId, authenticatedClientsKeyClientId, server));
+		packetHandlers.put(AuthenticationPacket.class, new AuthenticationPacketHandler(loggedUsersKeyUserId,
+				authenticatedClientsKeyClientId, server, playState));
 		packetHandlers.put(CharacterCreationPacket.class,
 				new CharacterCreationPacketHandler(authenticatedClientsKeyClientId, server));
 		packetHandlers.put(CharacterChangePacket.class, new CharacterChangePacketHandler(loggedUsersKeyUserId,

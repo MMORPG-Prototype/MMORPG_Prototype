@@ -9,17 +9,22 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
+import pl.mmorpg.prototype.server.UserInfo;
+import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 
 public class GameCommandsHandler
 {
 	private final static String OBJECT_NAME = "Game";
 	private final ScriptEngine javaScriptEngine;
 	private PlayState game;
+	private UserInfo userInfo;
 
-	public GameCommandsHandler(PlayState game)
+	public GameCommandsHandler(PlayState game, UserInfo userInfo)
 	{
 		this.game = game;
+		this.userInfo = userInfo;
 		ScriptEngineManager manager = new ScriptEngineManager();
 		javaScriptEngine = manager.getEngineByName("JavaScript");
 		javaScriptEngine.put(OBJECT_NAME, this);
@@ -59,14 +64,42 @@ public class GameCommandsHandler
 	{
 		game.addGameObject(ObjectsIdentifiers.QUEST_BOARD, x, y);
 	}
+	
+	public void additem(String identifier, int inventoryX, int inventoryY, int inventoryPage)
+	{
+		addItem(identifier, 1, inventoryX, inventoryY, inventoryPage);
+	}
+	
+	public void addItem(String identifier, int ammount, int inventoryX, int inventoryY, int inventoryPage)
+	{
+		InventoryPosition position = new InventoryPosition(inventoryPage, inventoryX, inventoryY);
+		try
+		{
+			ItemIdentifiers itemIdentifier =  ItemIdentifiers.valueOf(identifier);
+			game.addItem(itemIdentifier, ammount, userInfo.userCharacter, position);			
+		}
+		catch(IllegalArgumentException e){}
+	}
 
 	public String help()
 	{
 		 return Arrays.stream(getClass().getDeclaredMethods())
 				.filter(this::isPublic)
-				.map(Method::getName)
-				.filter(method -> !method.equals("execute") && !method.equals("help"))
+				.filter(method -> !method.getName().equals("execute") && !method.getName().equals("help"))
+				.map(this::createMethodInfo)
 				.collect(Collectors.joining("\n"));
+	}
+
+	private String createMethodInfo(Method method)
+	{
+		StringBuilder methodInfo = new StringBuilder(method.getName());
+		methodInfo.append('(');
+		String parameters = Arrays.stream(method.getParameterTypes())
+			.map(Class::getSimpleName)
+			.collect(Collectors.joining(", "));
+		methodInfo.append(parameters);
+		methodInfo.append(");");
+		return methodInfo.toString();
 	}
 
 	private boolean isPublic(Method method)

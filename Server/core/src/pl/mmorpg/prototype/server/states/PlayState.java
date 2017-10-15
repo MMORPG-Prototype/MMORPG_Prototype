@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server.states;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,8 +19,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Server;
 
+import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.ServerSettings;
+import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionMap;
 import pl.mmorpg.prototype.server.collision.pixelmap.IntegerRectangle;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
@@ -27,6 +30,8 @@ import pl.mmorpg.prototype.server.collision.stackablemap.LayerCollisionMap;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
+import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.exceptions.CannotTargetItselfException;
 import pl.mmorpg.prototype.server.headless.NullOrthogonalTiledMapRenderer;
 import pl.mmorpg.prototype.server.objects.GameObject;
@@ -34,6 +39,8 @@ import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.ObjectsIdentifier;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
+import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
+import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.GameObjectsFactory;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
@@ -59,7 +66,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private final ServerInputHandler inputHandler = new ServerInputHandler(this);
 	private final GameObjectsFactory objectsFactory = new GameObjectsFactory(collisionMap, this);
 	private final MonsterSpawner monsterSpawner = new MonsterSpawner(objectsFactory);
-	private final GameCommandsHandler gameCommandsHandler = new GameCommandsHandler(this);
+	private final Map<Integer, GameCommandsHandler> gameCommandsHandlers = new HashMap<>();
 	private final RewardForFinishedQuestObserver rewardForFisnishedQuestObserver;
 	private final EventsHandler questEventsHandler;
 
@@ -253,7 +260,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		monsterKilledEvent.addReceiver(playerCharacter);
 		enqueueEvent(monsterKilledEvent);
 	}
-	
+
 	public void enqueueEvent(Event event)
 	{
 		questEventsHandler.enqueueEvent(event);
@@ -285,9 +292,33 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		return gameContainers.get(containerId);
 	}
 
-	public Object executeCode(String code) throws ScriptException
+	public void addGameCommandsHandler(UserInfo userInfo)
 	{
-		return gameCommandsHandler.execute(code);
+		gameCommandsHandlers.put(userInfo.user.getId(), new GameCommandsHandler(this, userInfo));
 	}
 
+	public void removeGameCommandsHandler(Integer userId)
+	{
+		gameCommandsHandlers.remove(userId);
+	}
+
+	public Object executeCode(String code, Integer userId) throws ScriptException
+	{
+		return gameCommandsHandlers.get(userId).execute(code);
+	}
+
+	public void addItem(ItemIdentifiers identifier, int amount, UserCharacter userCharacter,
+			InventoryPosition inventoryPosition)
+	{
+		PlayerCharacter player = (PlayerCharacter) gameObjects.get((long) userCharacter.getId());
+		if (player.hasItemInPosition(inventoryPosition))
+		{
+			sendTo(player.getConnectionId(), PacketsMaker.makeUnacceptableOperationPacket("Inventory field is taken"));
+			return;
+		}
+
+		Item item = GameItemsFactory.produce(identifier, amount, IdSupplier.getId(), inventoryPosition);
+		player.addItem(item);
+		sendTo(player.getConnectionId(), PacketsMaker.makeItemPacket(item));
+	}
 }

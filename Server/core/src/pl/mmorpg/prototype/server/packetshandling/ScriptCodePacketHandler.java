@@ -28,11 +28,14 @@ public class ScriptCodePacketHandler extends PacketHandlerBase<ScriptCodePacket>
 	{
 		User user = authenticatedClientsKeyClientId.get(connection.getID());
 		if(!user.getRole().equals(UserRole.ADMIN))
+		{
 			connection.sendTCP(PacketsMaker.makeScriptExecutionErrorPacket("You must be admin to do that"));
+			return;
+		}
 		
 		try
 		{
-			Object result = playState.executeCode(packet.getCode());
+			Object result = playState.executeCode(packet.getCode(), user.getId());
 			if(result != null)
 				connection.sendTCP(PacketsMaker.makeScriptResultInfoPacket(result.toString()));
 			

@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.server.packetshandling;
+package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import com.esotericsoftware.kryonet.Connection;
 
@@ -6,6 +6,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.NpcConversationAnwserChoos
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.Npc;
+import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
+import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
 import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.quests.events.NpcDialogEvent;
 import pl.mmorpg.prototype.server.states.PlayState;
