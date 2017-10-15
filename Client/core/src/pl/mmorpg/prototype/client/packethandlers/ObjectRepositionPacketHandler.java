@@ -33,4 +33,9 @@ public class ObjectRepositionPacketHandler extends PacketHandlerBase<ObjectRepos
 		return playState.getObject(packet.id) != null;
 	}
 
+	@Override
+	public boolean canOmmit(ObjectRepositionPacket packet)
+	{
+		return true;
+	}
 }

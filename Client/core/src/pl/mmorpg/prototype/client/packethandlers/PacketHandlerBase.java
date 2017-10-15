@@ -10,7 +10,7 @@ public abstract class PacketHandlerBase<T> implements PacketHandler
 		handlePacket(packet);
 	}
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") 
     @Override
 	public boolean canBeHandled(Object packet)
 	{
@@ -20,6 +20,18 @@ public abstract class PacketHandlerBase<T> implements PacketHandler
 	public boolean canHandle(T packet)
 	{
 		return true;
+	}
+
+    @SuppressWarnings("unchecked") 
+	@Override
+	public boolean canBeOmmited(Object packet)
+	{
+		return canOmmit((T) packet);
+	}
+	
+	public boolean canOmmit(T packet)
+	{
+		return false;
 	}
 
 	public abstract void handlePacket(T packet);

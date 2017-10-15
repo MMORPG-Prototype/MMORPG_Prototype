@@ -12,6 +12,7 @@ import pl.mmorpg.prototype.client.packethandlers.PacketHandler;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerFactory;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.StateManager;
+import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 
 public class ClientListener extends Listener
 {
@@ -36,15 +37,16 @@ public class ClientListener extends Listener
 	}
 
 	@Override
-	public void received(Connection connection, Object object)
+	public void received(Connection connection, Object packet)
 	{
-		PacketHandler packetHandler = packetHandlersFactory.produce(object);
-		if (packetHandler.canBeHandled(object))
-			packetHandler.handle(object);
-		else
-			unhandledPackets.add(new PacketInfo(connection.getID(), object));
+		PacketHandler packetHandler = packetHandlersFactory.produce(packet);
+		if (packetHandler.canBeHandled(packet))
+			packetHandler.handle(packet);
+		else if(!packetHandler.canBeOmmited(packet))
+			unhandledPackets.add(new PacketInfo(connection.getID(), packet));
 		
-		Log.info("Packet received from server, id: " + connection.getID() + "packet: " + object);
+		if(!(packet instanceof ObjectRepositionPacket))
+			Log.info("Packet received from server, id: " + connection.getID() + "packet: " + packet);
 	}
 
 	public void tryHandlingUnhandledPackets()

@@ -18,4 +18,16 @@ public class HpChangeByItemUsagePacketHandler extends PacketHandlerBase<HpChange
 		playState.hpChangeByItemUsagePacketReceived(packet);
 	}
 	
+	@Override
+	public boolean canHandle(HpChangeByItemUsagePacket packet)
+	{
+		return playState.has(packet.getMonsterTargetId());
+	}
+	
+	@Override
+	public boolean canOmmit(HpChangeByItemUsagePacket packet)
+	{
+		return true;
+	}
+	
 }

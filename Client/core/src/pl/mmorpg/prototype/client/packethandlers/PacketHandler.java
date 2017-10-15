@@ -5,4 +5,6 @@ public interface PacketHandler
 	void handle(Object object);
 	
 	boolean canBeHandled(Object packet);
+	
+	boolean canBeOmmited(Object packet);
 }
