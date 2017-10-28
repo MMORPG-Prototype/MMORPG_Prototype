@@ -10,6 +10,7 @@ public class KillMonstersTask extends QuestTaskBase<MonsterKilledEvent>
 	private final String monsterIdentifier;
 	@JsonProperty
 	private final int totalMonstersToKill;
+	@QuestMakerIgnore
 	private int monstersLeftToKill;
 
 	@JsonCreator

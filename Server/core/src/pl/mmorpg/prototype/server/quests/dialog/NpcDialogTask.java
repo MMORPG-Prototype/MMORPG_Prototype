@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.quests.QuestMakerIgnore;
 import pl.mmorpg.prototype.server.quests.QuestTaskBase;
 import pl.mmorpg.prototype.server.quests.events.NpcDialogEvent;
 
@@ -15,7 +16,9 @@ public class NpcDialogTask extends QuestTaskBase<NpcDialogEvent>
 	@JsonProperty
 	private final DialogStep dialogEntryPoint;
 	@JsonIgnore
+	@QuestMakerIgnore
 	private DialogStep currentDialogStep;
+	@QuestMakerIgnore
 	private boolean isFinished = false;
 
 	@JsonCreator

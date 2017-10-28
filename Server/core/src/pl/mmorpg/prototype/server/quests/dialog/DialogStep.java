@@ -11,11 +11,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import pl.mmorpg.prototype.server.quests.QuestMakerIgnore;
+
 @JsonSerialize
 @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class DialogStep implements Serializable
 {
-	@JsonProperty
+	@JsonProperty @QuestMakerIgnore
 	private final Map<String, DialogStep> furtherDialogs = new HashMap<>(); 
 	private final String speech;
 
@@ -25,10 +27,10 @@ public class DialogStep implements Serializable
 	}
 	
 	@JsonCreator
-	public DialogStep(@JsonProperty("speech") String speach, 
+	public DialogStep(@JsonProperty("speech") String speech, 
 			@JsonProperty("furtherDialogs") Map<String, DialogStep> furtherDialogs)
 	{
-		this.speech = speach;
+		this.speech = speech;
 		if(furtherDialogs != null)
 			this.furtherDialogs.putAll(furtherDialogs);
 	}

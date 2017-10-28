@@ -11,7 +11,7 @@ import pl.mmorpg.prototype.server.objects.items.potions.SmallMpPotion;
 
 public class ItemIdentifier
 {
-    private static Map<Class<?>, ItemIdentifiers> identifiers = new HashMap<>();
+    private static Map<Class<?>, ItemIdentifiers> identifiers = new HashMap<>(); 
     
     static
     {

@@ -45,7 +45,7 @@ public class Quest
     private Integer goldReward = 0;
 
 	@OneToMany(mappedBy = "quest", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Collection<QuestItemReward> itemsReward = new ArrayList<>();
+    private Collection<QuestItemReward> itemsReward = new ArrayList<>(); 
 	
 	@OneToMany(mappedBy="key.quest")
     private Set<CharactersQuests> characters;

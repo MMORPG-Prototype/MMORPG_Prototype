@@ -12,11 +12,14 @@ import pl.mmorpg.prototype.server.quests.observers.QuestFinishedObserver;
 
 public abstract class QuestTaskBase<T extends Event> implements QuestTask
 {
+	@QuestMakerIgnore
     private transient CharactersQuests sourceTask;
     
     @JsonProperty
+    @QuestMakerIgnore
     private Collection<QuestTask> nextTasks = new ArrayList<>(1);
     
+    @QuestMakerIgnore
     private Class<T> desiredEventType;
 
     public QuestTaskBase(Class<T> desiredEventType)

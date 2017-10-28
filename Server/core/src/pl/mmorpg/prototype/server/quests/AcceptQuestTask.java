@@ -7,6 +7,7 @@ import pl.mmorpg.prototype.server.quests.events.AcceptQuestEvent;
 
 public class AcceptQuestTask extends QuestTaskBase<AcceptQuestEvent>
 {
+	@QuestMakerIgnore
 	private boolean finished = false;
 	@JsonProperty
 	private final String questName;

@@ -25,7 +25,7 @@ public class QuestItemReward extends ItemReward
 
     public QuestItemReward(ItemIdentifiers itemIdentifier, Integer numberOfItems, Quest quest)
     {
-        super(itemIdentifier, numberOfItems);
+        super(itemIdentifier, numberOfItems); 
         setQuest(quest);
     }
 }
