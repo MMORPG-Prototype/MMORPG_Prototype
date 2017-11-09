@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -25,6 +26,7 @@ import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.items.Useable;
 import pl.mmorpg.prototype.server.objects.monsters.abilities.Ability;
+import pl.mmorpg.prototype.server.objects.monsters.abilities.TimedAbility;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
@@ -121,6 +123,9 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     private void abilitiesUsageHandle()
 	{
 		for(Ability ability : abilities)
+		{
+			if(ability instanceof TimedAbility)
+				((TimedAbility)ability).updateWithDeltaTime(Gdx.graphics.getDeltaTime());
 			if(ability.shouldUse())
 			{
 				if(ability.shouldBeUsedOnItself())
@@ -128,6 +133,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 				else if(ability.shouldBeUsedOnTargetedMonster() && isTargetingAnotherMonster())
 					ability.use(targetedMonster, (PacketsSender)linkedState);
 			}
+		}
 	}
     
 
