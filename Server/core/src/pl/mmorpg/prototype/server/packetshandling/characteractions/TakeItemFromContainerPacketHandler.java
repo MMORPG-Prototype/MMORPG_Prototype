@@ -36,7 +36,7 @@ public class TakeItemFromContainerPacketHandler extends PacketHandlerBase<TakeIt
 		server.sendToAllTCP(PacketsMaker.makeContainerItemRemovalPacket(packet.getContainerId(), packet.getItemId()));
 		InventoryPosition desiredPosition = new InventoryPosition(packet.getDesiredInventoryPage(), packet.getDesiredInventoryX(), packet.getDesiredInventoryY());
 		item.setInventoryPosition(desiredPosition);		
-		player.addItem(item);
+		player.addItemAllowStacking(item);
 		connection.sendTCP(PacketsMaker.makeItemPacket(item));
 	}
 

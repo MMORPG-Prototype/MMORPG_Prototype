@@ -48,7 +48,7 @@ public class RetrieveItemRewardPacketHandler extends PacketHandlerBase<RetrieveI
         else
             throw new NotImplementedException("Not implemented yet");
 
-        player.addItem(gameItem);
+        player.addItemAllowStacking(gameItem);
         connection.sendTCP(PacketsMaker.makeItemRewardRemovePacket(packet.getItemIdentifier(),
                 itemReward.getNumberOfItems()));
         connection.sendTCP(PacketsMaker.makeItemPacket(gameItem));

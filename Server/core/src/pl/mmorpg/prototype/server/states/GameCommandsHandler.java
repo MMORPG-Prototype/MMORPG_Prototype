@@ -13,6 +13,7 @@ import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.server.exceptions.UnknownItemTypeException;
 
 public class GameCommandsHandler
 {
@@ -65,20 +66,29 @@ public class GameCommandsHandler
 		game.addGameObject(ObjectsIdentifiers.QUEST_BOARD, x, y);
 	}
 	
-	public void additem(String identifier, int inventoryX, int inventoryY, int inventoryPage)
+	public void additem(String identifier, int inventoryX, int inventoryY, int inventoryPage) throws ScriptException
 	{
 		addItem(identifier, 1, inventoryX, inventoryY, inventoryPage);
 	}
-	
+
 	public void addItem(String identifier, int ammount, int inventoryX, int inventoryY, int inventoryPage)
+			throws ScriptException
 	{
 		InventoryPosition position = new InventoryPosition(inventoryPage, inventoryX, inventoryY);
+		ItemIdentifiers itemIdentifier = tryConvertToItemIdentifier(identifier);
+		game.addItem(itemIdentifier, ammount, userInfo.userCharacter, position);
+	}
+
+	private ItemIdentifiers tryConvertToItemIdentifier(String identifier) throws ScriptException
+	{
 		try
 		{
-			ItemIdentifiers itemIdentifier =  ItemIdentifiers.valueOf(identifier);
-			game.addItem(itemIdentifier, ammount, userInfo.userCharacter, position);			
+			return ItemIdentifiers.valueOf(identifier);		
 		}
-		catch(IllegalArgumentException e){}
+		catch(IllegalArgumentException e)
+		{
+			throw new ScriptException(new UnknownItemTypeException(identifier));
+		}
 	}
 
 	public String help()

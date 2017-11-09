@@ -7,7 +7,12 @@ public class UnknownItemTypeException extends GameException
 
     public UnknownItemTypeException(ItemIdentifiers itemType)
     {
-        super("ItemType: " + itemType);
+        this(itemType.toString());
     }
+
+	public UnknownItemTypeException(String identifier)
+	{
+		super("ItemType: " + identifier);
+	}
 
 }

@@ -62,7 +62,7 @@ public class BuyFromShopPacketHandler extends PacketHandlerBase<BuyFromShopPacke
 		Item item = itemWrapper.getItem();
 		Item newItem = GameItemsFactory.produce(item.getIdentifier(), itemCount, IdSupplier.getId(),
 				itemInventoryPosition);
-		character.addItem(newItem);
+		character.addItemAllowStacking(newItem);
 		connection.sendTCP(PacketsMaker.makeItemPacket(newItem));
 	}
 }

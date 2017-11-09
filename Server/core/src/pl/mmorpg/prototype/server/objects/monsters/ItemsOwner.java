@@ -6,9 +6,13 @@ import pl.mmorpg.prototype.server.objects.items.Item;
 
 public interface ItemsOwner
 {
-	void addItem(Item item);
+	void addItemAllowStacking(Item item);
 	
-	void addItems(Collection<Item> items);
+	void addItemsAllowStacking(Collection<Item> items);
+	
+	void addItemDenyStacking(Item item);
+	
+	void addItemsDenyStacking(Collection<Item> items);
 
 	Collection<Item> getItems();
 	

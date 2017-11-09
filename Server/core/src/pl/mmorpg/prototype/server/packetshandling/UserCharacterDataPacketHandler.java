@@ -59,7 +59,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
         sendCurrentGameObjectsInfo(clientId);
         PlayerCharacter newPlayer = new PlayerCharacter(character, playState, clientId);
         Collection<Item> playerItems = getPlayerItems(newPlayer);
-        playerItems.forEach((item) -> newPlayer.addItem(item));
+        playerItems.forEach((item) -> newPlayer.addItemAllowStacking(item));
         playState.add(newPlayer);
         server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
         sendItemsDataToClient(playerItems, clientId);

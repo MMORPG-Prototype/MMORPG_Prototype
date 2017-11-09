@@ -206,7 +206,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     }
     
     @Override
-	public void addItem(Item newItem)
+	public void addItemAllowStacking(Item newItem)
     {
     	if(newItem instanceof StackableItem)
     	{
@@ -220,6 +220,24 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     	}
     	items.put(newItem.getId(), newItem);
     }
+    
+	@Override
+	public void addItemDenyStacking(Item newItem)
+	{
+    	items.put(newItem.getId(), newItem);
+	}
+	
+    @Override
+    public void addItemsAllowStacking(Collection<Item> items)
+    {
+    	items.forEach(this::addItemAllowStacking);
+    }
+
+	@Override
+	public void addItemsDenyStacking(Collection<Item> items)
+	{
+    	items.forEach(this::addItemDenyStacking);
+	}
 
     @Override
 	public void useItem(long id, PacketsSender packetSender)
@@ -258,12 +276,6 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     {
     	if(items.remove(id) == null)
     		throw new NoSuchItemToRemoveException(id);
-    }
-    
-    @Override
-    public void addItems(Collection<Item> items)
-    {
-    	items.forEach( item -> this.items.put(item.getId(), item));
     }
     
     protected void addAbility(Ability ability)

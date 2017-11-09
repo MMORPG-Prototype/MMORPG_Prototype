@@ -15,6 +15,6 @@ public interface MonsterLootGenerator
 	{
 		monster.getProperties().gold = generateGold();
 		Collection<Item> items = generateItems();
-		monster.addItems(items);
+		monster.addItemsAllowStacking(items);
 	}
 }

@@ -318,7 +318,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		}
 
 		Item item = GameItemsFactory.produce(identifier, amount, IdSupplier.getId(), inventoryPosition);
-		player.addItem(item);
+		player.addItemDenyStacking(item);
 		sendTo(player.getConnectionId(), PacketsMaker.makeItemPacket(item));
 	}
 }

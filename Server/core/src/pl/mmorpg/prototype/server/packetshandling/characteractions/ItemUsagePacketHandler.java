@@ -6,7 +6,7 @@ import com.esotericsoftware.kryonet.Server;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.exceptions.OutOfStockExcpetion;
+import pl.mmorpg.prototype.server.exceptions.OutOfStockException;
 import pl.mmorpg.prototype.server.exceptions.PlayerUsingItemNotFoundException;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -38,7 +38,7 @@ public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
 			itemUser.useItem(packet.getItemId(), target, (PacketsSender)playState);
 			connection.sendTCP(packet);
 		}
-		catch(OutOfStockExcpetion e)
+		catch(OutOfStockException e)
 		{
 			connection.sendTCP(PacketsMaker.makeUnacceptableOperationPacket("Your item stack was depleted"));
 		}
