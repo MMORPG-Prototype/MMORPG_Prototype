@@ -55,6 +55,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemStackPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
@@ -540,6 +541,16 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void continueNpcConversation(NpcContinueDialogPacket packet)
 	{
 		userInterface.continueNpcConversation(packet);
+	}
+
+	public void inventoryItemStackPacketReceived(InventoryItemStackPacket packet)
+	{
+	}
+
+	public void inventoryItemStackPacketReceived(ItemInventoryPosition firstPosition,
+			ItemInventoryPosition secondPosition)
+	{
+		userInterface.stackItemsInInventoryDialog(firstPosition, secondPosition);
 	}
 
 }

@@ -9,7 +9,7 @@ import pl.mmorpg.prototype.server.states.GameObjectsContainer;
 
 public class FireballAbility extends TimedAbility
 {
-	private final static float CAST_INTERVAL = 10.0f;
+	private final static float CAST_INTERVAL = 10000.0f;
 	private Monster source;
 	private GameObjectsContainer linkedContainer;
 

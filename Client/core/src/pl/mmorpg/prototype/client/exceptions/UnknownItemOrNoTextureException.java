@@ -1,6 +1,4 @@
-package pl.mmorpg.prototype.client.items;
-
-import pl.mmorpg.prototype.client.exceptions.GameException;
+package pl.mmorpg.prototype.client.exceptions;
 
 public class UnknownItemOrNoTextureException extends GameException
 {

@@ -469,4 +469,9 @@ public class UserInterface
 		npcConversationDialog.update(packet.getSpeech(), packet.getPossibleAnswers());
 	}
 
+	public void stackItemsInInventoryDialog(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
+	{
+		inventoryDialog.stackItems(firstPosition, secondPosition);
+	}
+
 }

@@ -6,6 +6,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryIte
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.items.Item;
+import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.monsters.InventoryRepositionableItemsOwner;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
@@ -38,7 +39,14 @@ public class InventoryItemRepositionRequestPacketHandler extends PacketHandlerBa
 			connection.sendTCP(
 					PacketsMaker.makeInventoryItemRepositionPacket(sourcePosition, desiredPosition));
 			item.setInventoryPosition(desiredPosition);
-		} else
+		} else if(itemInDestinationPosition instanceof StackableItem && 
+				itemInDestinationPosition.getIdentifier().equals(item.getIdentifier()))
+		{
+			connection.sendTCP(PacketsMaker.makeInventoryItemStackPacket(sourcePosition, desiredPosition));
+			((StackableItem)itemInDestinationPosition).stackWith((StackableItem)item);
+			playerCharacter.removeItem(item.getId());
+		}
+		else
 		{
 			connection.sendTCP(PacketsMaker.makeInventoryItemSwapPacket(sourcePosition, desiredPosition));
 			itemInDestinationPosition.setInventoryPosition(sourcePosition);;

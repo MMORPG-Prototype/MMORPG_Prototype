@@ -41,7 +41,7 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
     
     public void spellUsed(int manaDrain)
     {
-        int newManaValue = userCharacter.getManaPoints() - manaDrain;
+        int newManaValue = getProperties().mp - manaDrain;
         userCharacter.setManaPoints(newManaValue);
         getProperties().mp = newManaValue;
     }

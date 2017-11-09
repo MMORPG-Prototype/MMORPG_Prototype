@@ -10,6 +10,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemStackPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemSwapPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
@@ -518,6 +519,22 @@ public class PacketsMaker
 		packet.setNpcId(npcId);
 		packet.setSpeech(speech);
 		packet.setPossibleAnswers(possibleAnswers);
+		return packet;
+	}
+
+	public static InventoryItemStackPacket makeInventoryItemStackPacket(InventoryPosition firstPosition,
+			InventoryPosition secondPosition)
+	{
+		InventoryItemStackPacket packet = new InventoryItemStackPacket();
+		
+        packet.setFirstPositionPageNumber(firstPosition.getInventoryPageNumber());
+        packet.setFirstPositionPageX(firstPosition.getInventoryX());
+        packet.setFirstPositionPageY(firstPosition.getInventoryY());
+
+        packet.setSecondPositionPageNumber(secondPosition.getInventoryPageNumber());
+        packet.setSecondPositionPageX(secondPosition.getInventoryX());
+        packet.setSecondPositionPageY(secondPosition.getInventoryY());
+
 		return packet;
 	}
 }

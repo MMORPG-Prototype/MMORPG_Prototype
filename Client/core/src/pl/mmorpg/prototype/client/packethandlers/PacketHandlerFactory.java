@@ -17,6 +17,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemStackPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemSwapPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
@@ -88,6 +89,7 @@ public class PacketHandlerFactory
         packetHandlers.put(ScriptExecutionErrorPacket.class, new ScriptExecutionErrorPacketHandler(playState));
         packetHandlers.put(InventoryItemRepositionPacket.class, new InventoryItemRepositionPacketHandler(playState));
         packetHandlers.put(InventoryItemSwapPacket.class, new InventoryItemSwapPacketHandler(playState));
+        packetHandlers.put(InventoryItemStackPacket.class, new InventoryItemStackPacketHandler(playState));
         packetHandlers.put(ItemPutInQuickAccessBarPacket.class, new ItemPutInQuickAccessBarPacketHandler(playState));
         packetHandlers.put(ScriptResultInfoPacket.class, new ScriptResultInfoPacketHandler(playState));
         packetHandlers.put(QuestBoardInfoPacket.class, new QuestBoardInfoPacketHandler(playState));

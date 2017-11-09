@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.client.items;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import pl.mmorpg.prototype.client.exceptions.UnknownItemOrNoTextureException;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 

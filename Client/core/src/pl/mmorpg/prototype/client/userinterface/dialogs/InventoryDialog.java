@@ -311,4 +311,14 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		return null;
 	}
 
+	public void stackItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
+	{
+		InventoryField<Item> firstField = getField(firstPosition);
+		InventoryField<Item> secondField = getField(secondPosition);
+		Item firstItem = firstField.getContent();
+		Item secondItem = secondField.getContent();
+		firstField.removeContent();
+		((StackableItem)secondItem).stackWith((StackableItem)firstItem);
+	}
+
 }
