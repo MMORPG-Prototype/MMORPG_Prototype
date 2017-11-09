@@ -132,7 +132,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 		{
 			Item item = field.getContent();
 			if (item != null && item.getIdentifier().equals(itemIdentifier))
-				itemCounter = getItemCount(item);
+				itemCounter += getItemCount(item);
 		}
 		return itemCounter;
 	}
