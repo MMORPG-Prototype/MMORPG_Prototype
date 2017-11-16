@@ -26,13 +26,19 @@ public class FireballSpell implements Spell
 	public void onUse(PlayerCharacter character, Monster target, PacketsSender packetsSender,
 			GameObjectsContainer gameObjectsContainer)
 	{		
-		Fireball fireball = new Fireball(character.getSpell(FireballSpell.class), IdSupplier.getId(), character, gameObjectsContainer, packetsSender);
+		Fireball fireball = new Fireball(character.getKnownSpell(FireballSpell.class), IdSupplier.getId(), character, gameObjectsContainer, packetsSender);
 		fireball.setTarget(target);
 		fireball.setPosition(character.getX(), character.getY());
 		gameObjectsContainer.add(fireball);
 		packetsSender.sendToAll(PacketsMaker.makeCreationPacket(fireball));
 	    packetsSender.sendTo(character.getConnectionId(), PacketsMaker.makeManaDrainPacket(getNeededMana()));
 	    character.spellUsed(this);
+	}
+
+	@Override
+	public SpellTypes getSpellType()
+	{
+		return SpellTypes.FIREBALL;
 	}
 
 

@@ -12,4 +12,6 @@ public interface Spell
 	int getNeededMana();
 	
 	void onUse(PlayerCharacter source, Monster target, PacketsSender packetsSender, GameObjectsContainer gameObjectsContainer);
+	
+	SpellTypes getSpellType();
 }

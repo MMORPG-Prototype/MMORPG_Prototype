@@ -265,11 +265,6 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		questEventsHandler.enqueueEvent(event);
 	}
 
-	public void createFireball(PlayerCharacter source, Monster targetedMonster)
-	{
-
-	}
-
 	public boolean hasContainer(int gameX, int gameY)
 	{
 		return deadBodiesCollisionMap.getTopObject(gameX, gameY) != null;

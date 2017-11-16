@@ -73,5 +73,7 @@ public class UserCharacter implements Serializable
 
     @OneToMany(mappedBy = "key.character")
     private Collection<CharactersQuests> quests;
-
+    
+    @OneToMany(mappedBy = "userCharacter")
+    private Collection<UserCharacterSpell> spells;
 }

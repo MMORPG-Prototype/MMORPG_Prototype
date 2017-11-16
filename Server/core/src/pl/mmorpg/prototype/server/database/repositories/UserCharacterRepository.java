@@ -21,6 +21,7 @@ public interface UserCharacterRepository extends CrudRepository<UserCharacter, I
 	{
 		UserCharacter result = findOne(id);
 		result.getQuickAccessBarConfig().size();
+		result.getSpells().size();
 		Collection<CharactersQuests> quests = result.getQuests();
         quests.forEach(q -> q.getQuestTasks().size());
         quests.forEach(q -> q.getQuest().getId());

@@ -8,11 +8,13 @@ import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.UserCharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
 import pl.mmorpg.prototype.server.database.repositories.CharactersQuestsRepository;
 import pl.mmorpg.prototype.server.database.repositories.QuickAccessBarConfigurationElementRepository;
 import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
+import pl.mmorpg.prototype.server.database.repositories.UserCharacterSpellRepository;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
@@ -25,6 +27,8 @@ public class CharacterDatabaseSaver
             .getBean(QuickAccessBarConfigurationElementRepository.class);
     private final CharactersQuestsRepository charactersQuestsRepo = SpringContext
             .getBean(CharactersQuestsRepository.class);
+    private final UserCharacterSpellRepository characterSpellRepo = SpringContext
+            .getBean(UserCharacterSpellRepository.class);
 
     public void save(PlayerCharacter character)
     {
@@ -32,9 +36,10 @@ public class CharacterDatabaseSaver
         saveCharacterQuestStates(character);
         saveCharacterProperties(character);
         saveCharacterQuickAccessBarConfig(character);
+        saveCharacterSpells(character);
     }
 
-    private void saveCharacterItems(PlayerCharacter character)
+	private void saveCharacterItems(PlayerCharacter character)
     {
         Collection<Item> items = character.getItems();
         Collection<CharacterItem> databaseItems = items.stream()
@@ -63,7 +68,7 @@ public class CharacterDatabaseSaver
 
     private void saveCharacterProperties(PlayerCharacter character)
     {
-        character.updateUserCharacterData();
+    	character.updateUserCharacterProperties();
         characterRepo.save(character.getUserCharacterData());
     }
 
@@ -80,5 +85,11 @@ public class CharacterDatabaseSaver
         Collection<QuickAccessBarConfigurationElement> configElements = userCharacterData.getQuickAccessBarConfig()
                 .values();
         quickAccessBarConfigRepo.save(configElements);
+    }
+    
+    private void saveCharacterSpells(PlayerCharacter character)
+    {
+    	Collection<UserCharacterSpell> spells = character.getUserCharacterData().getSpells();
+    	characterSpellRepo.save(spells);
     }
 }

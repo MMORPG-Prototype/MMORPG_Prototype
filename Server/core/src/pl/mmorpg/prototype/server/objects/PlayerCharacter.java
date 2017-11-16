@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.server.objects;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,12 +8,13 @@ import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.Player
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.UserCharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.InventoryRepositionableItemsOwner;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.spells.Spell;
-import pl.mmorpg.prototype.server.objects.monsters.spells.objects.Fireball;
+import pl.mmorpg.prototype.server.objects.monsters.spells.SpellFactory;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
@@ -28,11 +30,19 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
                 new PlayerPropertiesBuilder(PacketsMaker.makeCharacterPacket(userCharacter)).build());
         this.userCharacter = userCharacter;
         this.connectionId = connectionId;
+        initializeSpells(userCharacter.getSpells());
         setPacketSendingInterval(0.0f);
         setPosition(userCharacter.getLastLocationX(), userCharacter.getLastLocationY());
     }
 
-    @Override
+    private void initializeSpells(Collection<UserCharacterSpell> spells)
+	{
+    	spells.stream()
+    		.map(SpellFactory::create)
+    		.forEach(spell -> knownSpells.put(spell.getClass(), spell));
+	}
+
+	@Override
     public void killed(Monster target)
     {
         linkedState.playerKilled(this, target);
@@ -57,7 +67,7 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
         return getProperties().mp >= manaDrain;
     }
 
-	public void updateUserCharacterData()
+	public void updateUserCharacterProperties()
 	{
 		userCharacter.setDexitirity(properties.dexitirity);
 		userCharacter.setExperience(properties.experience);
@@ -113,14 +123,8 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
         return connectionId;
     }
 
-    public boolean doesKnowSpell(Spell spell)
-	{
-    	// TODO remove fireball
-    	return spell instanceof Fireball || knownSpells.containsKey(spell.getClass());
-	}
-
 	@SuppressWarnings("unchecked")
-	public <T extends Spell> T getSpell(Class<T> type)
+	public <T extends Spell> T getKnownSpell(Class<T> type)
 	{
 		return (T) knownSpells.get(type);
 	}
