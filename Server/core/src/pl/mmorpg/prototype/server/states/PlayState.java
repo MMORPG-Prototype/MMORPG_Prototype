@@ -44,7 +44,6 @@ import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.GameObjectsFactory;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
-import pl.mmorpg.prototype.server.objects.monsters.spells.Fireball;
 import pl.mmorpg.prototype.server.objects.spawners.MonsterSpawner;
 import pl.mmorpg.prototype.server.objects.spawners.MonsterSpawnerUnit;
 import pl.mmorpg.prototype.server.quests.events.Event;
@@ -268,11 +267,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 
 	public void createFireball(PlayerCharacter source, Monster targetedMonster)
 	{
-		Fireball fireball = new Fireball(IdSupplier.getId(), source, this, this);
-		fireball.setTarget(targetedMonster);
-		fireball.setPosition(source.getX(), source.getY());
-		gameObjects.put(fireball.getId(), fireball);
-		sendToAll(PacketsMaker.makeCreationPacket(fireball));
+
 	}
 
 	public boolean hasContainer(int gameX, int gameY)

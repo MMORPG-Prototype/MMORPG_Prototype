@@ -1,5 +1,8 @@
 package pl.mmorpg.prototype.server.objects;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.PlayerPropertiesBuilder;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
@@ -8,6 +11,8 @@ import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.InventoryRepositionableItemsOwner;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.objects.monsters.spells.Spell;
+import pl.mmorpg.prototype.server.objects.monsters.spells.objects.Fireball;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
@@ -15,6 +20,7 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 {
     private UserCharacter userCharacter;
     private final int connectionId;
+    private final Map<Class<? extends Spell>, Spell> knownSpells = new HashMap<>();
 
     public PlayerCharacter(UserCharacter userCharacter, PlayState linkedState, int connectionId)
     {
@@ -39,9 +45,9 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
         return userCharacter;
     }
     
-    public void spellUsed(int manaDrain)
+    public void spellUsed(Spell spell)
     {
-        int newManaValue = getProperties().mp - manaDrain;
+        int newManaValue = getProperties().mp - spell.getNeededMana();
         userCharacter.setManaPoints(newManaValue);
         getProperties().mp = newManaValue;
     }
@@ -106,5 +112,17 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
     {
         return connectionId;
     }
+
+    public boolean doesKnowSpell(Spell spell)
+	{
+    	// TODO remove fireball
+    	return spell instanceof Fireball || knownSpells.containsKey(spell.getClass());
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Spell> T getSpell(Class<T> type)
+	{
+		return (T) knownSpells.get(type);
+	}
 	 
 }

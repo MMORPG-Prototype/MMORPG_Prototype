@@ -17,7 +17,7 @@ import pl.mmorpg.prototype.server.objects.monsters.dragons.GreenDragon;
 import pl.mmorpg.prototype.server.objects.monsters.dragons.RedDragon;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.GroceryShopNpc;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.QuestDialogNpc;
-import pl.mmorpg.prototype.server.objects.monsters.spells.Fireball;
+import pl.mmorpg.prototype.server.objects.monsters.spells.objects.Fireball;
 
 public class ObjectsIdentifier
 {

@@ -39,7 +39,6 @@ import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.AcceptQuestPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.CharacterBoardClickPacketHandler;
-import pl.mmorpg.prototype.server.packetshandling.characteractions.FireballSpellUsagePacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.InventoryItemRepositionRequestPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemPutInQuickAccessBarPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemRemovedFromQuickAccessBarPacketHandler;
@@ -54,6 +53,7 @@ import pl.mmorpg.prototype.server.packetshandling.characteractions.RetrieveGoldR
 import pl.mmorpg.prototype.server.packetshandling.characteractions.RetrieveItemRewardPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakeItemFromContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakingGoldFromContainerPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.spell.usage.FireballSpellUsagePacketHandler;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class PacketHandlerFactory
@@ -87,7 +87,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(BoardClickPacket.class, new CharacterBoardClickPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(ItemUsagePacket.class, new ItemUsagePacketHandler(gameDataRetriever, playState, server));
 		packetHandlers.put(FireballSpellUsagePacket.class,
-				new FireballSpellUsagePacketHandler(gameDataRetriever, server, playState));
+				new FireballSpellUsagePacketHandler(gameDataRetriever, playState));
 		packetHandlers.put(OpenContainterPacket.class, new OpenContainerPacketHandler(server, playState));
 		packetHandlers.put(TakeItemFromContainerPacket.class,
 				new TakeItemFromContainerPacketHandler(gameDataRetriever, server, playState));
