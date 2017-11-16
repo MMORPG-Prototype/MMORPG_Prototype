@@ -20,6 +20,7 @@ public abstract class ThrowableObject extends MovableGameObject
 		super(lookout, id, packetSender);
 		this.linkedContainer = linkedContainer;
 		this.packetSender = packetSender;
+		this.setCollideable(false);
 	}
 
 	@Override

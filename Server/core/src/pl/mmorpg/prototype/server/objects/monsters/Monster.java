@@ -162,7 +162,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     public void targetMonster(Monster target)
     {
         targetedMonster = target;
-        target.isTargetedBy(this);
+        target.addBeingTargetedBy(this);
     }
 
     public Monster getTargetedMonster()
@@ -170,7 +170,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
         return targetedMonster;
     }
 
-    private void isTargetedBy(Monster source)
+    private void addBeingTargetedBy(Monster source)
     {
         targetedBy.add(source);
     }

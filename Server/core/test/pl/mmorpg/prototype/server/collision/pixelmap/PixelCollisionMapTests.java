@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.collision;
+package pl.mmorpg.prototype.server.collision.pixelmap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

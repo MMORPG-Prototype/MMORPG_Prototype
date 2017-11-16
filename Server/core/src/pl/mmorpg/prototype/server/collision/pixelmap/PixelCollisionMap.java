@@ -48,8 +48,11 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
         return collisionMap;
     }
 
-    public void placeObjectOnBorder(T object)
+    void placeObjectOnBorder(T object)
     {
+    	if(!object.isCurrentlyCollideable())
+    		return;
+    	
         for (int i = 0; i < collisionMap.length; i++)
         {
             collisionMap[i][0] = object;
@@ -76,6 +79,9 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
     @Override
     public void insert(T object)
     {
+    	if(!object.isCurrentlyCollideable())
+    		return;
+    	
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
         for (int i = collision.x; i <= collision.x + collision.width; i++)
@@ -86,6 +92,9 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
     @Override
     public void remove(T object)
     {
+    	if(!object.isCurrentlyCollideable())
+    		return;
+    	
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
 
         for (int i = collision.x; i <= collision.x + collision.width; i++)
@@ -96,6 +105,9 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
     @Override
     public T tryToRepositionGoingLeft(int moveValue, T object)
     {
+    	if(!object.isCurrentlyCollideable())
+    		return null;
+    	
         T possibleCollision = checkForSpaceGoingLeft(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
@@ -106,6 +118,9 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
     @Override
     public T tryToRepositionGoingRight(int moveValue, T object)
     {
+    	if(!object.isCurrentlyCollideable())
+    		return null;
+    	
         T possibleCollision = checkForSpaceGoingRight(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
@@ -116,6 +131,9 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
     @Override
     public T tryToRepositionGoingDown(int moveValue, T object)
     {
+    	if(!object.isCurrentlyCollideable())
+    		return null;
+    	
         T possibleCollision = checkForSpaceGoingDown(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)
@@ -126,6 +144,9 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
     @Override
     public T tryToRepositionGoingUp(int moveValue, T object)
     {
+    	if(!object.isCurrentlyCollideable())
+    		return null;
+    	
         T possibleCollision = checkForSpaceGoingUp(moveValue,
                 new IntegerRectangle(object.getCollisionRect(), scale));
         if (possibleCollision == null)

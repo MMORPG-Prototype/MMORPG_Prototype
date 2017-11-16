@@ -15,6 +15,7 @@ public abstract class GameObject implements RectangleCollisionObject
     public static final NullGameObject NULL_OBJECT = new NullGameObject();
 
     private Rectangle collisionRectangle = new Rectangle();
+	private boolean collideable = true;
     private Sprite sprite;
     private long id = -1;
     private int layer;
@@ -123,8 +124,19 @@ public abstract class GameObject implements RectangleCollisionObject
         linkedContainer.remove(getId());
         packetSender.sendToAll(PacketsMaker.makeRemovalPacket(getId()));
     }
-	
-    private static class NullGameObject extends GameObject
+    
+	@Override
+    public boolean isCurrentlyCollideable()
+	{
+		return collideable;
+	}
+
+	public void setCollideable(boolean collideable)
+	{
+		this.collideable = collideable;
+	}
+
+	private static class NullGameObject extends GameObject
     {
 
         @Override

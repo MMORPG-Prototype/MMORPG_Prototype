@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.collision;
+package pl.mmorpg.prototype.server.collision.pixelmap;
 
 import com.badlogic.gdx.math.Rectangle;
 

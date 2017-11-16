@@ -10,4 +10,9 @@ public interface RectangleCollisionObject
 	{
 		return getCollisionRect().contains(gameX, gameY);
 	}
+	
+	default boolean isCurrentlyCollideable()
+	{
+		return true;
+	}
 }
