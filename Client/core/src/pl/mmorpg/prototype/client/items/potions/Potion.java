@@ -1,9 +1,11 @@
-package pl.mmorpg.prototype.client.items;
+package pl.mmorpg.prototype.client.items.potions;
 
 import com.badlogic.gdx.graphics.Texture;
 
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
+import pl.mmorpg.prototype.client.items.ItemUseable;
+import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 
 public abstract class Potion extends StackableItem implements ItemUseable

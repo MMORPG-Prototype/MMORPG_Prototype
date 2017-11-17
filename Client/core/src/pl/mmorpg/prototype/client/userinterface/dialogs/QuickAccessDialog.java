@@ -13,18 +13,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.exceptions.CannotUseThisItemException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchItemInQuickAccessBarException;
-import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemIcon;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryTextField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.QuickAccessIcon;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.InventoryTextField;
 
 public class QuickAccessDialog extends Dialog
 {
-    private Map<Integer, InventoryField<QuickAccessIcon>> quickAccessButtons = new TreeMap<>();
+    private Map<Integer, ButtonField<QuickAccessIcon>> quickAccessButtons = new TreeMap<>();
     private UserInterface linkedInterface;
 
     public QuickAccessDialog(UserInterface linkedInterface)
@@ -35,7 +35,7 @@ public class QuickAccessDialog extends Dialog
         HorizontalGroup buttons = new HorizontalGroup().padBottom(8).space(4).padTop(0).fill();
         for (int i = 0; i < 12; i++)
         {
-            InventoryField<QuickAccessIcon> field = createField(i);
+            ButtonField<QuickAccessIcon> field = createField(i);
             quickAccessButtons.put(i, field);
             buttons.addActor(field);
         }
@@ -47,7 +47,7 @@ public class QuickAccessDialog extends Dialog
         this.setMovable(false);
     }
 
-    private InventoryField<QuickAccessIcon> createField(int cellPosition)
+    private ButtonField<QuickAccessIcon> createField(int cellPosition)
     {
         InventoryTextField<QuickAccessIcon> inventoryField = new InventoryTextField<>(
                 "F" + String.valueOf(cellPosition + 1));
@@ -71,16 +71,16 @@ public class QuickAccessDialog extends Dialog
 
     public void useButtonItem(int cellPosition, Monster target, PacketsSender packetSender)
     {
-        InventoryField<QuickAccessIcon> fieldWithIcon = quickAccessButtons.get(cellPosition);
+        ButtonField<QuickAccessIcon> fieldWithIcon = quickAccessButtons.get(cellPosition);
         if (fieldWithIcon.hasContent())
         {
             QuickAccessIcon quickAccessIcon = fieldWithIcon.getContent();
             String itemIdentifier = quickAccessIcon.getItemIdenfier();
-            Item item = linkedInterface.searchForItem(itemIdentifier);
+            ItemIcon item = linkedInterface.searchForItem(itemIdentifier);
             if (item == null)
                 return;
             if (!(item instanceof ItemUseable))
-                throw new CannotUseThisItemException((Item) item);
+                throw new CannotUseThisItemException((ItemIcon) item);
 
             ((ItemUseable) item).use(target, packetSender);
         }
@@ -89,7 +89,7 @@ public class QuickAccessDialog extends Dialog
 
     public boolean hasItem(QuickAccessIcon item)
     {
-        for (InventoryField<QuickAccessIcon> field : quickAccessButtons.values())
+        for (ButtonField<QuickAccessIcon> field : quickAccessButtons.values())
             if (field.hasContent() && field.getContent() == item)
                 return true;
         return false;
@@ -97,7 +97,7 @@ public class QuickAccessDialog extends Dialog
 
     public void removeItem(QuickAccessIcon usedItem)
     {
-        for (InventoryField<QuickAccessIcon> field : quickAccessButtons.values())
+        for (ButtonField<QuickAccessIcon> field : quickAccessButtons.values())
             if (field.hasContent() && field.getContent() == usedItem)
             {
                 field.removeContent();
@@ -113,7 +113,7 @@ public class QuickAccessDialog extends Dialog
 
     private Stream<QuickAccessIcon> getValidIcons(String identifier)
     {
-        return quickAccessButtons.values().stream().map(InventoryField::getContent).filter(Objects::nonNull)
+        return quickAccessButtons.values().stream().map(ButtonField::getContent).filter(Objects::nonNull)
                 .filter(icon -> icon.getItemIdenfier().equals(identifier));
     }
 
@@ -130,7 +130,7 @@ public class QuickAccessDialog extends Dialog
     public void putItem(String itemIdentifier, int cellPosition, ItemCounter itemCounter)
     {
         QuickAccessIcon icon = new QuickAccessIcon(itemIdentifier, itemCounter);
-        InventoryField<QuickAccessIcon> quickAccessField = quickAccessButtons.get(cellPosition);
+        ButtonField<QuickAccessIcon> quickAccessField = quickAccessButtons.get(cellPosition);
         quickAccessField.put(icon);
     }
 

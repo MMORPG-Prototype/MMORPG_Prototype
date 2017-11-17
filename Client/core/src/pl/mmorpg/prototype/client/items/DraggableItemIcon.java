@@ -3,12 +3,12 @@ package pl.mmorpg.prototype.client.items;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public abstract class DraggableItem extends Item
+public abstract class DraggableItemIcon extends ItemIcon
 {
 	protected static final float WIDTH_WHEN_DRAGGED = 36;
 	protected static final float HEIGHT_WHEN_DRAGGED = 36;
 	
-	public DraggableItem(Texture texture, long id)
+	public DraggableItemIcon(Texture texture, long id)
 	{
 		super(texture, id);
 	}

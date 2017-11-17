@@ -25,7 +25,7 @@ import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.NullInputHandler;
 import pl.mmorpg.prototype.client.input.PlayInputContinuousHandler;
 import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
-import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemIcon;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.objects.GameObject;
@@ -264,7 +264,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
     public void newItemPacketReceived(CharacterItemDataPacket itemData)
     {
-        Item newItem = ItemFactory.produceItem(itemData);
+        ItemIcon newItem = ItemFactory.produceItem(itemData);
         ItemInventoryPosition position = new ItemInventoryPosition(itemData.getInventoryPageNumber(),
                 new Point(itemData.getInventoryX(), itemData.getInventoryY()));
 
@@ -461,7 +461,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
     private ShopItem makeShopItem(ShopItemPacket packet)
     {
-        Item item = ItemFactory.produceItem(packet.getItem());
+        ItemIcon item = ItemFactory.produceItem(packet.getItem());
         ShopItem shopItem = new ShopItem(item, packet.getPrice());
         return shopItem;
     }

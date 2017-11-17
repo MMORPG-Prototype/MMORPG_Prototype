@@ -1,12 +1,12 @@
-package pl.mmorpg.prototype.client.userinterface.dialogs.components;
+package pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-import pl.mmorpg.prototype.client.items.InventoryIcon;
+import pl.mmorpg.prototype.client.items.Icon;
 import pl.mmorpg.prototype.client.resources.Assets;
 
-public class InventoryTextField<T extends InventoryIcon> extends InventoryField<T>
+public class InventoryTextField<T extends Icon> extends ButtonField<T>
 {
 	private static BitmapFont font = Assets.getFont();
 	private String text;

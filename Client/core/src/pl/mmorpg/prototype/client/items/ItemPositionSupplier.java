@@ -4,7 +4,7 @@ public interface ItemPositionSupplier
 {
     ItemInventoryPosition get(String itemIdentifier, int numberOfItems);
     
-    default ItemInventoryPosition get(Item item)
+    default ItemInventoryPosition get(ItemIcon item)
     {
         if(item instanceof StackableItem)
             return get(item.getIdentifier(), 1);

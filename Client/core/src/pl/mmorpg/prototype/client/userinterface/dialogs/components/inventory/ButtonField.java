@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.userinterface.dialogs.components;
+package pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -6,12 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
-import pl.mmorpg.prototype.client.items.InventoryIcon;
+import pl.mmorpg.prototype.client.items.Icon;
 import pl.mmorpg.prototype.client.items.Reference;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.Container;
 
-public class InventoryField<T extends InventoryIcon> extends Button implements Container<T>
+public class ButtonField<T extends Icon> extends Button implements Container<T>
 {
 	private static final Texture NULL_TEXTURE = Assets.get("nullTexture.png");
 
@@ -20,16 +21,20 @@ public class InventoryField<T extends InventoryIcon> extends Button implements C
 
 	private Reference<T> itemReference = null;
 	
-	public InventoryField()
+	public ButtonField()
 	{
 		super(Settings.DEFAULT_SKIN);
-		Sprite nullSprite = new Sprite(NULL_TEXTURE);
-		drawable = new SpriteDrawable(nullSprite);
-
-		nullImage = new Image(drawable);
+		nullImage = createNullImage();
 		add(nullImage);
 		drawable.setMinWidth(32);
 		drawable.setMinHeight(32);
+	}
+
+	private Image createNullImage()
+	{
+		Sprite nullSprite = new Sprite(NULL_TEXTURE);
+		drawable = new SpriteDrawable(nullSprite);
+		return new Image(drawable);
 	}
 	
 	@Override

@@ -1,11 +1,11 @@
 package pl.mmorpg.prototype.client.exceptions;
 
-import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemIcon;
 
 public class CannotUseThisItemException extends GameException
 {
 
-	public CannotUseThisItemException(Item item)
+	public CannotUseThisItemException(ItemIcon item)
 	{
 		super(item.toString());
 	}

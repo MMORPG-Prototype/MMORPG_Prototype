@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.userinterface.dialogs.components;
+package pl.mmorpg.prototype.client.userinterface.dialogs.components.console;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;

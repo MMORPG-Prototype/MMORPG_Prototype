@@ -2,9 +2,9 @@ package pl.mmorpg.prototype.client.items;
 
 
 
-public class ItemReference extends Reference<Item>
+public class ItemReference extends Reference<ItemIcon>
 {
-    public ItemReference(Item item)
+    public ItemReference(ItemIcon item)
     {
     	super(item);
     }

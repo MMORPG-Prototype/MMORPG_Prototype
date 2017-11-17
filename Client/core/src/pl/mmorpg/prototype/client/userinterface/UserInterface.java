@@ -16,8 +16,8 @@ import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.exceptions.CannotFindSpecifiedDialogTypeException;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
-import pl.mmorpg.prototype.client.items.DraggableItem;
-import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.DraggableItemIcon;
+import pl.mmorpg.prototype.client.items.ItemIcon;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
 import pl.mmorpg.prototype.client.items.StackableItem;
@@ -41,9 +41,9 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.QuickAccessIcon;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -181,10 +181,10 @@ public class UserInterface
         return stage;
     }
 
-    public void inventoryFieldClicked(InventoryField<Item> inventoryField, ItemInventoryPosition cellPosition)
+    public void inventoryFieldClicked(ButtonField<ItemIcon> inventoryField, ItemInventoryPosition cellPosition)
     {
         if (mousePointerToItem.item == null && inventoryField.hasContent())
-            mousePointerToItem.item = (DraggableItem) inventoryField.getContent();
+            mousePointerToItem.item = (DraggableItemIcon) inventoryField.getContent();
         else if (mousePointerToItem.item != null)
         {
             InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
@@ -209,7 +209,7 @@ public class UserInterface
         linkedState.userWantsToChangeCharacter();
     }
 
-    public void addItemToInventory(Item newItem, ItemInventoryPosition position)
+    public void addItemToInventory(ItemIcon newItem, ItemInventoryPosition position)
     {
         if (newItem instanceof StackableItem)
             inventoryDialog.addItem((StackableItem) newItem, position);
@@ -217,9 +217,9 @@ public class UserInterface
             inventoryDialog.addItem(newItem, position);
     }
 
-    public void quickAccessButtonClicked(InventoryField<QuickAccessIcon> field, int cellPosition)
+    public void quickAccessButtonClicked(ButtonField<QuickAccessIcon> field, int cellPosition)
     {
-        DraggableItem heldItem = mousePointerToItem.item;
+        DraggableItemIcon heldItem = mousePointerToItem.item;
         if (heldItem != null)
         {
             QuickAccessIcon icon = new QuickAccessIcon(heldItem.getIdentifier(), (ItemCounter) inventoryDialog);
@@ -271,7 +271,7 @@ public class UserInterface
 
     public void itemUsed(long itemId)
     {
-        Item item = (Item) inventoryDialog.useItem(itemId);
+        ItemIcon item = (ItemIcon) inventoryDialog.useItem(itemId);
         quickAccessDialog.decreaseNumberOfItems(item.getIdentifier());
     }
 
@@ -367,17 +367,17 @@ public class UserInterface
         inventoryDialog.swapItems(firstPosition, secondPosition);
     }
 
-    public Item searchForItem(String itemIdentifier)
+    public ItemIcon searchForItem(String itemIdentifier)
     {
         return inventoryDialog.searchForItem(itemIdentifier);
     }
 
-    public void increaseQuickAccessDialogNumbers(Item newItem)
+    public void increaseQuickAccessDialogNumbers(ItemIcon newItem)
     {
         quickAccessDialog.increaseNumbers(newItem.getIdentifier(), getItemCount(newItem));
     }
 
-    private int getItemCount(Item item)
+    private int getItemCount(ItemIcon item)
     {
         if (item instanceof StackableItem)
             return ((StackableItem) item).getItemCount();

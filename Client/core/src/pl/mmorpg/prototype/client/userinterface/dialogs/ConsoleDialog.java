@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.ConsolePane;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.console.ConsolePane;
 
 public class ConsoleDialog extends Dialog
 {

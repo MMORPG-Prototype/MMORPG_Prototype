@@ -2,11 +2,11 @@ package pl.mmorpg.prototype.client.items;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public abstract class Item extends InventoryIcon
+public abstract class ItemIcon extends Icon
 {
     private long id;
 
-    public Item(Texture texture, long id)
+    public ItemIcon(Texture texture, long id)
     {
     	super(texture);
         this.id = id;

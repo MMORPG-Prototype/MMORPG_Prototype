@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchFieldException;
-import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemIcon;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
@@ -21,10 +21,10 @@ import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryField;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryPage;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.InventoryTextField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLabel;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.InventoryPage;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.InventoryTextField;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 
 public class InventoryDialog extends Dialog implements ItemCounter
@@ -33,7 +33,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	private int currentPageIndex = 0;
 	private final List<InventoryPage> inventoryPages = new ArrayList<>(numberOfPages);
 	private final VerticalGroup currentPageButtons = new VerticalGroup();
-	private final List<InventoryTextField<Item>> switchPageButtons = new ArrayList<>(numberOfPages);
+	private final List<InventoryTextField<ItemIcon>> switchPageButtons = new ArrayList<>(numberOfPages);
 	private final UserInterface linkedInterface;
 	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
 
@@ -56,7 +56,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 		for (int i = 0; i < numberOfPages; i++)
 		{
-			InventoryTextField<Item> switchButton = createSwitchButton(i);
+			InventoryTextField<ItemIcon> switchButton = createSwitchButton(i);
 			switchButtons.addActor(switchButton);
 			switchPageButtons.add(switchButton);
 		}
@@ -74,9 +74,9 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		this.pack();
 	}
 
-	private InventoryTextField<Item> createSwitchButton(int pageIndex)
+	private InventoryTextField<ItemIcon> createSwitchButton(int pageIndex)
 	{
-		InventoryTextField<Item> switchButton = new InventoryTextField<>(String.valueOf(pageIndex + 1));
+		InventoryTextField<ItemIcon> switchButton = new InventoryTextField<>(String.valueOf(pageIndex + 1));
 		switchButton.setTextShiftX(-4);
 		switchButton.setTextShiftY(6);
 		switchButton.addListener(new ClickListener()
@@ -92,13 +92,13 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	public void buttonClicked(ItemInventoryPosition cellPosition)
 	{
-		InventoryField<Item> field = getField(cellPosition);
+		ButtonField<ItemIcon> field = getField(cellPosition);
 		linkedInterface.inventoryFieldClicked(field, cellPosition);
 	}
 
 	private void switchButtonClicked(int pageIndex)
 	{
-		for (InventoryTextField<Item> button : switchPageButtons)
+		for (InventoryTextField<ItemIcon> button : switchPageButtons)
 			button.setColor(1, 1, 1, 1);
 
 		switchPageButtons.get(pageIndex).setColor(0.5f, 0.5f, 0.5f, 1);
@@ -107,9 +107,9 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		currentPageIndex = pageIndex;
 	}
 
-	public Item getItem(Point position)
+	public ItemIcon getItem(Point position)
 	{
-		InventoryField<Item> field = inventoryPages.get(currentPageIndex).getField(position);
+		ButtonField<ItemIcon> field = inventoryPages.get(currentPageIndex).getField(position);
 		return field.getContent();
 	}
 
@@ -117,9 +117,9 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	{
 		for (InventoryPage inventoryPage : inventoryPages)
 		{
-			for (InventoryField<Item> field : inventoryPage.getAllFields())
+			for (ButtonField<ItemIcon> field : inventoryPage.getAllFields())
 			{
-				Item fieldItem = field.getContent();
+				ItemIcon fieldItem = field.getContent();
 				if (fieldItem != null && fieldItem.getIdentifier().equals(item.getIdentifier()))
 				{
 					((StackableItem) fieldItem).stackWith(item);
@@ -128,25 +128,25 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			}
 		}
 
-		addItem((Item) item);
+		addItem((ItemIcon) item);
 	}
 
-	private InventoryField<Item> getField(ItemInventoryPosition fieldPosition)
+	private ButtonField<ItemIcon> getField(ItemInventoryPosition fieldPosition)
 	{
 		return inventoryPages.get(fieldPosition.getPageNumber())
 				.getField(new Point(fieldPosition.getPosition().x, fieldPosition.getPosition().y));
 	}
 
-	public void addItem(Item item)
+	public void addItem(ItemIcon item)
 	{
 		ItemInventoryPosition freeFieldPosition = getFreeInventoryPosition();
-		InventoryField<Item> freeField = getField(freeFieldPosition);
+		ButtonField<ItemIcon> freeField = getField(freeFieldPosition);
 		freeField.put(item);
 	}
 
 	public void addItem(StackableItem newItem, ItemInventoryPosition inventoryPosition)
 	{
-		InventoryField<Item> field = getField(inventoryPosition);
+		ButtonField<ItemIcon> field = getField(inventoryPosition);
 		if (field.hasContent())
 		{
 			StackableItem item = (StackableItem) field.getContent();
@@ -155,7 +155,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			field.put(newItem);
 	}
 
-	public void addItem(Item newItem, ItemInventoryPosition inventoryPosition)
+	public void addItem(ItemIcon newItem, ItemInventoryPosition inventoryPosition)
 	{
 		getField(inventoryPosition).put(newItem);
 	}
@@ -177,7 +177,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		super.setVisible(visible);
 	}
 
-	public boolean removeIfHas(Item item)
+	public boolean removeIfHas(ItemIcon item)
 	{
 		for (InventoryPage inventoryPage : inventoryPages)
 			if (inventoryPage.removeIfHas(item))
@@ -203,7 +203,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 				for (int j = 0; j < currentPage.getInventoryFieldsWidthNumber(); j++)
 				{
 					Point fieldPosition = new Point(j, i);
-					InventoryField<Item> field = currentPage.getField(fieldPosition);
+					ButtonField<ItemIcon> field = currentPage.getField(fieldPosition);
 					if (!field.hasContent())
 						return new ItemInventoryPosition(pageNumber, fieldPosition);
 				}
@@ -211,7 +211,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		throw new NoFreeFieldException();
 	}
 	
-    public ItemInventoryPosition getDesiredItemPositionFor(Item item)
+    public ItemInventoryPosition getDesiredItemPositionFor(ItemIcon item)
     {
         if (item instanceof StackableItem)
             return getFieldWithSuiteTypeStackableItemFor(item.getIdentifier());
@@ -232,7 +232,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	    // TODO: Should refactor
 	    CharacterItemDataPacket packet = new CharacterItemDataPacket();
 	    packet.setIdentifier(itemIdentifier);
-	    Item item = ItemFactory.produceItem(packet);
+	    ItemIcon item = ItemFactory.produceItem(packet);
 	    return item instanceof StackableItem;
     }
 
@@ -264,8 +264,8 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			for (int j = 0; j < currentPage.getInventoryFieldsWidthNumber(); j++)
 			{
 				Point fieldPosition = new Point(i, j);
-				InventoryField<Item> field = currentPage.getField(fieldPosition);
-				Item fieldItem = field.getContent();
+				ButtonField<ItemIcon> field = currentPage.getField(fieldPosition);
+				ItemIcon fieldItem = field.getContent();
 				if (fieldItem != null && fieldItem.getIdentifier().equals(itemIdentifier))
 					return new ItemInventoryPosition(pageIndex, fieldPosition);
 			}
@@ -274,19 +274,19 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	public void repositionItem(ItemInventoryPosition sourcePosition, ItemInventoryPosition destinationPosition)
 	{
-		InventoryField<Item> sourceField = getField(sourcePosition);
-		InventoryField<Item> destinationField = getField(destinationPosition);
-		Item targetItem = sourceField.getContent();
+		ButtonField<ItemIcon> sourceField = getField(sourcePosition);
+		ButtonField<ItemIcon> destinationField = getField(destinationPosition);
+		ItemIcon targetItem = sourceField.getContent();
 		sourceField.removeContent();
 		destinationField.put(targetItem);
 	}
 
 	public void swapItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
 	{
-		InventoryField<Item> firstField = getField(firstPosition);
-		InventoryField<Item> secondField = getField(secondPosition);
-		Item firstItem = firstField.getContent();
-		Item secondItem = secondField.getContent();
+		ButtonField<ItemIcon> firstField = getField(firstPosition);
+		ButtonField<ItemIcon> secondField = getField(secondPosition);
+		ItemIcon firstItem = firstField.getContent();
+		ItemIcon secondItem = secondField.getContent();
 		firstField.put(secondItem);
 		secondField.put(firstItem);
 	}
@@ -300,11 +300,11 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		return itemCounter;
 	}
 
-	public Item searchForItem(String itemIdentifier)
+	public ItemIcon searchForItem(String itemIdentifier)
 	{
 		for (InventoryPage inventoryPage : inventoryPages)
 		{
-			Item item = inventoryPage.searchForItem(itemIdentifier);
+			ItemIcon item = inventoryPage.searchForItem(itemIdentifier);
 			if (item != null)
 				return item;
 		}
@@ -313,10 +313,10 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	public void stackItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
 	{
-		InventoryField<Item> firstField = getField(firstPosition);
-		InventoryField<Item> secondField = getField(secondPosition);
-		Item firstItem = firstField.getContent();
-		Item secondItem = secondField.getContent();
+		ButtonField<ItemIcon> firstField = getField(firstPosition);
+		ButtonField<ItemIcon> secondField = getField(secondPosition);
+		ItemIcon firstItem = firstField.getContent();
+		ItemIcon secondItem = secondField.getContent();
 		firstField.removeContent();
 		((StackableItem)secondItem).stackWith((StackableItem)firstItem);
 	}

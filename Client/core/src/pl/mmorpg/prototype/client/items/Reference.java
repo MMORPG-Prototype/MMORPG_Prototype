@@ -2,7 +2,7 @@ package pl.mmorpg.prototype.client.items;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 
-public class Reference<T extends InventoryIcon> extends InventoryIcon
+public class Reference<T extends Icon> extends Icon
 {
 	private T referencedObject;
 

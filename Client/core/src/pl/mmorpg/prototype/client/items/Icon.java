@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
-public abstract class InventoryIcon extends Actor
+public abstract class Icon extends Actor
 {
 	private static final float WIDTH_INVENTORY = 32;
 	private static final float HEIGHT_INVENTORY = 32;
@@ -15,7 +15,7 @@ public abstract class InventoryIcon extends Actor
 	final Sprite sprite;
 	private final SpriteDrawable drawable;
 
-	public InventoryIcon(Texture texture)
+	public Icon(Texture texture)
 	{
 		sprite = new Sprite(texture);
 		drawable = new SpriteDrawable(sprite);

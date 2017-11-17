@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.userinterface.dialogs.components;
+package pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory;
 
 import java.awt.Point;
 import java.util.Collection;
@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemIcon;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.items.StackableItem;
@@ -22,7 +22,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 	private static final int INVENTORY_FIELDS_HEIGHT_NUMBER = 5;
 	private static final int INVENTORY_FIELDS_WIDTH_NUMBER = 5;
 	
-	private final Map<Point, InventoryField<Item>> inventoryFields = new HashMap<>();
+	private final Map<Point, ButtonField<ItemIcon>> inventoryFields = new HashMap<>();
 	private final InventoryDialog inventoryDialog;
 
 	public InventoryPage(InventoryDialog inventoryDialog, int pageIndex)
@@ -37,7 +37,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 			{
 				Point cellPosition = new Point(j, i);
 				ItemInventoryPosition inventoryPosition = new ItemInventoryPosition(pageIndex, cellPosition);
-				InventoryField<Item> button = createField(inventoryPosition);
+				ButtonField<ItemIcon> button = createField(inventoryPosition);
 				inventoryFields.put(cellPosition, button);
 				buttonRow.addActor(button);
 			}
@@ -46,9 +46,9 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 		padBottom(8);
 	}
 
-	private InventoryField<Item> createField(ItemInventoryPosition cellPosition)
+	private ButtonField<ItemIcon> createField(ItemInventoryPosition cellPosition)
 	{
-		InventoryField<Item> button = new InventoryField<Item>();
+		ButtonField<ItemIcon> button = new ButtonField<ItemIcon>();
 		button.addListener(new ClickListener()
 		{
 			@Override
@@ -66,21 +66,21 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 		inventoryDialog.buttonClicked(cellPosition);
 	}
 
-	public InventoryField<Item> getField(Point point)
+	public ButtonField<ItemIcon> getField(Point point)
 	{
 		return inventoryFields.get(point);
 	}
 
-	public Collection<InventoryField<Item>> getAllFields()
+	public Collection<ButtonField<ItemIcon>> getAllFields()
 	{
 		return inventoryFields.values();
 	}
 
-	public boolean removeIfHas(Item item)
+	public boolean removeIfHas(ItemIcon item)
 	{
-		for (InventoryField<Item> field : inventoryFields.values())
+		for (ButtonField<ItemIcon> field : inventoryFields.values())
 		{
-			Item fieldItem = field.getContent();
+			ItemIcon fieldItem = field.getContent();
 			if (fieldItem == item)	
 			{
 				field.removeContent();
@@ -90,17 +90,17 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 		return false;
 	}
 	
-	public void put(Item item, Point position)
+	public void put(ItemIcon item, Point position)
 	{
 		inventoryFields.get(position).put(item);
 	}
 
 
-	public Item getItem(long itemId)
+	public ItemIcon getItem(long itemId)
 	{
-		for (InventoryField<Item> field : inventoryFields.values())
+		for (ButtonField<ItemIcon> field : inventoryFields.values())
 		{
-			Item item = field.getContent();
+			ItemIcon item = field.getContent();
 			if (item != null && item.getId() == itemId)
 				return item;
 		}
@@ -109,9 +109,9 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 
 	public ItemUseable useIfHas(long itemId)
 	{
-		for (InventoryField<Item> field : inventoryFields.values())
+		for (ButtonField<ItemIcon> field : inventoryFields.values())
 		{
-			Item item = field.getContent();
+			ItemIcon item = field.getContent();
 			if (item != null && item.getId() == itemId)
 			{
 				ItemUseable itemUseable = (ItemUseable)item;
@@ -128,16 +128,16 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 	public int countItems(String itemIdentifier)
 	{
 		int itemCounter = 0;
-		for (InventoryField<Item> field : inventoryFields.values())
+		for (ButtonField<ItemIcon> field : inventoryFields.values())
 		{
-			Item item = field.getContent();
+			ItemIcon item = field.getContent();
 			if (item != null && item.getIdentifier().equals(itemIdentifier))
 				itemCounter += getItemCount(item);
 		}
 		return itemCounter;
 	}
 
-	private int getItemCount(Item item)
+	private int getItemCount(ItemIcon item)
 	{
 		if(item instanceof StackableItem)
 			return ((StackableItem)item).getItemCount();
@@ -154,11 +154,11 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 		return INVENTORY_FIELDS_WIDTH_NUMBER;
 	}
 
-	public Item searchForItem(String itemIdentifier)
+	public ItemIcon searchForItem(String itemIdentifier)
 	{
-		for (InventoryField<Item> field : inventoryFields.values())
+		for (ButtonField<ItemIcon> field : inventoryFields.values())
 		{
-			Item item = field.getContent();
+			ItemIcon item = field.getContent();
 			if (item != null && item.getIdentifier().equals(itemIdentifier))
 				return item;
 		}

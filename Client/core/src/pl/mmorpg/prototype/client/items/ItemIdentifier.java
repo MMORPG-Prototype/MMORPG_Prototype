@@ -5,6 +5,8 @@ import java.util.Map;
 
 import pl.mmorpg.prototype.client.items.food.BlueBerry;
 import pl.mmorpg.prototype.client.items.food.Fish;
+import pl.mmorpg.prototype.client.items.potions.SmallHealthPotion;
+import pl.mmorpg.prototype.client.items.potions.SmallManaPotion;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 
 public class ItemIdentifier

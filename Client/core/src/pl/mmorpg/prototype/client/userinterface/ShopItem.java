@@ -1,19 +1,19 @@
 package pl.mmorpg.prototype.client.userinterface;
 
-import pl.mmorpg.prototype.client.items.Item;
+import pl.mmorpg.prototype.client.items.ItemIcon;
 
 public class ShopItem
 {
-	private final Item item;
+	private final ItemIcon item;
 	private final int price;
 	
-	public ShopItem(Item item, int price)
+	public ShopItem(ItemIcon item, int price)
 	{
 		this.item = item;
 		this.price = price;
 	}
 
-	public Item getItem()
+	public ItemIcon getItem()
 	{
 		return item;
 	}
