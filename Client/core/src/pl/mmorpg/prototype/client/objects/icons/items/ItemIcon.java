@@ -1,6 +1,8 @@
-package pl.mmorpg.prototype.client.items;
+package pl.mmorpg.prototype.client.objects.icons.items;
 
 import com.badlogic.gdx.graphics.Texture;
+
+import pl.mmorpg.prototype.client.objects.icons.Icon;
 
 public abstract class ItemIcon extends Icon
 {
@@ -11,14 +13,13 @@ public abstract class ItemIcon extends Icon
     	super(texture);
         this.id = id;
     }
-
-    public abstract String getIdentifier();
     
     public long getId()
     {
         return id;
     }
 
+    public abstract String getIdentifier();
+    
 	public abstract boolean shouldBeRemoved();
-
 }

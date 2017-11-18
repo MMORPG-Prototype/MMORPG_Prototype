@@ -22,6 +22,9 @@ public class InputProcessorAdapter extends InputAdapter
     @Override
     public boolean keyDown(int keycode)
     {
+    	if(shouldAvoidInput())
+    		return true;
+    	
         KeyHandler keyHandler = getKeyHandler(keycode);
         if (!keyHandler.equals(KeyHandler.EMPTY))
             keyHandlersToActivate.putIfAbsent(keycode, keyHandler);
@@ -31,6 +34,9 @@ public class InputProcessorAdapter extends InputAdapter
     @Override
     public boolean keyUp(int keycode)
     {
+    	if(shouldAvoidInput())
+    		return true;
+    	
         keyHandlersToActivate.remove(keycode);
         return true;
     }
@@ -40,36 +46,25 @@ public class InputProcessorAdapter extends InputAdapter
         activateAll(getActiveKeyHandlers());
     }
 
-    protected void activateAll(Collection<KeyHandler> keyHandlers)
+    private void activateAll(Collection<KeyHandler> keyHandlers)
     {
         for (KeyHandler keyHandler : keyHandlers)
             keyHandler.handle();
     }
 
-    public Collection<KeyHandler> getActiveKeyHandlers()
+    private Collection<KeyHandler> getActiveKeyHandlers()
     {
         return keyHandlersToActivate.values();
     }
 
-    public KeyHandler getKeyHandler(int key)
+    private KeyHandler getKeyHandler(int key)
     {
         KeyHandler keyHandler = keyHandlers.get(Keys.toString(key));
         return keyHandler;
     }
-
-    protected KeyHandler produceKeyHandler(int key)
+    
+    protected boolean shouldAvoidInput()
     {
-        return new KeyHandlerFactory(this).produce(key);
+    	return false;
     }
-
-    public void simulateKeyUpInput(int keyCode)
-    {
-        keyUp(keyCode);
-    }
-
-    public void simulateKeyDownInput(int keyCode)
-    {
-        keyDown(keyCode);
-    }
-
 }

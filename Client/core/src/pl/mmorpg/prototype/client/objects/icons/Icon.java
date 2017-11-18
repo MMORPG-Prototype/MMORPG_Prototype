@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.items;
+package pl.mmorpg.prototype.client.objects.icons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,7 +12,7 @@ public abstract class Icon extends Actor
 	private static final float WIDTH_INVENTORY = 32;
 	private static final float HEIGHT_INVENTORY = 32;
 
-	final Sprite sprite;
+	protected final Sprite sprite;
 	private final SpriteDrawable drawable;
 
 	public Icon(Texture texture)
@@ -23,6 +23,11 @@ public abstract class Icon extends Actor
 		setHeight(HEIGHT_INVENTORY);
 		drawable.setMinWidth(WIDTH_INVENTORY);
 		drawable.setMinHeight(HEIGHT_INVENTORY);
+	}
+	
+	protected Sprite getSprite()
+	{
+		return sprite;
 	}
 
 	public SpriteDrawable getDrawable()
@@ -60,5 +65,4 @@ public abstract class Icon extends Actor
     {
         batch.draw(sprite.getTexture(), x, y, WIDTH_INVENTORY, HEIGHT_INVENTORY);
     }
-	
 }

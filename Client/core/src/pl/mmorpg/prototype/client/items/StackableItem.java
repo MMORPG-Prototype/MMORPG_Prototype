@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import pl.mmorpg.prototype.client.objects.icons.items.DraggableItemIcon;
 import pl.mmorpg.prototype.client.resources.Assets;
 
 public abstract class StackableItem extends DraggableItemIcon

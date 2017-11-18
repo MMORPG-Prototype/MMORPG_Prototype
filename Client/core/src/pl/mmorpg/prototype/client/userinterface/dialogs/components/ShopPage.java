@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.communication.PacketsSender;
-import pl.mmorpg.prototype.client.items.ItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShopBuyingDialog;

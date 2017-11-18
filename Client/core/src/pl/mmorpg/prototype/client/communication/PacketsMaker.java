@@ -2,9 +2,9 @@ package pl.mmorpg.prototype.client.communication;
 
 import java.awt.Point;
 
-import pl.mmorpg.prototype.client.items.ItemIcon;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
+import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;

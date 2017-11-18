@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.client.items;
 
+import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
+
 public interface ItemPositionSupplier
 {
     ItemInventoryPosition get(String itemIdentifier, int numberOfItems);

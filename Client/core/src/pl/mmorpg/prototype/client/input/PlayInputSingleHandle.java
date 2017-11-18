@@ -5,27 +5,35 @@ import com.badlogic.gdx.Input.Keys;
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.objects.Player;
+import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 
 public class PlayInputSingleHandle extends InputProcessorAdapter
 {
-    private ActorManipulator dialogs;
-    private QuickAccessDialog quickAccesDialog;
+    private UserInterface userInterface;
+    private QuickAccessDialog quickAccessDialog;
     private Player player;
     private PacketsSender packetSender;
 
-    public PlayInputSingleHandle(ActorManipulator dialogs, Player player, PacketsSender packetSender)
+    public PlayInputSingleHandle(UserInterface userInterface, Player player, PacketsSender packetSender)
     {
-        this.dialogs = dialogs;
+        this.userInterface = userInterface;
         this.packetSender = packetSender;
-        this.quickAccesDialog = (QuickAccessDialog) dialogs.searchForDialog(QuickAccessDialog.class);
+        this.quickAccessDialog = (QuickAccessDialog) userInterface.getDialogs().searchForDialog(QuickAccessDialog.class);
         this.player = player;
+    }
+    
+    @Override
+    protected boolean shouldAvoidInput()
+    {
+    	return userInterface.isTextFieldFocused();
     }
 
     @Override
     public boolean keyDown(int keycode)
-    {
+    {   	
+    	ActorManipulator dialogs = userInterface.getDialogs();
         if (dialogs.isMapped(keycode) && !dialogs.searchForDialog(ChatDialog.class).isVisible())
             dialogs.showOrHide(keycode);
         else if (keycode == Keys.NUM_1)
@@ -39,8 +47,8 @@ public class PlayInputSingleHandle extends InputProcessorAdapter
 	private void quickAccessAction(int keycode)
 	{
 		int cellPosition = keycode - Keys.F1;
-		if(quickAccesDialog.isFieldTaken(cellPosition))
-			quickAccesDialog.useButtonItem(cellPosition, player, packetSender);
+		if(quickAccessDialog.isFieldTaken(cellPosition))
+			quickAccessDialog.useButtonItem(cellPosition, player, packetSender);
 	}
 
 }

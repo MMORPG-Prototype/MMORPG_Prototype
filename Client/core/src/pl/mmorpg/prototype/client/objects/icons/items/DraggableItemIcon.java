@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.items;
+package pl.mmorpg.prototype.client.objects.icons.items;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

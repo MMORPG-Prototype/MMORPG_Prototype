@@ -10,17 +10,18 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.exceptions.CannotFindSpecifiedDialogTypeException;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
-import pl.mmorpg.prototype.client.items.DraggableItemIcon;
-import pl.mmorpg.prototype.client.items.ItemIcon;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
 import pl.mmorpg.prototype.client.items.StackableItem;
+import pl.mmorpg.prototype.client.objects.icons.items.DraggableItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -70,9 +71,9 @@ public class UserInterface
     private final ActorManipulator dialogs = new ActorManipulator();
     private final DialogIdSupplier dialogIdSupplier = new DialogIdSupplier();
 
-    private MousePointerToItem mousePointerToItem = new MousePointerToItem();
+    private final MousePointerToItem mousePointerToItem = new MousePointerToItem();
 
-    private PlayState linkedState;
+    private final PlayState linkedState;
 
     public UserInterface(PlayState linkedState, UserCharacterDataPacket character)
     {
@@ -100,6 +101,7 @@ public class UserInterface
                 if (!dialogs.hasDialogOnPosition(x, y))
                 {
                     linkedState.userLeftClickedOnGameBoard(x, y);
+                    stage.setKeyboardFocus(null);
                 }
             }
         });
@@ -134,7 +136,7 @@ public class UserInterface
         dialogs.add(quickAccessDialog);
     }
 
-    public void showDialogs()
+    private void showDialogs()
     {
         stage.addActor(chatDialog);
         stage.addActor(quickAccessDialog);
@@ -160,6 +162,7 @@ public class UserInterface
 
     public void update()
     {
+    	System.out.println(stage.getKeyboardFocus());
         popUpInfoStage.act();
         stage.act();
         dialogs.manageZIndexes();
@@ -202,6 +205,11 @@ public class UserInterface
     public void showOrHideDialog(Class<? extends Table> clazz)
     {
         dialogs.showOrHide(clazz);
+    }
+    
+    public boolean isTextFieldFocused()
+    {
+    	return stage.getKeyboardFocus() instanceof TextField;
     }
 
     public void userWantsToChangeCharacter()

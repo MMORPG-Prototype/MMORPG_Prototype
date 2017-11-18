@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.userinterface.dialogs;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import pl.mmorpg.prototype.client.items.ItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 

@@ -10,10 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import pl.mmorpg.prototype.client.items.ItemIcon;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.items.StackableItem;
+import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 

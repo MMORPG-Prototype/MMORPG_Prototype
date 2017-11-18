@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.client.userinterface;
 
-import pl.mmorpg.prototype.client.items.ItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
 
 public class ShopItem
 {

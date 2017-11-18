@@ -25,7 +25,6 @@ import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.NullInputHandler;
 import pl.mmorpg.prototype.client.input.PlayInputContinuousHandler;
 import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
-import pl.mmorpg.prototype.client.items.ItemIcon;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.objects.GameObject;
@@ -40,6 +39,7 @@ import pl.mmorpg.prototype.client.objects.graphic.GraphicGameObject;
 import pl.mmorpg.prototype.client.objects.graphic.HealLabel;
 import pl.mmorpg.prototype.client.objects.graphic.ManaReplenishLabel;
 import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
+import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.quests.Quest;
@@ -107,7 +107,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         camera.viewportHeight = 500;
         TiledMap map = Assets.get("Map/tiled2.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
-
     }
 
     public void initialize(UserCharacterDataPacket character)
@@ -115,9 +114,9 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
         player = new Player(character.getId());
         player.initialize(character);
         gameObjects.put((long) character.getId(), player);
-        inputHandler = new PlayInputContinuousHandler(client, player);
         userInterface = new UserInterface(this, character);
-        inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface.getDialogs(), player, this));
+        inputHandler = new PlayInputContinuousHandler(userInterface, client, player);
+        inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface, player, this));
         inputMultiplexer.addProcessor(userInterface.getStage());
         inputMultiplexer.addProcessor(inputHandler);
         isInitalized = true;

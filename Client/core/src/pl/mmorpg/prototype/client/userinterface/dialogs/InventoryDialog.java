@@ -13,11 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchFieldException;
-import pl.mmorpg.prototype.client.items.ItemIcon;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.items.StackableItem;
+import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
