@@ -162,7 +162,6 @@ public class UserInterface
 
     public void update()
     {
-    	System.out.println(stage.getKeyboardFocus());
         popUpInfoStage.act();
         stage.act();
         dialogs.manageZIndexes();

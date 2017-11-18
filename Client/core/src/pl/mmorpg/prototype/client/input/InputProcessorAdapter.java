@@ -21,10 +21,7 @@ public class InputProcessorAdapter extends InputAdapter
 
     @Override
     public boolean keyDown(int keycode)
-    {
-    	if(shouldAvoidInput())
-    		return true;
-    	
+    {	
         KeyHandler keyHandler = getKeyHandler(keycode);
         if (!keyHandler.equals(KeyHandler.EMPTY))
             keyHandlersToActivate.putIfAbsent(keycode, keyHandler);
@@ -34,16 +31,14 @@ public class InputProcessorAdapter extends InputAdapter
     @Override
     public boolean keyUp(int keycode)
     {
-    	if(shouldAvoidInput())
-    		return true;
-    	
         keyHandlersToActivate.remove(keycode);
         return true;
     }
 
     public void process()
     {
-        activateAll(getActiveKeyHandlers());
+    	if(!shouldAvoidInput())
+        	activateAll(getActiveKeyHandlers());
     }
 
     private void activateAll(Collection<KeyHandler> keyHandlers)
