@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.client.spells;
+package pl.mmorpg.prototype.client.objects.icons.spells;
 
 import com.badlogic.gdx.graphics.Texture;
 
@@ -15,4 +15,5 @@ public abstract class Spell extends DraggableIcon
 	
 	public abstract String getName();
 	
+	public abstract Object makeUsagePacket();
 }

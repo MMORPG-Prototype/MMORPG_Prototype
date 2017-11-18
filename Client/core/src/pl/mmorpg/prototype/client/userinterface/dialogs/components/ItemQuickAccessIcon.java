@@ -7,14 +7,14 @@ import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.quest.QuestRewardIcon;
 
-public class QuickAccessIcon extends QuestRewardIcon
+public class ItemQuickAccessIcon extends QuestRewardIcon
 {
     private final BitmapFont font = Assets.getFont();
     
 	private final String itemIdentifier;
 	private ItemCounter itemCounter;
 
-	public QuickAccessIcon(String itemIdentifier, ItemCounter itemCounter)
+	public ItemQuickAccessIcon(String itemIdentifier, ItemCounter itemCounter)
 	{
 		super(itemIdentifier, itemCounter.countItems(itemIdentifier));
 		this.itemCounter = itemCounter;

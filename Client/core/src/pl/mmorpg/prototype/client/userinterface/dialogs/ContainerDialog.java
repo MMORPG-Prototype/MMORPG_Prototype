@@ -15,7 +15,7 @@ import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
-import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.AutoCleanupOnCloseButtonDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ButtonCreator;
@@ -28,7 +28,7 @@ public class ContainerDialog extends AutoCleanupOnCloseButtonDialog
 {
 	private static final int ROW_LENGTH = 5;
 	private static final int BUTTON_SIZE = 32;
-	private final Map<Point, ButtonField<ItemIcon>> containerFields = new HashMap<>();
+	private final Map<Point, ButtonField<Item>> containerFields = new HashMap<>();
 	private final StringValueLabel<Integer> goldLabel;
 
 	public ContainerDialog(CharacterItemDataPacket[] itemsToShow, int gold, String title,
@@ -63,23 +63,23 @@ public class ContainerDialog extends AutoCleanupOnCloseButtonDialog
 		HorizontalGroup buttonRow = new HorizontalGroup().space(0).pad(0).fill();
 		for (int j = 0; j < ROW_LENGTH; j++)
 		{
-			ButtonField<ItemIcon> field = createField(packetsSender, userInventoryTakeItemPositionSupplier);
+			ButtonField<Item> field = createField(packetsSender, userInventoryTakeItemPositionSupplier);
 			int nextIndex = i * ROW_LENGTH + j;
 			buttonRow.addActor(field);
 			containerFields.put(new Point(j, i), field);
 			if (nextIndex < numberOfItems)
 			{
-				ItemIcon item = ItemFactory.produceItem(itemsToShow[nextIndex]);
+				Item item = ItemFactory.produceItem(itemsToShow[nextIndex]);
 				field.put(item);
 			}
 		}
 		this.getContentTable().add(buttonRow);
 	}
 
-	private ButtonField<ItemIcon> createField(PacketsSender packetsSender,
+	private ButtonField<Item> createField(PacketsSender packetsSender,
 			ItemPositionSupplier userInventoryTakeItemPositionSupplier)
 	{
-		ButtonField<ItemIcon> field = new ButtonField<ItemIcon>();
+		ButtonField<Item> field = new ButtonField<Item>();
 		field.addListener(new ClickListener()
 		{
 			@Override
@@ -87,7 +87,7 @@ public class ContainerDialog extends AutoCleanupOnCloseButtonDialog
 			{
 				if (field.hasContent())
 				{
-					ItemIcon item = field.getContent();
+					Item item = field.getContent();
 					TakeItemFromContainerPacket packet = PacketsMaker.makeTakeItemFromContainerPacket(
 							ContainerDialog.this.getId(), item.getId(),
 							userInventoryTakeItemPositionSupplier.get(item));
@@ -100,7 +100,7 @@ public class ContainerDialog extends AutoCleanupOnCloseButtonDialog
 
 	public boolean removeItem(long itemId)
 	{
-		for (ButtonField<ItemIcon> field : containerFields.values())
+		for (ButtonField<Item> field : containerFields.values())
 			if (field.hasContent() && field.getContent().getId() == itemId)
 			{
 				field.removeContent();

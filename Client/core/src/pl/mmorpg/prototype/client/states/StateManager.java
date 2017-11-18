@@ -22,7 +22,7 @@ public class StateManager
 	}
 
     public void render(SpriteBatch batch)
-    {
+    { 
         usedState().render(batch);
     }
 

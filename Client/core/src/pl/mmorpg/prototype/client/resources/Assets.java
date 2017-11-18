@@ -39,6 +39,7 @@ public class Assets
 	private static BitmapFont font = new BitmapFont();
 	private static Map<String, Skin> skins = new HashMap<>();
 	private static SpriteBatch batch = new SpriteBatch();
+	private static SpriteBatch backupBatch = new SpriteBatch();
 	private static List<CustomStage> stages = new LinkedList<>();
 
 	static
@@ -190,12 +191,17 @@ public class Assets
 
 	private static CustomStage createStage()
 	{
-		return new CustomStage(new ScalingViewport(Scaling.stretch, Settings.GAME_WIDTH, Settings.GAME_HEIGHT), batch);
+		return new CustomStage(new ScalingViewport(Scaling.stretch, Settings.GAME_WIDTH, Settings.GAME_HEIGHT));
 	}
 
 	public static SpriteBatch getBatch()
 	{
 		return batch;
+	}
+	
+	public static SpriteBatch getBackupBatch()
+	{
+		return backupBatch;
 	}
 
 	private static class UnknownExtensionException extends GameException

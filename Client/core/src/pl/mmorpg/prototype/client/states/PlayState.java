@@ -39,7 +39,7 @@ import pl.mmorpg.prototype.client.objects.graphic.GraphicGameObject;
 import pl.mmorpg.prototype.client.objects.graphic.HealLabel;
 import pl.mmorpg.prototype.client.objects.graphic.ManaReplenishLabel;
 import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
-import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.quests.Quest;
@@ -99,7 +99,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
     {
         this.client = client;
         inputHandler = new NullInputHandler();
-        player = new NullPlayer();
+        player = new NullPlayer(); 
         this.states = states;
         inputMultiplexer = new InputMultiplexer();
         camera.setToOrtho(false);
@@ -263,7 +263,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
     public void newItemPacketReceived(CharacterItemDataPacket itemData)
     {
-        ItemIcon newItem = ItemFactory.produceItem(itemData);
+        Item newItem = ItemFactory.produceItem(itemData);
         ItemInventoryPosition position = new ItemInventoryPosition(itemData.getInventoryPageNumber(),
                 new Point(itemData.getInventoryX(), itemData.getInventoryY()));
 
@@ -460,7 +460,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
     private ShopItem makeShopItem(ShopItemPacket packet)
     {
-        ItemIcon item = ItemFactory.produceItem(packet.getItem());
+        Item item = ItemFactory.produceItem(packet.getItem());
         ShopItem shopItem = new ShopItem(item, packet.getPrice());
         return shopItem;
     }

@@ -2,9 +2,9 @@ package pl.mmorpg.prototype.client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
@@ -38,7 +38,7 @@ public class GameClient extends ApplicationAdapter
         client = initizlizeClient();
         states.push(playState);
         states.push(new SettingsChoosingState(client, states));
-        // Gdx.input.setCursorCatched(true);
+        // Gdx.input.setCursorCatched(true); 
     }
 
     private Client initizlizeClient()
@@ -58,17 +58,14 @@ public class GameClient extends ApplicationAdapter
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
-        batch.disableBlending();
-        batch.setColor(Color.WHITE);
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.enableBlending();
-        batch.end();
+        Batch backupBatch = Assets.getBackupBatch();
+        backupBatch.begin();
+        backupBatch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        backupBatch.end();
         states.render(batch);
-        batch.begin();
-        batch.draw(mousePointer, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - 24, 24, 24);
-        batch.enableBlending();
-        batch.end();
+        backupBatch.begin();
+        backupBatch.draw(mousePointer, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - 24, 24, 24);
+        backupBatch.end();
     }
 
     private void update()

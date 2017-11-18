@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.communication.PacketsSender;
-import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.userinterface.ShopItem;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShopBuyingDialog;
@@ -24,7 +24,7 @@ public class ShopPage extends VerticalGroup
 	private static final int BUTTON_ROW_LENGTH = 6;
 	private static final int BUTTON_COLUMN_LENGTH = 12;
 
-	private final Map<Point, ButtonField<ItemIcon>> inventoryFields = new HashMap<>();
+	private final Map<Point, ButtonField<Item>> inventoryFields = new HashMap<>();
 
 	public ShopPage(ShopItem[] items, Stage stageForPopUpInfo, UserInterface linkedInterface,
 			PacketsSender packetSender, long shopId)
@@ -42,7 +42,7 @@ public class ShopPage extends VerticalGroup
 			for (int j = 0; j < BUTTON_ROW_LENGTH; j++)
 			{
 				Point cellPosition = new Point(j, i);
-				ButtonField<ItemIcon> field = new ButtonField<ItemIcon>();
+				ButtonField<Item> field = new ButtonField<Item>();
 				inventoryFields.put(cellPosition, field);
 				buttonRow.addActor(field);
 			}
@@ -57,7 +57,7 @@ public class ShopPage extends VerticalGroup
 		Point currentPosition = new Point(0, 0);
 		for (ShopItem item : items)
 		{
-			ButtonField<ItemIcon> field = inventoryFields.get(currentPosition);
+			ButtonField<Item> field = inventoryFields.get(currentPosition);
 			field.put(item.getItem());
 			addPopUpInfoListener(field, item, stageForPopUpInfo);
 			addListenerForUsingField(field, item, linkedInterface, packetSender, shopId);
@@ -65,14 +65,14 @@ public class ShopPage extends VerticalGroup
 		}
 	}
 
-	private void addPopUpInfoListener(ButtonField<ItemIcon> field, ShopItem item, Stage stageForPopUpInfo)
+	private void addPopUpInfoListener(ButtonField<Item> field, ShopItem item, Stage stageForPopUpInfo)
 	{
 		PopUpInfo infoDialog = new PopUpInfo(item);
 		InputListener popUpHideListener = new ActorPopUpHideListener(stageForPopUpInfo, infoDialog);
 		field.addListener(popUpHideListener);
 	}
 
-	private void addListenerForUsingField(ButtonField<ItemIcon> field, ShopItem item, UserInterface linkedInterface, PacketsSender packetSender, long shopId)
+	private void addListenerForUsingField(ButtonField<Item> field, ShopItem item, UserInterface linkedInterface, PacketsSender packetSender, long shopId)
 	{
 		field.addListener(new ClickListener()
 		{

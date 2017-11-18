@@ -5,13 +5,13 @@ import pl.mmorpg.prototype.client.items.food.BlueBerry;
 import pl.mmorpg.prototype.client.items.food.Fish;
 import pl.mmorpg.prototype.client.items.potions.SmallHealthPotion;
 import pl.mmorpg.prototype.client.items.potions.SmallManaPotion;
-import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 
 public class ItemFactory
 {
-    public static ItemIcon produceItem(CharacterItemDataPacket itemData)
+    public static Item produceItem(CharacterItemDataPacket itemData)
     {
         String identifier = itemData.getIdentifier();
 		if (identifier.equalsIgnoreCase(ItemIdentifiers.SMALL_HP_POTION.toString()))

@@ -3,12 +3,11 @@ package pl.mmorpg.prototype.client.items;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
 
-public abstract class StackableItem extends ItemIcon
+public abstract class StackableItem extends Item
 {
     private Integer count = 1; 
     private final BitmapFont font = Assets.getFont();
@@ -50,7 +49,7 @@ public abstract class StackableItem extends ItemIcon
     }
 
     @Override
-    public void renderWhenDragged(SpriteBatch batch)
+    public void renderWhenDragged(Batch batch)
     {
         super.renderWhenDragged(batch);
         font.getData().setScale(1.0f);

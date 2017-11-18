@@ -4,7 +4,7 @@ import java.awt.Point;
 
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
-import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
@@ -57,7 +57,7 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static <T extends ItemIcon & ItemUseable> ItemUsagePacket makeItemUsagePacket(T item, Monster target)
+	public static <T extends Item & ItemUseable> ItemUsagePacket makeItemUsagePacket(T item, Monster target)
 	{
 		ItemUsagePacket packet = new ItemUsagePacket();
 		packet.setItemId(item.getId());

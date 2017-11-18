@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.client.spells;
 
+import pl.mmorpg.prototype.client.communication.PacketsMaker;
+import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
 import pl.mmorpg.prototype.client.resources.Assets;
 
 public class FireballSpell extends Spell
@@ -19,6 +21,12 @@ public class FireballSpell extends Spell
 	public String getName()
 	{
 		return "Fireball";
+	}
+
+	@Override
+	public Object makeUsagePacket()
+	{
+		return PacketsMaker.makeFireballSpellUsagePacket();
 	}
 
 }

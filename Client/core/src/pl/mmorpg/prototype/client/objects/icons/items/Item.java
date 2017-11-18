@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 
 import pl.mmorpg.prototype.client.objects.icons.DraggableIcon;
 
-public abstract class ItemIcon extends DraggableIcon
+public abstract class Item extends DraggableIcon
 {
     private long id;
 
-    public ItemIcon(Texture texture, long id)
+    public Item(Texture texture, long id)
     {
     	super(texture);
         this.id = id;

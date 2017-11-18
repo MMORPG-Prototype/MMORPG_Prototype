@@ -2,16 +2,17 @@ package pl.mmorpg.prototype.client.input;
 
 import com.badlogic.gdx.Input.Keys;
 
-import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
-import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ItemQuickAccessDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.SpellQuickAccessDialog;
 
 public class PlayInputSingleHandle extends InputProcessorAdapter
 {
     private UserInterface userInterface;
-    private QuickAccessDialog quickAccessDialog;
+    private ItemQuickAccessDialog itemQuickAccessDialog;
+    private SpellQuickAccessDialog spellQuickAccessDialog;
     private Player player;
     private PacketsSender packetSender;
 
@@ -19,7 +20,8 @@ public class PlayInputSingleHandle extends InputProcessorAdapter
     {
         this.userInterface = userInterface;
         this.packetSender = packetSender;
-        this.quickAccessDialog = (QuickAccessDialog) userInterface.getDialogs().searchForDialog(QuickAccessDialog.class);
+        this.itemQuickAccessDialog = (ItemQuickAccessDialog) userInterface.getDialogs().searchForDialog(ItemQuickAccessDialog.class);
+        this.spellQuickAccessDialog = (SpellQuickAccessDialog) userInterface.getDialogs().searchForDialog(SpellQuickAccessDialog.class);
         this.player = player;
     }
     
@@ -38,25 +40,29 @@ public class PlayInputSingleHandle extends InputProcessorAdapter
     	ActorManipulator dialogs = userInterface.getDialogs();
         if (dialogs.isMapped(keycode))
             dialogs.showOrHide(keycode);
-        else if (keycode == Keys.NUM_1)
-            packetSender.send(PacketsMaker.makeFireballSpellUsagePacket());
+        else if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9)
+        	spellQuickAccessAction(keycode - Keys.NUM_1);
         else if (keycode >= Keys.F1 && keycode <= Keys.F12)
-            quickAccessAction(keycode);
+            itemQuickAccessAction(keycode - Keys.F1);
 
         return false;
     }
     
-    @Override
+    private void spellQuickAccessAction(int cellPosition)
+	{
+		if(spellQuickAccessDialog.isFieldTaken(cellPosition))
+			spellQuickAccessDialog.useButtonSpell(cellPosition, packetSender);
+	}
+
+	private void itemQuickAccessAction(int cellPosition)
+	{
+		if(itemQuickAccessDialog.isFieldTaken(cellPosition))
+			itemQuickAccessDialog.useButtonItem(cellPosition, player, packetSender);
+	}
+	
+	@Override
     public boolean keyUp(int keycode)
     {
     	return false;
     }
-
-	private void quickAccessAction(int keycode)
-	{
-		int cellPosition = keycode - Keys.F1;
-		if(quickAccessDialog.isFieldTaken(cellPosition))
-			quickAccessDialog.useButtonItem(cellPosition, player, packetSender);
-	}
-
 }

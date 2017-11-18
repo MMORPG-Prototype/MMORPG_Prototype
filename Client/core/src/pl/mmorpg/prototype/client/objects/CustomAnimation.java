@@ -31,6 +31,7 @@ public class CustomAnimation<T> extends Animation<T>
 		return newArray;
 	}
 
+	@SafeVarargs
 	public CustomAnimation(float frameDuration, T... keyFrames)
 	{
 		super(frameDuration, keyFrames);
