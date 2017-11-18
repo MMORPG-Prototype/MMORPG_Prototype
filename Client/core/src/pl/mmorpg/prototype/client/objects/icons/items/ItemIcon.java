@@ -2,9 +2,9 @@ package pl.mmorpg.prototype.client.objects.icons.items;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import pl.mmorpg.prototype.client.objects.icons.Icon;
+import pl.mmorpg.prototype.client.objects.icons.DraggableIcon;
 
-public abstract class ItemIcon extends Icon
+public abstract class ItemIcon extends DraggableIcon
 {
     private long id;
 

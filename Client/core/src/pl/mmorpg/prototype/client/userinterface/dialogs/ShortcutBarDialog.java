@@ -12,7 +12,7 @@ public class ShortcutBarDialog extends Dialog
 	public ShortcutBarDialog(UserInterface linkedInterface)
 	{
 		super("", Settings.DEFAULT_SKIN);
-
+		this.padLeft(0);
 		TextButton menuButton = ButtonCreator.createTextButton("Menu", 
 				() -> linkedInterface.showOrHideDialog(MenuDialog.class));
 		TextButton inventoryButton = ButtonCreator.createTextButton("Inventory", 
@@ -23,10 +23,13 @@ public class ShortcutBarDialog extends Dialog
 				() -> linkedInterface.showOrHideDialog(ChatDialog.class));
 		TextButton equipmentButton = ButtonCreator.createTextButton("Equipment", 
 				() -> linkedInterface.showOrHideDialog(EquipmentDialog.class));
-		TextButton consoleDialog = ButtonCreator.createTextButton("Console", 
-				() -> linkedInterface.showOrHideDialog(ConsoleDialog.class));		
+		TextButton consoleButton = ButtonCreator.createTextButton("Console", 
+				() -> linkedInterface.showOrHideDialog(ConsoleDialog.class));
+		TextButton spellListButton = ButtonCreator.createTextButton("Spells", 
+				() -> linkedInterface.showOrHideDialog(SpellListDialog.class));		
 
-		add(consoleDialog).bottom().right();
+		add(spellListButton).bottom().right();
+		add(consoleButton).bottom().right();
 		add(chatButton).bottom().right();
 		add(statisticsButton).bottom().right();
 		add(inventoryButton).bottom().right();

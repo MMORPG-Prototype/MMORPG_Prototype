@@ -1,6 +1,34 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs;
 
-public class SpellListDialog
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+
+import pl.mmorpg.prototype.client.spells.FireballSpell;
+import pl.mmorpg.prototype.client.spells.Spell;
+import pl.mmorpg.prototype.client.states.helpers.Settings;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.spell.SpellListPane;
+
+public class SpellListDialog extends Dialog
 {
+	private SpellListPane spellListPane;
+
+	public SpellListDialog()
+	{
+		super("Spells", Settings.DEFAULT_SKIN);
+		Button closeButton = new CloseButton(this); 
+		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
+
+        spellListPane = new SpellListPane();
+        this.add(spellListPane);
+        //TODO remove, it is temp
+        spellListPane.addSpell(new FireballSpell());
+        this.pack();
+	}
+	
+	public void addSpell(Spell spell)
+	{
+		spellListPane.addSpell(spell);
+	}
 
 }

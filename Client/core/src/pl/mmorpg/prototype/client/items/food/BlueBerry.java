@@ -15,7 +15,7 @@ public class BlueBerry extends FoodItem
 	{
     	super(Assets.get("Items/BlueBerry.png"), id, itemCount);
 	}
-
+ 
 	@Override
 	public String getIdentifier()
 	{

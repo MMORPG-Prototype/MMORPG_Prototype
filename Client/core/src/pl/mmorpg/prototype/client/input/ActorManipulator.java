@@ -53,7 +53,7 @@ public class ActorManipulator
 	public void hideKeyMappedDialogs()
 	{
 		for (Actor dialog : mappedDialogs.values())
-			dialog.setVisible(false);
+			dialog.setVisible(false); 
 	}
 
 	public Collection<Actor> getAllMapped()

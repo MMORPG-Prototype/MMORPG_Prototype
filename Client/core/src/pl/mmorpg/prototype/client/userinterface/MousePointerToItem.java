@@ -1,8 +1,8 @@
 package pl.mmorpg.prototype.client.userinterface;
 
-import pl.mmorpg.prototype.client.objects.icons.items.DraggableItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.DraggableIcon;
 
 public class MousePointerToItem
 {
-	public DraggableItemIcon item = null;
+	public DraggableIcon item = null;
 }

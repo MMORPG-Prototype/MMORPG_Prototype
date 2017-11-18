@@ -21,7 +21,7 @@ import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
 import pl.mmorpg.prototype.client.items.StackableItem;
-import pl.mmorpg.prototype.client.objects.icons.items.DraggableItemIcon;
+import pl.mmorpg.prototype.client.objects.icons.DraggableIcon;
 import pl.mmorpg.prototype.client.objects.icons.items.ItemIcon;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.quests.Quest;
@@ -42,6 +42,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.QuestRewardDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
+import pl.mmorpg.prototype.client.userinterface.dialogs.SpellListDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.QuickAccessIcon;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
@@ -62,15 +63,16 @@ public class UserInterface
     private final MenuDialog menuDialog;
     private final InventoryDialog inventoryDialog;
     private final StatisticsDialog statisticsDialog;
-    private final ShortcutBarPane standardBarDialog;
+    private final ShortcutBarPane shortcutBarDialog;
     private final HitPointManaPointPane hpMpDialog;
     private final QuickAccessDialog quickAccessDialog;
     private final EquipmentDialog equipmentDialog;
     private final ChatDialog chatDialog;
     private final ConsoleDialog consoleDialog;
     private final QuestListDialog questListDialog;
+    private final SpellListDialog spellListDialog;
     private final ActorManipulator dialogs = new ActorManipulator();
-    private final DialogIdSupplier dialogIdSupplier = new DialogIdSupplier();
+    private final DialogIdSupplier dialogIdSupplier = new DialogIdSupplier(); 
 
     private final MousePointerToItem mousePointerToItem = new MousePointerToItem();
 
@@ -82,16 +84,17 @@ public class UserInterface
         menuDialog = new MenuDialog(this);
         inventoryDialog = new InventoryDialog(this, character.getGold());
         statisticsDialog = new StatisticsDialog(character);
-        standardBarDialog = new ShortcutBarPane(this);
+        shortcutBarDialog = new ShortcutBarPane(this);
         hpMpDialog = new HitPointManaPointPane(character);
         quickAccessDialog = new QuickAccessDialog(this);
         equipmentDialog = new EquipmentDialog();
         chatDialog = new ChatDialog(this);
         consoleDialog = new ConsoleDialog(this);
         questListDialog = new QuestListDialog();
+        spellListDialog = new SpellListDialog();
         mapDialogsWithKeys();
-        addOtherDialogs();
-        showDialogs();
+        mapOtherDialogs();
+        addDialogsToStage();
         dialogs.hideKeyMappedDialogs();
 
         stage.addListener(new ClickListener(Buttons.LEFT)
@@ -129,27 +132,29 @@ public class UserInterface
         dialogs.map(Keys.C, statisticsDialog);
         dialogs.map(Keys.L, consoleDialog);
         dialogs.map(Keys.Q, questListDialog);
+        dialogs.map(Keys.J, spellListDialog);
     }
 
-    private void addOtherDialogs()
+    private void mapOtherDialogs()
     {
-        dialogs.add(standardBarDialog);
+        dialogs.add(shortcutBarDialog);
         dialogs.add(hpMpDialog);
         dialogs.add(quickAccessDialog);
     }
 
-    private void showDialogs()
+    private void addDialogsToStage()
     {
         stage.addActor(chatDialog);
         stage.addActor(quickAccessDialog);
         stage.addActor(hpMpDialog);
-        stage.addActor(standardBarDialog);
+        stage.addActor(shortcutBarDialog);
         stage.addActor(menuDialog);
         stage.addActor(inventoryDialog);
         stage.addActor(statisticsDialog);
         stage.addActor(equipmentDialog);
         stage.addActor(consoleDialog);
         stage.addActor(questListDialog);
+        stage.addActor(spellListDialog);
     }
 
     public void draw(SpriteBatch batch)
@@ -188,11 +193,11 @@ public class UserInterface
     public void inventoryFieldClicked(ButtonField<ItemIcon> inventoryField, ItemInventoryPosition cellPosition)
     {
         if (mousePointerToItem.item == null && inventoryField.hasContent())
-            mousePointerToItem.item = (DraggableItemIcon) inventoryField.getContent();
+            mousePointerToItem.item = (DraggableIcon) inventoryField.getContent();
         else if (mousePointerToItem.item != null)
         {
             InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
-                    .makeInventoryItemRepositionRequestPacket(mousePointerToItem.item.getId(), cellPosition);
+                    .makeInventoryItemRepositionRequestPacket(((ItemIcon)mousePointerToItem.item).getId(), cellPosition);
             ((PacketsSender) linkedState).send(inventoryItemRepositionRequestPacket);
             mousePointerToItem.item = null;
         }
@@ -228,13 +233,13 @@ public class UserInterface
 
     public void quickAccessButtonClicked(ButtonField<QuickAccessIcon> field, int cellPosition)
     {
-        DraggableItemIcon heldItem = mousePointerToItem.item;
+    	DraggableIcon heldItem = mousePointerToItem.item;
         if (heldItem != null)
         {
-            QuickAccessIcon icon = new QuickAccessIcon(heldItem.getIdentifier(), (ItemCounter) inventoryDialog);
+            QuickAccessIcon icon = new QuickAccessIcon(((ItemIcon)heldItem).getIdentifier(), (ItemCounter) inventoryDialog);
             field.put(icon);
             ((PacketsSender) linkedState)
-                    .send(PacketsMaker.makeItemPutInQuickAccessBarPacket(heldItem.getIdentifier(), cellPosition));
+                    .send(PacketsMaker.makeItemPutInQuickAccessBarPacket(((ItemIcon)heldItem).getIdentifier(), cellPosition));
             mousePointerToItem.item = null;
         } else if (field.hasContent())
         {

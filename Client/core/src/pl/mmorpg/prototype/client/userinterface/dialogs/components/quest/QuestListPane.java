@@ -14,7 +14,7 @@ public class QuestListPane extends ScrollPane
     {
         super(new QuestList());
         questList = (QuestList) getWidget();
-        setSmoothScrolling(false);  
+        setSmoothScrolling(false); 
         setTransform(true);
     }
     

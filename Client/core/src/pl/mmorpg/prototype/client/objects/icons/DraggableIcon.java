@@ -1,16 +1,17 @@
-package pl.mmorpg.prototype.client.objects.icons.items;
+package pl.mmorpg.prototype.client.objects.icons;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public abstract class DraggableItemIcon extends ItemIcon
+public abstract class DraggableIcon extends Icon
 {
 	protected static final float WIDTH_WHEN_DRAGGED = 36;
 	protected static final float HEIGHT_WHEN_DRAGGED = 36;
-	
-	public DraggableItemIcon(Texture texture, long id)
+
+	public DraggableIcon(Texture texture)
 	{
-		super(texture, id);
+		super(texture);
+		// TODO Auto-generated constructor stub
 	}
 	
 	public void renderWhenDragged(SpriteBatch batch)
