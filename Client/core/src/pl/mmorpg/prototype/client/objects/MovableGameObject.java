@@ -13,6 +13,7 @@ public abstract class MovableGameObject extends GameObject
     private float targetY = 100.0f;
     private boolean slidingActive = true;
     private float lastDeltaTime;
+    private int lastMoveDirection = Directions.NONE;
 
     public MovableGameObject(Texture lookout, long id)
     {
@@ -42,7 +43,10 @@ public abstract class MovableGameObject extends GameObject
     {
         stopMovingTime += deltaTime;
         if (stopMovingTime > stopMovingTimeBound)
+        {
             stopMovingTime = 0.0f;
+            lastMoveDirection = Directions.NONE;
+        }
     }
 
     private void repositionX(float deltaTime)
@@ -76,12 +80,20 @@ public abstract class MovableGameObject extends GameObject
     @Override
     public void setX(float x)
     {
+        if (x > getX())
+            lastMoveDirection = Directions.RIGHT;
+        else if (x < getX())
+            lastMoveDirection = Directions.LEFT;
         targetX = x;
     }
 
     @Override
     public void setY(float y)
     {
+        if (y > getY())
+            lastMoveDirection = Directions.UP;
+        else if (y < getY())
+            lastMoveDirection = Directions.DOWN;
         targetY = y;
     }
 
@@ -93,7 +105,10 @@ public abstract class MovableGameObject extends GameObject
     }
 
     public int getMoveDirection()
-    {        
+    {   
+    	if(!slidingActive)
+    		return lastMoveDirection;
+    	
         float deltaX = targetX - getX();
         float deltaY = targetY - getY();
         
