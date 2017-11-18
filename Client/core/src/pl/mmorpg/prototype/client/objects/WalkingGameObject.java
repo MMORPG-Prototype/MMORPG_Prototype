@@ -68,15 +68,22 @@ public abstract class WalkingGameObject extends MovableGameObject
 	{
 		super.update(deltaTime);
 
-		int moveDirection = getMoveDirection();
+		MoveInfo moveInfo = getMoveInfo();
+		int moveDirection = moveInfo.getMoveDirection();
+		float animationDelta = deltaTime*moveInfo.getCurrentMovementSpeed();
+		updateAnimation(animationDelta, moveDirection);
+	}
+
+	private void updateAnimation(float animationDelta, int moveDirection)
+	{
 		if (moveDirection == Directions.LEFT)
-			useAnimation(moveLeftAnimation, deltaTime);
+			useAnimation(moveLeftAnimation, animationDelta);
 		else if (moveDirection == Directions.RIGHT)
-			useAnimation(moveRightAnimation, deltaTime);
+			useAnimation(moveRightAnimation, animationDelta);
 		else if (moveDirection == Directions.DOWN)
-			useAnimation(moveDownAnimation, deltaTime);
+			useAnimation(moveDownAnimation, animationDelta);
 		else if (moveDirection == Directions.UP)
-			useAnimation(moveUpAnimation, deltaTime);
+			useAnimation(moveUpAnimation, animationDelta);
 	}
 
 	@Override
