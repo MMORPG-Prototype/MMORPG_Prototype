@@ -6,7 +6,6 @@ import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.QuickAccessDialog;
 
 public class PlayInputSingleHandle extends InputProcessorAdapter
@@ -32,9 +31,12 @@ public class PlayInputSingleHandle extends InputProcessorAdapter
 
     @Override
     public boolean keyDown(int keycode)
-    {   	
+    {   
+    	if(shouldAvoidInput())
+    		return false;
+    	
     	ActorManipulator dialogs = userInterface.getDialogs();
-        if (dialogs.isMapped(keycode) && !dialogs.searchForDialog(ChatDialog.class).isVisible())
+        if (dialogs.isMapped(keycode))
             dialogs.showOrHide(keycode);
         else if (keycode == Keys.NUM_1)
             packetSender.send(PacketsMaker.makeFireballSpellUsagePacket());
@@ -42,6 +44,12 @@ public class PlayInputSingleHandle extends InputProcessorAdapter
             quickAccessAction(keycode);
 
         return false;
+    }
+    
+    @Override
+    public boolean keyUp(int keycode)
+    {
+    	return false;
     }
 
 	private void quickAccessAction(int keycode)

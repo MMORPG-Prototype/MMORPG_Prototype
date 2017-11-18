@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -72,7 +73,11 @@ public class ChatDialog extends Dialog
 	public void setVisible(boolean visible)
 	{
 		if(visible)
-			chatTextField.setText("");
+		{
+			linkedInterface.focus(chatTextField);
+			Gdx.app.postRunnable(() -> chatTextField.setText(""));
+		}
+		chatTextField.setText("");	
 		super.setVisible(visible);
 	}
 

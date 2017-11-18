@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -101,7 +102,7 @@ public class UserInterface
                 if (!dialogs.hasDialogOnPosition(x, y))
                 {
                     linkedState.userLeftClickedOnGameBoard(x, y);
-                    stage.setKeyboardFocus(null);
+                    stage.unfocusAll();
                 }
             }
         });
@@ -113,6 +114,7 @@ public class UserInterface
                 if (!dialogs.hasDialogOnPosition(x, y))
                 {
                     linkedState.userRightClickedOnGameBoard(x, y);
+                    stage.unfocusAll();
                 }
             }
         });
@@ -479,6 +481,12 @@ public class UserInterface
 	public void stackItemsInInventoryDialog(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
 	{
 		inventoryDialog.stackItems(firstPosition, secondPosition);
+	}
+
+	public void focus(Actor actor)
+	{
+		stage.setKeyboardFocus(actor);
+		stage.setScrollFocus(actor);
 	}
 
 }
