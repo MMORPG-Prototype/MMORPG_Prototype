@@ -13,7 +13,6 @@ public abstract class MovableGameObject extends GameObject
     private float targetY = 100.0f;
     private boolean slidingActive = true;
     private float lastDeltaTime;
-    private int lastMoveDirection = Directions.NONE;
 
     public MovableGameObject(Texture lookout, long id)
     {
@@ -43,10 +42,7 @@ public abstract class MovableGameObject extends GameObject
     {
         stopMovingTime += deltaTime;
         if (stopMovingTime > stopMovingTimeBound)
-        {
             stopMovingTime = 0.0f;
-            lastMoveDirection = Directions.NONE;
-        }
     }
 
     private void repositionX(float deltaTime)
@@ -80,20 +76,12 @@ public abstract class MovableGameObject extends GameObject
     @Override
     public void setX(float x)
     {
-        if (x > getX())
-            lastMoveDirection = Directions.RIGHT;
-        else if (x < getX())
-            lastMoveDirection = Directions.LEFT;
         targetX = x;
     }
 
     @Override
     public void setY(float y)
     {
-        if (y > getY())
-            lastMoveDirection = Directions.UP;
-        else if (y < getY())
-            lastMoveDirection = Directions.DOWN;
         targetY = y;
     }
 
@@ -104,9 +92,17 @@ public abstract class MovableGameObject extends GameObject
         setY(y);
     }
 
-    public int getLastMoveDirection()
-    {
-        return lastMoveDirection;
+    public int getMoveDirection()
+    {        
+        float deltaX = targetX - getX();
+        float deltaY = targetY - getY();
+        
+        if(deltaX == 0 && deltaY == 0)
+            return Directions.NONE;
+        
+        if(Math.abs(deltaX) > Math.abs(deltaY))
+            return deltaX > 0 ? Directions.RIGHT : Directions.LEFT;
+        return deltaY > 0 ? Directions.UP : Directions.DOWN;
     }
 
     public boolean isNearTarget()
