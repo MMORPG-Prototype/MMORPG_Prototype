@@ -20,7 +20,8 @@ public interface UserCharacterRepository extends CrudRepository<UserCharacter, I
 	default UserCharacter findOneAndFetchEverythingRelated(Integer id)
 	{
 		UserCharacter result = findOne(id);
-		result.getQuickAccessBarConfig().size();
+		result.getItemQuickAccessBarConfig().size();
+		result.getSpellQuickAccessBarConfig().size();
 		result.getSpells().size();
 		Collection<CharactersQuests> quests = result.getQuests();
         quests.forEach(q -> q.getQuestTasks().size());

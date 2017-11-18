@@ -6,7 +6,8 @@ import java.util.Map;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.PlayerPropertiesBuilder;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.UserCharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
@@ -108,14 +109,25 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 		return getItem(position) != null;
 	}
 
-	public void putNewConfigElemetInQuickAccessBar(QuickAccessBarConfigurationElement quickAccessConfigElement)
+	public void putNewConfigElemetInItemQuickAccessBar(ItemQuickAccessBarConfigurationElement quickAccessConfigElement)
 	{
-		userCharacter.getQuickAccessBarConfig().put(quickAccessConfigElement.getFieldPosition(), quickAccessConfigElement);
+		userCharacter.getItemQuickAccessBarConfig().put(quickAccessConfigElement.getFieldPosition(), quickAccessConfigElement);
 	}
 	
-	public void removeConfigElementFromQuickAccessBar(int cellPosition)
+	public void removeConfigElementFromItemQuickAccessBar(int cellPosition)
 	{
-		userCharacter.getQuickAccessBarConfig().remove(cellPosition);
+		userCharacter.getItemQuickAccessBarConfig().remove(cellPosition);
+	}
+	
+	public void putNewConfigElemetInSpellQuickAccessBar(
+			SpellQuickAccessBarConfigurationElement quickAccessConfigElement)
+	{
+		userCharacter.getSpellQuickAccessBarConfig().put(quickAccessConfigElement.getFieldPosition(), quickAccessConfigElement);
+	}
+	
+	public void removeConfigElementFromSpellQuickAccessBar(int cellPosition)
+	{
+		userCharacter.getSpellQuickAccessBarConfig().remove(cellPosition);
 	}
 
     public int getConnectionId()

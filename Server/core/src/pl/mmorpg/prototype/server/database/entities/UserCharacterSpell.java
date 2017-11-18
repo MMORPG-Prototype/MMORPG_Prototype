@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pl.mmorpg.prototype.server.objects.monsters.spells.SpellTypes;
+import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 
 @Entity(name = "UserCharacterSpell")
 @Table(name = "user_character_spells")
@@ -28,7 +28,7 @@ public class UserCharacterSpell
 
     @Column(name = "spellType", nullable = false)
     @Enumerated(EnumType.STRING)
-    private SpellTypes spellType;
+    private SpellIdentifiers spellType;
     
     @ManyToOne
     @JoinColumn(name = "user_character_id", nullable = false)

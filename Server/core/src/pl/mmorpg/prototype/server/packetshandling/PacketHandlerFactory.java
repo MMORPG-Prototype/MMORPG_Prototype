@@ -32,6 +32,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedF
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveGoldRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellRemovedFromQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
 import pl.mmorpg.prototype.server.UserInfo;
@@ -51,6 +53,8 @@ import pl.mmorpg.prototype.server.packetshandling.characteractions.NpcConversati
 import pl.mmorpg.prototype.server.packetshandling.characteractions.OpenContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.RetrieveGoldRewardPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.RetrieveItemRewardPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.SpellPutInQuickAccessBarPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.SpellRemovedFromQuickAccessBarPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakeItemFromContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakingGoldFromContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.spell.usage.FireballSpellUsagePacketHandler;
@@ -102,6 +106,10 @@ public class PacketHandlerFactory
 				new ItemPutInQuickAccessBarPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(ItemRemovedFromQuickAccessBarPacket.class,
 				new ItemRemovedFromQuickAccessBarPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(SpellPutInQuickAccessBarPacket.class,
+				new SpellPutInQuickAccessBarPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(SpellRemovedFromQuickAccessBarPacket.class,
+				new SpellRemovedFromQuickAccessBarPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(RetrieveItemRewardPacket.class,
 				new RetrieveItemRewardPacketHandler(gameDataRetriever, playState));
 		packetHandlers.put(RetrieveGoldRewardPacket.class,

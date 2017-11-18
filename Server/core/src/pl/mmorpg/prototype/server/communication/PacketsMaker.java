@@ -13,6 +13,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPac
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemStackPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemSwapPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemRewardPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.KnownSpellInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
@@ -44,13 +45,16 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTarge
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
+import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.ItemReward;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
-import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.UserCharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.objects.GameObject;
@@ -65,438 +69,439 @@ import pl.mmorpg.prototype.server.quests.QuestTask;
 
 public class PacketsMaker
 {
-    public static ObjectCreationPacket makeCreationPacket(GameObject object)
-    {
-        ObjectCreationPacket packet = new ObjectCreationPacket();
-        packet.id = object.getId();
-        packet.identifier = object.getIdentifier();
-        packet.x = object.getX();
-        packet.y = object.getY();
-        return packet;
-    }
-
-    public static MonsterCreationPacket makeCreationPacket(Monster monster)
-    {
-        MonsterCreationPacket packet = new MonsterCreationPacket();
-        packet.id = monster.getId();
-        packet.identifier = monster.getIdentifier();
-        packet.x = monster.getX();
-        packet.y = monster.getY();
-        packet.properties = monster.getProperties();
-        return packet;
-    }
-
-    public static PlayerCreationPacket makeCreationPacket(PlayerCharacter player)
-    {
-        PlayerCreationPacket packet = new PlayerCreationPacket();
-        packet.id = player.getId();
-        packet.identifier = player.getIdentifier();
-        packet.x = player.getX();
-        packet.y = player.getY();
-        packet.properties = player.getProperties();
-        packet.data = PacketsMaker.makeCharacterPacket(player.getUserCharacterData());
-        return packet;
-    }
-
-    public static ObjectRemovePacket makeRemovalPacket(long id)
-    {
-        return new ObjectRemovePacket(id);
-    }
-
-    public static ObjectRepositionPacket makeRepositionPacket(GameObject gameObject)
-    {
-        return makeRepositionPacket(gameObject.getId(), gameObject.getX(), gameObject.getY());
-    }
-
-    public static ObjectRepositionPacket makeRepositionPacket(long id, float x, float y)
-    {
-        ObjectRepositionPacket packet = new ObjectRepositionPacket();
-        packet.id = id;
-        packet.x = x;
-        packet.y = y;
-        return packet;
-    }
-
-    public static UserCharacterDataPacket makeCharacterPacket(UserCharacter character)
-    {
-        UserCharacterDataPacket packet = new UserCharacterDataPacket();
-        packet.setId(character.getId());
-        packet.setLevel(character.getLevel());
-        packet.setHitPoints(character.getHitPoints());
-        packet.setManaPoints(character.getManaPoints());
-        packet.setNickname(character.getNickname());
-        packet.setExperience(character.getExperience());
-        packet.setStrength(character.getStrength());
-        packet.setMagic(character.getMagic());
-        packet.setDexitirity(character.getDexitirity());
-        packet.setGold(character.getGold());
-        packet.setStartingX(character.getLastLocationX());
-        packet.setStartingY(character.getLastLocationY());
-        return packet;
-    }
-
-    public static CharacterItemDataPacket makeItemPacket(CharacterItem item, long id)
-    {
-        CharacterItemDataPacket packet = new CharacterItemDataPacket();
-        packet.setId(id);
-        packet.setIdentifier(item.getIdentifier().toString());
-        packet.setCount(item.getCount());
-        InventoryPosition position = item.getInventoryPosition();
-        packet.setInventoryPageNumber(position.getInventoryPageNumber());
-        packet.setInventoryX(position.getInventoryX());
-        packet.setInventoryY(position.getInventoryY());
-        return packet;
-    }
-
-    public static CharacterItemDataPacket makeItemPacket(Item item)
-    {
-        InventoryPosition inventoryPosition = item.getInventoryPosition();
-        return makeItemPacket(item, inventoryPosition.getInventoryPageNumber(), inventoryPosition.getInventoryX(),
-                inventoryPosition.getInventoryY());
-    }
-
-    private static CharacterItemDataPacket makeItemPacket(Item item, int inventoryPage, int inventoryX, int inventoryY)
-    {
-        CharacterItemDataPacket packet = new CharacterItemDataPacket();
-        packet.setId(item.getId());
-        packet.setIdentifier(item.getIdentifier().toString());
-        if (item instanceof StackableItem)
-            packet.setCount(((StackableItem) item).getCount());
-        packet.setInventoryPageNumber(inventoryPage);
-        packet.setInventoryX(inventoryX);
-        packet.setInventoryY(inventoryY);
-        return packet;
-    }
-
-    public static MonsterTargetingReplyPacket makeTargetingReplyPacket(GameObject target)
-    {
-        if (target == null)
-            throw new NullPointerException("Target cannot be null");
-        MonsterTargetingReplyPacket packet = new MonsterTargetingReplyPacket();
-        packet.monsterId = target.getId();
-        return packet;
-    }
-
-    public static NormalDamagePacket makeNormalDamagePacket(long id, int damage)
-    {
-        NormalDamagePacket packet = new NormalDamagePacket();
-        packet.setTargetId(id);
-        packet.setDamage(damage);
-        return packet;
-    }
-
-    public static ExperienceGainPacket makeExperienceGainPacket(long id, int experienceGain)
-    {
-        ExperienceGainPacket packet = new ExperienceGainPacket();
-        packet.setTargetId(id);
-        packet.setExperience(experienceGain);
-        return packet;
-    }
-
-    public static HpChangeByItemUsagePacket makeHpNotifiedIncreasePacket(int delta, long targetId)
-    {
-        HpChangeByItemUsagePacket packet = new HpChangeByItemUsagePacket();
-        packet.setHpChange(delta);
-        packet.setMonsterTargetId(targetId);
-        return packet;
-    }
-
-    public static MpChangeByItemUsagePacket makeMpChangeByItemUsagePacket(int delta, long targetId)
-    {
-        MpChangeByItemUsagePacket packet = new MpChangeByItemUsagePacket();
-        packet.setMpChange(delta);
-        packet.setMonsterTargetId(targetId);
-        return packet;
-    }
-
-    public static FireDamagePacket makeFireDamagePacket(long targetId, int spellDamage)
-    {
-        FireDamagePacket fireDamagePacket = new FireDamagePacket();
-        fireDamagePacket.setTargetId(targetId);
-        fireDamagePacket.setDamage(spellDamage);
-        return fireDamagePacket;
-    }
-
-    public static ManaDrainPacket makeManaDrainPacket(int manaDrain)
-    {
-        ManaDrainPacket packet = new ManaDrainPacket();
-        packet.manaDrained = manaDrain;
-        return packet;
-    }
-
-    public static ContainerContentPacket makeOpenContainerPacket(GameContainer container)
-    {
-        Collection<Item> items = container.getItems().values();
-        CharacterItemDataPacket[] containerContent = createContainerContentPackets(items);
-        ContainerContentPacket packet = new ContainerContentPacket();
-        packet.setContentItems(containerContent);
-        packet.setContainerId(container.getId());
-        packet.setGoldAmount(container.getGoldAmount());
-        return packet;
-    }
-
-    private static CharacterItemDataPacket[] createContainerContentPackets(Collection<Item> items)
-    {
-        CharacterItemDataPacket[] containerContent = new CharacterItemDataPacket[items.size()];
-        Iterator<Item> it = items.iterator();
-        for (int i = 0; i < containerContent.length; i++)
-        {
-            Item item = it.next();
-            int inventoryPositionX = i;
-            containerContent[i] = makeItemPacketWithStandardPosition(inventoryPositionX, item);
-        }
-        return containerContent;
-    }
-
-    private static CharacterItemDataPacket makeItemPacketWithStandardPosition(int inventoryPositionX, Item item)
-    {
-        int inventoryPage = 1;
-        int inventoryPositionY = 1;
-        CharacterItemDataPacket makeItemPacket = makeItemPacket(item, inventoryPage, inventoryPositionX,
-                inventoryPositionY);
-        return makeItemPacket;
-    }
-
-    public static ContainerItemRemovalPacket makeContainerItemRemovalPacket(long containerId, long itemId)
-    {
-        ContainerItemRemovalPacket packet = new ContainerItemRemovalPacket();
-        packet.setContainerId(containerId);
-        packet.setItemId(itemId);
-        return packet;
-    }
-
-    public static UnacceptableOperationPacket makeUnacceptableOperationPacket(String errorMessage)
-    {
-        UnacceptableOperationPacket packet = new UnacceptableOperationPacket();
-        packet.setErrorMessage(errorMessage);
-        return packet;
-    }
-
-    public static ContainerGoldRemovalPacket makeContainerGoldRemovalPacket(long containerId, int gold)
-    {
-        ContainerGoldRemovalPacket packet = new ContainerGoldRemovalPacket();
-        packet.setContainerId(containerId);
-        packet.setGoldAmount(gold);
-        return packet;
-    }
-
-    public static GoldReceivePacket makeGoldReceivePacket(int gold)
-    {
-        GoldReceivePacket packet = new GoldReceivePacket();
-        packet.setGoldAmount(gold);
-        return packet;
-    }
-
-    public static HpUpdatePacket makeHpUpdatePacket(long monsterId, int hp)
-    {
-        HpUpdatePacket packet = new HpUpdatePacket();
-        packet.setNewHp(hp);
-        packet.setId(monsterId);
-        return packet;
-    }
-
-    public static MpUpdatePacket makeMpUpdatePacket(long monsterId, int mp)
-    {
-        MpUpdatePacket packet = new MpUpdatePacket();
-        packet.setNewMp(mp);
-        packet.setId(monsterId);
-        return packet;
-    }
-
-    public static ShopItemsPacket makeShopItemsPacket(Collection<ShopItemWrapper> availableItems, long shopId)
-    {
-        ShopItemPacket[] itemsArray = availableItems.stream()
-                .map(PacketsMaker::makeShopItemPacket)
-                .toArray(ShopItemPacket[]::new);
-
-        ShopItemsPacket packet = new ShopItemsPacket();
-        packet.setShopItems(itemsArray);
-        packet.setShopId(shopId);
-        return packet;
-    }
-
-    public static ShopItemPacket makeShopItemPacket(ShopItemWrapper itemWrapper)
-    {
-        ShopItemPacket singleItemPacketWrapper = new ShopItemPacket();
-        CharacterItemDataPacket itemPacket = makeItemPacketWithStandardPosition(1, itemWrapper.getItem());
-        singleItemPacketWrapper.setItem(itemPacket);
-        singleItemPacketWrapper.setPrice(itemWrapper.getPrice());
-        return singleItemPacketWrapper;
-    }
-
-    public static GoldAmountChangePacket makeGoldAmountChangePacket(int newGoldAmount)
-    {
-        GoldAmountChangePacket packet = new GoldAmountChangePacket();
-        packet.setNewGoldAmount(newGoldAmount);
-        return packet;
-    }
-
-    public static ScriptExecutionErrorPacket makeScriptExecutionErrorPacket(String error)
-    {
-        ScriptExecutionErrorPacket packet = new ScriptExecutionErrorPacket();
-        packet.setError(error);
-        return packet;
-    }
-
-    public static InventoryItemRepositionPacket makeInventoryItemRepositionPacket(InventoryPosition sourcePosition,
-            InventoryPosition destinationPosition)
-    {
-        InventoryItemRepositionPacket packet = new InventoryItemRepositionPacket();
-
-        packet.setSourcePageNumber(sourcePosition.getInventoryPageNumber());
-        packet.setSourcePageX(sourcePosition.getInventoryX());
-        packet.setSourcePageY(sourcePosition.getInventoryY());
-
-        packet.setDestinationPageNumber(destinationPosition.getInventoryPageNumber());
-        packet.setDestinationPageX(destinationPosition.getInventoryX());
-        packet.setDestinationPageY(destinationPosition.getInventoryY());
-
-        return packet;
-    }
-
-    public static InventoryItemSwapPacket makeInventoryItemSwapPacket(InventoryPosition firstPosition,
-            InventoryPosition secondPosition)
-    {
-        InventoryItemSwapPacket packet = new InventoryItemSwapPacket();
-
-        packet.setFirstPositionPageNumber(firstPosition.getInventoryPageNumber());
-        packet.setFirstPositionPageX(firstPosition.getInventoryX());
-        packet.setFirstPositionPageY(firstPosition.getInventoryY());
-
-        packet.setSecondPositionPageNumber(secondPosition.getInventoryPageNumber());
-        packet.setSecondPositionPageX(secondPosition.getInventoryX());
-        packet.setSecondPositionPageY(secondPosition.getInventoryY());
-
-        return packet;
-    }
-
-    public static ItemPutInQuickAccessBarPacket makeQuickAccessBarConfigElementPacket(
-            QuickAccessBarConfigurationElement element)
-    {
-        ItemPutInQuickAccessBarPacket packet = new ItemPutInQuickAccessBarPacket();
-        packet.setCellPosition(element.getFieldPosition());
-        packet.setItemIdentifier(element.getItemIdentifier().toString());
-        return packet;
-    }
-
-    public static ScriptResultInfoPacket makeScriptResultInfoPacket(String message)
-    {
-        ScriptResultInfoPacket packet = new ScriptResultInfoPacket();
-        packet.setMessage(message);
-        return packet;
-    }
-    
-    public static QuestBoardInfoPacket makeQUestBoardInfoPacket(QuestBoard questBoard)
-    {
-        Predicate<Quest> shouldIncludeQuest = q -> true;
-        return makeQuestBoardInfoPacket(questBoard, shouldIncludeQuest);
-    }
-
-    public static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestBoard questBoard, Predicate<Quest> shouldBeIncluded)
-    {
-        QuestDataPacket[] quests = questBoard.getQuests().stream()
-                .filter(shouldBeIncluded)
-                .map(PacketsMaker::makeQuestDataPacket)
-                .toArray(QuestDataPacket[]::new);
-
-        return makeQuestBoardInfoPacket(quests, questBoard.getId());
-    }
-
-    public static QuestDataPacket makeQuestDataPacket(Quest quest)
-    {
-        QuestDataPacket packet = new QuestDataPacket();
-        packet.setDescription(quest.getDescription());
-        packet.setName(quest.getName());
-        return packet;
-    }
-
-    private static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestDataPacket[] quests, long questBoardId)
-    {
-        QuestBoardInfoPacket packet = new QuestBoardInfoPacket();
-        packet.setQuests(quests);
-        packet.setQuestBoardId(questBoardId);
-        return packet;
-    }
-
-    public static QuestFinishedRewardPacket makeQuestFinishedRewardPacket(Quest quest)
-    {
-        QuestFinishedRewardPacket packet = new QuestFinishedRewardPacket();
-        packet.setGoldReward(quest.getGoldReward());
-        packet.setQuestName(quest.getName());
-        ItemRewardPacket[] itemReward = quest.getItemsReward().stream()
-                .map(PacketsMaker::makeItemRewardPacket)
-                .toArray(ItemRewardPacket[]::new);
-        packet.setItemReward(itemReward);
-        return packet;
-    }
-
-    public static ItemRewardPacket makeItemRewardPacket(ItemReward itemReward)
-    {
-        ItemRewardPacket packet = new ItemRewardPacket();
-        packet.setItemIdentifier(itemReward.getItemIdentifier().toString());
-        packet.setNumberOfItems(itemReward.getNumberOfItems());
-        return packet;
-    }
-
-    public static ItemRewardRemovePacket makeItemRewardRemovePacket(String itemIdentifier, int numberOfItems)
-    {
-        ItemRewardRemovePacket packet = new ItemRewardRemovePacket();
-        packet.setItemIdentifier(itemIdentifier);
-        packet.setNumberOfItems(numberOfItems);
-        return packet;
-    }
-
-    public static QuestRewardGoldRemovalPacket makeQuestRewardGoldRemovalPacket(int howMuchGold)
-    {
-        QuestRewardGoldRemovalPacket packet = new QuestRewardGoldRemovalPacket();
-        packet.setGoldAmount(howMuchGold);
-        return packet;
-    }
-
-    public static QuestStateInfoPacket[] makeQuestStateInfoPackets(Collection<CharactersQuests> quests)
-    {
-        return quests.stream()
-                .map(PacketsMaker::makeQuestStateInfoPacket)
-                .toArray(QuestStateInfoPacket[]::new);
-    }
-
-    public static QuestStateInfoPacket makeQuestStateInfoPacket(CharactersQuests characterQuest)
-    {
-        QuestStateInfoPacket packet = new QuestStateInfoPacket();
-        Quest quest = characterQuest.getQuest();
-        packet.setDescription(quest.getDescription());
-        packet.setQuestName(quest.getName());
-        QuestTaskInfoPacket[] questTasks = characterQuest.getQuestTasks().stream()
-                .map(QuestTaskWrapper::getQuestTask)
-                .map(PacketsMaker::makeQuestTaskInfoPacket)
-                .toArray(QuestTaskInfoPacket[]::new);
-        packet.setQuestTasks(questTasks);
-        return packet;
-    }
-
-    public static QuestTaskInfoPacket makeQuestTaskInfoPacket(QuestTask questTask)
-    {
-        QuestTaskInfoPacket packet = new QuestTaskInfoPacket();
-        packet.setDescription(questTask.getDescription());
-        packet.setPercentFinished(questTask.getPercentFinished());
-        return packet;
-    }
-
-    public static QuestAcceptedPacket makeQuestAcceptedPacket(CharactersQuests characterQuest)
-    {
-        QuestAcceptedPacket packet = new QuestAcceptedPacket();
-        packet.setQuestStatePacket(makeQuestStateInfoPacket(characterQuest));
-        return packet;
-    }
-
-
-	public static NpcStartDialogPacket makeNpcStartDialogPacket(long npcId, String speech, Collection<String> possibleAnswers)
+	public static ObjectCreationPacket makeCreationPacket(GameObject object)
 	{
-		String[] possibleAnswersInArray = possibleAnswers.stream()
-			.toArray(String[]::new);
+		ObjectCreationPacket packet = new ObjectCreationPacket();
+		packet.id = object.getId();
+		packet.identifier = object.getIdentifier();
+		packet.x = object.getX();
+		packet.y = object.getY();
+		return packet;
+	}
+
+	public static MonsterCreationPacket makeCreationPacket(Monster monster)
+	{
+		MonsterCreationPacket packet = new MonsterCreationPacket();
+		packet.id = monster.getId();
+		packet.identifier = monster.getIdentifier();
+		packet.x = monster.getX();
+		packet.y = monster.getY();
+		packet.properties = monster.getProperties();
+		return packet;
+	}
+
+	public static PlayerCreationPacket makeCreationPacket(PlayerCharacter player)
+	{
+		PlayerCreationPacket packet = new PlayerCreationPacket();
+		packet.id = player.getId();
+		packet.identifier = player.getIdentifier();
+		packet.x = player.getX();
+		packet.y = player.getY();
+		packet.properties = player.getProperties();
+		packet.data = PacketsMaker.makeCharacterPacket(player.getUserCharacterData());
+		return packet;
+	}
+
+	public static ObjectRemovePacket makeRemovalPacket(long id)
+	{
+		return new ObjectRemovePacket(id);
+	}
+
+	public static ObjectRepositionPacket makeRepositionPacket(GameObject gameObject)
+	{
+		return makeRepositionPacket(gameObject.getId(), gameObject.getX(), gameObject.getY());
+	}
+
+	public static ObjectRepositionPacket makeRepositionPacket(long id, float x, float y)
+	{
+		ObjectRepositionPacket packet = new ObjectRepositionPacket();
+		packet.id = id;
+		packet.x = x;
+		packet.y = y;
+		return packet;
+	}
+
+	public static UserCharacterDataPacket makeCharacterPacket(UserCharacter character)
+	{
+		UserCharacterDataPacket packet = new UserCharacterDataPacket();
+		packet.setId(character.getId());
+		packet.setLevel(character.getLevel());
+		packet.setHitPoints(character.getHitPoints());
+		packet.setManaPoints(character.getManaPoints());
+		packet.setNickname(character.getNickname());
+		packet.setExperience(character.getExperience());
+		packet.setStrength(character.getStrength());
+		packet.setMagic(character.getMagic());
+		packet.setDexitirity(character.getDexitirity());
+		packet.setGold(character.getGold());
+		packet.setStartingX(character.getLastLocationX());
+		packet.setStartingY(character.getLastLocationY());
+		return packet;
+	}
+
+	public static CharacterItemDataPacket makeItemPacket(CharacterItem item, long id)
+	{
+		CharacterItemDataPacket packet = new CharacterItemDataPacket();
+		packet.setId(id);
+		packet.setIdentifier(item.getIdentifier().toString());
+		packet.setCount(item.getCount());
+		InventoryPosition position = item.getInventoryPosition();
+		packet.setInventoryPageNumber(position.getInventoryPageNumber());
+		packet.setInventoryX(position.getInventoryX());
+		packet.setInventoryY(position.getInventoryY());
+		return packet;
+	}
+
+	public static CharacterItemDataPacket makeItemPacket(Item item)
+	{
+		InventoryPosition inventoryPosition = item.getInventoryPosition();
+		return makeItemPacket(item, inventoryPosition.getInventoryPageNumber(), inventoryPosition.getInventoryX(),
+				inventoryPosition.getInventoryY());
+	}
+
+	private static CharacterItemDataPacket makeItemPacket(Item item, int inventoryPage, int inventoryX, int inventoryY)
+	{
+		CharacterItemDataPacket packet = new CharacterItemDataPacket();
+		packet.setId(item.getId());
+		packet.setIdentifier(item.getIdentifier().toString());
+		if (item instanceof StackableItem)
+			packet.setCount(((StackableItem) item).getCount());
+		packet.setInventoryPageNumber(inventoryPage);
+		packet.setInventoryX(inventoryX);
+		packet.setInventoryY(inventoryY);
+		return packet;
+	}
+
+	public static MonsterTargetingReplyPacket makeTargetingReplyPacket(GameObject target)
+	{
+		if (target == null)
+			throw new NullPointerException("Target cannot be null");
+		MonsterTargetingReplyPacket packet = new MonsterTargetingReplyPacket();
+		packet.monsterId = target.getId();
+		return packet;
+	}
+
+	public static NormalDamagePacket makeNormalDamagePacket(long id, int damage)
+	{
+		NormalDamagePacket packet = new NormalDamagePacket();
+		packet.setTargetId(id);
+		packet.setDamage(damage);
+		return packet;
+	}
+
+	public static ExperienceGainPacket makeExperienceGainPacket(long id, int experienceGain)
+	{
+		ExperienceGainPacket packet = new ExperienceGainPacket();
+		packet.setTargetId(id);
+		packet.setExperience(experienceGain);
+		return packet;
+	}
+
+	public static HpChangeByItemUsagePacket makeHpNotifiedIncreasePacket(int delta, long targetId)
+	{
+		HpChangeByItemUsagePacket packet = new HpChangeByItemUsagePacket();
+		packet.setHpChange(delta);
+		packet.setMonsterTargetId(targetId);
+		return packet;
+	}
+
+	public static MpChangeByItemUsagePacket makeMpChangeByItemUsagePacket(int delta, long targetId)
+	{
+		MpChangeByItemUsagePacket packet = new MpChangeByItemUsagePacket();
+		packet.setMpChange(delta);
+		packet.setMonsterTargetId(targetId);
+		return packet;
+	}
+
+	public static FireDamagePacket makeFireDamagePacket(long targetId, int spellDamage)
+	{
+		FireDamagePacket fireDamagePacket = new FireDamagePacket();
+		fireDamagePacket.setTargetId(targetId);
+		fireDamagePacket.setDamage(spellDamage);
+		return fireDamagePacket;
+	}
+
+	public static ManaDrainPacket makeManaDrainPacket(int manaDrain)
+	{
+		ManaDrainPacket packet = new ManaDrainPacket();
+		packet.manaDrained = manaDrain;
+		return packet;
+	}
+
+	public static ContainerContentPacket makeOpenContainerPacket(GameContainer container)
+	{
+		Collection<Item> items = container.getItems().values();
+		CharacterItemDataPacket[] containerContent = createContainerContentPackets(items);
+		ContainerContentPacket packet = new ContainerContentPacket();
+		packet.setContentItems(containerContent);
+		packet.setContainerId(container.getId());
+		packet.setGoldAmount(container.getGoldAmount());
+		return packet;
+	}
+
+	private static CharacterItemDataPacket[] createContainerContentPackets(Collection<Item> items)
+	{
+		CharacterItemDataPacket[] containerContent = new CharacterItemDataPacket[items.size()];
+		Iterator<Item> it = items.iterator();
+		for (int i = 0; i < containerContent.length; i++)
+		{
+			Item item = it.next();
+			int inventoryPositionX = i;
+			containerContent[i] = makeItemPacketWithStandardPosition(inventoryPositionX, item);
+		}
+		return containerContent;
+	}
+
+	private static CharacterItemDataPacket makeItemPacketWithStandardPosition(int inventoryPositionX, Item item)
+	{
+		int inventoryPage = 1;
+		int inventoryPositionY = 1;
+		CharacterItemDataPacket makeItemPacket = makeItemPacket(item, inventoryPage, inventoryPositionX,
+				inventoryPositionY);
+		return makeItemPacket;
+	}
+
+	public static ContainerItemRemovalPacket makeContainerItemRemovalPacket(long containerId, long itemId)
+	{
+		ContainerItemRemovalPacket packet = new ContainerItemRemovalPacket();
+		packet.setContainerId(containerId);
+		packet.setItemId(itemId);
+		return packet;
+	}
+
+	public static UnacceptableOperationPacket makeUnacceptableOperationPacket(String errorMessage)
+	{
+		UnacceptableOperationPacket packet = new UnacceptableOperationPacket();
+		packet.setErrorMessage(errorMessage);
+		return packet;
+	}
+
+	public static ContainerGoldRemovalPacket makeContainerGoldRemovalPacket(long containerId, int gold)
+	{
+		ContainerGoldRemovalPacket packet = new ContainerGoldRemovalPacket();
+		packet.setContainerId(containerId);
+		packet.setGoldAmount(gold);
+		return packet;
+	}
+
+	public static GoldReceivePacket makeGoldReceivePacket(int gold)
+	{
+		GoldReceivePacket packet = new GoldReceivePacket();
+		packet.setGoldAmount(gold);
+		return packet;
+	}
+
+	public static HpUpdatePacket makeHpUpdatePacket(long monsterId, int hp)
+	{
+		HpUpdatePacket packet = new HpUpdatePacket();
+		packet.setNewHp(hp);
+		packet.setId(monsterId);
+		return packet;
+	}
+
+	public static MpUpdatePacket makeMpUpdatePacket(long monsterId, int mp)
+	{
+		MpUpdatePacket packet = new MpUpdatePacket();
+		packet.setNewMp(mp);
+		packet.setId(monsterId);
+		return packet;
+	}
+
+	public static ShopItemsPacket makeShopItemsPacket(Collection<ShopItemWrapper> availableItems, long shopId)
+	{
+		ShopItemPacket[] itemsArray = availableItems.stream().map(PacketsMaker::makeShopItemPacket)
+				.toArray(ShopItemPacket[]::new);
+
+		ShopItemsPacket packet = new ShopItemsPacket();
+		packet.setShopItems(itemsArray);
+		packet.setShopId(shopId);
+		return packet;
+	}
+
+	public static ShopItemPacket makeShopItemPacket(ShopItemWrapper itemWrapper)
+	{
+		ShopItemPacket singleItemPacketWrapper = new ShopItemPacket();
+		CharacterItemDataPacket itemPacket = makeItemPacketWithStandardPosition(1, itemWrapper.getItem());
+		singleItemPacketWrapper.setItem(itemPacket);
+		singleItemPacketWrapper.setPrice(itemWrapper.getPrice());
+		return singleItemPacketWrapper;
+	}
+
+	public static GoldAmountChangePacket makeGoldAmountChangePacket(int newGoldAmount)
+	{
+		GoldAmountChangePacket packet = new GoldAmountChangePacket();
+		packet.setNewGoldAmount(newGoldAmount);
+		return packet;
+	}
+
+	public static ScriptExecutionErrorPacket makeScriptExecutionErrorPacket(String error)
+	{
+		ScriptExecutionErrorPacket packet = new ScriptExecutionErrorPacket();
+		packet.setError(error);
+		return packet;
+	}
+
+	public static InventoryItemRepositionPacket makeInventoryItemRepositionPacket(InventoryPosition sourcePosition,
+			InventoryPosition destinationPosition)
+	{
+		InventoryItemRepositionPacket packet = new InventoryItemRepositionPacket();
+
+		packet.setSourcePageNumber(sourcePosition.getInventoryPageNumber());
+		packet.setSourcePageX(sourcePosition.getInventoryX());
+		packet.setSourcePageY(sourcePosition.getInventoryY());
+
+		packet.setDestinationPageNumber(destinationPosition.getInventoryPageNumber());
+		packet.setDestinationPageX(destinationPosition.getInventoryX());
+		packet.setDestinationPageY(destinationPosition.getInventoryY());
+
+		return packet;
+	}
+
+	public static InventoryItemSwapPacket makeInventoryItemSwapPacket(InventoryPosition firstPosition,
+			InventoryPosition secondPosition)
+	{
+		InventoryItemSwapPacket packet = new InventoryItemSwapPacket();
+
+		packet.setFirstPositionPageNumber(firstPosition.getInventoryPageNumber());
+		packet.setFirstPositionPageX(firstPosition.getInventoryX());
+		packet.setFirstPositionPageY(firstPosition.getInventoryY());
+
+		packet.setSecondPositionPageNumber(secondPosition.getInventoryPageNumber());
+		packet.setSecondPositionPageX(secondPosition.getInventoryX());
+		packet.setSecondPositionPageY(secondPosition.getInventoryY());
+
+		return packet;
+	}
+
+	public static ItemPutInQuickAccessBarPacket makeItemQuickAccessBarConfigElementPacket(
+			ItemQuickAccessBarConfigurationElement element)
+	{
+		ItemPutInQuickAccessBarPacket packet = new ItemPutInQuickAccessBarPacket();
+		packet.setCellPosition(element.getFieldPosition());
+		packet.setItemIdentifier(element.getItemIdentifier().toString());
+		return packet;
+	}
+
+	public static SpellPutInQuickAccessBarPacket makeSpellQuickAccessBarConfigElementPacket(
+			SpellQuickAccessBarConfigurationElement element)
+	{
+		SpellPutInQuickAccessBarPacket packet = new SpellPutInQuickAccessBarPacket();
+		packet.setCellPosition(element.getFieldPosition());
+		packet.setSpellIdentifier(element.getSpellIdentifier());
+		return packet;
+	}
+
+	public static ScriptResultInfoPacket makeScriptResultInfoPacket(String message)
+	{
+		ScriptResultInfoPacket packet = new ScriptResultInfoPacket();
+		packet.setMessage(message);
+		return packet;
+	}
+
+	public static QuestBoardInfoPacket makeQUestBoardInfoPacket(QuestBoard questBoard)
+	{
+		Predicate<Quest> shouldIncludeQuest = q -> true;
+		return makeQuestBoardInfoPacket(questBoard, shouldIncludeQuest);
+	}
+
+	public static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestBoard questBoard,
+			Predicate<Quest> shouldBeIncluded)
+	{
+		QuestDataPacket[] quests = questBoard.getQuests().stream().filter(shouldBeIncluded)
+				.map(PacketsMaker::makeQuestDataPacket).toArray(QuestDataPacket[]::new);
+
+		return makeQuestBoardInfoPacket(quests, questBoard.getId());
+	}
+
+	public static QuestDataPacket makeQuestDataPacket(Quest quest)
+	{
+		QuestDataPacket packet = new QuestDataPacket();
+		packet.setDescription(quest.getDescription());
+		packet.setName(quest.getName());
+		return packet;
+	}
+
+	private static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestDataPacket[] quests, long questBoardId)
+	{
+		QuestBoardInfoPacket packet = new QuestBoardInfoPacket();
+		packet.setQuests(quests);
+		packet.setQuestBoardId(questBoardId);
+		return packet;
+	}
+
+	public static QuestFinishedRewardPacket makeQuestFinishedRewardPacket(Quest quest)
+	{
+		QuestFinishedRewardPacket packet = new QuestFinishedRewardPacket();
+		packet.setGoldReward(quest.getGoldReward());
+		packet.setQuestName(quest.getName());
+		ItemRewardPacket[] itemReward = quest.getItemsReward().stream().map(PacketsMaker::makeItemRewardPacket)
+				.toArray(ItemRewardPacket[]::new);
+		packet.setItemReward(itemReward);
+		return packet;
+	}
+
+	public static ItemRewardPacket makeItemRewardPacket(ItemReward itemReward)
+	{
+		ItemRewardPacket packet = new ItemRewardPacket();
+		packet.setItemIdentifier(itemReward.getItemIdentifier().toString());
+		packet.setNumberOfItems(itemReward.getNumberOfItems());
+		return packet;
+	}
+
+	public static ItemRewardRemovePacket makeItemRewardRemovePacket(String itemIdentifier, int numberOfItems)
+	{
+		ItemRewardRemovePacket packet = new ItemRewardRemovePacket();
+		packet.setItemIdentifier(itemIdentifier);
+		packet.setNumberOfItems(numberOfItems);
+		return packet;
+	}
+
+	public static QuestRewardGoldRemovalPacket makeQuestRewardGoldRemovalPacket(int howMuchGold)
+	{
+		QuestRewardGoldRemovalPacket packet = new QuestRewardGoldRemovalPacket();
+		packet.setGoldAmount(howMuchGold);
+		return packet;
+	}
+
+	public static QuestStateInfoPacket[] makeQuestStateInfoPackets(Collection<CharactersQuests> quests)
+	{
+		return quests.stream().map(PacketsMaker::makeQuestStateInfoPacket).toArray(QuestStateInfoPacket[]::new);
+	}
+
+	public static QuestStateInfoPacket makeQuestStateInfoPacket(CharactersQuests characterQuest)
+	{
+		QuestStateInfoPacket packet = new QuestStateInfoPacket();
+		Quest quest = characterQuest.getQuest();
+		packet.setDescription(quest.getDescription());
+		packet.setQuestName(quest.getName());
+		QuestTaskInfoPacket[] questTasks = characterQuest.getQuestTasks().stream().map(QuestTaskWrapper::getQuestTask)
+				.map(PacketsMaker::makeQuestTaskInfoPacket).toArray(QuestTaskInfoPacket[]::new);
+		packet.setQuestTasks(questTasks);
+		return packet;
+	}
+
+	public static QuestTaskInfoPacket makeQuestTaskInfoPacket(QuestTask questTask)
+	{
+		QuestTaskInfoPacket packet = new QuestTaskInfoPacket();
+		packet.setDescription(questTask.getDescription());
+		packet.setPercentFinished(questTask.getPercentFinished());
+		return packet;
+	}
+
+	public static QuestAcceptedPacket makeQuestAcceptedPacket(CharactersQuests characterQuest)
+	{
+		QuestAcceptedPacket packet = new QuestAcceptedPacket();
+		packet.setQuestStatePacket(makeQuestStateInfoPacket(characterQuest));
+		return packet;
+	}
+
+	public static NpcStartDialogPacket makeNpcStartDialogPacket(long npcId, String speech,
+			Collection<String> possibleAnswers)
+	{
+		String[] possibleAnswersInArray = possibleAnswers.stream().toArray(String[]::new);
 		return makeNpcStartDialogPacket(npcId, speech, possibleAnswersInArray);
 	}
-	
+
 	public static NpcStartDialogPacket makeNpcStartDialogPacket(long npcId, String speech, String[] possibleAnswers)
 	{
 		NpcStartDialogPacket packet = new NpcStartDialogPacket();
@@ -506,14 +511,15 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static NpcContinueDialogPacket makeNpcContinueDialogPacket(long npcId, String speech, Collection<String> possibleAnswers)
+	public static NpcContinueDialogPacket makeNpcContinueDialogPacket(long npcId, String speech,
+			Collection<String> possibleAnswers)
 	{
-		String[] possibleAnswersInArray = possibleAnswers.stream()
-				.toArray(String[]::new);
+		String[] possibleAnswersInArray = possibleAnswers.stream().toArray(String[]::new);
 		return makeNpcContinueDialogPacket(npcId, speech, possibleAnswersInArray);
 	}
-	
-	public static NpcContinueDialogPacket makeNpcContinueDialogPacket(long npcId, String speech, String[] possibleAnswers)
+
+	public static NpcContinueDialogPacket makeNpcContinueDialogPacket(long npcId, String speech,
+			String[] possibleAnswers)
 	{
 		NpcContinueDialogPacket packet = new NpcContinueDialogPacket();
 		packet.setNpcId(npcId);
@@ -526,15 +532,23 @@ public class PacketsMaker
 			InventoryPosition secondPosition)
 	{
 		InventoryItemStackPacket packet = new InventoryItemStackPacket();
-		
-        packet.setFirstPositionPageNumber(firstPosition.getInventoryPageNumber());
-        packet.setFirstPositionPageX(firstPosition.getInventoryX());
-        packet.setFirstPositionPageY(firstPosition.getInventoryY());
 
-        packet.setSecondPositionPageNumber(secondPosition.getInventoryPageNumber());
-        packet.setSecondPositionPageX(secondPosition.getInventoryX());
-        packet.setSecondPositionPageY(secondPosition.getInventoryY());
+		packet.setFirstPositionPageNumber(firstPosition.getInventoryPageNumber());
+		packet.setFirstPositionPageX(firstPosition.getInventoryX());
+		packet.setFirstPositionPageY(firstPosition.getInventoryY());
+
+		packet.setSecondPositionPageNumber(secondPosition.getInventoryPageNumber());
+		packet.setSecondPositionPageX(secondPosition.getInventoryX());
+		packet.setSecondPositionPageY(secondPosition.getInventoryY());
 
 		return packet;
 	}
+
+	public static KnownSpellInfoPacket makeKnownSpellInfoPacket(UserCharacterSpell spell)
+	{
+		KnownSpellInfoPacket packet = new KnownSpellInfoPacket();
+		packet.setSpellIdentifer(spell.getSpellType());
+		return packet;
+	}
+
 }

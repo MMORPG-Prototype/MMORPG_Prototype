@@ -55,7 +55,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemStackPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
@@ -65,6 +64,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -79,6 +79,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueD
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
 {
@@ -492,6 +493,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
     {
         userInterface.putItemInQuickAccessBar(packet.getItemIdentifier(), packet.getCellPosition());
     }
+    
+	public void putSpellInQuickAccessBarPacketReceived(SpellPutInQuickAccessBarPacket packet)
+	{
+        userInterface.putSpellInQuickAccessBar(packet.getSpellIdentifier(), packet.getCellPosition());
+	}
 
     public void scriptResultInfoPacketReceived(ScriptResultInfoPacket packet)
     {
@@ -542,14 +548,15 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		userInterface.continueNpcConversation(packet);
 	}
 
-	public void inventoryItemStackPacketReceived(InventoryItemStackPacket packet)
-	{
-	}
-
 	public void inventoryItemStackPacketReceived(ItemInventoryPosition firstPosition,
 			ItemInventoryPosition secondPosition)
 	{
 		userInterface.stackItemsInInventoryDialog(firstPosition, secondPosition);
+	}
+
+	public void knownSpellInfoReceived(SpellIdentifiers spellIdentifer)
+	{
+		userInterface.addSpellToSpellListDialog(spellIdentifer);
 	}
 
 }

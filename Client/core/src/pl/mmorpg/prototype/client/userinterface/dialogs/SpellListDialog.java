@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
-import pl.mmorpg.prototype.client.spells.FireballSpell;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
@@ -23,9 +22,8 @@ public class SpellListDialog extends Dialog
         spellListPane = new SpellListPane(userInterface);
         this.getContentTable().add(spellListPane).fillX();
         this.getContentTable().row();
-        //TODO remove, it is temp
-        spellListPane.addSpell(new FireballSpell());
-        this.pack();
+        this.setHeight(150);
+        this.setWidth(470);
 	}
 	
 	public void addSpell(Spell spell)

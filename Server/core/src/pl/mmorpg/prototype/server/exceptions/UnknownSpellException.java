@@ -1,13 +1,11 @@
 package pl.mmorpg.prototype.server.exceptions;
 
-import pl.mmorpg.prototype.server.objects.monsters.spells.SpellTypes;
+import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 
 public class UnknownSpellException extends GameException
 {
-
-	public UnknownSpellException(SpellTypes spellType)
+	public UnknownSpellException(SpellIdentifiers spellType)
 	{
 		super(spellType.toString());
 	}
-
 }

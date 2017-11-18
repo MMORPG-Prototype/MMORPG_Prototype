@@ -15,8 +15,10 @@ import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
-import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.UserCharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
 import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
@@ -30,90 +32,102 @@ import pl.mmorpg.prototype.server.states.PlayState;
 public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharacterDataPacket>
 {
 	private final UserCharacterRepository characterRepo = SpringContext.getBean(UserCharacterRepository.class);
-	
-    private Map<Integer, UserInfo> loggedUsersKeyUserId;
-    private PlayState playState;
-    private Server server;
-    
-    public UserCharacterDataPacketHandler(Map<Integer, UserInfo> loggedUsersKeyUserId, Server server,
-            PlayState playState)
-    {
-        this.loggedUsersKeyUserId = loggedUsersKeyUserId;
-        this.server = server; 
-        this.playState = playState;
-    }
 
-    @Override
-    public void handle(Connection connection, UserCharacterDataPacket packet)
-    {
-        userChoosenCharcter(packet.getId(), connection.getID());
-    }
+	private Map<Integer, UserInfo> loggedUsersKeyUserId;
+	private PlayState playState;
+	private Server server;
 
-    private void userChoosenCharcter(int userCharacterId, int clientId)
-    {
-        UserCharacter character = characterRepo.findOneAndFetchEverythingRelated(userCharacterId);
-
-        UserInfo info = loggedUsersKeyUserId.get(character.getUser().getId());
-        info.userCharacter = character;
-
-        sendCurrentGameObjectsInfo(clientId);
-        PlayerCharacter newPlayer = new PlayerCharacter(character, playState, clientId);
-        Collection<Item> playerItems = getPlayerItems(newPlayer);
-        playerItems.forEach((item) -> newPlayer.addItemDenyStacking(item));
-        playState.add(newPlayer);
-        server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
-        sendItemsDataToClient(playerItems, clientId);
-        sendQuickAccessBarConfigToClient(character.getQuickAccessBarConfig().values(), clientId);
-        sendQuestInfoToClient(character.getQuests(), clientId);
-    }
-
-    private Collection<Item> getPlayerItems(PlayerCharacter newPlayer)
+	public UserCharacterDataPacketHandler(Map<Integer, UserInfo> loggedUsersKeyUserId, Server server,
+			PlayState playState)
 	{
-    	CharacterItemRepository itemRepo = SpringContext.getBean(CharacterItemRepository.class);
-    	List<Item> characterItems = 
-    			itemRepo.findByCharacter_Id((int)newPlayer.getId())
-    			.stream()
-    			.map(dbItem -> convertToGameItem(dbItem))
-    			.collect(Collectors.toList());
-    				
-    	return characterItems;
+		this.loggedUsersKeyUserId = loggedUsersKeyUserId;
+		this.server = server;
+		this.playState = playState;
 	}
 
-    private Item convertToGameItem(CharacterItem item)
-    {
-    	Item result = GameItemsFactory.produce(item, IdSupplier.getId());
-    	return result;
-    }
-    
-	private void sendCurrentGameObjectsInfo(int id)
-    {
-        Map<Long, GameObject> gameObjects = playState.getGameObjects();
-        for (GameObject object : gameObjects.values())
-        {
-
-            if (object instanceof PlayerCharacter)
-                server.sendToTCP(id, PacketsMaker.makeCreationPacket((PlayerCharacter) object));
-            else if (object instanceof Monster)
-                server.sendToTCP(id, PacketsMaker.makeCreationPacket((Monster) object));
-            else
-                server.sendToTCP(id, PacketsMaker.makeCreationPacket(object));
-        }
-    }
-
-    private void sendItemsDataToClient(Collection<Item> playerItems, int clientId)
-    {
-    	playerItems.forEach((item) -> server.sendToTCP(clientId, PacketsMaker.makeItemPacket(item)));
-    }
-    
-    private void sendQuickAccessBarConfigToClient(Collection<QuickAccessBarConfigurationElement> quickAccessBarConfig, int clientId)
+	@Override
+	public void handle(Connection connection, UserCharacterDataPacket packet)
 	{
-		quickAccessBarConfig.forEach(
-				element -> server.sendToTCP(clientId, PacketsMaker.makeQuickAccessBarConfigElementPacket(element)));
+		userChoosenCharcter(packet.getId(), connection);
 	}
-    
-    private void sendQuestInfoToClient(Collection<CharactersQuests> quests, int clientId)
-    {
-        QuestStateInfoPacket[] questStateInfoPackets = PacketsMaker.makeQuestStateInfoPackets(quests);
-        server.sendToTCP(clientId, questStateInfoPackets);
-    }
+
+	private void userChoosenCharcter(int userCharacterId, Connection connection)
+	{
+		UserCharacter character = characterRepo.findOneAndFetchEverythingRelated(userCharacterId);
+
+		UserInfo info = loggedUsersKeyUserId.get(character.getUser().getId());
+		info.userCharacter = character;
+		int clientId = connection.getID();
+		sendCurrentGameObjectsInfo(connection);
+		PlayerCharacter newPlayer = new PlayerCharacter(character, playState, clientId);
+		Collection<Item> playerItems = getPlayerItems(newPlayer);
+		playerItems.forEach((item) -> newPlayer.addItemDenyStacking(item));
+		playState.add(newPlayer);
+		server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
+		sendItemsDataToClient(playerItems, connection);
+		sendItemQuickAccessBarConfigToClient(character.getItemQuickAccessBarConfig().values(), connection);
+		sendSpellQuickAccessBarConfigToClient(character.getSpellQuickAccessBarConfig().values(), connection);
+		sendQuestInfoToClient(character.getQuests(), connection);
+		sendAvailableSpellsToClient(character.getSpells(), connection);
+	}
+
+	private Collection<Item> getPlayerItems(PlayerCharacter newPlayer)
+	{
+		CharacterItemRepository itemRepo = SpringContext.getBean(CharacterItemRepository.class);
+		List<Item> characterItems = itemRepo.findByCharacter_Id((int) newPlayer.getId()).stream()
+				.map(dbItem -> convertToGameItem(dbItem)).collect(Collectors.toList());
+
+		return characterItems;
+	}
+
+	private Item convertToGameItem(CharacterItem item)
+	{
+		Item result = GameItemsFactory.produce(item, IdSupplier.getId());
+		return result;
+	}
+
+	private void sendCurrentGameObjectsInfo(Connection connection)
+	{
+		Map<Long, GameObject> gameObjects = playState.getGameObjects();
+		for (GameObject object : gameObjects.values())
+		{
+			if (object instanceof PlayerCharacter)
+				connection.sendTCP(PacketsMaker.makeCreationPacket((PlayerCharacter) object));
+			else if (object instanceof Monster)
+				connection.sendTCP(PacketsMaker.makeCreationPacket((Monster) object));
+			else
+				connection.sendTCP(PacketsMaker.makeCreationPacket(object));
+		}
+	}
+
+	private void sendItemsDataToClient(Collection<Item> playerItems, Connection connection)
+	{
+		playerItems.forEach((item) -> connection.sendTCP(PacketsMaker.makeItemPacket(item)));
+	}
+
+	private void sendItemQuickAccessBarConfigToClient(
+			Collection<ItemQuickAccessBarConfigurationElement> itemQuickAccessBarConfig, Connection connection)
+	{
+		itemQuickAccessBarConfig
+				.forEach(element -> connection.sendTCP(PacketsMaker.makeItemQuickAccessBarConfigElementPacket(element)));
+	}
+
+	private void sendSpellQuickAccessBarConfigToClient(
+			Collection<SpellQuickAccessBarConfigurationElement> spellQuickAccessBarConfig, Connection connection)
+	{
+		spellQuickAccessBarConfig
+				.forEach(element -> connection.sendTCP(PacketsMaker.makeSpellQuickAccessBarConfigElementPacket(element)));
+	}
+
+	private void sendQuestInfoToClient(Collection<CharactersQuests> quests, Connection connection)
+	{
+		QuestStateInfoPacket[] questStateInfoPackets = PacketsMaker.makeQuestStateInfoPackets(quests);
+		connection.sendTCP(questStateInfoPackets);
+	}
+
+	private void sendAvailableSpellsToClient(Collection<UserCharacterSpell> spells, Connection connection)
+	{
+		spells.forEach(spell -> connection.sendTCP(PacketsMaker.makeKnownSpellInfoPacket(spell)));
+	}
+
 }

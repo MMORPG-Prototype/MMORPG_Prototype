@@ -20,6 +20,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPac
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemStackPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemSwapPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.KnownSpellInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
@@ -49,6 +50,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTarge
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 
 public class PacketHandlerFactory
@@ -91,6 +93,7 @@ public class PacketHandlerFactory
         packetHandlers.put(InventoryItemSwapPacket.class, new InventoryItemSwapPacketHandler(playState));
         packetHandlers.put(InventoryItemStackPacket.class, new InventoryItemStackPacketHandler(playState));
         packetHandlers.put(ItemPutInQuickAccessBarPacket.class, new ItemPutInQuickAccessBarPacketHandler(playState));
+        packetHandlers.put(SpellPutInQuickAccessBarPacket.class, new SpellPutInQuickAccessBarPacketHandler(playState));
         packetHandlers.put(ScriptResultInfoPacket.class, new ScriptResultInfoPacketHandler(playState));
         packetHandlers.put(QuestBoardInfoPacket.class, new QuestBoardInfoPacketHandler(playState));
         packetHandlers.put(QuestFinishedRewardPacket.class, new QuestFinishedRewardPacketHandler(playState));
@@ -100,6 +103,7 @@ public class PacketHandlerFactory
         packetHandlers.put(QuestAcceptedPacket.class, new QuestAcceptedPacketHandler(playState));
         packetHandlers.put(NpcStartDialogPacket.class, new NpcStartDialogPacketHandler(playState));
         packetHandlers.put(NpcContinueDialogPacket.class, new NpcContinueDialogPacketHandler(playState));
+        packetHandlers.put(KnownSpellInfoPacket.class, new KnownSpellInfoPacketHandler(playState));
         
         // Ignore framework keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

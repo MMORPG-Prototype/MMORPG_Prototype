@@ -24,4 +24,19 @@ public class DialogUtils
 		}
 		return topDialogActor;
 	}
+	
+	public static String humanReadableFromItemIdentifier(String identifier)
+	{
+		String noUnderScores = identifier.replaceAll("_", " ");
+		String[] words = noUnderScores.split(" ");
+		String result = "";
+		for(String word : words)
+		{
+			word = word.toLowerCase();
+			StringBuilder firstLetterUpper = new StringBuilder(word);
+			firstLetterUpper.setCharAt(0, Character.toUpperCase(word.charAt(0)));
+			result += firstLetterUpper.toString() + " ";
+		}
+		return result;
+	}
 }

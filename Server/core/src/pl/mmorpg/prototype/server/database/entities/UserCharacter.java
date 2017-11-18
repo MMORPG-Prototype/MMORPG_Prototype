@@ -69,7 +69,11 @@ public class UserCharacter implements Serializable
 
     @OneToMany(mappedBy = "character")
     @MapKey(name = "fieldPosition")
-    private Map<Integer, QuickAccessBarConfigurationElement> quickAccessBarConfig;
+    private Map<Integer, ItemQuickAccessBarConfigurationElement> itemQuickAccessBarConfig;
+    
+    @OneToMany(mappedBy = "character")
+    @MapKey(name = "fieldPosition")
+    private Map<Integer, SpellQuickAccessBarConfigurationElement> spellQuickAccessBarConfig;
 
     @OneToMany(mappedBy = "key.character")
     private Collection<CharactersQuests> quests;

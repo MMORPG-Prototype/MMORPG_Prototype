@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.server.objects.monsters.spells;
 
+import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
@@ -36,9 +37,9 @@ public class FireballSpell implements Spell
 	}
 
 	@Override
-	public SpellTypes getSpellType()
+	public SpellIdentifiers getSpellType()
 	{
-		return SpellTypes.FIREBALL;
+		return SpellIdentifiers.FIREBALL;
 	}
 
 

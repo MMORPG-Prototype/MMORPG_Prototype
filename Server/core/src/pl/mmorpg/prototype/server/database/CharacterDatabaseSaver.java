@@ -6,13 +6,15 @@ import java.util.stream.Collectors;
 
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
-import pl.mmorpg.prototype.server.database.entities.QuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.UserCharacter;
 import pl.mmorpg.prototype.server.database.entities.UserCharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
 import pl.mmorpg.prototype.server.database.repositories.CharactersQuestsRepository;
-import pl.mmorpg.prototype.server.database.repositories.QuickAccessBarConfigurationElementRepository;
+import pl.mmorpg.prototype.server.database.repositories.ItemQuickAccessBarConfigurationElementRepository;
+import pl.mmorpg.prototype.server.database.repositories.SpellQuickAccessBarConfigurationElementRepository;
 import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
 import pl.mmorpg.prototype.server.database.repositories.UserCharacterSpellRepository;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
@@ -23,8 +25,10 @@ public class CharacterDatabaseSaver
 {
     private final UserCharacterRepository characterRepo = SpringContext.getBean(UserCharacterRepository.class);
     private final CharacterItemRepository itemRepo = SpringContext.getBean(CharacterItemRepository.class);
-    private final QuickAccessBarConfigurationElementRepository quickAccessBarConfigRepo = SpringContext
-            .getBean(QuickAccessBarConfigurationElementRepository.class);
+    private final ItemQuickAccessBarConfigurationElementRepository itemQuickAccessBarConfigRepo = SpringContext
+            .getBean(ItemQuickAccessBarConfigurationElementRepository.class);
+    private final SpellQuickAccessBarConfigurationElementRepository spellQuickAccessBarConfigRepo = SpringContext
+            .getBean(SpellQuickAccessBarConfigurationElementRepository.class);
     private final CharactersQuestsRepository charactersQuestsRepo = SpringContext
             .getBean(CharactersQuestsRepository.class);
     private final UserCharacterSpellRepository characterSpellRepo = SpringContext
@@ -35,7 +39,8 @@ public class CharacterDatabaseSaver
         saveCharacterItems(character);
         saveCharacterQuestStates(character);
         saveCharacterProperties(character);
-        saveCharacterQuickAccessBarConfig(character);
+        saveCharacterItemQuickAccessBarConfig(character);
+        saveCharacterSpellQuickAccessBarConfig(character);
         saveCharacterSpells(character);
     }
 
@@ -78,14 +83,24 @@ public class CharacterDatabaseSaver
         charactersQuestsRepo.save(quests);
     }
 
-    private void saveCharacterQuickAccessBarConfig(PlayerCharacter character)
+    private void saveCharacterItemQuickAccessBarConfig(PlayerCharacter character)
     {
         UserCharacter userCharacterData = character.getUserCharacterData();
-        quickAccessBarConfigRepo.delete(quickAccessBarConfigRepo.findByCharacter(userCharacterData));
-        Collection<QuickAccessBarConfigurationElement> configElements = userCharacterData.getQuickAccessBarConfig()
+        itemQuickAccessBarConfigRepo.delete(itemQuickAccessBarConfigRepo.findByCharacter(userCharacterData));
+        Collection<ItemQuickAccessBarConfigurationElement> configElements = userCharacterData.getItemQuickAccessBarConfig()
                 .values();
-        quickAccessBarConfigRepo.save(configElements);
+        itemQuickAccessBarConfigRepo.save(configElements);
     }
+    
+
+	private void saveCharacterSpellQuickAccessBarConfig(PlayerCharacter character)
+	{
+		UserCharacter userCharacterData = character.getUserCharacterData();
+        spellQuickAccessBarConfigRepo.delete(spellQuickAccessBarConfigRepo.findByCharacter(userCharacterData));
+        Collection<SpellQuickAccessBarConfigurationElement> configElements = userCharacterData.getSpellQuickAccessBarConfig()
+                .values();
+        spellQuickAccessBarConfigRepo.save(configElements);
+	}
     
     private void saveCharacterSpells(PlayerCharacter character)
     {

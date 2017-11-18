@@ -27,6 +27,7 @@ import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.resources.Assets;
+import pl.mmorpg.prototype.client.spells.SpellFactory;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ConsoleDialog;
@@ -51,6 +52,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -203,8 +205,7 @@ public class UserInterface
 		else if (mousePointerToIcon.icon != null && mousePointerToIcon.icon instanceof Item)
 		{
 			InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
-					.makeInventoryItemRepositionRequestPacket(((Item) mousePointerToIcon.icon).getId(),
-							cellPosition);
+					.makeInventoryItemRepositionRequestPacket(((Item) mousePointerToIcon.icon).getId(), cellPosition);
 			((PacketsSender) linkedState).send(inventoryItemRepositionRequestPacket);
 			mousePointerToIcon.icon = null;
 		}
@@ -248,8 +249,8 @@ public class UserInterface
 			ItemQuickAccessIcon icon = new ItemQuickAccessIcon(((Item) heldIcon).getIdentifier(),
 					(ItemCounter) inventoryDialog);
 			field.put(icon);
-			((PacketsSender) linkedState).send(PacketsMaker
-					.makeItemPutInQuickAccessBarPacket(((Item) heldIcon).getIdentifier(), cellPosition));
+			((PacketsSender) linkedState).send(
+					PacketsMaker.makeItemPutInQuickAccessBarPacket(((Item) heldIcon).getIdentifier(), cellPosition));
 			mousePointerToIcon.icon = null;
 		} else if (field.hasContent())
 		{
@@ -261,17 +262,22 @@ public class UserInterface
 	public void spellQuickAccessButtonClicked(ButtonField<Spell> buttonField, int cellPosition)
 	{
 		DraggableIcon heldIcon = mousePointerToIcon.icon;
-		if(heldIcon == null && buttonField.hasContent())
+		if (heldIcon == null && buttonField.hasContent())
+		{
 			buttonField.removeContent();
+			((PacketsSender) linkedState).send(PacketsMaker.makeSpellRemovedFromQuickAccessBarPacket(cellPosition));
+		}
 		else if (!(heldIcon instanceof Spell))
 			return;
-		else 
+		else
 		{
-			buttonField.put((Spell)heldIcon);
+			buttonField.put((Spell) heldIcon);
+			((PacketsSender) linkedState).send(
+					PacketsMaker.makeSpellPutInQuickAccessBarPacket(((Spell) heldIcon).getIdentifier(), cellPosition));
 			mousePointerToIcon.icon = null;
 		}
 	}
-	
+
 	public void spellListButtonWithIconClicked(ButtonField<Spell> spellButtonField)
 	{
 		mousePointerToIcon.icon = spellButtonField.getContent();
@@ -431,6 +437,11 @@ public class UserInterface
 	{
 		itemQuickAccessDialog.putItem(itemIdentifier, cellPosition, (ItemCounter) inventoryDialog);
 	}
+	
+	public void putSpellInQuickAccessBar(SpellIdentifiers spellIdentifier, int cellPosition)
+	{
+		spellQuickAccessDialog.putSpell(spellIdentifier, cellPosition);
+	}
 
 	public ItemInventoryPosition getSuitePositionInInventoryFor(ShopItem item)
 	{
@@ -524,5 +535,13 @@ public class UserInterface
 		stage.setKeyboardFocus(actor);
 		stage.setScrollFocus(actor);
 	}
+
+	public void addSpellToSpellListDialog(SpellIdentifiers spellIdentifer)
+	{
+		Spell spell = SpellFactory.produce(spellIdentifer);
+		spellListDialog.addSpell(spell);
+	}
+
+
 
 }

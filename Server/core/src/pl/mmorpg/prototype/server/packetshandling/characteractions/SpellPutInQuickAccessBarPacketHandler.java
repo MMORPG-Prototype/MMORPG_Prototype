@@ -2,37 +2,36 @@ package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import com.esotericsoftware.kryonet.Connection;
 
-import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
-import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
+import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
 import pl.mmorpg.prototype.server.states.PlayState;
 
-public class ItemPutInQuickAccessBarPacketHandler extends PacketHandlerBase<ItemPutInQuickAccessBarPacket>
+public class SpellPutInQuickAccessBarPacketHandler extends PacketHandlerBase<SpellPutInQuickAccessBarPacket>
 {
 	private GameDataRetriever gameData;
 	private PlayState playState;
 
-	public ItemPutInQuickAccessBarPacketHandler(PlayState playState, GameDataRetriever gameData)
+	public SpellPutInQuickAccessBarPacketHandler(PlayState playState, GameDataRetriever gameData)
 	{
 		this.playState = playState;
 		this.gameData = gameData;
 	}
 	
 	@Override
-	public void handle(Connection connection, ItemPutInQuickAccessBarPacket packet)
+	public void handle(Connection connection, SpellPutInQuickAccessBarPacket packet)
 	{
 		int characterId = gameData.getCharacterIdByConnectionId(connection.getID());
 		PlayerCharacter character = (PlayerCharacter)playState.getObject(characterId);
 		
-		ItemQuickAccessBarConfigurationElement quickAccessConfigElement = new ItemQuickAccessBarConfigurationElement();
+		SpellQuickAccessBarConfigurationElement quickAccessConfigElement = new SpellQuickAccessBarConfigurationElement();
 		quickAccessConfigElement.setCharacter(character.getUserCharacterData());
 		quickAccessConfigElement.setFieldPosition(packet.getCellPosition());
-		quickAccessConfigElement.setItemIdentifier(ItemIdentifiers.valueOf(packet.getItemIdentifier()));
+		quickAccessConfigElement.setSpellIdentifier(packet.getSpellIdentifier());
 		
-		character.putNewConfigElemetInItemQuickAccessBar(quickAccessConfigElement);
+		character.putNewConfigElemetInSpellQuickAccessBar(quickAccessConfigElement);
 	}
 
 }

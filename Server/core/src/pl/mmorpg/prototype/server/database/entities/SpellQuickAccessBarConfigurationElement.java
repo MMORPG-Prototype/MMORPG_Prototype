@@ -14,21 +14,21 @@ import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
+import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 
-@Entity(name = "QuickAccessBarConfigurationElement")
+@Entity(name = "SpellQuickAccessBarConfigurationElement")
 @Table(
-		name = "character_quick_access_bar_configuration_elements", 
+		name = "character_spell_quick_access_bar_configuration_elements", 
 		uniqueConstraints = 
 		@UniqueConstraint(columnNames={
 				"character_id", 
-				"item_identifier", 
+				"spell_identifier", 
 				"field_position"
 				})
 )
 @Data
 @EqualsAndHashCode(of="id")
-public class QuickAccessBarConfigurationElement
+public class SpellQuickAccessBarConfigurationElement
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +36,8 @@ public class QuickAccessBarConfigurationElement
 	private Integer id;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "item_identifier", nullable = false)
-	private ItemIdentifiers itemIdentifier;
+	@Column(name = "spell_identifier", nullable = false)
+	private SpellIdentifiers spellIdentifier;
 
 	@Column(name = "field_position", nullable = false)
 	private Integer fieldPosition;

@@ -6,8 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
+import pl.mmorpg.prototype.client.spells.SpellFactory;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
+import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 
 public class SpellQuickAccessDialog extends QuickAccessDialog<Spell>
 {
@@ -45,6 +47,12 @@ public class SpellQuickAccessDialog extends QuickAccessDialog<Spell>
 	{
 		Spell spell = quickAccessButtons.get(cellPosition).getContent();
 		packetSender.send(spell.makeUsagePacket());
+	}
+
+	public void putSpell(SpellIdentifiers spellIdentifier, int cellPosition)
+	{
+		Spell spell = SpellFactory.produce(spellIdentifier);
+		quickAccessButtons.get(cellPosition).put(spell);	
 	}
 
 }

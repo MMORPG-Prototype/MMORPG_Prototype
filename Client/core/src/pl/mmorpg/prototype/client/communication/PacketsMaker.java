@@ -11,6 +11,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.NpcConversationAnwserChoosenPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
@@ -22,6 +23,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedF
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveGoldRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellRemovedFromQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
 
@@ -138,10 +141,25 @@ public class PacketsMaker
 		packet.setItemIdentifier(itemIdentifier);
 		return packet;
 	}
+	
+	public static SpellPutInQuickAccessBarPacket makeSpellPutInQuickAccessBarPacket(SpellIdentifiers spellIdentifier, int cellPosition)
+	{
+		SpellPutInQuickAccessBarPacket packet = new SpellPutInQuickAccessBarPacket();
+		packet.setCellPosition(cellPosition);
+		packet.setSpellIdentifier(spellIdentifier);
+		return packet;
+	}
 
 	public static ItemRemovedFromQuickAccessBarPacket makeItemRemovedFromQuickAccessBarPacket(int cellPosition)
 	{
 		ItemRemovedFromQuickAccessBarPacket packet = new ItemRemovedFromQuickAccessBarPacket();
+		packet.setCellPosition(cellPosition);
+		return packet;
+	}
+	
+	public static SpellRemovedFromQuickAccessBarPacket makeSpellRemovedFromQuickAccessBarPacket(int cellPosition)
+	{
+		SpellRemovedFromQuickAccessBarPacket packet = new SpellRemovedFromQuickAccessBarPacket();
 		packet.setCellPosition(cellPosition);
 		return packet;
 	}
@@ -180,4 +198,5 @@ public class PacketsMaker
 		packet.setAnwser(anwser);
 		return packet;
 	}
+
 }

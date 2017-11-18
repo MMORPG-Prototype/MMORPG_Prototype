@@ -25,7 +25,7 @@ public class ShopBuyingDialog extends AutoCleanupOnCloseButtonDialog
 
 	public ShopBuyingDialog(ShopItem item, UserInterface linkedInterface, PacketsSender packetsSender, long shopId)
 	{
-		super(humanReadableFromItemIdentifier(item.getItem().getIdentifier()), linkedInterface.getDialogs(),
+		super(DialogUtils.humanReadableFromItemIdentifier(item.getItem().getIdentifier()), linkedInterface.getDialogs(),
 				item.getItem().getId());
 		this.item = item;
 		totalPrice = new StringValueLabel<>("Total: ", getSkin(), item.getPrice());
@@ -44,20 +44,6 @@ public class ShopBuyingDialog extends AutoCleanupOnCloseButtonDialog
 		DialogUtils.centerPosition(this);
 	}
 
-	private static String humanReadableFromItemIdentifier(String identifier)
-	{
-		String noUnderScores = identifier.replaceAll("_", " ");
-		String[] words = noUnderScores.split(" ");
-		String result = "";
-		for(String word : words)
-		{
-			word = word.toLowerCase();
-			StringBuilder firstLetterUpper = new StringBuilder(word);
-			firstLetterUpper.setCharAt(0, Character.toUpperCase(word.charAt(0)));
-			result += firstLetterUpper.toString() + " ";
-		}
-		return result;
-	}
 
 	@Override
 	public void act(float delta)

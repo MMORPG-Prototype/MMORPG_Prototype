@@ -21,7 +21,7 @@ import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 
 public class ObjectsIdentifier
 {
-    private static Map<Class<?>, String> identifiers = new HashMap<>();
+    private static final Map<Class<?>, String> identifiers = new HashMap<>();
 
     static
     {

@@ -18,12 +18,6 @@ public class FireballSpell extends Spell
 	}
 
 	@Override
-	public String getName()
-	{
-		return "Fireball";
-	}
-
-	@Override
 	public Object makeUsagePacket()
 	{
 		return PacketsMaker.makeFireballSpellUsagePacket();
