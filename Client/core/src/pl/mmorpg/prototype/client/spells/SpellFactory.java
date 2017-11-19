@@ -10,6 +10,8 @@ public class SpellFactory
 	{
 		if(identifier.equals(SpellIdentifier.getSpellIdentifier(FireballSpell.class)))
 			return new FireballSpell();
+		if(identifier.equals(SpellIdentifier.getSpellIdentifier(HealSpell.class)))
+			return new HealSpell();
 		
 		throw new UnknownSpellException(identifier.toString());
 	}

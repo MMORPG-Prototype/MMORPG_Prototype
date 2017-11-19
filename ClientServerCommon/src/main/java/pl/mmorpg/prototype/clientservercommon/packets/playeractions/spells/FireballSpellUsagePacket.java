@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.clientservercommon.packets.playeractions;
+package pl.mmorpg.prototype.clientservercommon.packets.playeractions.spells;
 
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 

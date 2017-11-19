@@ -1,7 +1,5 @@
 package pl.mmorpg.prototype.server.objects.monsters.abilities;
 
-import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
-import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
@@ -18,16 +16,7 @@ public class TimedHealAbility extends TimedAbility
 	@Override
 	public void use(Monster target, PacketsSender packetSender)
 	{
-        MonsterProperties targetProperties = target.getProperties();
-        if(targetProperties.hp == targetProperties.maxHp)
-        	return;
-        int previous = targetProperties.hp;
-        targetProperties.hp += healPower;
-        if(targetProperties.hp > targetProperties.maxHp)
-            targetProperties.hp = targetProperties.maxHp;
-        int delta = targetProperties.hp - previous;
-        
-        packetSender.sendToAll(PacketsMaker.makeHpNotifiedIncreasePacket(delta, target.getId()));			
+		target.heal(healPower);
 	}
 
 	@Override

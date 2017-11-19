@@ -12,6 +12,8 @@ public class SpellFactory
 		
 		if (spellType.equals(SpellIdentifiers.FIREBALL))
 			return new FireballSpell();
+		if (spellType.equals(SpellIdentifiers.HEAL))
+			return new HealSpell();
 		throw new UnknownSpellException(spellType);
 	}
 }

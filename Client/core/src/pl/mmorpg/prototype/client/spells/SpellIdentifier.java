@@ -13,6 +13,7 @@ public class SpellIdentifier
 	static
 	{
 		identifiers.put(FireballSpell.class, SpellIdentifiers.FIREBALL);
+		identifiers.put(HealSpell.class, SpellIdentifiers.HEAL);
 	}
 
 	public static SpellIdentifiers getSpellIdentifier(Class<?> type)

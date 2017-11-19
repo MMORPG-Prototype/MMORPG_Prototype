@@ -9,7 +9,7 @@ import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.spells.objects.Fireball;
 import pl.mmorpg.prototype.server.states.GameObjectsContainer;
 
-public class FireballSpell implements Spell
+public class FireballSpell implements OffensiveSpell
 {
 	@Override
 	public int getDamage()

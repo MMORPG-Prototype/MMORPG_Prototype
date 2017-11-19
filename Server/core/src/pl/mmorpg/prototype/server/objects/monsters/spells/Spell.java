@@ -7,12 +7,10 @@ import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.states.GameObjectsContainer;
 
 public interface Spell
-{
-	int getDamage();
+{	
+	void onUse(PlayerCharacter source, Monster target, PacketsSender packetsSender, GameObjectsContainer gameObjectsContainer);
 	
 	int getNeededMana();
-	
-	void onUse(PlayerCharacter source, Monster target, PacketsSender packetsSender, GameObjectsContainer gameObjectsContainer);
 	
 	SpellIdentifiers getSpellType();
 }

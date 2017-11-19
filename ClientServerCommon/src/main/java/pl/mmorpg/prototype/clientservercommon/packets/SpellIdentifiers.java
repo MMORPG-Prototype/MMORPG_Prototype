@@ -5,5 +5,5 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 @Registerable
 public enum SpellIdentifiers 
 {
-	FIREBALL
+	FIREBALL, HEAL
 }

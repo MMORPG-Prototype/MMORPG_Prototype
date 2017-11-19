@@ -3,6 +3,8 @@ package pl.mmorpg.prototype.server.packetshandling.characteractions.spell.usage;
 import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.objects.monsters.spells.OffensiveSpell;
 import pl.mmorpg.prototype.server.objects.monsters.spells.Spell;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
@@ -34,13 +36,18 @@ public abstract class SpellUsagePacketHandler<T> extends PacketHandlerBase<T>
 	private boolean canCharacterUseSpell(PlayerCharacter character, Class<? extends Spell> spellType)
 	{
 		Spell spell = character.getKnownSpell(spellType);
-		return spell != null && character.isTargetingAnotherMonster() && character.hasMana(spell.getNeededMana());
+		if(!character.hasMana(spell.getNeededMana()))
+			return false;
+		if(spell instanceof OffensiveSpell)
+			return character.isTargetingAnotherMonster();
+		return spell != null;
 	}
 	
 	private void use(PlayerCharacter character, Class<? extends Spell> spellType)
 	{
 		Spell spell = character.getKnownSpell(spellType);
-		spell.onUse(character, character.getTargetedMonster(), playState, playState);		
+		Monster target = spell instanceof OffensiveSpell ? character.getTargetedMonster() : character;
+		spell.onUse(character, target, playState, playState);		
 	}
 
 }

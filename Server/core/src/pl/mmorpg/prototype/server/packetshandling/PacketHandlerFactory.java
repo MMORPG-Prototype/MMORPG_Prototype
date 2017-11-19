@@ -25,7 +25,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedFromQuickAccessBarPacket;
@@ -36,6 +35,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQu
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellRemovedFromQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.spells.FireballSpellUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.spells.HealSpellUsagePacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
@@ -58,6 +59,7 @@ import pl.mmorpg.prototype.server.packetshandling.characteractions.SpellRemovedF
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakeItemFromContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakingGoldFromContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.spell.usage.FireballSpellUsagePacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.spell.usage.HealSpellUsagePacketHandler;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class PacketHandlerFactory
@@ -92,6 +94,8 @@ public class PacketHandlerFactory
 		packetHandlers.put(ItemUsagePacket.class, new ItemUsagePacketHandler(gameDataRetriever, playState, server));
 		packetHandlers.put(FireballSpellUsagePacket.class,
 				new FireballSpellUsagePacketHandler(gameDataRetriever, playState));
+		packetHandlers.put(HealSpellUsagePacket.class,
+				new HealSpellUsagePacketHandler(gameDataRetriever, playState));
 		packetHandlers.put(OpenContainterPacket.class, new OpenContainerPacketHandler(server, playState));
 		packetHandlers.put(TakeItemFromContainerPacket.class,
 				new TakeItemFromContainerPacketHandler(gameDataRetriever, server, playState));

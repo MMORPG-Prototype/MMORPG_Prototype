@@ -300,5 +300,19 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     		ongoingEffects.put(effect.getClass(), effect);
     	}
     }
+    
+    public void heal(int healPower)
+    {
+        MonsterProperties targetProperties = getProperties();
+        if(targetProperties.hp == targetProperties.maxHp)
+        	return;
+        int previous = targetProperties.hp;
+        targetProperties.hp += healPower;
+        if(targetProperties.hp > targetProperties.maxHp)
+            targetProperties.hp = targetProperties.maxHp;
+        int delta = targetProperties.hp - previous;
+        
+        linkedState.sendToAll(PacketsMaker.makeHpNotifiedIncreasePacket(delta, getId()));		
+    }
 
 }
