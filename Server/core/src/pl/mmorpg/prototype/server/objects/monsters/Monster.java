@@ -185,6 +185,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 
     public void killed(Monster target)
     {
+        properties.experience += target.properties.experienceGain;
         targetedMonster = null;
     }
 

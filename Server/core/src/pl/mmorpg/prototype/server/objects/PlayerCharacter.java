@@ -47,7 +47,6 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
     public void killed(Monster target)
     {
         linkedState.playerKilled(this, target);
-        userCharacter.setExperience(userCharacter.getExperience() + target.getProperties().experienceGain);
         super.killed(target);
     }
 
