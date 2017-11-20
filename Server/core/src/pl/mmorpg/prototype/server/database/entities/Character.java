@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
@@ -19,11 +20,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 
-@Entity(name = "UserCharacter")
-@Table(name = "user_characters")
+@Entity(name = "Character")
+@Table(name = "characters")
 @Data
 @EqualsAndHashCode(of="id")
-public class UserCharacter implements Serializable
+public class Character implements Serializable
 {
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -78,6 +79,8 @@ public class UserCharacter implements Serializable
     @OneToMany(mappedBy = "key.character")
     private Collection<CharactersQuests> quests;
     
-    @OneToMany(mappedBy = "userCharacter")
-    private Collection<UserCharacterSpell> spells;
+    @ManyToMany
+    @JoinColumn(table="character_spell", name="spell_id", nullable = false)
+    private Collection<CharacterSpell> spells;
+    
 }

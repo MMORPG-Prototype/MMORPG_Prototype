@@ -47,14 +47,14 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDial
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
+import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.ItemReward;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
 import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
-import pl.mmorpg.prototype.server.database.entities.UserCharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.objects.GameObject;
@@ -121,7 +121,7 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static UserCharacterDataPacket makeCharacterPacket(UserCharacter character)
+	public static UserCharacterDataPacket makeCharacterPacket(Character character)
 	{
 		UserCharacterDataPacket packet = new UserCharacterDataPacket();
 		packet.setId(character.getId());
@@ -387,7 +387,7 @@ public class PacketsMaker
 	{
 		SpellPutInQuickAccessBarPacket packet = new SpellPutInQuickAccessBarPacket();
 		packet.setCellPosition(element.getFieldPosition());
-		packet.setSpellIdentifier(element.getSpellIdentifier());
+		packet.setSpellIdentifier(element.getSpell().getIdentifier());
 		return packet;
 	}
 
@@ -544,10 +544,10 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static KnownSpellInfoPacket makeKnownSpellInfoPacket(UserCharacterSpell spell)
+	public static KnownSpellInfoPacket makeKnownSpellInfoPacket(CharacterSpell spell)
 	{
 		KnownSpellInfoPacket packet = new KnownSpellInfoPacket();
-		packet.setSpellIdentifer(spell.getSpellType());
+		packet.setSpellIdentifer(spell.getIdentifier());
 		return packet;
 	}
 

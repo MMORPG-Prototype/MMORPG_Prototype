@@ -6,7 +6,7 @@ import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.Quest;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.database.repositories.QuestRepository;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
@@ -25,7 +25,7 @@ public class AcceptQuestPacketHandler extends PacketHandlerBase<AcceptQuestPacke
     @Override
     public void handle(Connection connection, AcceptQuestPacket packet)
     {
-        UserCharacter character = gameDataRetriever.getUserCharacterByConnectionId(connection.getID());
+        Character character = gameDataRetriever.getUserCharacterByConnectionId(connection.getID());
         Quest quest = questRepository.findByNameFetchItemsReward(packet.getQuestName());
         CharactersQuests characterQuest = new CharactersQuests(character, quest);
         character.getQuests().add(characterQuest);

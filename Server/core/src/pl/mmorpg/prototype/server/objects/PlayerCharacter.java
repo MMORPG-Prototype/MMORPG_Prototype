@@ -6,10 +6,10 @@ import java.util.Map;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.PlayerPropertiesBuilder;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.database.entities.Character;
+import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
-import pl.mmorpg.prototype.server.database.entities.UserCharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.InventoryRepositionableItemsOwner;
@@ -21,11 +21,11 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class PlayerCharacter extends Monster implements InventoryRepositionableItemsOwner
 {
-    private UserCharacter userCharacter;
+    private Character userCharacter;
     private final int connectionId;
     private final Map<Class<? extends Spell>, Spell> knownSpells = new HashMap<>();
 
-    public PlayerCharacter(UserCharacter userCharacter, PlayState linkedState, int connectionId)
+    public PlayerCharacter(Character userCharacter, PlayState linkedState, int connectionId)
     {
         super(Assets.get("MainChar.png"), userCharacter.getId(), linkedState,
                 new PlayerPropertiesBuilder(PacketsMaker.makeCharacterPacket(userCharacter)).build());
@@ -36,13 +36,13 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
         setPosition(userCharacter.getLastLocationX(), userCharacter.getLastLocationY());
     }
 
-    private void initializeSpells(Collection<UserCharacterSpell> spells)
+    private void initializeSpells(Collection<CharacterSpell> spells)
 	{
     	spells.stream()
     		.map(SpellFactory::create)
     		.forEach(spell -> knownSpells.put(spell.getClass(), spell));
 	}
-
+ 
 	@Override
     public void killed(Monster target)
     {
@@ -50,7 +50,7 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
         super.killed(target);
     }
 
-    public UserCharacter getUserCharacterData()
+    public Character getUserCharacterData()
     {
         return userCharacter;
     }

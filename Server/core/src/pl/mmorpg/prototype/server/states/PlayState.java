@@ -30,7 +30,7 @@ import pl.mmorpg.prototype.server.collision.stackablemap.LayerCollisionMap;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.exceptions.CannotTargetItselfException;
 import pl.mmorpg.prototype.server.headless.NullOrthogonalTiledMapRenderer;
@@ -297,7 +297,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		return gameCommandsHandlers.get(userId).execute(code);
 	}
 
-	public void addItem(ItemIdentifiers identifier, int amount, UserCharacter userCharacter,
+	public void addItem(ItemIdentifiers identifier, int amount, Character userCharacter,
 			InventoryPosition inventoryPosition)
 	{
 		PlayerCharacter player = (PlayerCharacter) gameObjects.get((long) userCharacter.getId());

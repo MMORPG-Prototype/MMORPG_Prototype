@@ -44,7 +44,7 @@ public class CharacterItem
 	private Integer count = 1;
 	
 	@ManyToOne
-	private UserCharacter character;
+	private Character character;
 	
 	private InventoryPosition inventoryPosition;
 	

@@ -11,7 +11,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItem
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.CharactersQuestsItemReward;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
@@ -35,7 +35,7 @@ public class RetrieveItemRewardPacketHandler extends PacketHandlerBase<RetrieveI
     @Override
     public void handle(Connection connection, RetrieveItemRewardPacket packet)
     {
-        UserCharacter character = gameDataRetreiver.getUserCharacterByConnectionId(connection.getID());
+        Character character = gameDataRetreiver.getUserCharacterByConnectionId(connection.getID());
         CharactersQuests quest = findSuiteQuest(character.getQuests(), packet.getQuestName());
         CharactersQuestsItemReward itemReward = findSuiteItemReward(quest.getItemsReward(), packet.getItemIdentifier());
         PlayerCharacter player = (PlayerCharacter) gameContainer.getObject(character.getId());

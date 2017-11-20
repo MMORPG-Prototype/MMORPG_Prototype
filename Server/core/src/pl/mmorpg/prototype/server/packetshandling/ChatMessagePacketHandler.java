@@ -9,7 +9,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 
 public class ChatMessagePacketHandler extends PacketHandlerBase<ChatMessagePacket>
 {
@@ -36,11 +36,11 @@ public class ChatMessagePacketHandler extends PacketHandlerBase<ChatMessagePacke
 			throw new RuntimeException(e);
 		}
 		ChatMessageReplyPacket newPacket = new ChatMessageReplyPacket();
-		UserCharacter sender = gameData.getUserCharacterByConnectionId(connection.getID());
+		Character sender = gameData.getUserCharacterByConnectionId(connection.getID());
 		String nickname = sender.getNickname();
 		newPacket.setMessage(packet.getMessage());
 		newPacket.setNickname(nickname);
-		UserCharacter character;
+		Character character;
 		for(Connection client : connections)		
 			if((character = gameData.getUserCharacterByConnectionId(client.getID())) != null)
 			{

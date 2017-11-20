@@ -10,7 +10,7 @@ import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.CharacterDatabaseSaver;
 import pl.mmorpg.prototype.server.database.entities.User;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.states.PlayState;
@@ -40,7 +40,7 @@ public class LogoutPacketHandler extends PacketHandlerBase<LogoutPacket>
     private void userLoggedOut(Connection connection)
     {
     	User user = authenticatedClientsKeyClientId.remove(connection.getID());
-    	UserCharacter userCharacter = loggedUsersKeyUserId.remove(user.getId()).userCharacter;
+    	Character userCharacter = loggedUsersKeyUserId.remove(user.getId()).userCharacter;
     	if (userCharacter != null)
     	{
     		int characterId = userCharacter.getId();

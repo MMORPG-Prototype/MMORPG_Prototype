@@ -44,5 +44,5 @@ public class ItemQuickAccessBarConfigurationElement
 
 	@ManyToOne
 	@JoinColumn(name = "character_id", nullable = false)
-	private UserCharacter character;
+	private Character character;
 }

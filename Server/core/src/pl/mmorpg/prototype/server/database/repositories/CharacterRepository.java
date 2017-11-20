@@ -7,19 +7,19 @@ import javax.transaction.Transactional;
 
 import org.springframework.data.repository.CrudRepository;
 
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 
-public interface UserCharacterRepository extends CrudRepository<UserCharacter, Integer> 
+public interface CharacterRepository extends CrudRepository<Character, Integer> 
 {
-	UserCharacter findByNickname(String nickname);
+	Character findByNickname(String nickname);
 
-	List<UserCharacter> findByUser_Username(String username);
+	List<Character> findByUser_Username(String username);
 	
 	@Transactional
-	default UserCharacter findOneAndFetchEverythingRelated(Integer id)
+	default Character findOneAndFetchEverythingRelated(Integer id)
 	{
-		UserCharacter result = findOne(id);
+		Character result = findOne(id);
 		result.getItemQuickAccessBarConfig().size();
 		result.getSpellQuickAccessBarConfig().size();
 		result.getSpells().size();

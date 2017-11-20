@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.mmorpg.prototype.server.database.entities.Quest;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 
 @Embeddable
 @Data
@@ -20,7 +20,7 @@ public class CharactersQuestsKey implements Serializable
 {
     @ManyToOne
     @JoinColumn(name="character_id")
-    private UserCharacter character;
+    private Character character;
     
     @ManyToOne
     @JoinColumn(name="quest_id")

@@ -17,11 +17,11 @@ import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
 import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
-import pl.mmorpg.prototype.server.database.entities.UserCharacterSpell;
+import pl.mmorpg.prototype.server.database.entities.Character;
+import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
-import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
+import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
@@ -31,7 +31,7 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharacterDataPacket>
 {
-	private final UserCharacterRepository characterRepo = SpringContext.getBean(UserCharacterRepository.class);
+	private final CharacterRepository characterRepo = SpringContext.getBean(CharacterRepository.class);
 
 	private Map<Integer, UserInfo> loggedUsersKeyUserId;
 	private PlayState playState;
@@ -53,7 +53,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 
 	private void userChoosenCharcter(int userCharacterId, Connection connection)
 	{
-		UserCharacter character = characterRepo.findOneAndFetchEverythingRelated(userCharacterId);
+		Character character = characterRepo.findOneAndFetchEverythingRelated(userCharacterId);
 
 		UserInfo info = loggedUsersKeyUserId.get(character.getUser().getId());
 		info.userCharacter = character;
@@ -125,7 +125,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 		connection.sendTCP(questStateInfoPackets);
 	}
 
-	private void sendAvailableSpellsToClient(Collection<UserCharacterSpell> spells, Connection connection)
+	private void sendAvailableSpellsToClient(Collection<CharacterSpell> spells, Connection connection)
 	{
 		spells.forEach(spell -> connection.sendTCP(PacketsMaker.makeKnownSpellInfoPacket(spell)));
 	}

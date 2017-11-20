@@ -2,8 +2,11 @@ package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import com.esotericsoftware.kryonet.Connection;
 
+import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
+import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.server.database.repositories.CharacterSpellRepository;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
@@ -11,6 +14,7 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class SpellPutInQuickAccessBarPacketHandler extends PacketHandlerBase<SpellPutInQuickAccessBarPacket>
 {
+	private final CharacterSpellRepository spellRepository = SpringContext.getBean(CharacterSpellRepository.class); 
 	private GameDataRetriever gameData;
 	private PlayState playState;
 
@@ -29,7 +33,8 @@ public class SpellPutInQuickAccessBarPacketHandler extends PacketHandlerBase<Spe
 		SpellQuickAccessBarConfigurationElement quickAccessConfigElement = new SpellQuickAccessBarConfigurationElement();
 		quickAccessConfigElement.setCharacter(character.getUserCharacterData());
 		quickAccessConfigElement.setFieldPosition(packet.getCellPosition());
-		quickAccessConfigElement.setSpellIdentifier(packet.getSpellIdentifier());
+		CharacterSpell spell = spellRepository.findByIdentifier(packet.getSpellIdentifier());
+		quickAccessConfigElement.setSpell(spell);
 		
 		character.putNewConfigElemetInSpellQuickAccessBar(quickAccessConfigElement);
 	}

@@ -2,8 +2,6 @@ package pl.mmorpg.prototype.server.database.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +12,6 @@ import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 
 @Entity(name = "SpellQuickAccessBarConfigurationElement")
 @Table(
@@ -22,7 +19,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 		uniqueConstraints = 
 		@UniqueConstraint(columnNames={
 				"character_id", 
-				"spell_identifier", 
+				"spell_id", 
 				"field_position"
 				})
 )
@@ -35,14 +32,14 @@ public class SpellQuickAccessBarConfigurationElement
 	@Column(name = "id")
 	private Integer id;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "spell_identifier", nullable = false)
-	private SpellIdentifiers spellIdentifier;
+	@ManyToOne
+	@JoinColumn(name = "spell_id", nullable = false)
+	private CharacterSpell spell;
 
 	@Column(name = "field_position", nullable = false)
 	private Integer fieldPosition;
 
 	@ManyToOne
 	@JoinColumn(name = "character_id", nullable = false)
-	private UserCharacter character;
+	private Character character;
 }

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
 import pl.mmorpg.prototype.server.database.entities.User;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.exceptions.UserIsNotInGameException;
 import pl.mmorpg.prototype.server.quests.QuestTask;
@@ -23,7 +23,7 @@ public class GameDataRetriever
 		this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
 	}
 	
-	public UserCharacter getUserCharacterByConnectionId(int clientId)
+	public Character getUserCharacterByConnectionId(int clientId)
 	{
 		if(!authenticatedClientsKeyClientId.containsKey(clientId))
 			return null;
@@ -36,7 +36,7 @@ public class GameDataRetriever
 	
 	public int getCharacterIdByConnectionId(int id)
     {
-        UserCharacter userCharacter = getUserCharacterByConnectionId(id);
+        Character userCharacter = getUserCharacterByConnectionId(id);
         if (userCharacter == null)
             throw new UserIsNotInGameException();
 
@@ -46,7 +46,7 @@ public class GameDataRetriever
 	
 	public Collection<CharactersQuests> getCharacterQuestsByConnectionId(int id)
 	{
-	    UserCharacter userCharacter = getUserCharacterByConnectionId(id);
+	    Character userCharacter = getUserCharacterByConnectionId(id);
         if (userCharacter == null)
             throw new UserIsNotInGameException();
         return userCharacter.getQuests();

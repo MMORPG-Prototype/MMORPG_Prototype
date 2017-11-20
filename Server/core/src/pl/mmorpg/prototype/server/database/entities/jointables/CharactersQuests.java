@@ -20,11 +20,11 @@ import pl.mmorpg.prototype.server.database.entities.CharactersQuestsItemReward;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.QuestItemReward;
 import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.components.keys.CharactersQuestsKey;
 import pl.mmorpg.prototype.server.quests.QuestTask;
 
-@Entity
+@Entity(name = "CharactersQuests")
 @Table(name = "characters_quests")
 @Data
 @NoArgsConstructor
@@ -43,7 +43,7 @@ public class CharactersQuests
     @Column(name = "gold_reward", nullable = false)
     private Integer goldReward;
 
-    public CharactersQuests(UserCharacter character, Quest quest)
+    public CharactersQuests(Character character, Quest quest)
     {
         setCharacter(character);
         setQuest(quest);
@@ -73,12 +73,12 @@ public class CharactersQuests
     }
 
     @Transient
-    public UserCharacter getCharacter()
+    public Character getCharacter()
     {
         return key.getCharacter();
     }
 
-    public void setCharacter(UserCharacter character)
+    public void setCharacter(Character character)
     {
         key.setCharacter(character);
     }

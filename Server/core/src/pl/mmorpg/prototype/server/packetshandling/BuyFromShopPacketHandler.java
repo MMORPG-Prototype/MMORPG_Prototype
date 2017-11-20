@@ -5,7 +5,7 @@ import com.esotericsoftware.kryonet.Connection;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
@@ -30,7 +30,7 @@ public class BuyFromShopPacketHandler extends PacketHandlerBase<BuyFromShopPacke
 	{
 		ShopNpc shopNpc = (ShopNpc) playState.getObject(packet.getShopId());
 		ShopItemWrapper itemWrapper = shopNpc.getItemWrapper(packet.getItemId());
-		UserCharacter userCharacter = gameData.getUserCharacterByConnectionId(connection.getID());
+		Character userCharacter = gameData.getUserCharacterByConnectionId(connection.getID());
 		PlayerCharacter character = (PlayerCharacter) playState.getObject(userCharacter.getId());
 
 		int itemCount = packet.getAmount();

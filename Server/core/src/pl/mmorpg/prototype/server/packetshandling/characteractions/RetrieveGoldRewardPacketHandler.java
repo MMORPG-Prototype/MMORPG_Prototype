@@ -7,7 +7,7 @@ import com.esotericsoftware.kryonet.Connection;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveGoldRewardPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
@@ -26,7 +26,7 @@ public class RetrieveGoldRewardPacketHandler extends PacketHandlerBase<RetrieveG
     @Override
     public void handle(Connection connection, RetrieveGoldRewardPacket packet)
     {
-        UserCharacter character = gameDataRetriever.getUserCharacterByConnectionId(connection.getID());
+        Character character = gameDataRetriever.getUserCharacterByConnectionId(connection.getID());
         CharactersQuests quest = findSuiteQuest(character.getQuests(), packet.getQuestName());
         int goldReward = quest.getGoldReward();
         if (goldReward > 0)

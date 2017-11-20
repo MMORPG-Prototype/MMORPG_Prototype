@@ -5,26 +5,26 @@ import java.util.LinkedList;
 
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.server.database.entities.Quest;
-import pl.mmorpg.prototype.server.database.entities.UserCharacter;
+import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.database.repositories.CharactersQuestsRepository;
 import pl.mmorpg.prototype.server.database.repositories.QuestRepository;
-import pl.mmorpg.prototype.server.database.repositories.UserCharacterRepository;
+import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
 
 public class UserCharactersQuestsTableSeeder implements TableSeeder
 {
     private final QuestRepository questRepository = SpringContext.getBean(QuestRepository.class);
-    private final UserCharacterRepository characterRepository = SpringContext.getBean(UserCharacterRepository.class);
+    private final CharacterRepository characterRepository = SpringContext.getBean(CharacterRepository.class);
     private final CharactersQuestsRepository charactersQuestRepository = SpringContext.getBean(CharactersQuestsRepository.class);
 
     @Override
     public void seed()
     {
         Iterable<Quest> allQuests = questRepository.findAll();
-        Iterable<UserCharacter> allCharacters = characterRepository.findAll();
+        Iterable<Character> allCharacters = characterRepository.findAll();
 
         Collection<CharactersQuests> joinEntites = new LinkedList<CharactersQuests>();
-        for (UserCharacter character : allCharacters)
+        for (Character character : allCharacters)
             for (Quest quest : allQuests)
             {
                 CharactersQuests charactersQuests = new CharactersQuests(character, quest);
