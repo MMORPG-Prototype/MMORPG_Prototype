@@ -14,5 +14,5 @@ public interface CharacterSpellRepository extends CrudRepository<CharacterSpell,
 	@Cacheable("spell")
 	CharacterSpell findByIdentifier(SpellIdentifiers identifier);
 	
-	Collection<Spell> findByCharacter(Character character);
+	Collection<Spell> findByCharacters(Character character);
 }

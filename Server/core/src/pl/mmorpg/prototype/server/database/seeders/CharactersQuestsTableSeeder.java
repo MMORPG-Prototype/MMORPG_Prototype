@@ -4,14 +4,14 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import pl.mmorpg.prototype.SpringContext;
-import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.Character;
+import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
+import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
 import pl.mmorpg.prototype.server.database.repositories.CharactersQuestsRepository;
 import pl.mmorpg.prototype.server.database.repositories.QuestRepository;
-import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
 
-public class UserCharactersQuestsTableSeeder implements TableSeeder
+public class CharactersQuestsTableSeeder implements TableSeeder
 {
     private final QuestRepository questRepository = SpringContext.getBean(QuestRepository.class);
     private final CharacterRepository characterRepository = SpringContext.getBean(CharacterRepository.class);
@@ -20,7 +20,7 @@ public class UserCharactersQuestsTableSeeder implements TableSeeder
     @Override
     public void seed()
     {
-        Iterable<Quest> allQuests = questRepository.findAll();
+        Iterable<Quest> allQuests = questRepository.findAllFetchItemReward();
         Iterable<Character> allCharacters = characterRepository.findAll();
 
         Collection<CharactersQuests> joinEntites = new LinkedList<CharactersQuests>();

@@ -17,4 +17,12 @@ public interface QuestRepository extends CrudRepository<Quest, Integer>
         quest.getItemsReward().size();
         return quest;
     }
+    
+    @Transactional
+    default Iterable<Quest> findAllFetchItemReward()
+    {
+    	Iterable<Quest> allQuests = findAll();
+    	allQuests.forEach(q -> q.getItemsReward().size());
+    	return allQuests;
+    }
 }

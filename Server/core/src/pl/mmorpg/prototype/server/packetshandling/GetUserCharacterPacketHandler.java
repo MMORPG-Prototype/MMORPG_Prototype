@@ -25,7 +25,7 @@ public class GetUserCharacterPacketHandler extends PacketHandlerBase<GetUserChar
 	public void handle(Connection connection, GetUserCharactersPacket packet)
 	{
 		CharacterRepository characterRepo = (CharacterRepository) SpringContext
-				.getBean("userCharacterRepository");
+				.getBean(CharacterRepository.class);
 		List<Character> userCharacters = characterRepo.findByUser_Username(packet.username);
 		UserCharacterDataPacket[] charactersPackets = new UserCharacterDataPacket[userCharacters.size()];
 		int i = 0;

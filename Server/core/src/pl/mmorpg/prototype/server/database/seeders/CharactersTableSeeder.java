@@ -1,16 +1,20 @@
 package pl.mmorpg.prototype.server.database.seeders;
 
+import com.google.common.collect.Lists;
+
 import pl.mmorpg.prototype.SpringContext;
-import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.Character;
+import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
+import pl.mmorpg.prototype.server.database.repositories.CharacterSpellRepository;
 import pl.mmorpg.prototype.server.database.repositories.UserRepository;
 
-public class UserCharactersTableSeeder implements TableSeeder
+public class CharactersTableSeeder implements TableSeeder
 {
 	private final CharacterRepository characterRepo = SpringContext.getBean(CharacterRepository.class);
 	private final UserRepository userRepo = SpringContext.getBean(UserRepository.class);
-	
+	private final CharacterSpellRepository spellRepo = SpringContext.getBean(CharacterSpellRepository.class);
+
 	@Override
 	public void seed()
 	{
@@ -24,6 +28,7 @@ public class UserCharactersTableSeeder implements TableSeeder
 		Character character = new Character();
 		character.setUser(user);
 		character.setNickname(characterName);
+		character.setSpells(Lists.newArrayList(spellRepo.findAll()));
 		return character;
 	}
 

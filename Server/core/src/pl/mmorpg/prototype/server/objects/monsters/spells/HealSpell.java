@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server.objects.monsters.spells;
 
 import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -16,6 +17,7 @@ public class HealSpell implements Spell
 	{
 		source.spellUsed(this);
 		target.heal(healPower);
+	    packetsSender.sendTo(source.getConnectionId(), PacketsMaker.makeManaDrainPacket(getNeededMana()));
 	}
 	
 	@Override
