@@ -12,6 +12,9 @@ import pl.mmorpg.prototype.server.objects.monsters.spells.Spell;
 public interface CharacterSpellRepository extends CrudRepository<CharacterSpell, Integer>
 {
 	@Cacheable("spell")
+	Iterable<CharacterSpell> findAll();
+	
+	@Cacheable("spell")
 	CharacterSpell findByIdentifier(SpellIdentifiers identifier);
 	
 	Collection<Spell> findByCharacters(Character character);

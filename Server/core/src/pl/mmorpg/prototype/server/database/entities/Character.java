@@ -82,8 +82,8 @@ public class Character implements Serializable
 
 	@ManyToMany
 	@JoinTable(name = "character_spell", 
-		joinColumns = @JoinColumn(name = "spell_id", nullable = false),
-		inverseJoinColumns = @JoinColumn(name = "character_id", nullable = false)
+		joinColumns = @JoinColumn(name = "character_id", nullable = false),
+		inverseJoinColumns = @JoinColumn(name = "spell_id", nullable = false)
 	)
 	private Collection<CharacterSpell> spells;
 
