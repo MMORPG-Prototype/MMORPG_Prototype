@@ -11,7 +11,7 @@ public class CharacterStatsCalculator
 	
 	public static Integer getMaxHp(Integer level, Integer strength, Integer magic, Integer dexitirity)
 	{
-		return new Integer(100);
+		return 100;
 	}
 	
 	public static Integer getMaxMP(UserCharacterDataPacket character)
@@ -21,6 +21,6 @@ public class CharacterStatsCalculator
 	
 	public static Integer getMaxMP(Integer level, Integer strength, Integer magic, Integer dexitirity)
 	{
-		return new Integer(100);
+		return 100;
 	}
 }

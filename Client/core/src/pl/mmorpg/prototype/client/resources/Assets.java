@@ -1,5 +1,10 @@
 package pl.mmorpg.prototype.client.resources;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +15,6 @@ import java.util.stream.Collectors;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
-import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import com.badlogic.gdx.Gdx;
@@ -81,8 +85,11 @@ public class Assets
 
 	private static Set<String> getClasspathResources(Set<String> filesExtensions)
     {
-        ConfigurationBuilder configuration = new ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forManifest())
+		Collection<URL> classpathJars = classpathJars();
+		System.out.println(classpathJars.size());
+		classpathJars.forEach(System.out::println);
+		ConfigurationBuilder configuration = new ConfigurationBuilder()
+                .setUrls(classpathJars)
                 .setScanners(new ResourcesScanner());
         configuration.setInputsFilter(Assets::isValidResourcePath);
         Reflections reflections = new Reflections(configuration);
@@ -90,6 +97,33 @@ public class Assets
         return resources;
     }
 	
+	private static Collection<URL> classpathJars()
+	{
+		String property = System.getProperty("java.class.path");
+		System.out.println(property);
+		String[] classpathJars = property.split(";");
+		String userDir = System.getProperty("user.dir");
+		List<URL> result = Arrays.stream(classpathJars)
+			.map(jar -> toURL(userDir, jar))
+			.collect(Collectors.toList());
+		return result;
+	}
+
+	private static URL toURL(String userDir, String jar)
+	{
+		try
+		{
+			String path = jar.trim().replace(" ", "%20");
+			if(!new File(path).isAbsolute())
+				return new URL("file:\\" + userDir + '\\' + path);
+			
+			return new URL("file:\\" + path);
+		} catch (MalformedURLException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
 	private static Pattern getResourcePattern(Set<String> filesExtensions)
     {
         return Pattern.compile(".+\\." + getCombinedExtensions(filesExtensions));
