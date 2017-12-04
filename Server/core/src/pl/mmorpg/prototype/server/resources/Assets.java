@@ -3,13 +3,6 @@ package pl.mmorpg.prototype.server.resources;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -60,46 +53,17 @@ public class Assets
 
 	private static void loadAll()
 	{
-		Set<String> files = getClasspathResources(classTypes.keySet());
+		Set<String> files = ReflectionResourceUtils.getClasspathResources(classTypes.keySet(), Assets::isValidResourcePath);
 		for (String file : files)
 			assets.load(file, getClassFromPath(file));
 
 		assets.finishLoading();
 	}
-	
-	private static Set<String> getClasspathResources(Set<String> filesExtensions)
-	{
-		ConfigurationBuilder configuration = new ConfigurationBuilder()
-				.setUrls(ClasspathHelper.forManifest())
-				.setScanners(new ResourcesScanner());
-		configuration.setInputsFilter(Assets::isValidResourcePath);
-        Reflections reflections = new Reflections(configuration);
-        Set<String> resources = reflections.getResources(getResourcePattern(filesExtensions));
-        return resources;
-	}
-	
+
 	private static boolean isValidResourcePath(String resourcePath)
 	{
-	    return !resourcePath.startsWith("com") && 
-	           !resourcePath.startsWith("org") && 
-               !resourcePath.startsWith("junit") &&
-	           !resourcePath.startsWith("lombok");
-	}
-	
-	private static Pattern getResourcePattern(Set<String> filesExtensions)
-    {
-        return Pattern.compile(".+\\." + getCombinedExtensions(filesExtensions));
-    }
-	
-	private static String getCombinedExtensions(Set<String> filesExtensions)
-	{
-		StringBuilder strBuilder = new StringBuilder();
-		strBuilder.append('(');
-		String joinedExtensions = filesExtensions.stream()
-		.collect(Collectors.joining("|"));
-		strBuilder.append(joinedExtensions);
-		strBuilder.append(')');
-		return strBuilder.toString();
+		return !resourcePath.startsWith("com") && !resourcePath.startsWith("org") && !resourcePath.startsWith("junit")
+				&& !resourcePath.startsWith("lombok");
 	}
 
 	private static Class<?> getClassFromPath(String path)
