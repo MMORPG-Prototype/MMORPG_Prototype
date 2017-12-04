@@ -8,8 +8,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -17,6 +15,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ConfigurationBuilder;
@@ -27,7 +26,7 @@ public class ReflectionResourceUtils
 {
 	public static Set<String> getClasspathResources(Set<String> filesExtensions, Predicate<String> inputsFilter)
 	{
-		Collection<URL> classpathJars = classpathJars();
+		Collection<URL> classpathJars = getUsedJars();
 		System.out.println(classpathJars.size());
 		classpathJars.forEach(System.out::println);
 		ConfigurationBuilder configuration = new ConfigurationBuilder().setUrls(classpathJars)
@@ -53,22 +52,27 @@ public class ReflectionResourceUtils
 		return strBuilder.toString();
 	}
 
-	private static Collection<URL> classpathJars()
+	private static Collection<URL> getUsedJars()
+	{
+		String[] classpathJars = getClasspathJars();
+		String[] manifestJars = manifestJars();
+		return Stream.concat(getUsedJars(classpathJars), getUsedJars(manifestJars))
+				.collect(Collectors.toList());
+	}
+
+	private static String[] getClasspathJars()
 	{
 		String property = System.getProperty("java.class.path");
 		System.out.println(property);
 		String[] classpathJars = property.split(";");
-		Collection<URL> classpathJarUrls = classpathJars(classpathJars);
-		return Stream.concat(classpathJarUrls.stream(), manifestJars().stream()).collect(Collectors.toList());
+		return classpathJars;
 	}
 
-	private static Collection<URL> classpathJars(String[] classpathJars)
+	private static Stream<URL> getUsedJars(String[] classpathJars)
 	{
 		String prefix = runJarLocation();
-		List<URL> result = Arrays.stream(classpathJars)
-				.map(jar -> toURL(prefix, jar))
-				.collect(Collectors.toList());
-		return result;
+		return Arrays.stream(classpathJars)
+				.map(jar -> toURL(prefix, jar));
 	}
 
 	private static String runJarLocation()
@@ -83,23 +87,19 @@ public class ReflectionResourceUtils
 		}
 	}
 
-	private static Collection<URL> manifestJars()
+	private static String[] manifestJars()
 	{
 		ClassLoader cl = Assets.class.getClassLoader();
-
-		try
+		try (InputStream manifestStream = cl.getResourceAsStream("META-INF/MANIFEST.MF"))
 		{
-			try (InputStream manifestStream = cl.getResourceAsStream("META-INF/MANIFEST.MF"))
-			{
-				Manifest manifest = new Manifest(manifestStream);
-				Attributes attributes = manifest.getMainAttributes();
-				String classpath = attributes.getValue(Attributes.Name.CLASS_PATH);
-				if (classpath == null)
-					return Collections.emptyList();
-				System.out.println(classpath);
-				String[] classpathJars = classpath.split(" ");
-				return classpathJars(classpathJars);
-			}
+
+			Manifest manifest = new Manifest(manifestStream);
+			Attributes attributes = manifest.getMainAttributes();
+			String classpath = attributes.getValue(Attributes.Name.CLASS_PATH);
+			if (classpath == null)
+				return ArrayUtils.EMPTY_STRING_ARRAY;
+			System.out.println(classpath);
+			return classpath.split(" ");
 		} catch (IOException e)
 		{
 			throw new RuntimeException(e);
