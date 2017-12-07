@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
@@ -67,9 +66,8 @@ public class ShopPage extends VerticalGroup
 
 	private void addPopUpInfoListener(ButtonField<Item> field, ShopItem item, Stage stageForPopUpInfo)
 	{
-		PopUpInfo infoDialog = new PopUpInfo(item);
-		InputListener popUpHideListener = new ActorPopUpHideListener(stageForPopUpInfo, infoDialog);
-		field.addListener(popUpHideListener);
+		PopUpShopItemInfo infoDialog = new PopUpShopItemInfo(item);
+		field.addListener(new ActorPopUpHideListener(stageForPopUpInfo, infoDialog));
 	}
 
 	private void addListenerForUsingField(ButtonField<Item> field, ShopItem item, UserInterface linkedInterface, PacketsSender packetSender, long shopId)

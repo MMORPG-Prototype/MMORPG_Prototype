@@ -55,7 +55,7 @@ public class ReflectionResourceUtils
 	private static Collection<URL> getUsedJars()
 	{
 		String[] classpathJars = getClasspathJars();
-		String[] manifestJars = manifestJars();
+		String[] manifestJars = getManifestJars();
 		return Stream.concat(getUsedJars(classpathJars), getUsedJars(manifestJars))
 				.collect(Collectors.toList());
 	}
@@ -87,7 +87,7 @@ public class ReflectionResourceUtils
 		}
 	}
 
-	private static String[] manifestJars()
+	private static String[] getManifestJars()
 	{
 		ClassLoader cl = Assets.class.getClassLoader();
 		try (InputStream manifestStream = cl.getResourceAsStream("META-INF/MANIFEST.MF"))

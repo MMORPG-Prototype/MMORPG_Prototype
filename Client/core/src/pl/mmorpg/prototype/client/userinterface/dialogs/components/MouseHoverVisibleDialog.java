@@ -20,7 +20,7 @@ public class MouseHoverVisibleDialog extends Dialog
 			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor)
 			{
 				Actor topDialogActor = DialogUtils.getTopActorOf(sourceActor);
-				setPosition(topDialogActor.getRight(), topDialogActor.getY());
+				setPosition(topDialogActor.getRight(), topDialogActor.getTop());
 				setVisible(true);
 				toFront();
 			}
@@ -30,12 +30,6 @@ public class MouseHoverVisibleDialog extends Dialog
 			{
 				setVisible(false);
 				toBack();
-			}
-
-			@Override
-			public boolean mouseMoved(InputEvent event, float x, float y)
-			{
-				return true;
 			}
 			
 		});

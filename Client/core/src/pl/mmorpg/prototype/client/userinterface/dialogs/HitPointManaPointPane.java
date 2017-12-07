@@ -14,7 +14,7 @@ public class HitPointManaPointPane extends ScrollPane
 	{
 		super(createDialog(character));
 		dialog = dialogInitializer;
-		initiazlize();
+		initiazlizePosition();
 	} 
 	
 	private static HitPointManaPointDialog createDialog(UserCharacterDataPacket character)
@@ -22,9 +22,8 @@ public class HitPointManaPointPane extends ScrollPane
 		dialogInitializer = new HitPointManaPointDialog(character);
 		return dialogInitializer;
 	}
-	
 
-	private void initiazlize()
+	private void initiazlizePosition()
 	{
 		this.setHeight(100);
 		this.setWidth(200);
