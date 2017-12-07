@@ -12,8 +12,7 @@ public abstract class MovableGameObject extends GameObject
 	private float targetX = 100.0f;
 	private float targetY = 100.0f;
 	private boolean slidingActive = true;
-	private float lastDeltaTime;
-	private MoveInfo currentMoveInfo = new MoveInfo();
+	private final MoveInfo currentMoveInfo = new MoveInfo();
 
 	public MovableGameObject(Texture lookout, long id)
 	{
@@ -33,7 +32,6 @@ public abstract class MovableGameObject extends GameObject
 	@Override
 	public void update(float deltaTime)
 	{
-		lastDeltaTime = deltaTime;
 		repositionX(deltaTime);
 		repositionY(deltaTime);
 		handleMovementStop(deltaTime);
@@ -134,14 +132,6 @@ public abstract class MovableGameObject extends GameObject
 		currentMoveInfo.setCurrentMovementSpeed(Math.abs(deltaX)/3.5f);
 		int moveDirection = deltaX > 0 ? Directions.RIGHT : Directions.LEFT;
 		currentMoveInfo.setMoveDirection(moveDirection);
-	}
-
-	public boolean isNearTarget()
-	{
-		float stepValue = stepSpeed * lastDeltaTime;
-		float deltaY = targetY - getY();
-		float deltaX = targetX - getX();
-		return Math.abs(deltaY) <= stepValue && Math.abs(deltaX) <= stepValue;
 	}
 
 	public void disableSliding()

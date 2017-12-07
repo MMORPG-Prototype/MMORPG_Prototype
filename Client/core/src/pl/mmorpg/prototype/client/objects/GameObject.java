@@ -3,8 +3,11 @@ package pl.mmorpg.prototype.client.objects;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
-public abstract class GameObject extends Sprite
+import pl.mmorpg.prototype.client.collision.interfaces.RectangleCollisionObject;
+
+public abstract class GameObject extends Sprite implements RectangleCollisionObject
 {
     private long id;
     private int layer = 0;
@@ -14,6 +17,12 @@ public abstract class GameObject extends Sprite
         super(lookout);
         super.setRegion(lookout);
         this.setId(id);
+    }
+    
+    @Override
+    public Rectangle getCollisionRect()
+    {
+    	return getBoundingRectangle();
     }
 
     public void render(SpriteBatch batch)
