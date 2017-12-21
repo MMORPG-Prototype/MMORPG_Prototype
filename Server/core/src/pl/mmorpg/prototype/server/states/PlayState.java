@@ -62,14 +62,14 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private final Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
 	private final Map<Long, GameContainer> gameContainers = new ConcurrentHashMap<>();
 	private final TiledMapRenderer mapRenderer;
-	private final ServerInputHandler inputHandler = new ServerInputHandler(this);
 	private final GameObjectsFactory objectsFactory = new GameObjectsFactory(collisionMap, this);
 	private final MonsterSpawner monsterSpawner = new MonsterSpawner(objectsFactory);
 	private final Map<Integer, GameCommandsHandler> gameCommandsHandlers = new HashMap<>();
 	private final RewardForFinishedQuestObserver rewardForFisnishedQuestObserver;
 	private final EventsHandler questEventsHandler;
 
-	private OrthographicCamera camera = new OrthographicCamera(6400, 4800);
+	private final OrthographicCamera camera = new OrthographicCamera();
+	private final ServerInputHandler inputHandler = new ServerInputHandler(new PlayStateInputActions(camera));
 
 	public PlayState(Server server, StateManager states)
 	{
@@ -78,6 +78,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		rewardForFisnishedQuestObserver = new RewardForFinishedQuestObserver(this, this);
 		questEventsHandler = new EventsHandler(rewardForFisnishedQuestObserver);
 		camera.setToOrtho(false);
+		camera.viewportWidth = 3000;
+		camera.viewportHeight = 1600;
 
 		collisionMap.setScale(1);
 		TiledMap map = loadMap();
@@ -86,7 +88,6 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 			mapRenderer = new NullOrthogonalTiledMapRenderer();
 		else
 			mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
-		mapRenderer.setView(camera);
 
 		Gdx.input.setInputProcessor(inputHandler);
 
@@ -157,13 +158,14 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	@Override
 	public void render(Batch batch)
 	{
+		batch.setProjectionMatrix(camera.combined);
 		batch.end();
 		mapRenderer.render();
+		mapRenderer.setView(camera);
 		batch.begin();
 		Collection<GameObject> toRender = gameObjects.values();
 		for (GameObject object : toRender)
 			object.render(batch);
-
 	}
 
 	@Override
@@ -174,6 +176,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 			object.update(deltaTime);
 		handleSpawner(deltaTime);
 		questEventsHandler.processEvents();
+		inputHandler.process();
 	}
 
 	private void handleSpawner(float deltaTime)

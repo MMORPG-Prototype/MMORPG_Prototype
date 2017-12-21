@@ -4,15 +4,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 
 public class InputProcessorAdapter implements InputProcessor
 {
-    private Map<String, KeyHandler> keyHandlers;
-    protected Map<Integer, KeyHandler> keyHandlersToActivate = Collections
+    private final Map<String, KeyHandler> keyHandlers;
+    private final Map<Integer, KeyHandler> keyHandlersToActivate = Collections
             .synchronizedMap(new HashMap<Integer, KeyHandler>());
+    private final LinkedBlockingQueue<Runnable> postponedActions = new LinkedBlockingQueue<>();
 
     public InputProcessorAdapter()
     {
@@ -74,38 +76,31 @@ public class InputProcessorAdapter implements InputProcessor
     public void process()
     {
         activateAll(getActiveKeyHandlers());
+        while(!postponedActions.isEmpty())
+        	postponedActions.poll().run();
     }
 
-    protected void activateAll(Collection<KeyHandler> keyHandlers)
+    private void activateAll(Collection<KeyHandler> keyHandlers)
     {
         for (KeyHandler keyHandler : keyHandlers)
             keyHandler.handle();
     }
+    
+    protected void postponeAction(Runnable action)
+    {
+    	postponedActions.offer(action);
+    }
 
-    public Collection<KeyHandler> getActiveKeyHandlers()
+    private Collection<KeyHandler> getActiveKeyHandlers()
     {
         return keyHandlersToActivate.values();
     }
 
-    public KeyHandler getKeyHandler(int key)
+    private KeyHandler getKeyHandler(int key)
     {
         KeyHandler keyHandler = keyHandlers.get(Keys.toString(key));
         return keyHandler;
     }
-
-    protected KeyHandler produceKeyHandler(int key)
-    {
-        return new KeyHandlerFactory(this).produce(key);
-    }
-
-    public void simulateKeyUpInput(int keyCode)
-    {
-        keyUp(keyCode);
-    }
-
-    public void simulateKeyDownInput(int keyCode)
-    {
-        keyDown(keyCode);
-    }
+    
 
 }
