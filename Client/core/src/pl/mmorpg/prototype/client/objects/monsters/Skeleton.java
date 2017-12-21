@@ -1,12 +1,14 @@
 package pl.mmorpg.prototype.client.objects.monsters;
 
+import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
+import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.SkeletonPropertiesBuilder;
 
 public class Skeleton extends HealthBarMonster
 {
 
-	public Skeleton(long id)
+	public Skeleton(long id, CollisionMap<GameObject> collisionMap)
 	{
 		super(new TextureSheetAnimationInfo
 				.Builder(Assets.get("skeletonWarrior.png"))
@@ -18,7 +20,7 @@ public class Skeleton extends HealthBarMonster
 				.textureTileYOffset(0)
 				.build(), 
 				id, 
-				new SkeletonPropertiesBuilder().build());
+				new SkeletonPropertiesBuilder().build(), collisionMap);
 
 	}
 

@@ -3,7 +3,9 @@ package pl.mmorpg.prototype.client.objects.monsters;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.client.objects.CustomAnimation;
+import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.graphic.HealthBar;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 
@@ -11,17 +13,17 @@ public abstract class HealthBarMonster extends Monster
 {
 	private HealthBar healthBar;
 
-	public HealthBarMonster(TextureSheetAnimationInfo sheetInfo, long id, MonsterProperties monster)
+	public HealthBarMonster(TextureSheetAnimationInfo sheetInfo, long id, MonsterProperties monsterProperties, CollisionMap<GameObject> collisionMap)
 	{
-		super(sheetInfo, id, monster);
-		healthBar = new HealthBar(monster.maxHp, this);
+		super(sheetInfo, id, monsterProperties, collisionMap);
+		healthBar = new HealthBar(monsterProperties.maxHp, this);
 	}
 
 	public HealthBarMonster(long id, CustomAnimation<TextureRegion> moveLeftAnimation,
 			CustomAnimation<TextureRegion> moveRightAnimation, CustomAnimation<TextureRegion> moveDownAnimation,
-			CustomAnimation<TextureRegion> moveUpAnimation, MonsterProperties monster)
+			CustomAnimation<TextureRegion> moveUpAnimation, MonsterProperties monster, CollisionMap<GameObject> collisionMap)
 	{
-		super(id, moveLeftAnimation, moveRightAnimation, moveDownAnimation, moveUpAnimation, monster);
+		super(id, moveLeftAnimation, moveRightAnimation, moveDownAnimation, moveUpAnimation, monster, collisionMap);
 		healthBar = new HealthBar(monster.maxHp, this);
 	
 	}

@@ -3,8 +3,10 @@ package pl.mmorpg.prototype.client.collision.pixelmap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+
 import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
-import pl.mmorpg.prototype.client.exceptions.NotImplementedException;
 import pl.mmorpg.prototype.client.objects.GameObject;
 
 @SuppressWarnings("unchecked")
@@ -70,7 +72,7 @@ public class PixelCollisionMap<T extends GameObject> implements CollisionMap<T>
     public void repositionGoingLeft(int moveValue, T object)
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
-
+        
         for (int i = collision.y; i <= collision.getUpperBound(); i++)
             for (int j = collision.x - moveValue; j < collision.x; j++)
                 collisionMap[j][i] = object;
@@ -122,11 +124,22 @@ public class PixelCollisionMap<T extends GameObject> implements CollisionMap<T>
                 collisionMap[j][i] = null;
     }
     
-    public void shift(int shiftX, int shiftY)
+    public void shiftX(int shiftX)
     {
     	this.shiftX = shiftX;
+    	if(shiftX > 0)
+    		insertedCollisionObjects.values().forEach(object -> repositionGoingLeft(shiftX, object));
+    	else
+    		insertedCollisionObjects.values().forEach(object -> repositionGoingRight(-shiftX, object));
+    }
+    
+    public void shiftY(int shiftY)
+    {
     	this.shiftY = shiftY;
-    	throw new NotImplementedException();
+    	if(shiftY > 0)
+    		insertedCollisionObjects.values().forEach(object -> repositionGoingDown(shiftY, object));
+    	else
+    		insertedCollisionObjects.values().forEach(object -> repositionGoingUp(-shiftY, object));
     }
 
 	@Override
@@ -136,5 +149,13 @@ public class PixelCollisionMap<T extends GameObject> implements CollisionMap<T>
                 || gameX < 0 || gameY < 0)
             return null;
         return (T)collisionMap[gameX][gameY];
+	}
+	
+	public void debugMethodRender(Batch batch, Texture texture)
+	{
+		for (int i = 0; i < collisionMap.length; i++)
+            for (int j = 0; j < collisionMap[i].length; j++)
+                if(collisionMap[i][j] != null)
+                	batch.draw(texture, i, j, 1, 1);        
 	}
 }

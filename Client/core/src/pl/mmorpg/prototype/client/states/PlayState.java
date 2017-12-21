@@ -7,6 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
@@ -95,7 +96,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private final TiledMapRenderer mapRenderer;
 	private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
 	private final OrthographicCamera camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
-	private final CollisionMap<GameObject> collisionMap = new PixelCollisionMap<>(CAMERA_WIDTH + 100, CAMERA_HEIGHT + 100);
+	private PixelCollisionMap<GameObject> collisionMap = createCollisionMap();
 	private InputProcessorAdapter inputHandler;
 	private Player player;
 	private UserInterface userInterface;
@@ -116,7 +117,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	public void initialize(UserCharacterDataPacket character)
 	{
-		player = new Player(character.getId());
+		player = new Player(character.getId(), collisionMap);
 		player.initialize(character);
 		gameObjects.put((long) character.getId(), player);
 		userInterface = new UserInterface(this, character);
@@ -146,6 +147,8 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			object.render(batch);
 		for (GraphicGameObject object : clientGraphics)
 			object.render(batch);
+		
+		collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"));
 		batch.end();
 		mapRenderer.render(new int[] { 2, 3, 4 });
 		userInterface.draw(batch);
@@ -172,8 +175,14 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	private void cameraUpdate()
 	{
+		float xBefore = camera.position.x;
+		float yBefore = camera.position.y;
 		camera.position.set(player.getX() - player.getWidth() / 2, player.getY() - player.getHeight() / 2, 0);
 		camera.update();
+		float shiftX = camera.position.x - xBefore;
+		float shiftY = camera.position.y - yBefore;
+		collisionMap.shiftX((int)Math.ceil(shiftX));
+		collisionMap.shiftY((int)Math.ceil(shiftY));
 	}
 
 	private void graphicObjectsUpdate(float deltaTime)
@@ -248,7 +257,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		client.sendTCP(new DisconnectPacket());
 		reset();
 		states.push(new SettingsChoosingState(client, states));
-
 	}
 
 	private void reset()
@@ -258,6 +266,12 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		gameObjects.clear();
 		userInterface.clear();
 		inputMultiplexer.clear();
+		collisionMap = createCollisionMap();
+	}
+	
+	private static PixelCollisionMap<GameObject> createCollisionMap()
+	{
+		return new PixelCollisionMap<>(CAMERA_WIDTH + 1000, CAMERA_HEIGHT + 1000);
 	}
 
 	public void userWantsToChangeCharacter()
@@ -575,5 +589,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		userInterface.addSpellToSpellListDialog(spellIdentifer);
 	}
+
+	public void add(Function<CollisionMap<GameObject>, GameObject> movableObjectCreator)
+	{
+		add(movableObjectCreator.apply(collisionMap));
+	}
+
 
 }

@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.objects;
 
+import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.client.exceptions.GameException;
 import pl.mmorpg.prototype.client.objects.interactive.QuestBoard;
 import pl.mmorpg.prototype.client.objects.monsters.Skeleton;
@@ -19,44 +20,44 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 
 public class ObjectsFactory
 {
-    public GameObject produce(ObjectCreationPacket packet)
+    public GameObject produce(ObjectCreationPacket packet, CollisionMap<GameObject> linkedCollisionMap)
     {
-        return produce(packet.identifier, packet.id, packet.x, packet.y);
+        return produce(packet.identifier, packet.id, packet.x, packet.y, linkedCollisionMap);
     }
 
-    public GameObject produce(String identifier, long id, float x, float y)
+    public GameObject produce(String identifier, long id, float x, float y, CollisionMap<GameObject> linkedCollisionMap)
     {
         GameObject object = null;
         if (identifier.equals(ObjectsIdentifier.getObjectIdentifier(Player.class)))
-            object = new Player(id);
+            object = new Player(id, linkedCollisionMap);
         else if (identifier.equals(ObjectsIdentifier.getObjectIdentifier(GreenDragon.class)))
-            object = new GreenDragon(id);
+            object = new GreenDragon(id, linkedCollisionMap);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GreenDragonBody.class)))
         	object = new GreenDragonBody(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(RedDragon.class)))
-        	object = new RedDragon(id);
+        	object = new RedDragon(id, linkedCollisionMap);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(RedDragonBody.class)))
         	object = new RedDragonBody(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GrayDragon.class)))
-        	object = new GrayDragon(id); 
+        	object = new GrayDragon(id, linkedCollisionMap); 
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GrayDragonBody.class)))
         	object = new GrayDragonBody(id); 
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(FireBall.class)))
-            object = new FireBall(id);
+            object = new FireBall(id, linkedCollisionMap);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(Skeleton.class)))
-        	object = new Skeleton(id);
+        	object = new Skeleton(id, linkedCollisionMap);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SkeletonBody.class)))
         	object = new SkeletonBody(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GroceryShopNpc.class)))
-        	object = new GroceryShopNpc(id);
+        	object = new GroceryShopNpc(id, linkedCollisionMap);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(Snake.class)))
-        	object = new Snake(id); 
+        	object = new Snake(id, linkedCollisionMap); 
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SnakeBody.class)))
         	object = new SnakeBody(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(QuestBoard.class)))
         	object = new QuestBoard(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(QuestDialogNpc.class)))
-        	object = new QuestDialogNpc(id);
+        	object = new QuestDialogNpc(id, linkedCollisionMap);
         else
             throw new ObjectIdentifierNotFoundException(identifier);
 

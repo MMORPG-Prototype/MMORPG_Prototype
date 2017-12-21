@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.client.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.Directions;
 
 public abstract class MovableGameObject extends GameObject
@@ -13,10 +14,12 @@ public abstract class MovableGameObject extends GameObject
 	private float targetY = 100.0f;
 	private boolean slidingActive = true;
 	private final MoveInfo currentMoveInfo = new MoveInfo();
+	private CollisionMap<GameObject> linkedCollisionMap;
 
-	public MovableGameObject(Texture lookout, long id)
+	public MovableGameObject(Texture lookout, long id, CollisionMap<GameObject> linkedCollisionMap)
 	{
 		super(lookout, id);
+		this.linkedCollisionMap = linkedCollisionMap;
 		targetX = getX();
 		targetY = getY();
 	}
@@ -56,9 +59,18 @@ public abstract class MovableGameObject extends GameObject
 		if (deltaX < 0)
 			stepValue = -stepValue;
 		if (Math.abs(deltaX) > Math.abs(stepValue))
-			super.setX(getX() + stepValue);
+			directPositionChangeX(getX() + stepValue);
 		else
 			super.setX(targetX);
+	}
+
+	private void directPositionChangeX(float stepValue)
+	{
+		super.setX(stepValue);
+		if(stepValue < 0)
+			linkedCollisionMap.repositionGoingLeft((int)stepValue, this);
+		else
+			linkedCollisionMap.repositionGoingRight((int)stepValue, this);
 	}
 
 	private void repositionY(float deltaTime)
@@ -73,6 +85,11 @@ public abstract class MovableGameObject extends GameObject
 			super.setY(getY() + stepValue);
 		else
 			super.setY(targetY);
+	}
+	
+	private void directPositionChangeY(float moveValue)
+	{
+		super.setY(getY() + moveValue);
 	}
 
 	@Override

@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.client.objects.CustomAnimation;
+import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.GraphicObjectsContainer;
 import pl.mmorpg.prototype.client.objects.graphic.ExplosionAnimation;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -13,9 +15,9 @@ public class FireBall extends ThrowableObject
 {
     private CustomAnimation<TextureRegion> fireBallAnimation;
     
-    public FireBall(long id)
+    public FireBall(long id, CollisionMap<GameObject> linkedCollisionMap)
     {
-        super(Assets.get("32x32.bmp"), id);
+        super(Assets.get("32x32.bmp"), id, linkedCollisionMap);
         Texture textureSheet = Assets.get("fireballSheet.png");
         fireBallAnimation = new CustomAnimation<>(0.16f,
                 TextureRegion.split(textureSheet, textureSheet.getWidth() / 3, textureSheet.getHeight()));

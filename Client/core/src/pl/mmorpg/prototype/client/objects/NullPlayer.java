@@ -5,7 +5,7 @@ public class NullPlayer extends Player
 
 	public NullPlayer()
 	{
-		super(-1);
+		super(-1, null);
 	}
 
 }

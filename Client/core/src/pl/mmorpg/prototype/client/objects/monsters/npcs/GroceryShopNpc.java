@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.client.objects.monsters.npcs;
 
+import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
+import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo;
 import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo.Builder;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -7,9 +9,9 @@ import pl.mmorpg.prototype.clientservercommon.NpcNames;
 
 public class GroceryShopNpc extends Npc
 {
-	public GroceryShopNpc(long id)
+	public GroceryShopNpc(long id, CollisionMap<GameObject> collisionMap)
 	{
-		super(NpcNames.GROCERY_NPC, getSheetInfo(), id);
+		super(NpcNames.GROCERY_NPC, getSheetInfo(), id, collisionMap);
 	}
 
 	private static TextureSheetAnimationInfo getSheetInfo()

@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.client.objects.monsters.dragons;
 
+import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
+import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.monsters.HealthBarMonster;
 import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -7,7 +9,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.GreenD
 
 public class GreenDragon extends HealthBarMonster
 {
-	public GreenDragon(long id)
+	public GreenDragon(long id, CollisionMap<GameObject> collisionMap)
 	{
 		super(new TextureSheetAnimationInfo
 				.Builder(Assets.get("monsterSheet.png"))
@@ -19,7 +21,7 @@ public class GreenDragon extends HealthBarMonster
 				.textureTileYOffset(0)
 				.build(), 
 				id, 
-				new GreenDragonPropertiesBuilder().build());
+				new GreenDragonPropertiesBuilder().build(), collisionMap);
 	}
 
 }
