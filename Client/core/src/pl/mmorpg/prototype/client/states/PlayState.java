@@ -110,7 +110,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		camera.setToOrtho(false);
 		camera.viewportWidth = CAMERA_WIDTH;
 		camera.viewportHeight = CAMERA_HEIGHT;
-		TiledMap map = Assets.get("Map/tiled2.tmx");
+		TiledMap map = Assets.get("Map/tiled3.tmx");
 		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
 	}
 
@@ -137,19 +137,25 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		batch.setProjectionMatrix(camera.combined);
 		batch.disableBlending();
-		mapRenderer.setView(camera);
+		updateMapRendererView();
 		mapRenderer.render(new int[] { 0 });
 		batch.enableBlending();
 		mapRenderer.render(new int[] { 1 });
-		mapRenderer.render(new int[] { 2 });
 		batch.begin();
 		for (GameObject object : gameObjects.values())
 			object.render(batch);
 		for (GraphicGameObject object : clientGraphics)
 			object.render(batch);
 		batch.end();
-		mapRenderer.render(new int[] { 3, 4, 5, 6, 7, 8 });
+		mapRenderer.render(new int[] { 2, 3, 4 });
 		userInterface.draw(batch);
+	}
+
+	private void updateMapRendererView()
+	{
+		mapRenderer.setView(camera.combined, camera.position.x - camera.viewportWidth / 2,
+				(camera.position.y - camera.viewportHeight / 2) - 100, camera.viewportWidth,
+				camera.viewportHeight + 100);
 	}
 
 	@Override
