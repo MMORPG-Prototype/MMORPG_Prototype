@@ -150,7 +150,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		for (GraphicGameObject object : clientGraphics)
 			object.render(batch);
 
-		collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"), camera);
+		//collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"), camera);
 		batch.end();
 		mapRenderer.render(new int[] { 2, 3, 4 });
 		userInterface.draw(batch);

@@ -76,7 +76,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 
 	private boolean isValidPoint(int x, int y)
 	{
-		return x >= shiftX && x < collisionMap.length + shiftX && y >= shiftY && y <= collisionMap[0].length + shiftY;
+		return x >= shiftX && x < collisionMap.length + shiftX && y >= shiftY && y < collisionMap[0].length + shiftY;
 	}
 
 	@Override
@@ -172,7 +172,6 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 		{
 			if (fitsInMap(shiftedCollision))
 			{
-
 				if (!collisionObjectInfo.isOnCollisionMap())
 				{
 					insertCollisionOnly(shiftedCollision, object);
@@ -187,7 +186,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 			}
 		} catch (ArrayIndexOutOfBoundsException e)
 		{
-			System.out.println(counter++);
+			System.out.println("Minor bug exception counter: " + counter++);
 			collisionObjectInfo.setOnCollisionMap(false);
 		} // ignore
 
