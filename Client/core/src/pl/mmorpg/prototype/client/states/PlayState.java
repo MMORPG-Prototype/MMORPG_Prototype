@@ -150,7 +150,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		for (GraphicGameObject object : clientGraphics)
 			object.render(batch);
 
-		collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"));
+		collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"), camera);
 		batch.end();
 		mapRenderer.render(new int[] { 2, 3, 4 });
 		userInterface.draw(batch);
@@ -171,7 +171,8 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 		graphicObjectsUpdate(deltaTime);
 		cameraUpdate();
-		collisionMap.update((int) camera.position.x, (int) camera.position.y);
+		collisionMap.update((int) (camera.position.x - 50 - camera.viewportWidth / 2),
+				(int) (camera.position.y - 50 - camera.viewportHeight / 2));
 		inputHandler.process();
 		userInterface.update();
 	}
@@ -268,7 +269,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	private static PixelCollisionMap<GameObject> createCollisionMap(Camera camera)
 	{
-		return new PixelCollisionMap<>(CAMERA_WIDTH + 1000, CAMERA_HEIGHT + 1000, (int) camera.position.x,
+		return new PixelCollisionMap<>(CAMERA_WIDTH + 100, CAMERA_HEIGHT + 100, (int) camera.position.x,
 				(int) camera.position.y);
 	}
 

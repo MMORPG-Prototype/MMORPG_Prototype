@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.client.collision.pixelmap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
@@ -13,6 +14,7 @@ import pl.mmorpg.prototype.clientservercommon.Identifiable;
 @SuppressWarnings("unchecked")
 public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable> implements ShiftableCollisionMap<T>
 {
+	private int counter = 0;
 	private Object[][] collisionMap;
 	private Map<Long, CollisionObjectInfo<T>> insertedCollisionObjects = new ConcurrentHashMap<>();
 	private int shiftX = 0;
@@ -160,26 +162,35 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 		shiftedCollision.y -= moveValue;
 		repositionWithBoundsChecking(moveValue, collision, shiftedCollision, object,
 				() -> repositionCollisionOnlyGoingDown(moveValue, collision, object));
-	} 
+	}
 
-	private void repositionWithBoundsChecking(int moveValue, IntegerRectangle collision, IntegerRectangle shiftedCollision,
-			T object, Runnable repositionInProperDirection)
+	private void repositionWithBoundsChecking(int moveValue, IntegerRectangle collision,
+			IntegerRectangle shiftedCollision, T object, Runnable repositionInProperDirection)
 	{
 		CollisionObjectInfo<T> collisionObjectInfo = insertedCollisionObjects.get(object.getId());
-		if (fitsInMap(shiftedCollision))
+		try
 		{
-			if (!collisionObjectInfo.isOnCollisionMap())
+			if (fitsInMap(shiftedCollision))
 			{
-				insertCollisionOnly(shiftedCollision, object);
-				collisionObjectInfo.setOnCollisionMap(true);
-			} else
-				repositionInProperDirection.run();
 
-		} else if (collisionObjectInfo.isOnCollisionMap())
+				if (!collisionObjectInfo.isOnCollisionMap())
+				{
+					insertCollisionOnly(shiftedCollision, object);
+					collisionObjectInfo.setOnCollisionMap(true);
+				} else
+					repositionInProperDirection.run();
+
+			} else if (collisionObjectInfo.isOnCollisionMap())
+			{
+				removeCollisionOnly(collision);
+				collisionObjectInfo.setOnCollisionMap(false);
+			}
+		} catch (ArrayIndexOutOfBoundsException e)
 		{
-			removeCollisionOnly(collision);
+			System.out.println(counter++);
 			collisionObjectInfo.setOnCollisionMap(false);
-		}
+		} // ignore
+
 	}
 
 	private void repositionCollisionOnlyGoingDown(int moveValue, IntegerRectangle collision, T object)
@@ -307,11 +318,12 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 		return (T) collisionMap[mapX][mapY];
 	}
 
-	public void debugMethodRender(Batch batch, Texture texture)
+	public void debugMethodRender(Batch batch, Texture texture, Camera offset)
 	{
 		for (int i = 0; i < collisionMap.length; i++)
 			for (int j = 0; j < collisionMap[i].length; j++)
 				if (collisionMap[i][j] != null)
-					batch.draw(texture, i, j, 1, 1);
+					batch.draw(texture, i + offset.position.x - 50 - offset.viewportWidth / 2,
+							j + offset.position.y - 50 - offset.viewportHeight / 2, 1, 1);
 	}
 }
