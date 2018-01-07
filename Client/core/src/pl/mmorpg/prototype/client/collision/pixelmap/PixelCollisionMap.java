@@ -51,8 +51,8 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
     		return;
     	insertedCollisionObjects.put(object.getId(), object);
 
-        for (int i = collision.x; i <= collision.x + collision.width; i++)
-            for (int j = collision.y; j <= collision.y + collision.height; j++)
+        for (int i = collision.x; i < collision.x + collision.width; i++)
+            for (int j = collision.y; j < collision.y + collision.height; j++)
                 collisionMap[i][j] = object;
     }
 
@@ -71,8 +71,8 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
 
-        for (int i = collision.x; i <= collision.x + collision.width; i++)
-            for (int j = collision.y; j <= collision.y + collision.height; j++)
+        for (int i = collision.x; i < collision.x + collision.width; i++)
+            for (int j = collision.y; j < collision.y + collision.height; j++)
                 collisionMap[i][j] = null;
         insertedCollisionObjects.remove(object.getId());
     }
@@ -91,6 +91,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
             for (int j = collision.getRightBound() - moveValue + 1; j <= collision.getRightBound(); j++)
                 collisionMap[j][i] = null;
     }
+    
 
     @Override
     public void repositionGoingRight(int moveValue, T object)
@@ -98,7 +99,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
     	IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
 
         for (int i = collision.y; i <= collision.getUpperBound(); i++)
-            for (int j = collision.getRightBound() + 1; j <= collision.getRightBound() + moveValue; j++)
+            for (int j = collision.getRightBound(); j <= collision.getRightBound() + moveValue; j++)
                 collisionMap[j][i] = object;
 
         for (int i = collision.y; i <= collision.getUpperBound(); i++)
@@ -115,7 +116,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
             for (int j = collision.x; j <= collision.getRightBound(); j++)
                 collisionMap[j][i] = object;
 
-        for (int i = collision.y + collision.height; i >= collision.y + collision.height - moveValue + 1; i--)
+        for (int i = collision.y + collision.height - 1; i > collision.y + collision.height - moveValue - 1; i--)
             for (int j = collision.x; j <= collision.getRightBound(); j++)
                 collisionMap[j][i] = null;
     }
@@ -125,7 +126,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
     {
         IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
 
-        for (int i = collision.y + collision.height + 1; i <= collision.y + collision.height + moveValue; i++)
+        for (int i = collision.y + collision.height; i < collision.y + collision.height + moveValue; i++)
             for (int j = collision.x; j <= collision.getRightBound(); j++)
                 collisionMap[j][i] = object;
 

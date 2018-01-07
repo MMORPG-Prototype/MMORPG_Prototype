@@ -19,12 +19,12 @@ public class IntegerRectangle
 
     public int getRightBound()
     {
-        return x + width;
+        return x + width - 1;
     }
 
     public int getUpperBound()
     {
-        return y + height;
+        return y + height - 1;
     }
 
     public int getX()
