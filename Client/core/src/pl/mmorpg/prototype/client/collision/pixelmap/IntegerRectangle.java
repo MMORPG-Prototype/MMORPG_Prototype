@@ -4,17 +4,17 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class IntegerRectangle
 {
-    public int x;
-    public int y;
-    public int width;
-    public int height;
+    public final int x;
+    public final int y;
+    public final int width;
+    public final int height;
 
     public IntegerRectangle(Rectangle rectangle)
     {
         this.x = (int) rectangle.x;
         this.y = (int) rectangle.y;
-        this.width = (int) rectangle.width;
-        this.height = (int) rectangle.height;
+        this.width = Math.round(rectangle.width);
+        this.height = Math.round(rectangle.height);
     }
 
     public int getRightBound()
@@ -45,26 +45,6 @@ public class IntegerRectangle
     public int getHeight()
     {
         return height;
-    }
-
-    public void setX(int x)
-    {
-        this.x = x;
-    }
-
-    public void setY(int y)
-    {
-        this.y = y;
-    }
-
-    public void setWidth(int width)
-    {
-        this.width = width;
-    }
-
-    public void setHeight(int height)
-    {
-        this.height = height;
     }
 
 }

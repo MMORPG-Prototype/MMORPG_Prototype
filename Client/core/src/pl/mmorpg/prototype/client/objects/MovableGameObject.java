@@ -59,18 +59,22 @@ public abstract class MovableGameObject extends GameObject
 		if (deltaX < 0)
 			stepValue = -stepValue;
 		if (Math.abs(deltaX) > Math.abs(stepValue))
-			directPositionChangeX(getX() + stepValue);
+			directPositionChangeX(stepValue);
 		else
-			super.setX(targetX);
+			directPositionChangeX(deltaX);
 	}
 
-	private void directPositionChangeX(float stepValue)
+	private void directPositionChangeX(float moveValue)
 	{
-		super.setX(stepValue);
-		if(stepValue < 0)
-			linkedCollisionMap.repositionGoingLeft((int)stepValue, this);
-		else
-			linkedCollisionMap.repositionGoingRight((int)stepValue, this);
+		float newPosition = getX() + moveValue;
+		int integerMovement = (int) newPosition - (int) getX();
+		if (integerMovement != 0)
+			if (moveValue < 0)
+				linkedCollisionMap.repositionGoingLeft(-integerMovement, this);
+			else
+				linkedCollisionMap.repositionGoingRight(integerMovement, this);
+
+		super.setX(newPosition);
 	}
 
 	private void repositionY(float deltaTime)
@@ -82,14 +86,22 @@ public abstract class MovableGameObject extends GameObject
 		if (deltaY < 0)
 			stepValue = -stepValue;
 		if (Math.abs(deltaY) > Math.abs(stepValue))
-			super.setY(getY() + stepValue);
+			directPositionChangeY(stepValue);
 		else
-			super.setY(targetY);
+			directPositionChangeY(deltaY);
 	}
-	
+
 	private void directPositionChangeY(float moveValue)
 	{
-		super.setY(getY() + moveValue);
+		float newPosition = getY() + moveValue;
+		int integerMovement = (int) newPosition - (int) getY();
+		if (integerMovement != 0)
+			if (moveValue < 0)
+				linkedCollisionMap.repositionGoingDown(-integerMovement, this);
+			else
+				linkedCollisionMap.repositionGoingUp(integerMovement, this);
+
+		super.setY(newPosition);
 	}
 
 	@Override
@@ -139,14 +151,14 @@ public abstract class MovableGameObject extends GameObject
 
 	private void updateCurrentMovementWithYAxis(float deltaY)
 	{
-		currentMoveInfo.setCurrentMovementSpeed(Math.abs(deltaY)/3.5f);
+		currentMoveInfo.setCurrentMovementSpeed(Math.abs(deltaY) / 3.5f);
 		int moveDirection = deltaY > 0 ? Directions.UP : Directions.DOWN;
 		currentMoveInfo.setMoveDirection(moveDirection);
 	}
 
 	private void updateCurrentMovementWithXAxis(float deltaX)
 	{
-		currentMoveInfo.setCurrentMovementSpeed(Math.abs(deltaX)/3.5f);
+		currentMoveInfo.setCurrentMovementSpeed(Math.abs(deltaX) / 3.5f);
 		int moveDirection = deltaX > 0 ? Directions.RIGHT : Directions.LEFT;
 		currentMoveInfo.setMoveDirection(moveDirection);
 	}

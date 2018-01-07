@@ -5,12 +5,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 
-import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
-import pl.mmorpg.prototype.client.objects.GameObject;
+import pl.mmorpg.prototype.client.collision.interfaces.RectangleCollisionObject;
+import pl.mmorpg.prototype.client.collision.interfaces.ShiftableCollisionMap;
+import pl.mmorpg.prototype.clientservercommon.Identifiable;
 
 @SuppressWarnings("unchecked")
-public class PixelCollisionMap<T extends GameObject> implements CollisionMap<T>
+public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable> implements ShiftableCollisionMap<T>
 {
     private Object[][] collisionMap;
     private Map<Long, T> insertedCollisionObjects = new ConcurrentHashMap<>();
@@ -19,7 +21,14 @@ public class PixelCollisionMap<T extends GameObject> implements CollisionMap<T>
     
     public PixelCollisionMap(int width, int height)
     {
+        this(width, height, 0, 0);
+    }
+    
+    public PixelCollisionMap(int width, int height, int shiftX, int shiftY)
+    {
         collisionMap = createCollisionMap(width, height);
+        this.shiftX = shiftX;
+        this.shiftY = shiftY;
     }
 
     private Object[][] createCollisionMap(int width, int height)
@@ -71,7 +80,8 @@ public class PixelCollisionMap<T extends GameObject> implements CollisionMap<T>
     @Override
     public void repositionGoingLeft(int moveValue, T object)
     {
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+        Rectangle collisionRect = object.getCollisionRect();
+		IntegerRectangle collision = new IntegerRectangle(collisionRect);
         
         for (int i = collision.y; i <= collision.getUpperBound(); i++)
             for (int j = collision.x - moveValue; j < collision.x; j++)
@@ -124,27 +134,40 @@ public class PixelCollisionMap<T extends GameObject> implements CollisionMap<T>
                 collisionMap[j][i] = null;
     }
     
-    public void shiftX(int shiftX)
-    {
+	@Override
+	public void update(int shiftX, int shiftY)
+	{
+		int deltaX = shiftX - this.shiftX;
+		int deltaY = shiftY - this.shiftY;
     	this.shiftX = shiftX;
-    	if(shiftX > 0)
-    		insertedCollisionObjects.values().forEach(object -> repositionGoingLeft(shiftX, object));
+    	this.shiftY = shiftY;
+    	if(deltaX != 0)
+    		shiftX(deltaX);
+    	if(deltaY != 0)
+    		shiftY(deltaY);
+	}
+    
+    private void shiftX(int deltaShiftX)
+    {
+    	if(deltaShiftX > 0)
+    		insertedCollisionObjects.values().forEach(object -> repositionGoingLeft(deltaShiftX, object));
     	else
-    		insertedCollisionObjects.values().forEach(object -> repositionGoingRight(-shiftX, object));
+    		insertedCollisionObjects.values().forEach(object -> repositionGoingRight(-deltaShiftX, object));
     }
     
-    public void shiftY(int shiftY)
+    private void shiftY(int deltaShiftY)
     {
-    	this.shiftY = shiftY;
-    	if(shiftY > 0)
-    		insertedCollisionObjects.values().forEach(object -> repositionGoingDown(shiftY, object));
+    	if(deltaShiftY > 0)
+    		insertedCollisionObjects.values().forEach(object -> repositionGoingDown(deltaShiftY, object));
     	else
-    		insertedCollisionObjects.values().forEach(object -> repositionGoingUp(-shiftY, object));
+    		insertedCollisionObjects.values().forEach(object -> repositionGoingUp(-deltaShiftY, object));
     }
 
 	@Override
 	public T getObject(int gameX, int gameY)
 	{
+		gameX -= shiftX;
+		gameY -= shiftY;
 		if (gameX >= collisionMap.length || gameY >= collisionMap[0].length
                 || gameX < 0 || gameY < 0)
             return null;

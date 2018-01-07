@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -88,7 +89,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 {
 	private static final int CAMERA_WIDTH = 900;
 	private static final int CAMERA_HEIGHT = 500;
-	
+
 	private final Client client;
 	private final StateManager states;
 	private final Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
@@ -96,7 +97,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private final TiledMapRenderer mapRenderer;
 	private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
 	private final OrthographicCamera camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
-	private PixelCollisionMap<GameObject> collisionMap = createCollisionMap();
+	private PixelCollisionMap<GameObject> collisionMap = createCollisionMap(camera);
 	private InputProcessorAdapter inputHandler;
 	private Player player;
 	private UserInterface userInterface;
@@ -119,6 +120,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		player = new Player(character.getId(), collisionMap);
 		player.initialize(character);
+		add(player);
 		gameObjects.put((long) character.getId(), player);
 		userInterface = new UserInterface(this, character);
 		inputHandler = new PlayInputContinuousHandler(userInterface, client, player);
@@ -147,7 +149,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			object.render(batch);
 		for (GraphicGameObject object : clientGraphics)
 			object.render(batch);
-		
+
 		collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"));
 		batch.end();
 		mapRenderer.render(new int[] { 2, 3, 4 });
@@ -169,20 +171,15 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 		graphicObjectsUpdate(deltaTime);
 		cameraUpdate();
+		collisionMap.update((int) camera.position.x, (int) camera.position.y);
 		inputHandler.process();
 		userInterface.update();
 	}
 
 	private void cameraUpdate()
 	{
-		float xBefore = camera.position.x;
-		float yBefore = camera.position.y;
 		camera.position.set(player.getX() - player.getWidth() / 2, player.getY() - player.getHeight() / 2, 0);
 		camera.update();
-		float shiftX = camera.position.x - xBefore;
-		float shiftY = camera.position.y - yBefore;
-		collisionMap.shiftX((int)Math.ceil(shiftX));
-		collisionMap.shiftY((int)Math.ceil(shiftY));
 	}
 
 	private void graphicObjectsUpdate(float deltaTime)
@@ -266,12 +263,13 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		gameObjects.clear();
 		userInterface.clear();
 		inputMultiplexer.clear();
-		collisionMap = createCollisionMap();
+		collisionMap = createCollisionMap(camera);
 	}
-	
-	private static PixelCollisionMap<GameObject> createCollisionMap()
+
+	private static PixelCollisionMap<GameObject> createCollisionMap(Camera camera)
 	{
-		return new PixelCollisionMap<>(CAMERA_WIDTH + 1000, CAMERA_HEIGHT + 1000);
+		return new PixelCollisionMap<>(CAMERA_WIDTH + 1000, CAMERA_HEIGHT + 1000, (int) camera.position.x,
+				(int) camera.position.y);
 	}
 
 	public void userWantsToChangeCharacter()
@@ -320,10 +318,10 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		BoardClickPacket packet = PacketsMaker.makeBoardClickPacket(realX, realY);
 		client.sendTCP(packet);
 		GameObject object = collisionMap.getObject((int) realX, (int) realY);
-		if(object != null)
+		if (object != null)
 			System.out.println("Id: " + object.getId() + ", " + object);
-		else
-			System.out.println("X: " + realX + ", Y: " + realY);
+
+		System.out.println("X: " + realX + ", Y: " + realY);
 	}
 
 	private float getRealY(float y)
@@ -594,6 +592,5 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		add(movableObjectCreator.apply(collisionMap));
 	}
-
 
 }

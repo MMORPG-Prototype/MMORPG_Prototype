@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import pl.mmorpg.prototype.client.collision.interfaces.RectangleCollisionObject;
+import pl.mmorpg.prototype.clientservercommon.Identifiable;
 
-public abstract class GameObject extends Sprite implements RectangleCollisionObject
+public abstract class GameObject extends Sprite implements RectangleCollisionObject, Identifiable
 {
     private long id;
     private int layer = 0;
