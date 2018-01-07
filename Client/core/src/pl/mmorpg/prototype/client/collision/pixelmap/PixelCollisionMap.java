@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
 
 import pl.mmorpg.prototype.client.collision.interfaces.RectangleCollisionObject;
 import pl.mmorpg.prototype.client.collision.interfaces.ShiftableCollisionMap;
@@ -14,172 +13,305 @@ import pl.mmorpg.prototype.clientservercommon.Identifiable;
 @SuppressWarnings("unchecked")
 public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable> implements ShiftableCollisionMap<T>
 {
-    private Object[][] collisionMap;
-    private Map<Long, T> insertedCollisionObjects = new ConcurrentHashMap<>();
-    private int shiftX = 0;
-    private int shiftY = 0;
-    
-    public PixelCollisionMap(int width, int height)
-    {
-        this(width, height, 0, 0);
-    }
-    
-    public PixelCollisionMap(int width, int height, int shiftX, int shiftY)
-    {
-        collisionMap = createCollisionMap(width, height);
-        this.shiftX = shiftX;
-        this.shiftY = shiftY;
-    }
+	private Object[][] collisionMap;
+	private Map<Long, CollisionObjectInfo<T>> insertedCollisionObjects = new ConcurrentHashMap<>();
+	private int shiftX = 0;
+	private int shiftY = 0;
 
-    private Object[][] createCollisionMap(int width, int height)
-    {
-        Object[][] collisionMap = new Object[width][];
-        for (int i = 0; i < width; i++)
-        {
-            collisionMap[i] = new Object[height];
-            for (int j = 0; j < height; j++)
-                collisionMap[i][j] = null;
-        }
-        return collisionMap;
-    }
-    
-    @Override
-    public void insert(T object)
-    {
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
-    	if(!objectFitsInMap(collision))
-    		return;
-    	insertedCollisionObjects.put(object.getId(), object);
-
-        for (int i = collision.x; i < collision.x + collision.width; i++)
-            for (int j = collision.y; j < collision.y + collision.height; j++)
-                collisionMap[i][j] = object;
-    }
-
-    private boolean objectFitsInMap(IntegerRectangle collision)
+	public PixelCollisionMap(int width, int height)
 	{
-		return isValidPoint(collision.getX(), collision.getY()) && isValidPoint(collision.getRightBound(), collision.getUpperBound());
+		this(width, height, 0, 0);
 	}
-    
-    private boolean isValidPoint(int x, int y)
-    {
-    	return x >= 0 && x < collisionMap.length && y >= 0 && y <= collisionMap[0].length;
-    }
+
+	public PixelCollisionMap(int width, int height, int shiftX, int shiftY)
+	{
+		collisionMap = createCollisionMap(width, height);
+		this.shiftX = shiftX;
+		this.shiftY = shiftY;
+	}
+
+	private Object[][] createCollisionMap(int width, int height)
+	{
+		Object[][] collisionMap = new Object[width][];
+		for (int i = 0; i < width; i++)
+		{
+			collisionMap[i] = new Object[height];
+			for (int j = 0; j < height; j++)
+				collisionMap[i][j] = null;
+		}
+		return collisionMap;
+	}
 
 	@Override
-    public void remove(T object)
-    {
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+	public void insert(T object)
+	{
+		insert(new CollisionObjectInfo<>(object));
+	}
 
-        for (int i = collision.x; i < collision.x + collision.width; i++)
-            for (int j = collision.y; j < collision.y + collision.height; j++)
-                collisionMap[i][j] = null;
-        insertedCollisionObjects.remove(object.getId());
-    }
+	public void insert(CollisionObjectInfo<T> collisionInfo)
+	{
+		T object = collisionInfo.getObject();
+		insertedCollisionObjects.put(object.getId(), collisionInfo);
+		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+		if (!fitsInMap(collision))
+			return;
+		collisionInfo.setOnCollisionMap(true);
+		insertCollisionOnly(collision, object);
+	}
 
-    @Override
-    public void repositionGoingLeft(int moveValue, T object)
-    {
-        Rectangle collisionRect = object.getCollisionRect();
-		IntegerRectangle collision = new IntegerRectangle(collisionRect);
-        
-        for (int i = collision.y; i <= collision.getUpperBound(); i++)
-            for (int j = collision.x - moveValue; j < collision.x; j++)
-                collisionMap[j][i] = object;
+	private void insertCollisionOnly(IntegerRectangle collision, T object)
+	{
+		for (int i = collision.x; i < collision.x + collision.width; i++)
+			for (int j = collision.y; j < collision.y + collision.height; j++)
+				collisionMap[i - shiftX][j - shiftY] = object;
+	}
 
-        for (int i = collision.y; i <= collision.getUpperBound(); i++)
-            for (int j = collision.getRightBound() - moveValue + 1; j <= collision.getRightBound(); j++)
-                collisionMap[j][i] = null;
-    }
-    
+	private boolean fitsInMap(IntegerRectangle collision)
+	{
+		return isValidPoint(collision.getX(), collision.getY())
+				&& isValidPoint(collision.getRightBound(), collision.getUpperBound());
+	}
 
-    @Override
-    public void repositionGoingRight(int moveValue, T object)
-    {
-    	IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+	private boolean isValidPoint(int x, int y)
+	{
+		return x >= shiftX && x < collisionMap.length + shiftX && y >= shiftY && y <= collisionMap[0].length + shiftY;
+	}
 
-        for (int i = collision.y; i <= collision.getUpperBound(); i++)
-            for (int j = collision.getRightBound(); j <= collision.getRightBound() + moveValue; j++)
-                collisionMap[j][i] = object;
+	@Override
+	public void remove(T object)
+	{
+		insertedCollisionObjects.remove(object.getId());
+		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+		if (!fitsInMap(collision))
+			return;
 
-        for (int i = collision.y; i <= collision.getUpperBound(); i++)
-            for (int j = collision.x; j < collision.x + moveValue; j++)
-                collisionMap[j][i] = null;
-    }
+		removeCollisionOnly(collision);
+	}
 
-    @Override
-    public void repositionGoingDown(int moveValue, T object)
-    {
-    	IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+	private void removeCollisionOnly(IntegerRectangle collision)
+	{
+		for (int i = collision.x; i < collision.x + collision.width; i++)
+			for (int j = collision.y; j < collision.y + collision.height; j++)
+				collisionMap[i - shiftX][j - shiftY] = null;
+	}
 
-        for (int i = collision.y - 1; i >= collision.y - moveValue; i--)
-            for (int j = collision.x; j <= collision.getRightBound(); j++)
-                collisionMap[j][i] = object;
+	@Override
+	public void repositionGoingLeft(int moveValue, T object)
+	{
+		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+		repositionGoingLeft(moveValue, collision, object);
+	}
 
-        for (int i = collision.y + collision.height - 1; i > collision.y + collision.height - moveValue - 1; i--)
-            for (int j = collision.x; j <= collision.getRightBound(); j++)
-                collisionMap[j][i] = null;
-    }
+	private void repositionGoingLeft(int moveValue, IntegerRectangle collision, T object)
+	{
+		IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
+		shiftedCollision.x -= moveValue;
+		repositionWithBoundsChecking(moveValue, collision, shiftedCollision, object,
+				() -> repositionCollisionOnlyGoingLeft(moveValue, collision, object));
+	}
 
-    @Override
-    public void repositionGoingUp(int moveValue, T object)
-    {
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+	private void repositionCollisionOnlyGoingLeft(int moveValue, IntegerRectangle collision, T object)
+	{
+		for (int i = collision.y; i <= collision.getUpperBound(); i++)
+			for (int j = collision.x - moveValue; j < collision.x; j++)
+				collisionMap[j - shiftX][i - shiftY] = object;
 
-        for (int i = collision.y + collision.height; i < collision.y + collision.height + moveValue; i++)
-            for (int j = collision.x; j <= collision.getRightBound(); j++)
-                collisionMap[j][i] = object;
+		for (int i = collision.y; i <= collision.getUpperBound(); i++)
+			for (int j = collision.getRightBound() - moveValue + 1; j <= collision.getRightBound(); j++)
+				collisionMap[j - shiftX][i - shiftY] = null;
+	}
 
-        for (int i = collision.y + moveValue - 1; i >= collision.y; i--)
-            for (int j = collision.x; j <= collision.getRightBound(); j++)
-                collisionMap[j][i] = null;
-    }
-    
+	@Override
+	public void repositionGoingRight(int moveValue, T object)
+	{
+		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+		repositionGoingRight(moveValue, collision, object);
+	}
+
+	private void repositionGoingRight(int moveValue, IntegerRectangle collision, T object)
+	{
+		IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
+		shiftedCollision.x += moveValue;
+		repositionWithBoundsChecking(moveValue, collision, shiftedCollision, object,
+				() -> repositionCollisionOnlyGoingRight(moveValue, collision, object));
+	}
+
+	private void repositionCollisionOnlyGoingRight(int moveValue, IntegerRectangle collision, T object)
+	{
+		for (int i = collision.y; i <= collision.getUpperBound(); i++)
+			for (int j = collision.getRightBound(); j <= collision.getRightBound() + moveValue; j++)
+				collisionMap[j - shiftX][i - shiftY] = object;
+
+		for (int i = collision.y; i <= collision.getUpperBound(); i++)
+			for (int j = collision.x; j < collision.x + moveValue; j++)
+				collisionMap[j - shiftX][i - shiftY] = null;
+	}
+
+	@Override
+	public void repositionGoingDown(int moveValue, T object)
+	{
+		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+		repositionGoingDown(moveValue, collision, object);
+	}
+
+	private void repositionGoingDown(int moveValue, IntegerRectangle collision, T object)
+	{
+		IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
+		shiftedCollision.y -= moveValue;
+		repositionWithBoundsChecking(moveValue, collision, shiftedCollision, object,
+				() -> repositionCollisionOnlyGoingDown(moveValue, collision, object));
+	} 
+
+	private void repositionWithBoundsChecking(int moveValue, IntegerRectangle collision, IntegerRectangle shiftedCollision,
+			T object, Runnable repositionInProperDirection)
+	{
+		CollisionObjectInfo<T> collisionObjectInfo = insertedCollisionObjects.get(object.getId());
+		if (fitsInMap(shiftedCollision))
+		{
+			if (!collisionObjectInfo.isOnCollisionMap())
+			{
+				insertCollisionOnly(shiftedCollision, object);
+				collisionObjectInfo.setOnCollisionMap(true);
+			} else
+				repositionInProperDirection.run();
+
+		} else if (collisionObjectInfo.isOnCollisionMap())
+		{
+			removeCollisionOnly(collision);
+			collisionObjectInfo.setOnCollisionMap(false);
+		}
+	}
+
+	private void repositionCollisionOnlyGoingDown(int moveValue, IntegerRectangle collision, T object)
+	{
+		for (int i = collision.y - 1; i >= collision.y - moveValue; i--)
+			for (int j = collision.x; j <= collision.getRightBound(); j++)
+				collisionMap[j - shiftX][i - shiftY] = object;
+
+		for (int i = collision.y + collision.height - 1; i > collision.y + collision.height - moveValue - 1; i--)
+			for (int j = collision.x; j <= collision.getRightBound(); j++)
+				collisionMap[j - shiftX][i - shiftY] = null;
+	}
+
+	@Override
+	public void repositionGoingUp(int moveValue, T object)
+	{
+		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+		repositionGoingUp(moveValue, collision, object);
+	}
+
+	private void repositionGoingUp(int moveValue, IntegerRectangle collision, T object)
+	{
+		IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
+		shiftedCollision.y += moveValue;
+		repositionWithBoundsChecking(moveValue, collision, shiftedCollision, object,
+				() -> repositionCollisionOnlyGoingUp(moveValue, collision, object));
+	}
+
+	private void repositionCollisionOnlyGoingUp(int moveValue, IntegerRectangle collision, T object)
+	{
+		for (int i = collision.y + collision.height; i < collision.y + collision.height + moveValue; i++)
+			for (int j = collision.x; j <= collision.getRightBound(); j++)
+				collisionMap[j - shiftX][i - shiftY] = object;
+
+		for (int i = collision.y + moveValue - 1; i >= collision.y; i--)
+			for (int j = collision.x; j <= collision.getRightBound(); j++)
+				collisionMap[j - shiftX][i - shiftY] = null;
+	}
+
 	@Override
 	public void update(int shiftX, int shiftY)
 	{
 		int deltaX = shiftX - this.shiftX;
 		int deltaY = shiftY - this.shiftY;
-    	this.shiftX = shiftX;
-    	this.shiftY = shiftY;
-    	if(deltaX != 0)
-    		shiftX(deltaX);
-    	if(deltaY != 0)
-    		shiftY(deltaY);
+		doShift(deltaX, deltaY);
+		this.shiftX = shiftX;
+		this.shiftY = shiftY;
 	}
-    
-    private void shiftX(int deltaShiftX)
-    {
-    	if(deltaShiftX > 0)
-    		insertedCollisionObjects.values().forEach(object -> repositionGoingLeft(deltaShiftX, object));
-    	else
-    		insertedCollisionObjects.values().forEach(object -> repositionGoingRight(-deltaShiftX, object));
-    }
-    
-    private void shiftY(int deltaShiftY)
-    {
-    	if(deltaShiftY > 0)
-    		insertedCollisionObjects.values().forEach(object -> repositionGoingDown(deltaShiftY, object));
-    	else
-    		insertedCollisionObjects.values().forEach(object -> repositionGoingUp(-deltaShiftY, object));
-    }
+
+	private void doShift(int deltaX, int deltaY)
+	{
+		if (deltaX == 0 && deltaY == 0)
+			return;
+
+		if (deltaX > 0 && deltaY > 0)
+			insertedCollisionObjects.values().forEach(info -> repositionLeftAndDown(deltaX, deltaY, info.getObject()));
+		else if (deltaX > 0 && deltaY < 0)
+			insertedCollisionObjects.values().forEach(info -> repositionLeftAndUp(deltaX, -deltaY, info.getObject()));
+		else if (deltaX < 0 && deltaY > 0)
+			insertedCollisionObjects.values()
+					.forEach(info -> repositionRightAndDown(-deltaX, deltaY, info.getObject()));
+		else if (deltaX < 0 && deltaY < 0)
+			insertedCollisionObjects.values().forEach(info -> repositionRightAndUp(-deltaX, -deltaY, info.getObject()));
+		else if (deltaX == 0)
+			shiftY(deltaY);
+		else
+			shiftX(deltaX);
+	}
+
+	private void repositionLeftAndDown(int moveX, int moveY, T object)
+	{
+		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+		repositionGoingDown(moveY, collision, object);
+		collision.y -= moveY;
+		repositionGoingLeft(moveX, collision, object);
+	}
+
+	private void repositionLeftAndUp(int moveX, int moveY, T object)
+	{
+		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+		repositionGoingUp(moveY, collision, object);
+		collision.y += moveY;
+		repositionGoingLeft(moveX, collision, object);
+	}
+
+	private void repositionRightAndDown(int moveX, int moveY, T object)
+	{
+		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+		repositionGoingDown(moveY, collision, object);
+		collision.y -= moveY;
+		repositionGoingRight(moveX, collision, object);
+	}
+
+	private void repositionRightAndUp(int moveX, int moveY, T object)
+	{
+		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
+		repositionGoingUp(moveY, collision, object);
+		collision.y += moveY;
+		repositionGoingRight(moveX, collision, object);
+	}
+
+	private void shiftX(int deltaShiftX)
+	{
+		if (deltaShiftX > 0)
+			insertedCollisionObjects.values().forEach(info -> repositionGoingLeft(deltaShiftX, info.getObject()));
+		else if (deltaShiftX < 0)
+			insertedCollisionObjects.values().forEach(info -> repositionGoingRight(-deltaShiftX, info.getObject()));
+	}
+
+	private void shiftY(int deltaShiftY)
+	{
+		if (deltaShiftY > 0)
+			insertedCollisionObjects.values().forEach(info -> repositionGoingDown(deltaShiftY, info.getObject()));
+		else if (deltaShiftY < 0)
+			insertedCollisionObjects.values().forEach(info -> repositionGoingUp(-deltaShiftY, info.getObject()));
+	}
 
 	@Override
 	public T getObject(int gameX, int gameY)
 	{
-		gameX -= shiftX;
-		gameY -= shiftY;
-		if (gameX >= collisionMap.length || gameY >= collisionMap[0].length
-                || gameX < 0 || gameY < 0)
-            return null;
-        return (T)collisionMap[gameX][gameY];
+		int mapX = gameX - shiftX;
+		int mapY = gameY - shiftY;
+		if (mapX >= collisionMap.length || mapY >= collisionMap[0].length || mapX < 0 || mapY < 0)
+			return null;
+		return (T) collisionMap[mapX][mapY];
 	}
-	
+
 	public void debugMethodRender(Batch batch, Texture texture)
 	{
 		for (int i = 0; i < collisionMap.length; i++)
-            for (int j = 0; j < collisionMap[i].length; j++)
-                if(collisionMap[i][j] != null)
-                	batch.draw(texture, i, j, 1, 1);        
+			for (int j = 0; j < collisionMap[i].length; j++)
+				if (collisionMap[i][j] != null)
+					batch.draw(texture, i, j, 1, 1);
 	}
 }

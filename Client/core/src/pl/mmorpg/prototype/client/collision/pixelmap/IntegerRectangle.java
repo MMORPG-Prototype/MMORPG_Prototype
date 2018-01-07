@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class IntegerRectangle
 {
-    public final int x;
-    public final int y;
+    public int x;
+    public int y;
     public final int width;
     public final int height;
 
@@ -17,7 +17,15 @@ public class IntegerRectangle
         this.height = Math.round(rectangle.height);
     }
 
-    public int getRightBound()
+    public IntegerRectangle(IntegerRectangle rectangle)
+	{
+		this.x = rectangle.x;
+		this.y = rectangle.y;
+		this.width = rectangle.width;
+		this.height = rectangle.height;
+	}
+
+	public int getRightBound()
     {
         return x + width - 1;
     }
