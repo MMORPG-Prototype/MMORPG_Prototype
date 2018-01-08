@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import pl.mmorpg.prototype.client.collision.interfaces.RectangleCollisionObject;
+import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.Identifiable;
 
 public abstract class GameObject extends Sprite implements RectangleCollisionObject, Identifiable
@@ -60,5 +61,27 @@ public abstract class GameObject extends Sprite implements RectangleCollisionObj
 	public void setLayer(int layer)
 	{
 		this.layer = layer;
+	}
+	
+	public static class CollisionMapGameObject extends GameObject
+	{
+		private Rectangle rectangle;
+
+		public CollisionMapGameObject(Rectangle rectangle, int id)
+		{
+			super(Assets.get("nullTexture.png"), id);
+			this.rectangle = rectangle;
+		}
+		
+		@Override
+	    public Rectangle getCollisionRect()
+	    {
+	    	return rectangle;
+	    }
+
+		@Override
+		public void update(float deltaTime)
+		{
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.client.states;
 
 import java.awt.Point;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -14,14 +15,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.minlog.Log;
 
 import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.client.collision.pixelmap.PixelCollisionMap;
+import pl.mmorpg.prototype.client.collision.pixelmap.UndefinedStaticObjectCreator;
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.InputMultiplexer;
@@ -37,6 +43,7 @@ import pl.mmorpg.prototype.client.objects.NullPlayer;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.objects.graphic.BloodAnimation;
 import pl.mmorpg.prototype.client.objects.graphic.ExperienceGainLabel;
+import pl.mmorpg.prototype.client.objects.graphic.FadingRedRectangle;
 import pl.mmorpg.prototype.client.objects.graphic.FireDamageLabel;
 import pl.mmorpg.prototype.client.objects.graphic.GameWorldLabel;
 import pl.mmorpg.prototype.client.objects.graphic.GraphicGameObject;
@@ -46,6 +53,11 @@ import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
+import pl.mmorpg.prototype.client.path.search.BestFirstPathFinder;
+import pl.mmorpg.prototype.client.path.search.PathFinder;
+import pl.mmorpg.prototype.client.path.search.collisionDetectors.CollisionDetector;
+import pl.mmorpg.prototype.client.path.search.collisionDetectors.GameObjectCollisionDetector;
+import pl.mmorpg.prototype.client.path.search.distanceComparators.ManhattanDistanceComparator;
 import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.quests.QuestCreator;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -96,6 +108,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private final BlockingQueue<GraphicGameObject> clientGraphics = new LinkedBlockingQueue<>();
 	private final TiledMapRenderer mapRenderer;
 	private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+	private final TiledMap map = Assets.get("Map/tiled3.tmx");
 	private final OrthographicCamera camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
 	private PixelCollisionMap<GameObject> collisionMap = createCollisionMap(camera);
 	private InputProcessorAdapter inputHandler;
@@ -112,7 +125,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		camera.setToOrtho(false);
 		camera.viewportWidth = CAMERA_WIDTH;
 		camera.viewportHeight = CAMERA_HEIGHT;
-		TiledMap map = Assets.get("Map/tiled3.tmx");
+
 		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
 	}
 
@@ -127,6 +140,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface, player, this));
 		inputMultiplexer.addProcessor(userInterface.getStage());
 		inputMultiplexer.addProcessor(inputHandler);
+		insertMapObjectsIntoCollisionMap(collisionMap, map);
 		isInitalized = true;
 	}
 
@@ -150,7 +164,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		for (GraphicGameObject object : clientGraphics)
 			object.render(batch);
 
-		//collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"), camera);
+		collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"), camera);
 		batch.end();
 		mapRenderer.render(new int[] { 2, 3, 4 });
 		userInterface.draw(batch);
@@ -264,13 +278,23 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		gameObjects.clear();
 		userInterface.clear();
 		inputMultiplexer.clear();
-		collisionMap = createCollisionMap(camera);
+		collisionMap.clear();
+	}
+
+	private void insertMapObjectsIntoCollisionMap(PixelCollisionMap<GameObject> collisionMap, TiledMap worldMap)
+	{
+		MapObjects objects = worldMap.getLayers().get("CollisionLayer").getObjects();
+		Array<RectangleMapObject> collision = objects.getByType(RectangleMapObject.class);
+		collision.forEach((rectangle) -> collisionMap.insertStaticObject(rectangle.getRectangle()));
+
 	}
 
 	private static PixelCollisionMap<GameObject> createCollisionMap(Camera camera)
 	{
+		UndefinedStaticObjectCreator<GameObject> collisionObjectCreator = (rectangle,
+				id) -> new GameObject.CollisionMapGameObject(rectangle, id);
 		return new PixelCollisionMap<>(CAMERA_WIDTH + 100, CAMERA_HEIGHT + 100, (int) camera.position.x,
-				(int) camera.position.y);
+				(int) camera.position.y, collisionObjectCreator);
 	}
 
 	public void userWantsToChangeCharacter()
@@ -316,6 +340,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		float realX = getRealX(x);
 		float realY = getRealY(y);
+		drawPathTo(realX, realY);
 		BoardClickPacket packet = PacketsMaker.makeBoardClickPacket(realX, realY);
 		client.sendTCP(packet);
 		GameObject object = collisionMap.getObject((int) realX, (int) realY);
@@ -323,6 +348,35 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			System.out.println("Id: " + object.getId() + ", " + object);
 
 		System.out.println("X: " + realX + ", Y: " + realY);
+	}
+
+	private void drawPathTo(float x, float y)
+	{
+		x -= x % 10;
+		y -= y % 10;
+		PathFinder pathFinder = new BestFirstPathFinder();
+		Point start = new Point((int) player.getX(), (int) player.getY());
+		start.x -= start.x % 10;
+		start.y -= start.y % 10;
+		Point destination = new Point((int) x, (int) y);
+		new Thread(() ->
+		{
+			CollisionDetector collisionDetector = new GameObjectCollisionDetector(collisionMap, player);
+			Collection<? extends Point> path = pathFinder.find(start, destination,
+					new ManhattanDistanceComparator(destination), collisionDetector);
+			drawPath(path);
+		}).run();
+	}
+
+	private void drawPath(Collection<? extends Point> path)
+	{
+		path.forEach(this::addPathElement);
+		
+	}
+
+	private boolean addPathElement(Point point)
+	{
+		return clientGraphics.offer(new FadingRedRectangle(new Rectangle(point.x, point.y, 10, 10)));
 	}
 
 	private float getRealY(float y)

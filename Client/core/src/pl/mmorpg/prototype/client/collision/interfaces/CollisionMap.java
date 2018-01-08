@@ -6,6 +6,8 @@ public interface CollisionMap<T extends RectangleCollisionObject>
 
 	void remove(T object);
 	
+	boolean isValidPoint(int gameX, int gameY);
+	
 	T getObject(int gameX, int gameY);
 	
 	void repositionGoingRight(int moveValue, T object);
@@ -15,4 +17,7 @@ public interface CollisionMap<T extends RectangleCollisionObject>
 	void repositionGoingUp(int moveValue, T object);
 	
 	void repositionGoingDown(int moveValue, T object);
+	
+	void clear();
+	
 }

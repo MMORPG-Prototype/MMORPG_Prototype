@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 
 import pl.mmorpg.prototype.client.collision.interfaces.RectangleCollisionObject;
 import pl.mmorpg.prototype.client.collision.interfaces.ShiftableCollisionMap;
@@ -14,20 +15,33 @@ import pl.mmorpg.prototype.clientservercommon.Identifiable;
 @SuppressWarnings("unchecked")
 public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable> implements ShiftableCollisionMap<T>
 {
-	private int counter = 0;
+	private int nextStaticObjectId = -1;
 	private Object[][] collisionMap;
 	private Map<Long, CollisionObjectInfo<T>> insertedCollisionObjects = new ConcurrentHashMap<>();
+	private final UndefinedStaticObjectCreator<T> undefinedStaticObjectCreator;
 	private int shiftX = 0;
 	private int shiftY = 0;
-
+	
 	public PixelCollisionMap(int width, int height)
 	{
-		this(width, height, 0, 0);
+		this(width, height, 0, 0, null);
 	}
-
+	
 	public PixelCollisionMap(int width, int height, int shiftX, int shiftY)
 	{
+		this(width, height, shiftX, shiftY, null);
+	}
+
+
+	public PixelCollisionMap(int width, int height, UndefinedStaticObjectCreator<T> undefinedStaticObjectCreator)
+	{
+		this(width, height, 0, 0, undefinedStaticObjectCreator);
+	}
+
+	public PixelCollisionMap(int width, int height, int shiftX, int shiftY, UndefinedStaticObjectCreator<T> undefinedStaticObjectCreator)
+	{
 		collisionMap = createCollisionMap(width, height);
+		this.undefinedStaticObjectCreator = undefinedStaticObjectCreator;
 		this.shiftX = shiftX;
 		this.shiftY = shiftY;
 	}
@@ -74,7 +88,8 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 				&& isValidPoint(collision.getRightBound(), collision.getUpperBound());
 	}
 
-	private boolean isValidPoint(int x, int y)
+	@Override
+	public boolean isValidPoint(int x, int y)
 	{
 		return x >= shiftX && x < collisionMap.length + shiftX && y >= shiftY && y < collisionMap[0].length + shiftY;
 	}
@@ -168,27 +183,21 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 			IntegerRectangle shiftedCollision, T object, Runnable repositionInProperDirection)
 	{
 		CollisionObjectInfo<T> collisionObjectInfo = insertedCollisionObjects.get(object.getId());
-		try
-		{
-			if (fitsInMap(shiftedCollision))
-			{
-				if (!collisionObjectInfo.isOnCollisionMap())
-				{
-					insertCollisionOnly(shiftedCollision, object);
-					collisionObjectInfo.setOnCollisionMap(true);
-				} else
-					repositionInProperDirection.run();
 
-			} else if (collisionObjectInfo.isOnCollisionMap())
-			{
-				removeCollisionOnly(collision);
-				collisionObjectInfo.setOnCollisionMap(false);
-			}
-		} catch (ArrayIndexOutOfBoundsException e)
+		if (fitsInMap(shiftedCollision))
 		{
-			System.out.println("Minor bug exception counter: " + counter++);
+			if (!collisionObjectInfo.isOnCollisionMap())
+			{
+				insertCollisionOnly(shiftedCollision, object);
+				collisionObjectInfo.setOnCollisionMap(true);
+			} else
+				repositionInProperDirection.run();
+
+		} else if (collisionObjectInfo.isOnCollisionMap())
+		{
+			removeCollisionOnly(collision);
 			collisionObjectInfo.setOnCollisionMap(false);
-		} // ignore
+		}
 
 	}
 
@@ -324,5 +333,17 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 				if (collisionMap[i][j] != null)
 					batch.draw(texture, i + offset.position.x - 50 - offset.viewportWidth / 2,
 							j + offset.position.y - 50 - offset.viewportHeight / 2, 1, 1);
+	}
+
+	@Override
+	public void clear()
+	{
+		insertedCollisionObjects.values().forEach(info -> remove(info.getObject()));
+	}
+
+	public void insertStaticObject(Rectangle rectangle)
+	{
+		T object = undefinedStaticObjectCreator.create(rectangle, nextStaticObjectId--);
+		insert(object);
 	}
 }
