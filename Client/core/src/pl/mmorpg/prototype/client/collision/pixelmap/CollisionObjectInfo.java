@@ -10,5 +10,5 @@ import pl.mmorpg.prototype.clientservercommon.Identifiable;
 public class CollisionObjectInfo<T extends RectangleCollisionObject & Identifiable>
 {
 	private final T object;
-	private boolean onCollisionMap = false;;
+	private boolean onCollisionMap = false;
 }

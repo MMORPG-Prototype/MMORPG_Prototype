@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.collision.pixelmap;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,24 +22,24 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	private final UndefinedStaticObjectCreator<T> undefinedStaticObjectCreator;
 	private int shiftX = 0;
 	private int shiftY = 0;
-	
+
 	public PixelCollisionMap(int width, int height)
 	{
 		this(width, height, 0, 0, null);
 	}
-	
+
 	public PixelCollisionMap(int width, int height, int shiftX, int shiftY)
 	{
 		this(width, height, shiftX, shiftY, null);
 	}
-
 
 	public PixelCollisionMap(int width, int height, UndefinedStaticObjectCreator<T> undefinedStaticObjectCreator)
 	{
 		this(width, height, 0, 0, undefinedStaticObjectCreator);
 	}
 
-	public PixelCollisionMap(int width, int height, int shiftX, int shiftY, UndefinedStaticObjectCreator<T> undefinedStaticObjectCreator)
+	public PixelCollisionMap(int width, int height, int shiftX, int shiftY,
+			UndefinedStaticObjectCreator<T> undefinedStaticObjectCreator)
 	{
 		collisionMap = createCollisionMap(width, height);
 		this.undefinedStaticObjectCreator = undefinedStaticObjectCreator;
@@ -178,7 +179,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	private void insertCollisionGoingRight(int moveValue, IntegerRectangle collision, T object)
 	{
 		for (int i = collision.y; i <= collision.getUpperBound(); i++)
-			for (int j = collision.getRightBound(); j <= collision.getRightBound() + moveValue; j++)
+			for (int j = collision.getRightBound() + 1; j <= collision.getRightBound() + moveValue; j++)
 				collisionMap[j - shiftX][i - shiftY] = object;
 	}
 
@@ -231,7 +232,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 			for (int j = collision.x; j <= collision.getRightBound(); j++)
 				collisionMap[j - shiftX][i - shiftY] = object;
 	}
-	
+
 	private void clearCollisionGoingDown(int moveValue, IntegerRectangle collision)
 	{
 		for (int i = collision.y + collision.height - 1; i > collision.y + collision.height - moveValue - 1; i--)
@@ -257,7 +258,6 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	private void repositionCollisionOnlyGoingUp(int moveValue, IntegerRectangle collision, T object)
 	{
 		insertCollisionGoingUp(moveValue, collision, object);
-
 		clearCollisionGoingUp(moveValue, collision);
 	}
 
@@ -340,17 +340,92 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	private void shiftX(int deltaShiftX)
 	{
 		if (deltaShiftX > 0)
-			insertedCollisionObjects.values().forEach(info -> repositionGoingLeft(deltaShiftX, info.getObject()));
+			shiftRight(deltaShiftX);
 		else if (deltaShiftX < 0)
-			insertedCollisionObjects.values().forEach(info -> repositionGoingRight(-deltaShiftX, info.getObject()));
+			shiftLeft(-deltaShiftX);
+	}
+
+	private void shiftRight(int shiftValue)
+	{
+		Collection<CollisionObjectInfo<T>> insertedObjects = insertedCollisionObjects.values();
+		for (CollisionObjectInfo<T> info : insertedObjects)
+			if (info.isOnCollisionMap())
+				clearCollisionGoingLeft(shiftValue, new IntegerRectangle(info.getObject().getCollisionRect()));
+
+		for (CollisionObjectInfo<T> info : insertedObjects)
+		{
+			T object = info.getObject();
+			Rectangle collisionRect = object.getCollisionRect();
+			IntegerRectangle collision = new IntegerRectangle(collisionRect);
+			IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
+			shiftedCollision.x -= shiftValue;
+			repositionWithBoundsChecking(shiftValue, collision, shiftedCollision, object,
+					() -> insertCollisionGoingLeft(shiftValue, collision, object));
+		}
+	}
+
+
+	private void shiftLeft(int shiftValue)
+	{
+		Collection<CollisionObjectInfo<T>> insertedObjects = insertedCollisionObjects.values();
+		for (CollisionObjectInfo<T> info : insertedObjects)
+			if (info.isOnCollisionMap())
+				clearCollisionGoingRight(shiftValue, new IntegerRectangle(info.getObject().getCollisionRect()));
+		
+		for (CollisionObjectInfo<T> info : insertedObjects)
+		{
+			T object = info.getObject();
+			Rectangle collisionRect = object.getCollisionRect();
+			IntegerRectangle collision = new IntegerRectangle(collisionRect);
+			IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
+			shiftedCollision.x += shiftValue;
+			repositionWithBoundsChecking(shiftValue, collision, shiftedCollision, object,
+					() -> insertCollisionGoingRight(shiftValue, collision, object));
+		}
 	}
 
 	private void shiftY(int deltaShiftY)
 	{
 		if (deltaShiftY > 0)
-			insertedCollisionObjects.values().forEach(info -> repositionGoingDown(deltaShiftY, info.getObject()));
+			shiftUp(deltaShiftY);
 		else if (deltaShiftY < 0)
-			insertedCollisionObjects.values().forEach(info -> repositionGoingUp(-deltaShiftY, info.getObject()));
+			shiftDown(-deltaShiftY);
+	}
+
+	private void shiftUp(int shiftValue)
+	{
+		Collection<CollisionObjectInfo<T>> insertedObjects = insertedCollisionObjects.values();
+		for (CollisionObjectInfo<T> info : insertedObjects)
+			if (info.isOnCollisionMap())
+				clearCollisionGoingDown(shiftValue, new IntegerRectangle(info.getObject().getCollisionRect()));
+		for (CollisionObjectInfo<T> info : insertedObjects)
+		{
+			T object = info.getObject();
+			Rectangle collisionRect = object.getCollisionRect();
+			IntegerRectangle collision = new IntegerRectangle(collisionRect);
+			IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
+			shiftedCollision.y -= shiftValue;
+			repositionWithBoundsChecking(shiftValue, collision, shiftedCollision, object,
+					() -> insertCollisionGoingDown(shiftValue, collision, object));
+		}
+	}
+
+	private void shiftDown(int shiftValue)
+	{
+		Collection<CollisionObjectInfo<T>> insertedObjects = insertedCollisionObjects.values();
+		for (CollisionObjectInfo<T> info : insertedObjects)
+			if (info.isOnCollisionMap())
+				clearCollisionGoingUp(shiftValue, new IntegerRectangle(info.getObject().getCollisionRect()));
+		for (CollisionObjectInfo<T> info : insertedObjects)
+		{
+			T object = info.getObject();
+			Rectangle collisionRect = object.getCollisionRect();
+			IntegerRectangle collision = new IntegerRectangle(collisionRect);
+			IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
+			shiftedCollision.y += shiftValue;
+			repositionWithBoundsChecking(shiftValue, collision, shiftedCollision, object,
+					() -> insertCollisionGoingUp(shiftValue, collision, object));
+		}
 	}
 
 	@Override
