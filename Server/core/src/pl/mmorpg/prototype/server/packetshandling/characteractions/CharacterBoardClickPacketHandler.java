@@ -13,8 +13,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.Character;
+import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.exceptions.CannotTargetItselfException;
 import pl.mmorpg.prototype.server.objects.GameObject;
@@ -67,6 +67,8 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 			tryToTargetMonster(connection, (Monster) target, source);
 		else if (target instanceof QuestBoard)
 			sendQuestBoardInfo(connection, (QuestBoard) target);
+		else if (target.getClass().getSimpleName().contains("$NullGameObject"))
+			;//ignore
 		else
 			throw new NotImplementedException("Not implemented");
 
