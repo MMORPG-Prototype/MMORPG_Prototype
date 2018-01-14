@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.client.objects;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 import pl.mmorpg.prototype.client.collision.interfaces.RectangleCollisionObject;
@@ -30,6 +31,11 @@ public abstract class GameObject extends Sprite implements RectangleCollisionObj
     public void render(SpriteBatch batch)
     {
         draw(batch);
+    }
+    
+    public TextureRegion getTextureRegion()
+    {
+    	return new TextureRegion(getTexture());
     }
 
     public abstract void update(float deltaTime);

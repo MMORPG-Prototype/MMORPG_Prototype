@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
@@ -50,6 +51,7 @@ import pl.mmorpg.prototype.client.objects.graphic.GraphicGameObject;
 import pl.mmorpg.prototype.client.objects.graphic.HealLabel;
 import pl.mmorpg.prototype.client.objects.graphic.ManaReplenishLabel;
 import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
+import pl.mmorpg.prototype.client.objects.graphic.helpers.ObjectHighlighter;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
@@ -106,6 +108,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private final StateManager states;
 	private final Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
 	private final BlockingQueue<GraphicGameObject> clientGraphics = new LinkedBlockingQueue<>();
+	private final ObjectHighlighter objectHighlighter = new ObjectHighlighter(clientGraphics);
 	private final TiledMapRenderer mapRenderer;
 	private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
 	private final TiledMap map = Assets.get("Map/tiled3.tmx");
@@ -115,6 +118,8 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private Player player;
 	private UserInterface userInterface;
 	private boolean isInitalized = false;
+	private float currentGameMouseX = -1f;
+	private float currentGameMouseY = -1f;
 
 	public PlayState(StateManager states, Client client)
 	{
@@ -164,7 +169,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		for (GraphicGameObject object : clientGraphics)
 			object.render(batch);
 
-		collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"), camera);
+		//collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"), camera);
 		batch.end();
 		mapRenderer.render(new int[] { 2, 3, 4 });
 		userInterface.draw(batch);
@@ -184,11 +189,30 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			object.update(deltaTime);
 
 		graphicObjectsUpdate(deltaTime);
+		objectHighlighter.update();
 		cameraUpdate();
 		collisionMap.update((int) (camera.position.x - 50 - camera.viewportWidth / 2),
 				(int) (camera.position.y - 50 - camera.viewportHeight / 2));
 		inputHandler.process();
 		userInterface.update();
+	}
+	
+	public void onMouseMove(float x, float y)
+	{
+		highlightHoveredObject(x, y);
+	}
+
+	private void highlightHoveredObject(float x, float y)
+	{
+		currentGameMouseX = getRealX(x);
+		currentGameMouseY = getRealY(y);
+		GameObject object = collisionMap.getObject((int) currentGameMouseX, (int) currentGameMouseY);
+		if (object != null)
+		{
+			Supplier<Boolean> graphicRemovalCondition = () -> !object.getCollisionRect()
+					.contains(currentGameMouseX, currentGameMouseY);
+			objectHighlighter.highlight(object, graphicRemovalCondition);
+		}
 	}
 
 	private void cameraUpdate()
@@ -286,7 +310,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		MapObjects objects = worldMap.getLayers().get("CollisionLayer").getObjects();
 		Array<RectangleMapObject> collision = objects.getByType(RectangleMapObject.class);
 		collision.forEach((rectangle) -> collisionMap.insertStaticObject(rectangle.getRectangle()));
-
 	}
 
 	private static PixelCollisionMap<GameObject> createCollisionMap(Camera camera)
@@ -371,7 +394,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private void drawPath(Collection<? extends Point> path)
 	{
 		path.forEach(this::addPathElement);
-		
+
 	}
 
 	private boolean addPathElement(Point point)

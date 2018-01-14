@@ -87,6 +87,12 @@ public abstract class WalkingGameObject extends MovableGameObject
 		else if (moveDirection == Directions.UP)
 			useAnimation(moveUpAnimation, animationDelta);
 	}
+	
+	@Override
+	public TextureRegion getTextureRegion()
+	{
+		return textureToDraw;
+	}
 
 	@Override
 	public void render(SpriteBatch batch)
