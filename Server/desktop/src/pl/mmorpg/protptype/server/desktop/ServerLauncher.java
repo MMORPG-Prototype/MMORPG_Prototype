@@ -12,13 +12,24 @@ import pl.mmorpg.prototype.server.GameServer;
 @SpringBootApplication(scanBasePackages="pl.mmorpg.prototype")
 public class ServerLauncher
 {
+
 	public static void main(String[] args)  
 	{
-		SpringApplication.run(ServerLauncher.class, args);
-		
+		initializeSpring(args);
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = Settings.GAME_WIDTH;
 		config.height = Settings.GAME_HEIGHT; 
 		new LwjglApplication(new GameServer(), config);
+	}
+
+	private static void initializeSpring(String[] args)
+	{
+		try {
+			SpringApplication.run(ServerLauncher.class, args);
+		}
+		catch(Exception e){
+			new MySqlLauncher().launch();
+			SpringApplication.run(ServerLauncher.class, args);
+		}
 	}
 }
