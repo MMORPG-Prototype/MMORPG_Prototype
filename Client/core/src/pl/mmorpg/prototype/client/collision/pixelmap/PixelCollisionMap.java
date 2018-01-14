@@ -129,10 +129,19 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 
 	private void repositionCollisionOnlyGoingLeft(int moveValue, IntegerRectangle collision, T object)
 	{
+		insertCollisionGoingLeft(moveValue, collision, object);
+		clearCollisionGoingLeft(moveValue, collision);
+	}
+
+	private void insertCollisionGoingLeft(int moveValue, IntegerRectangle collision, T object)
+	{
 		for (int i = collision.y; i <= collision.getUpperBound(); i++)
 			for (int j = collision.x - moveValue; j < collision.x; j++)
 				collisionMap[j - shiftX][i - shiftY] = object;
+	}
 
+	private void clearCollisionGoingLeft(int moveValue, IntegerRectangle collision)
+	{
 		for (int i = collision.y; i <= collision.getUpperBound(); i++)
 			for (int j = collision.getRightBound() - moveValue + 1; j <= collision.getRightBound(); j++)
 				collisionMap[j - shiftX][i - shiftY] = null;
@@ -155,13 +164,22 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 
 	private void repositionCollisionOnlyGoingRight(int moveValue, IntegerRectangle collision, T object)
 	{
-		for (int i = collision.y; i <= collision.getUpperBound(); i++)
-			for (int j = collision.getRightBound(); j <= collision.getRightBound() + moveValue; j++)
-				collisionMap[j - shiftX][i - shiftY] = object;
+		insertCollisionGoingRight(moveValue, collision, object);
+		clearCollisionGoingRight(moveValue, collision);
+	}
 
+	private void clearCollisionGoingRight(int moveValue, IntegerRectangle collision)
+	{
 		for (int i = collision.y; i <= collision.getUpperBound(); i++)
 			for (int j = collision.x; j < collision.x + moveValue; j++)
 				collisionMap[j - shiftX][i - shiftY] = null;
+	}
+
+	private void insertCollisionGoingRight(int moveValue, IntegerRectangle collision, T object)
+	{
+		for (int i = collision.y; i <= collision.getUpperBound(); i++)
+			for (int j = collision.getRightBound(); j <= collision.getRightBound() + moveValue; j++)
+				collisionMap[j - shiftX][i - shiftY] = object;
 	}
 
 	@Override
@@ -203,10 +221,19 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 
 	private void repositionCollisionOnlyGoingDown(int moveValue, IntegerRectangle collision, T object)
 	{
+		insertCollisionGoingDown(moveValue, collision, object);
+		clearCollisionGoingDown(moveValue, collision);
+	}
+
+	private void insertCollisionGoingDown(int moveValue, IntegerRectangle collision, T object)
+	{
 		for (int i = collision.y - 1; i >= collision.y - moveValue; i--)
 			for (int j = collision.x; j <= collision.getRightBound(); j++)
 				collisionMap[j - shiftX][i - shiftY] = object;
-
+	}
+	
+	private void clearCollisionGoingDown(int moveValue, IntegerRectangle collision)
+	{
 		for (int i = collision.y + collision.height - 1; i > collision.y + collision.height - moveValue - 1; i--)
 			for (int j = collision.x; j <= collision.getRightBound(); j++)
 				collisionMap[j - shiftX][i - shiftY] = null;
@@ -229,10 +256,20 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 
 	private void repositionCollisionOnlyGoingUp(int moveValue, IntegerRectangle collision, T object)
 	{
+		insertCollisionGoingUp(moveValue, collision, object);
+
+		clearCollisionGoingUp(moveValue, collision);
+	}
+
+	private void insertCollisionGoingUp(int moveValue, IntegerRectangle collision, T object)
+	{
 		for (int i = collision.y + collision.height; i < collision.y + collision.height + moveValue; i++)
 			for (int j = collision.x; j <= collision.getRightBound(); j++)
 				collisionMap[j - shiftX][i - shiftY] = object;
+	}
 
+	private void clearCollisionGoingUp(int moveValue, IntegerRectangle collision)
+	{
 		for (int i = collision.y + moveValue - 1; i >= collision.y; i--)
 			for (int j = collision.x; j <= collision.getRightBound(); j++)
 				collisionMap[j - shiftX][i - shiftY] = null;
