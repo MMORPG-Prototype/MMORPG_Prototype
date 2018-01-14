@@ -174,18 +174,13 @@ public class LayerCollisionMap<T extends StackableCollisionObject> implements St
 	{
 		return getContainer(new Point(gameX, gameY)).top(gameX, gameY);
 	}
-	
-	/*public void printContent()
-	{
-		for(int i=0; i<collisionMap.length; i++)
-			for(int j=0; j<collisionMap[0].length; j++)
-			{
-				Point position = new Point(i, j);
-				CollisionObjectsContainer container = getContainer(position);
-				Collection<RectangleCollisionObject> objects = container.getObjects();
-				if(!objects.isEmpty())
-					System.out.println(position + " " + objects);
-			}
-	}*/
 
+	// Not tested
+	@Override
+	public boolean isValidPoint(int gameX, int gameY)
+	{
+		int containerX = gameX / containerWidth;
+		int containerY = gameY / containerHeight;
+		return containerX > 0 && containerX < collisionMap.length && containerY > 0 && containerY < collisionMap[0].length;
+	}
 }

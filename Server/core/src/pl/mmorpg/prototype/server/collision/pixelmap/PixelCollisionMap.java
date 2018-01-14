@@ -253,9 +253,15 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
 
     public T getTopObject(int gameX, int gameY)
     {
-        if (gameX / scale >= collisionMap.length || gameY / scale >= collisionMap[0].length
-                || gameX < 0 || gameY < 0)
+        if (!isValidPoint(gameX, gameY))
             return null;
         return (T)collisionMap[gameX / scale][gameY / scale];
     }
+
+    @Override
+	public boolean isValidPoint(int gameX, int gameY)
+	{
+		return !(gameX / scale >= collisionMap.length || gameY / scale >= collisionMap[0].length
+                || gameX < 0 || gameY < 0);
+	}
 }
