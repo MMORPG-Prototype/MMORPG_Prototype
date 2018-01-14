@@ -13,6 +13,27 @@ import pl.mmorpg.prototype.client.collision.interfaces.ShiftableCollisionMap;
 
 public class PixelCollisionMapTests
 {
+	@Test
+	public void whenObjectsAreNearEachOtherShouldBeAbleToBeShiftedProperely()
+	{
+		int width = 15;
+		int height = 15;
+		ShiftableCollisionMap<PixelCollisionMapTestObject> collisionMap = new PixelCollisionMap<>(width, height);
+		PixelCollisionMapTestObject firstObject = new PixelCollisionMapTestObject(new Rectangle(0, 0, 2, 2));
+		PixelCollisionMapTestObject secondObject = new PixelCollisionMapTestObject(new Rectangle(2, 0, 2, 2));
+		collisionMap.insert(firstObject);
+		collisionMap.insert(secondObject);
+		int shiftX = 2;
+		int shiftY = 0;
+		collisionMap.update(shiftX, shiftY);
+		print(width, height, collisionMap);
+		//System.out.println();
+		//printCollisionMap(collisionMap, shiftX, shiftY, width, height);
+		assertThereIsPlacedObject(collisionMap, firstObject);
+		assertThereIsPlacedObject(collisionMap, secondObject);
+		assertNullAroundObject(collisionMap, new Rectangle(0, 0, 4, 2));
+	}
+	
 	@Test 
 	public void whenShiftedAndObjectsMovesRightAndUpCollisionShouldBeRepositioned()
 	{
@@ -25,12 +46,10 @@ public class PixelCollisionMapTests
 		int shiftX = 2;
 		int shiftY = 2;
 		collisionMap.update(shiftX, shiftY);
-		print(width, height, collisionMap);
 		collisionMap.repositionGoingRight(2, object);
 		object.x += 2;
 		collisionMap.repositionGoingUp(2, object);
 		object.y += 2;
-		System.out.println();
 		printCollisionMap(collisionMap, shiftX, shiftY, width, height);
 		assertNullAroundObject(collisionMap, object);
 		assertThereIsPlacedObject(collisionMap, object);
