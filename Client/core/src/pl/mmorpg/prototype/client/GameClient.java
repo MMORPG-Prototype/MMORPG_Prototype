@@ -57,7 +57,6 @@ public class GameClient extends ApplicationAdapter
         update();
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         Batch backupBatch = Assets.getBackupBatch();
         backupBatch.begin();
         backupBatch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
