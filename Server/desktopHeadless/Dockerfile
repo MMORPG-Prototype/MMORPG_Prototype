@@ -1,4 +1,4 @@
-FROM openjdk:8u141-jdk
+FROM openjdk:8u151-jdk
 
 EXPOSE 8000
 EXPOSE 8001
