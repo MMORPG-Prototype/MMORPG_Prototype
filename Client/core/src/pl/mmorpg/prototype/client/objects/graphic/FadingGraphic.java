@@ -31,7 +31,6 @@ public abstract class FadingGraphic extends GraphicGameObject
 	@Override
 	public void update(float deltaTime)
 	{
-		super.update(deltaTime);
 		currentFadingTime += deltaTime;
 	}
 

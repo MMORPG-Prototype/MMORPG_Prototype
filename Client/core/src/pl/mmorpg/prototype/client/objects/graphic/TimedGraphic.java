@@ -14,7 +14,6 @@ public abstract class TimedGraphic extends GraphicGameObject
 	public void update(float deltaTime)
 	{
 		this.currentLivingTime += deltaTime;
-		super.update(deltaTime);
 	}
 	
 	@Override

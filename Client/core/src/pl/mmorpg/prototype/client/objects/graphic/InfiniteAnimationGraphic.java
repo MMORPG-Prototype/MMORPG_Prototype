@@ -24,7 +24,6 @@ public class InfiniteAnimationGraphic extends GraphicGameObject
     public void update(float deltaTime)
     {
         animation.update(deltaTime);
-        super.update(deltaTime);
     }
 
     @Override

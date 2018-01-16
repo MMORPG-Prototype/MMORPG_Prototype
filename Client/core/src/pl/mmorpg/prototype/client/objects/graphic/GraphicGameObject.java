@@ -4,20 +4,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public abstract class GraphicGameObject
 {
-    private boolean isAlive = true;
     protected float x;
     protected float y;
 
-    public boolean isAlive()
-    {
-        return isAlive;
-    }
-
-    public void update(float deltaTime)
-    {
-        if (shouldDelete())
-            isAlive = false;
-    }
+    public abstract void update(float deltaTime);
     
     public void setX(float x)
     {

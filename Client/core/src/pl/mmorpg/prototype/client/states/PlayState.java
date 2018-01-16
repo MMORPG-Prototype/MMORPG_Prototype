@@ -43,6 +43,7 @@ import pl.mmorpg.prototype.client.objects.GraphicObjectsContainer;
 import pl.mmorpg.prototype.client.objects.NullPlayer;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.objects.graphic.BloodAnimation;
+import pl.mmorpg.prototype.client.objects.graphic.DefinedAreaCloudCluster;
 import pl.mmorpg.prototype.client.objects.graphic.ExperienceGainLabel;
 import pl.mmorpg.prototype.client.objects.graphic.FadingRedRectangle;
 import pl.mmorpg.prototype.client.objects.graphic.FireDamageLabel;
@@ -141,12 +142,35 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		add(player);
 		gameObjects.put((long) character.getId(), player);
 		userInterface = new UserInterface(this, character);
+		initializeInputHandlers();
+		insertMapObjectsIntoCollisionMap(collisionMap, map);
+		addClouds();
+		isInitalized = true;
+	}
+
+	private void initializeInputHandlers()
+	{
 		inputHandler = new PlayInputContinuousHandler(userInterface, client, player);
 		inputMultiplexer.addProcessor(new PlayInputSingleHandle(userInterface, player, this));
 		inputMultiplexer.addProcessor(userInterface.getStage());
 		inputMultiplexer.addProcessor(inputHandler);
-		insertMapObjectsIntoCollisionMap(collisionMap, map);
-		isInitalized = true;
+	}
+
+	private void addClouds()
+	{
+		clientGraphics.offer(new DefinedAreaCloudCluster(getMapWidth(map), getMapHeight(map)));
+	}
+
+	private float getMapWidth(TiledMap map)
+	{
+		return map.getProperties().get("width", Integer.class) *
+				map.getProperties().get("tilewidth", Integer.class);
+	}
+	
+	private float getMapHeight(TiledMap map)
+	{
+		return map.getProperties().get("height", Integer.class) *
+				map.getProperties().get("tileheight", Integer.class);
 	}
 
 	public boolean isInitialized()
@@ -166,13 +190,15 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		batch.begin();
 		for (GameObject object : gameObjects.values())
 			object.render(batch);
-		for (GraphicGameObject object : clientGraphics)
-			object.render(batch);
 
 		//collisionMap.debugMethodRender(batch, Assets.get("debugTexture.png"), camera);
 		batch.end();
 		mapRenderer.render(new int[] { 2, 3, 4 });
 		userInterface.draw(batch);
+		batch.begin();
+		for (GraphicGameObject object : clientGraphics)
+			object.render(batch);
+		batch.end();
 	}
 
 	private void updateMapRendererView()
@@ -228,7 +254,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		{
 			GraphicGameObject object = it.next();
 			object.update(deltaTime);
-			if (!object.isAlive())
+			if (object.shouldDelete())
 				it.remove();
 		}
 	}
@@ -300,6 +326,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		isInitalized = false;
 		inputHandler = new NullInputHandler();
 		gameObjects.clear();
+		clientGraphics.clear();
 		userInterface.clear();
 		inputMultiplexer.clear();
 		collisionMap.clear();

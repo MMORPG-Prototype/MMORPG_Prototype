@@ -51,6 +51,8 @@ public class ClientListener extends Listener
 
 	public void tryHandlingUnhandledPackets()
 	{
+		if(unhandledPackets.size() > 10)
+			System.out.println("Unhandled packets number: " + unhandledPackets.size());
 		Iterator<PacketInfo> it = unhandledPackets.iterator();
 		while(it.hasNext())
 		{

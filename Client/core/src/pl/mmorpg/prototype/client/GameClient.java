@@ -55,17 +55,32 @@ public class GameClient extends ApplicationAdapter
     public void render()
     {
         update();
-        Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        clearScreen();
         Batch backupBatch = Assets.getBackupBatch();
-        backupBatch.begin();
+        renderBackground(backupBatch);
+        states.render(batch);
+        renderCursor(backupBatch);
+    }
+
+	private void clearScreen()
+	{
+		Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	}
+
+	private void renderBackground(Batch backupBatch)
+	{
+		backupBatch.begin();
         backupBatch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         backupBatch.end();
-        states.render(batch);
-        backupBatch.begin();
+	}
+	
+	private void renderCursor(Batch backupBatch)
+	{
+		backupBatch.begin();
         backupBatch.draw(mousePointer, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - 24, 24, 24);
         backupBatch.end();
-    }
+	}
 
     private void update()
     {

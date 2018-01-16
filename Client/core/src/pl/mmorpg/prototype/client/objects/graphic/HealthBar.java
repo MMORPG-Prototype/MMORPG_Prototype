@@ -31,12 +31,6 @@ public class HealthBar extends GraphicGameObject
 		batch.draw(blackEmptyRectangle, x, y);
 	}
 	
-	public void updatePosition()
-	{
-		x = owner.getX();
-		y = owner.getY() + 40;
-	}
-	
 	public void updateBar(int hp)
 	{
 		this.hp = hp;
@@ -51,6 +45,13 @@ public class HealthBar extends GraphicGameObject
 	public void delete()
 	{
 		shouldDelete = true;
+	}
+
+	@Override
+	public void update(float deltaTime)
+	{
+		x = owner.getX();
+		y = owner.getY() + 40;
 	}
 
 }

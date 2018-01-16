@@ -52,12 +52,6 @@ public class GameObjectHighlightGraphic extends GraphicGameObject
 	}
 
 	@Override
-	public void update(float deltaTime)
-	{
-		super.update(deltaTime);
-	}
-
-	@Override
 	public void render(SpriteBatch batch)
 	{
 		batch.setColor(1.0f, 1.0f, 1.0f, 0.5f);
@@ -70,5 +64,10 @@ public class GameObjectHighlightGraphic extends GraphicGameObject
 	public boolean shouldDelete()
 	{
 		return removalCondition.get();
+	}
+
+	@Override
+	public void update(float deltaTime)
+	{
 	}
 }

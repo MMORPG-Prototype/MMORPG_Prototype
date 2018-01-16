@@ -30,7 +30,7 @@ public abstract class HealthBarMonster extends Monster
 	@Override
 	public void update(float deltaTime)
 	{
-		healthBar.updatePosition();
+		healthBar.update(deltaTime);
 		healthBar.updateBar(properties.hp);
 		super.update(deltaTime);
 	}
