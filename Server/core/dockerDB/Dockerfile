@@ -1,6 +1,6 @@
 FROM mysql:5.7.15
 
 ENV MYSQL_DATABASE=mmorpgprototype \
-    MYSQL_ALLOW_EMPTY_PASSWORD=true
+    MYSQL_ROOT_PASSWORD=root
 
 EXPOSE 3306
