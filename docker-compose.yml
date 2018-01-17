@@ -1,6 +1,7 @@
 version: '3'
 services:
   mmorpg_headless_server:
+    container_name: mmorpg_headless_server
     image: pankiev/mmorpgheadlessserver
     ports:
       - 8000:8000/tcp
@@ -8,15 +9,21 @@ services:
     depends_on:
       - mmorpg_db
     restart: on-failure
+    networks:
+      - mmorpg_net
+
     
   mmorpg_db:
+    container_name: mmorpg_db
     image: mysql:5.7.15
     ports:
       - 3306:3306
     restart: on-failure
-	environment:
+    environment:
       - MYSQL_ROOT_PASSWORD=root
-	  - MYSQL_DATABASE=mmorpgprototype
-	
-      
-    
+      - MYSQL_DATABASE=mmorpgprototype
+    networks:
+      - mmorpg_net
+
+networks:
+  mmorpg_net:
