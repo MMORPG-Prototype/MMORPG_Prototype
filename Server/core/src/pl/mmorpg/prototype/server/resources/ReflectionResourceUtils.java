@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server.resources;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -63,7 +64,7 @@ public class ReflectionResourceUtils
 	private static String[] getClasspathJars()
 	{
 		String property = System.getProperty("java.class.path");
-		System.out.println(property);
+		System.out.println("Classpath: " + property);
 		String[] classpathJars = property.split(";");
 		return classpathJars;
 	}
@@ -71,6 +72,7 @@ public class ReflectionResourceUtils
 	private static Stream<URL> getUsedJars(String[] classpathJars)
 	{
 		String prefix = runJarLocation();
+		System.out.println("Run jar location: " + prefix);
 		return Arrays.stream(classpathJars)
 				.map(jar -> toURL(prefix, jar));
 	}
@@ -79,7 +81,7 @@ public class ReflectionResourceUtils
 	{
 		try
 		{
-			return new File(Assets.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())
+			return new File(Assets.class.getProtectionDomain().getCodeSource().getLocation().toURI().getRawPath())
 					.getParentFile().getParent();
 		} catch (URISyntaxException e)
 		{
@@ -89,20 +91,39 @@ public class ReflectionResourceUtils
 
 	private static String[] getManifestJars()
 	{
-		ClassLoader cl = Assets.class.getClassLoader();
-		try (InputStream manifestStream = cl.getResourceAsStream("META-INF/MANIFEST.MF"))
-		{
-
-			Manifest manifest = new Manifest(manifestStream);
-			Attributes attributes = manifest.getMainAttributes();
-			String classpath = attributes.getValue(Attributes.Name.CLASS_PATH);
-			if (classpath == null)
-				return ArrayUtils.EMPTY_STRING_ARRAY;
-			System.out.println(classpath);
-			return classpath.split(" ");
+		try(InputStream in = ReflectionResourceUtils.class.getResourceAsStream("/META-INF/MANIFEST.MF"))
+		{	
+			String[] manifestJars = readManifestJars(in);
+			if(manifestJars.length == 0)
+				return tryReadingFromRootManifest();
+			return manifestJars;
 		} catch (IOException e)
 		{
-			throw new RuntimeException(e);
+			return tryReadingFromRootManifest();
+		}
+	}
+	
+	private static String[] readManifestJars(InputStream in) throws IOException
+	{
+		Manifest manifest = new Manifest(in);
+		Attributes attributes = manifest.getMainAttributes();
+		String classpath = attributes.getValue(Attributes.Name.CLASS_PATH);
+		if(classpath == null)
+			return ArrayUtils.EMPTY_STRING_ARRAY;
+		System.out.println("Manifest jars: " + classpath);
+		return classpath.split(" ");
+	}
+
+	// Workaround for openJDK where MANIFEST.MF cannot be read from jar file
+	private static String[] tryReadingFromRootManifest()
+	{
+		try(InputStream in = new FileInputStream("META-INF/MANIFEST.MF"))
+		{
+			return readManifestJars(in);
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			return ArrayUtils.EMPTY_STRING_ARRAY;
 		}
 	}
 
@@ -112,9 +133,9 @@ public class ReflectionResourceUtils
 		{
 			String path = jar.trim().replace(" ", "%20");
 			if (!new File(path).isAbsolute())
-				return new URL("file:\\" + pathPrefix + '\\' + path);
+				return new URL("file:" + pathPrefix + '/' + path);
 
-			return new URL("file:\\" + path);
+			return new URL("file:" + path);
 		} catch (MalformedURLException e)
 		{
 			throw new RuntimeException(e);
