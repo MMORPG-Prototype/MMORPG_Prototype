@@ -67,7 +67,7 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 			tryToTargetMonster(connection, (Monster) target, source);
 		else if (target instanceof QuestBoard)
 			sendQuestBoardInfo(connection, (QuestBoard) target);
-		else if (target.getClass().getSimpleName().contains("$NullGameObject"))
+		else if (target.getClass().getSimpleName().contains("NullGameObject"))
 			;//ignore
 		else
 			throw new NotImplementedException("Not implemented");

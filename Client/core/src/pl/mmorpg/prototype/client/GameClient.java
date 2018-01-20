@@ -25,7 +25,7 @@ public class GameClient extends ApplicationAdapter
 
     private Texture mousePointer;
     private Texture background;
-
+    
     @Override
     public void create()
     {

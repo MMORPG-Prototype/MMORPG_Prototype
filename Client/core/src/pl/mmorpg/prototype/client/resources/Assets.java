@@ -34,6 +34,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.google.common.collect.Sets;
 
 import pl.mmorpg.prototype.client.exceptions.GameException;
+import pl.mmorpg.prototype.client.post.proccessing.ShaderBatch;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 
 public class Assets
@@ -42,7 +43,7 @@ public class Assets
 	private static AssetManager assets = new AssetManager();
 	private static BitmapFont font = new BitmapFont();
 	private static Map<String, Skin> skins = new HashMap<>();
-	private static SpriteBatch batch = new SpriteBatch();
+	private static SpriteBatch batch = new ShaderBatch(0.05f, 1.1f);
 	private static SpriteBatch backupBatch = new SpriteBatch();
 	private static List<CustomStage> stages = new LinkedList<>();
 
