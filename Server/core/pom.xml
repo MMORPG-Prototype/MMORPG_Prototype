@@ -22,7 +22,7 @@
 		<id>dev</id>
 			<activation>
 				<property>
-					<name>PRODUCTION</name>
+					<name>env.PRODUCTION</name>
 					<value>!true</value>
 				</property>
 			</activation>
@@ -35,7 +35,7 @@
 		<id>production</id>
 			<activation>
 				<property>
-					<name>PRODUCTION</name>
+					<name>env.PRODUCTION</name>
 					<value>true</value>
 				</property>
 			</activation>
