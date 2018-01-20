@@ -16,6 +16,34 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	
+	<profiles>
+		<profile>
+		<id>dev</id>
+			<activation>
+				<property>
+					<name>PRODUCTION</name>
+					<value>!true</value>
+				</property>
+			</activation>
+			<properties>
+		       <database.host>localhost</database.host>
+		   </properties>
+		</profile>
+		
+		<profile>
+		<id>production</id>
+			<activation>
+				<property>
+					<name>PRODUCTION</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<properties>
+		       <database.host>mmorpg_db</database.host>
+		   </properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<resources>
