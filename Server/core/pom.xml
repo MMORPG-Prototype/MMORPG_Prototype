@@ -16,6 +16,34 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	
+	<profiles>
+		<profile>
+		<id>dev</id>
+			<activation>
+				<property>
+					<name>env.PRODUCTION</name>
+					<value>!true</value>
+				</property>
+			</activation>
+			<properties>
+		       <database.host>localhost</database.host>
+		   </properties>
+		</profile>
+		
+		<profile>
+		<id>production</id>
+			<activation>
+				<property>
+					<name>env.PRODUCTION</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<properties>
+		       <database.host>mmorpg_db</database.host>
+		   </properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<resources>
@@ -38,6 +66,13 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
 				</configuration>
 			</plugin>
 		</plugins>
