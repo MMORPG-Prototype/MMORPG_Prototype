@@ -107,7 +107,7 @@
 							<goal>push</goal>
 						</goals>
 					</execution>
-				</executions>
+				</executions> 
 				<configuration>
 					<repository>pankiev/mmorpgheadlessserver</repository>
 					<tag>latest</tag>
