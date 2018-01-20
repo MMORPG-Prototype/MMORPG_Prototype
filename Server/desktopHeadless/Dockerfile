@@ -7,8 +7,7 @@ RUN mkdir /mmorpgServer
 
 COPY target/ /mmorpgServer/
 
-ARG JAR_FILE
 # Workaround for openJDK
-RUN jar xf /mmorpgServer/${JAR_FILE} META-INF/MANIFEST.MF
+RUN jar xf /mmorpgServer/mmorpgServer-desktop-headless-0.0.1-SNAPSHOT.jar META-INF/MANIFEST.MF
 
-CMD java -jar /mmorpgServer/${JAR_FILE}
+CMD java -jar /mmorpgServer/mmorpgServer-desktop-headless-0.0.1-SNAPSHOT.jar
