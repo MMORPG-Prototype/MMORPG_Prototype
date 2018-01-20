@@ -14,14 +14,6 @@
 		<module>/Client/core</module>
 		<module>/Client/desktop</module>
 	</modules>
-
-	<distributionManagement>
-		<repository>
-			<id>internal.repo</id>
-			<name>Internal repo</name>
-			<url>file:///internal_repo</url>
-		</repository>
-	</distributionManagement>
 	
 	<build>
 		<sourceDirectory>src</sourceDirectory>
