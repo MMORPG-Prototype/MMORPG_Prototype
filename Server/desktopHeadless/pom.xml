@@ -16,6 +16,14 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	
+	<distributionManagement>
+       <repository>
+         <id>internal.repo</id>
+         <name>Internal repo</name>
+         <url>file:///internal_repo</url>
+       </repository>
+   </distributionManagement>
 
 	<profiles>
 		<profile>
