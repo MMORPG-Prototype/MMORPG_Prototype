@@ -410,6 +410,7 @@ public class PixelCollisionMapTests
 		return null;
 	}
 
+	@SuppressWarnings("unused")
 	private void print(int width, int height, CollisionMap<PixelCollisionMapTestObject> collisionMap)
 	{
 		System.out.println(getFirstObjectBounds(collisionMap, 0, 0, width, height));

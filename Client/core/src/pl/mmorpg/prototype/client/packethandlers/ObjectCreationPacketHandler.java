@@ -8,7 +8,7 @@ import pl.mmorpg.prototype.client.objects.ObjectsFactory;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 
-public class ObjectCreationPacketHandler extends PacketHandlerBase<ObjectCreationPacket>
+public class ObjectCreationPacketHandler extends PacketHandlerAdapter<ObjectCreationPacket>
 {
     private PlayState playState;
     private static ObjectsFactory objectsFactory = new ObjectsFactory();
@@ -19,7 +19,7 @@ public class ObjectCreationPacketHandler extends PacketHandlerBase<ObjectCreatio
     }
 
     @Override
-    public void handlePacket(ObjectCreationPacket packet)
+    public void handle(ObjectCreationPacket packet)
     {
     	Function<CollisionMap<GameObject>, GameObject> objectCreator = 
 				collisionMap -> objectsFactory.produce(packet, collisionMap);

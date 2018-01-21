@@ -39,7 +39,8 @@ public class ClientListener extends Listener
 	@Override
 	public void received(Connection connection, Object packet)
 	{
-		PacketHandler packetHandler = packetHandlersFactory.produce(packet);
+		@SuppressWarnings("unchecked")
+		PacketHandler<Object> packetHandler = (PacketHandler<Object>) packetHandlersFactory.produce(packet);
 		if (packetHandler.canBeHandled(packet))
 			packetHandler.handle(packet);
 		else if(!packetHandler.canBeOmmited(packet))
@@ -48,16 +49,18 @@ public class ClientListener extends Listener
 		if(!(packet instanceof ObjectRepositionPacket))
 			Log.info("Packet received from server, id: " + connection.getID() + "packet: " + packet);
 	}
+	
 
 	public void tryHandlingUnhandledPackets()
 	{
 		if(unhandledPackets.size() > 10)
-			System.out.println("Unhandled packets number: " + unhandledPackets.size());
+			System.out.println("Unhandled packets number exceded 10 and is: " + unhandledPackets.size());
 		Iterator<PacketInfo> it = unhandledPackets.iterator();
 		while(it.hasNext())
-		{
+		{ 
 			PacketInfo packetInfo = it.next();
-			PacketHandler packetHandler = packetHandlersFactory.produce(packetInfo.packet);
+			@SuppressWarnings("unchecked")
+			PacketHandler<Object> packetHandler = (PacketHandler<Object>) packetHandlersFactory.produce(packetInfo.packet);
 			if (packetHandler.canBeHandled(packetInfo.packet))
 			{
 				packetHandler.handle(packetInfo.packet);

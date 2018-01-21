@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 
-public class NormalDamagePacketHandler extends PacketHandlerBase<NormalDamagePacket>
+public class NormalDamagePacketHandler extends PacketHandlerAdapter<NormalDamagePacket>
 {
     private PlayState playState;
 
@@ -13,13 +13,13 @@ public class NormalDamagePacketHandler extends PacketHandlerBase<NormalDamagePac
     }
 
     @Override
-    public void handlePacket(NormalDamagePacket packet)
+    public void handle(NormalDamagePacket packet)
     {
         playState.normalDamagePacketReceived(packet);
     }
 
     @Override
-    public boolean canBeHandled(Object packet)
+    public boolean canBeHandled(NormalDamagePacket packet)
     {
         return playState.isInitialized() && playState.has(((NormalDamagePacket) packet).getTargetId());
     }

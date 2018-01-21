@@ -55,10 +55,10 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.Unacceptable
 
 public class PacketHandlerFactory
 {
-    private Map<Class<?>, PacketHandler> packetHandlers = new HashMap<>();
+    private Map<Class<?>, PacketHandler<? extends Object>> packetHandlers = new HashMap<>();
 
     public PacketHandlerFactory(final PlayState playState, final StateManager states)
-    {
+    { 
         packetHandlers.put(AuthenticationReplyPacket.class, new AuthenticationReplyPacketHandler(states));
         packetHandlers.put(CharacterCreationReplyPacket.class, new CharacterCreationReplyPacketHandler(states));
         packetHandlers.put(CharacterItemDataPacket.class, new CharacterItemDataPacketHandler(playState));
@@ -109,9 +109,9 @@ public class PacketHandlerFactory
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
     }
 
-    public PacketHandler produce(Object object)
+    public PacketHandler<? extends Object> produce(Object object)
     {
-        PacketHandler packetHandler = packetHandlers.get(object.getClass());
+		PacketHandler<? extends Object> packetHandler = packetHandlers.get(object.getClass());
         if (packetHandler == null)
             throw new UnknownPacketTypeException(object);
         return packetHandler;

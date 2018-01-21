@@ -5,7 +5,7 @@ import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.GameObjectTargetPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 
-public class ObjectRepositionPacketHandler extends PacketHandlerBase<ObjectRepositionPacket>
+public class ObjectRepositionPacketHandler extends PacketHandlerAdapter<ObjectRepositionPacket>
 {
 	private PlayState playState;
 
@@ -15,7 +15,7 @@ public class ObjectRepositionPacketHandler extends PacketHandlerBase<ObjectRepos
 	}
 	
 	@Override
-	public void handlePacket(ObjectRepositionPacket packet)
+	public void handle(ObjectRepositionPacket packet)
 	{
 		GameObject operationTarget = playState.getObject(packet.id);
 		operationTarget.setX(packet.x);
@@ -23,7 +23,7 @@ public class ObjectRepositionPacketHandler extends PacketHandlerBase<ObjectRepos
 	}
 	
 	@Override
-	public boolean canHandle(ObjectRepositionPacket packet)
+	public boolean canBeHandled(ObjectRepositionPacket packet)
 	{
 		return objectExist(packet);
 	}
@@ -34,7 +34,7 @@ public class ObjectRepositionPacketHandler extends PacketHandlerBase<ObjectRepos
 	}
 
 	@Override
-	public boolean canOmmit(ObjectRepositionPacket packet)
+	public boolean canBeOmmited(ObjectRepositionPacket packet)
 	{
 		return true;
 	}

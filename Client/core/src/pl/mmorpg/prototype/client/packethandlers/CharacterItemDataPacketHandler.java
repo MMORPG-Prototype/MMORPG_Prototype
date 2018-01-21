@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 
-public class CharacterItemDataPacketHandler extends PacketHandlerBase<CharacterItemDataPacket>
+public class CharacterItemDataPacketHandler extends PacketHandlerAdapter<CharacterItemDataPacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class CharacterItemDataPacketHandler extends PacketHandlerBase<CharacterI
 	}
 	
 	@Override
-	public void handlePacket(CharacterItemDataPacket packet)
+	public void handle(CharacterItemDataPacket packet)
 	{
 		playState.newItemPacketReceived(packet);
 	}

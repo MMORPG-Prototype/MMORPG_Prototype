@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
 
-public class SpellPutInQuickAccessBarPacketHandler extends PacketHandlerBase<SpellPutInQuickAccessBarPacket>
+public class SpellPutInQuickAccessBarPacketHandler extends PacketHandlerAdapter<SpellPutInQuickAccessBarPacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class SpellPutInQuickAccessBarPacketHandler extends PacketHandlerBase<Spe
 	}
 	
 	@Override
-	public void handlePacket(SpellPutInQuickAccessBarPacket packet)
+	public void handle(SpellPutInQuickAccessBarPacket packet)
 	{
 		playState.putSpellInQuickAccessBarPacketReceived(packet);
 	}

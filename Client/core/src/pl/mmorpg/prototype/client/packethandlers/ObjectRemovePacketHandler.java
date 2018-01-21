@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 
-public class ObjectRemovePacketHandler extends PacketHandlerBase<ObjectRemovePacket>
+public class ObjectRemovePacketHandler extends PacketHandlerAdapter<ObjectRemovePacket>
 {
 	private PlayState playState;
 	
@@ -13,7 +13,7 @@ public class ObjectRemovePacketHandler extends PacketHandlerBase<ObjectRemovePac
 	}
 	
 	@Override
-	public void handlePacket(ObjectRemovePacket packet)
+	public void handle(ObjectRemovePacket packet)
 	{
 		playState.removeObject(packet.id);	
 	}

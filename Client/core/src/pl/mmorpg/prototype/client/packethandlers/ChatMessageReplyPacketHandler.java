@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 
-public class ChatMessageReplyPacketHandler extends PacketHandlerBase<ChatMessageReplyPacket>
+public class ChatMessageReplyPacketHandler extends PacketHandlerAdapter<ChatMessageReplyPacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class ChatMessageReplyPacketHandler extends PacketHandlerBase<ChatMessage
 	}
 	
 	@Override
-	public void handlePacket(ChatMessageReplyPacket packet)
+	public void handle(ChatMessageReplyPacket packet)
 	{		
 		playState.chatMessagePacketReceived(packet);
 	}

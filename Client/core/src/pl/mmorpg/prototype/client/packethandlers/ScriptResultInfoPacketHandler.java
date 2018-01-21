@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 
-public class ScriptResultInfoPacketHandler extends PacketHandlerBase<ScriptResultInfoPacket>
+public class ScriptResultInfoPacketHandler extends PacketHandlerAdapter<ScriptResultInfoPacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class ScriptResultInfoPacketHandler extends PacketHandlerBase<ScriptResul
 	}
 		
 	@Override
-	public void handlePacket(ScriptResultInfoPacket packet)
+	public void handle(ScriptResultInfoPacket packet)
 	{
 		playState.scriptResultInfoPacketReceived(packet);
 	}

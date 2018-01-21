@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
 
-public class MpChangeByItemUsagePacketHandler extends PacketHandlerBase<MpChangeByItemUsagePacket>
+public class MpChangeByItemUsagePacketHandler extends PacketHandlerAdapter<MpChangeByItemUsagePacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class MpChangeByItemUsagePacketHandler extends PacketHandlerBase<MpChange
 	}
 	
 	@Override
-	public void handlePacket(MpChangeByItemUsagePacket packet)
+	public void handle(MpChangeByItemUsagePacket packet)
 	{
 		playState.mpChangeByItemUsagePacketReceived(packet);
 	}

@@ -4,7 +4,7 @@ import pl.mmorpg.prototype.client.states.ChoosingCharacterState;
 import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
-public class UserCharacterDataArrayPacketHandler extends PacketHandlerBase<UserCharacterDataPacket[]>
+public class UserCharacterDataArrayPacketHandler extends PacketHandlerAdapter<UserCharacterDataPacket[]>
 {
 	private StateManager states;
 
@@ -14,7 +14,7 @@ public class UserCharacterDataArrayPacketHandler extends PacketHandlerBase<UserC
 	}
 
 	@Override
-	public void handlePacket(UserCharacterDataPacket[] characterPackets)
+	public void handle(UserCharacterDataPacket[] characterPackets)
 	{
 		ChoosingCharacterState choosingCharState = (ChoosingCharacterState) states.usedState();
 		choosingCharState.userCharactersDataReceived(characterPackets);

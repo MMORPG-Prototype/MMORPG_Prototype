@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 
-public class ManaDrainPacketHandler extends PacketHandlerBase<ManaDrainPacket>
+public class ManaDrainPacketHandler extends PacketHandlerAdapter<ManaDrainPacket>
 {
 
     private PlayState playState;
@@ -14,7 +14,7 @@ public class ManaDrainPacketHandler extends PacketHandlerBase<ManaDrainPacket>
     }
     
     @Override
-    public void handlePacket(ManaDrainPacket packet)
+    public void handle(ManaDrainPacket packet)
     {
         playState.playerUsedMana(packet.manaDrained);
     }

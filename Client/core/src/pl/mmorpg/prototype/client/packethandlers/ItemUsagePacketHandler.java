@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 
-public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
+public class ItemUsagePacketHandler extends PacketHandlerAdapter<ItemUsagePacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
 	}
 	
 	@Override
-	public void handlePacket(ItemUsagePacket packet)
+	public void handle(ItemUsagePacket packet)
 	{
 		playState.itemUsagePacketReceived(packet);
 	}

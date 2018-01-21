@@ -14,7 +14,6 @@ import pl.mmorpg.prototype.client.objects.GameObject;
 
 public class GameObjectHighlightGraphic extends GraphicGameObject
 {
-	private static final float MAX_LIVING_TIME = 0.5f;
 	private GameObject gameObject;
 	private final Texture highlightingGraphic;
 	private Supplier<Boolean> removalCondition;

@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 
-public class NpcStartDialogPacketHandler extends PacketHandlerBase<NpcStartDialogPacket>
+public class NpcStartDialogPacketHandler extends PacketHandlerAdapter<NpcStartDialogPacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class NpcStartDialogPacketHandler extends PacketHandlerBase<NpcStartDialo
 	}
 
 	@Override
-	public void handlePacket(NpcStartDialogPacket packet)
+	public void handle(NpcStartDialogPacket packet)
 	{
 		playState.npcStartDialogPacketReceived(packet);		
 	}

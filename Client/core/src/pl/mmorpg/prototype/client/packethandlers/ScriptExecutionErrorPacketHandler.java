@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
 
-public class ScriptExecutionErrorPacketHandler extends PacketHandlerBase<ScriptExecutionErrorPacket>
+public class ScriptExecutionErrorPacketHandler extends PacketHandlerAdapter<ScriptExecutionErrorPacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class ScriptExecutionErrorPacketHandler extends PacketHandlerBase<ScriptE
 	}
 
 	@Override
-	public void handlePacket(ScriptExecutionErrorPacket packet)
+	public void handle(ScriptExecutionErrorPacket packet)
 	{
 		playState.scriptExecutionErrorReceived(packet.getError());
 	}

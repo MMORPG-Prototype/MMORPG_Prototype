@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 
-public class QuestFinishedRewardPacketHandler extends PacketHandlerBase<QuestFinishedRewardPacket>
+public class QuestFinishedRewardPacketHandler extends PacketHandlerAdapter<QuestFinishedRewardPacket>
 {
     private PlayState playState;
 
@@ -13,7 +13,7 @@ public class QuestFinishedRewardPacketHandler extends PacketHandlerBase<QuestFin
     }
 
     @Override
-    public void handlePacket(QuestFinishedRewardPacket packet)
+    public void handle(QuestFinishedRewardPacket packet)
     {
         playState.questFinishedRewardPacketReceived(packet);
     }

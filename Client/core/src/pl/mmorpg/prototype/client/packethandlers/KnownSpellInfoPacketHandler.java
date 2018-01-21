@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.KnownSpellInfoPacket;
 
-public class KnownSpellInfoPacketHandler extends PacketHandlerBase<KnownSpellInfoPacket>
+public class KnownSpellInfoPacketHandler extends PacketHandlerAdapter<KnownSpellInfoPacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class KnownSpellInfoPacketHandler extends PacketHandlerBase<KnownSpellInf
 	}
 
 	@Override
-	public void handlePacket(KnownSpellInfoPacket packet)
+	public void handle(KnownSpellInfoPacket packet)
 	{
 		playState.knownSpellInfoReceived(packet.getSpellIdentifer());
 	}

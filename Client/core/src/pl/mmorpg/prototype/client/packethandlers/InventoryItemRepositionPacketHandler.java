@@ -6,7 +6,7 @@ import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
 
-public class InventoryItemRepositionPacketHandler extends PacketHandlerBase<InventoryItemRepositionPacket>
+public class InventoryItemRepositionPacketHandler extends PacketHandlerAdapter<InventoryItemRepositionPacket>
 {
 	private PlayState playState;
 
@@ -16,7 +16,7 @@ public class InventoryItemRepositionPacketHandler extends PacketHandlerBase<Inve
 	}
 	
 	@Override
-	public void handlePacket(InventoryItemRepositionPacket packet)
+	public void handle(InventoryItemRepositionPacket packet)
 	{
 		ItemInventoryPosition sourcePosition = new ItemInventoryPosition(packet.getSourcePageNumber(), new Point(packet.getSourcePageX(), packet.getSourcePageY()));
 		ItemInventoryPosition destinationPosition = new ItemInventoryPosition(packet.getDestinationPageNumber(), new Point(packet.getDestinationPageX(), packet.getDestinationPageY()));

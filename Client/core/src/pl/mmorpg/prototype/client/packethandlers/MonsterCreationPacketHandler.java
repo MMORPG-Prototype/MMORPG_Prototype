@@ -8,7 +8,7 @@ import pl.mmorpg.prototype.client.objects.monsters.MonstersFactory;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 
-public class MonsterCreationPacketHandler extends PacketHandlerBase<MonsterCreationPacket>
+public class MonsterCreationPacketHandler extends PacketHandlerAdapter<MonsterCreationPacket>
 {
 	private PlayState playState;
 	private static final MonstersFactory monstersFactory = new MonstersFactory();
@@ -19,7 +19,7 @@ public class MonsterCreationPacketHandler extends PacketHandlerBase<MonsterCreat
 	}
 	
 	@Override
-	public void handlePacket(MonsterCreationPacket packet)
+	public void handle(MonsterCreationPacket packet)
 	{
 		Function<CollisionMap<GameObject>, GameObject> monsterCreator = 
 				collisionMap -> monstersFactory.produce(packet, collisionMap);

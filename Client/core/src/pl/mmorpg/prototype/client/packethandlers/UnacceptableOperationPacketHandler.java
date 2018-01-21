@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 
-public class UnacceptableOperationPacketHandler extends PacketHandlerBase<UnacceptableOperationPacket>
+public class UnacceptableOperationPacketHandler extends PacketHandlerAdapter<UnacceptableOperationPacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class UnacceptableOperationPacketHandler extends PacketHandlerBase<Unacce
 	}
 	
 	@Override
-	public void handlePacket(UnacceptableOperationPacket packet)
+	public void handle(UnacceptableOperationPacket packet)
 	{
 		playState.showTimedErrorMessage(packet.getErrorMessage(), 5.0f);
 	}

@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
 
-public class QuestAcceptedPacketHandler extends PacketHandlerBase<QuestAcceptedPacket>
+public class QuestAcceptedPacketHandler extends PacketHandlerAdapter<QuestAcceptedPacket>
 {
     private final PlayState playState;
     
@@ -13,7 +13,7 @@ public class QuestAcceptedPacketHandler extends PacketHandlerBase<QuestAcceptedP
     }
 
     @Override
-    public void handlePacket(QuestAcceptedPacket packet)
+    public void handle(QuestAcceptedPacket packet)
     {
         playState.questAcceptedPacketReceived(packet);
     }

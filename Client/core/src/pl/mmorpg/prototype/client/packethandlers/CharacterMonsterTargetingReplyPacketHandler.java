@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 
-public class CharacterMonsterTargetingReplyPacketHandler extends PacketHandlerBase<MonsterTargetingReplyPacket>
+public class CharacterMonsterTargetingReplyPacketHandler extends PacketHandlerAdapter<MonsterTargetingReplyPacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class CharacterMonsterTargetingReplyPacketHandler extends PacketHandlerBa
 	}
 	
 	@Override
-	public void handlePacket(MonsterTargetingReplyPacket packet)
+	public void handle(MonsterTargetingReplyPacket packet)
 	{
 		playState.monsterTargeted(packet.monsterId);	
 	}

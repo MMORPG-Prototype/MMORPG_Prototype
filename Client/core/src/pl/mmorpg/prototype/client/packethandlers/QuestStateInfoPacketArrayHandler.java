@@ -5,7 +5,7 @@ import pl.mmorpg.prototype.client.quests.QuestCreator;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
 
-public class QuestStateInfoPacketArrayHandler extends PacketHandlerBase<QuestStateInfoPacket[]>
+public class QuestStateInfoPacketArrayHandler extends PacketHandlerAdapter<QuestStateInfoPacket[]>
 {
     private PlayState playState;
 
@@ -15,7 +15,7 @@ public class QuestStateInfoPacketArrayHandler extends PacketHandlerBase<QuestSta
     }
 
     @Override
-    public void handlePacket(QuestStateInfoPacket[] packets)
+    public void handle(QuestStateInfoPacket[] packets)
     {
         for (QuestStateInfoPacket packet : packets)
         {

@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 
-public class MpUpdatePacketHandler extends PacketHandlerBase<MpUpdatePacket>
+public class MpUpdatePacketHandler extends PacketHandlerAdapter<MpUpdatePacket>
 {
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class MpUpdatePacketHandler extends PacketHandlerBase<MpUpdatePacket>
 	}
 	
 	@Override
-	public void handlePacket(MpUpdatePacket packet)
+	public void handle(MpUpdatePacket packet)
 	{
 		playState.updateMp(packet.getId(), packet.getNewMp());
 	}

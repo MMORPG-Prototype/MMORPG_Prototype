@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 
-public class QuestRewardGoldRemovalPacketHandler extends PacketHandlerBase<QuestRewardGoldRemovalPacket>
+public class QuestRewardGoldRemovalPacketHandler extends PacketHandlerAdapter<QuestRewardGoldRemovalPacket>
 {
     private PlayState playState;
 
@@ -13,7 +13,7 @@ public class QuestRewardGoldRemovalPacketHandler extends PacketHandlerBase<Quest
     }
     
     @Override
-    public void handlePacket(QuestRewardGoldRemovalPacket packet)
+    public void handle(QuestRewardGoldRemovalPacket packet)
     {
         playState.questRewardGoldRemovalPacketReceived(packet);
     }

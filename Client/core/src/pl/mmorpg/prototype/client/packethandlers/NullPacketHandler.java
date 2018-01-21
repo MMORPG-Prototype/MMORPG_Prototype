@@ -1,22 +1,9 @@
 package pl.mmorpg.prototype.client.packethandlers;
 
-public class NullPacketHandler implements PacketHandler
+public class NullPacketHandler extends PacketHandlerAdapter<Object>
 {
 	@Override
 	public void handle(Object object)
 	{ 
 	}
-
-	@Override
-	public boolean canBeHandled(Object packet)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canBeOmmited(Object packet)
-	{
-		return false;
-	}
-
 }

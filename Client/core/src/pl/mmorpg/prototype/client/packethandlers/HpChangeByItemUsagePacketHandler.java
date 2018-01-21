@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 
-public class HpChangeByItemUsagePacketHandler extends PacketHandlerBase<HpChangeByItemUsagePacket>
+public class HpChangeByItemUsagePacketHandler extends PacketHandlerAdapter<HpChangeByItemUsagePacket>
 {
 	private PlayState playState;
 
@@ -13,19 +13,19 @@ public class HpChangeByItemUsagePacketHandler extends PacketHandlerBase<HpChange
 	}
 	
 	@Override
-	public void handlePacket(HpChangeByItemUsagePacket packet)
+	public void handle(HpChangeByItemUsagePacket packet)
 	{
 		playState.hpChangeByItemUsagePacketReceived(packet);
 	}
 	
 	@Override
-	public boolean canHandle(HpChangeByItemUsagePacket packet)
+	public boolean canBeHandled(HpChangeByItemUsagePacket packet)
 	{
 		return playState.has(packet.getMonsterTargetId());
 	}
 	
 	@Override
-	public boolean canOmmit(HpChangeByItemUsagePacket packet)
+	public boolean canBeOmmited(HpChangeByItemUsagePacket packet)
 	{
 		return true;
 	}

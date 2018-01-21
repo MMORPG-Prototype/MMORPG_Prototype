@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 
-public class FireDamagePacketHandler extends PacketHandlerBase<FireDamagePacket>
+public class FireDamagePacketHandler extends PacketHandlerAdapter<FireDamagePacket>
 {
     private PlayState playState;
     
@@ -13,7 +13,7 @@ public class FireDamagePacketHandler extends PacketHandlerBase<FireDamagePacket>
     }
 
     @Override
-    public void handlePacket(FireDamagePacket packet)
+    public void handle(FireDamagePacket packet)
     {
         playState.fireDamagePacketReceived(packet);
     }

@@ -10,7 +10,7 @@ import pl.mmorpg.prototype.client.objects.monsters.MonstersFactory;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 
-public class PlayerCreationPacketHandler extends PacketHandlerBase<PlayerCreationPacket>
+public class PlayerCreationPacketHandler extends PacketHandlerAdapter<PlayerCreationPacket>
 {
 	private PlayState playState;
 
@@ -20,7 +20,7 @@ public class PlayerCreationPacketHandler extends PacketHandlerBase<PlayerCreatio
 	}
 	
 	@Override
-	public void handlePacket(PlayerCreationPacket packet)
+	public void handle(PlayerCreationPacket packet)
 	{
 		Function<CollisionMap<GameObject>, GameObject> playerCreator = 
 				collisionMap -> createPlayer(packet, collisionMap);

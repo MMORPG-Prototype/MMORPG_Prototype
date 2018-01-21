@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
 
-public class GoldAmountChangePacketHandler extends PacketHandlerBase<GoldAmountChangePacket>
+public class GoldAmountChangePacketHandler extends PacketHandlerAdapter<GoldAmountChangePacket>
 {	
 	private PlayState playState;
 
@@ -13,7 +13,7 @@ public class GoldAmountChangePacketHandler extends PacketHandlerBase<GoldAmountC
 	}
 
 	@Override
-	public void handlePacket(GoldAmountChangePacket packet)
+	public void handle(GoldAmountChangePacket packet)
 	{
 		playState.updateCharacterGold(packet.getNewGoldAmount());
 	}
