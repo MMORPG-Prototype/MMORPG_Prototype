@@ -1,11 +1,57 @@
 package pl.mmorpg.prototype.client.packethandlers;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.esotericsoftware.kryonet.FrameworkMessage;
 
 import pl.mmorpg.prototype.client.exceptions.UnknownPacketTypeException;
+import pl.mmorpg.prototype.client.packethandlers.pure.AuthenticationReplyPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.CharacterCreationReplyPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.CharacterItemDataPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.CharacterMonsterTargetingReplyPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ChatMessageReplyPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ContainerContentPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ContainerGoldRemovalPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ContainerItemRemovalPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ExperienceGainPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.FireDamagePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.GoldAmountChangePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.GoldReceivePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.HpChangeByItemUsagePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.HpUpdatePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.InventoryItemRepositionPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.InventoryItemStackPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.InventoryItemSwapPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ItemPutInQuickAccessBarPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ItemRewardRemovePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ItemUsagePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.KnownSpellInfoPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ManaDrainPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.MonsterCreationPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.MpChangeByItemUsagePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.MpUpdatePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.NormalDamagePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.NpcContinueDialogPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.NpcStartDialogPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.NullPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ObjectCreationPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ObjectRemovePacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ObjectRepositionPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.PlayerCreationPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.QuestAcceptedPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.QuestBoardInfoPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.QuestFinishedRewardPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.QuestRewardGoldRemovalPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.QuestStateInfoPacketArrayHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.RegisterationReplyPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ScriptExecutionErrorPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ScriptResultInfoPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.ShopItemsPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.SpellPutInQuickAccessBarPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.UnacceptableOperationPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.pure.UserCharacterDataArrayPacketHandler;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
@@ -107,6 +153,11 @@ public class PacketHandlerFactory
         
         // Ignore framework keepAliveMessage
         packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
+    }
+    
+    public Collection<PacketHandler<? extends Object>> produceAll()
+    {
+		return packetHandlers.values();
     }
 
     public PacketHandler<? extends Object> produce(Object object)

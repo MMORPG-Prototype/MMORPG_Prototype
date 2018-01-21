@@ -18,6 +18,8 @@ import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
@@ -25,6 +27,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLa
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.InventoryPage;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.InventoryTextField;
+import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 
 public class InventoryDialog extends Dialog implements ItemCounter
@@ -37,10 +40,11 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	private final UserInterface linkedInterface;
 	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
 
-	public InventoryDialog(UserInterface linkedInterface, Integer linkedFieldGold)
+	public InventoryDialog(UserInterface linkedInterface, Integer initialGoldAmmount, PacketHandlerRegisterer registerer)
 	{
 		super("Inventory", Settings.DEFAULT_SKIN);
 		this.linkedInterface = linkedInterface;
+		registerer.registerPrivateClassPacketHandlers(this);
 
 		Button closeButton = new CloseButton(this);
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
@@ -64,7 +68,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 		contentTable.add(switchButtons);
 		contentTable.row();
-		goldLabel.setValue(linkedFieldGold);
+		goldLabel.setValue(initialGoldAmmount);
 		goldLabel.update();
 		contentTable.add(goldLabel).left();
 		contentTable.row();
@@ -319,6 +323,16 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		Item secondItem = secondField.getContent();
 		firstField.removeContent();
 		((StackableItem)secondItem).stackWith((StackableItem)firstItem);
+	}
+
+	@SuppressWarnings("unused")
+	private class GoldReceivePacketHandler extends PacketHandlerBase<GoldReceivePacket>
+	{
+		@Override
+		protected void doHandle(GoldReceivePacket packet)
+		{
+			updateGoldValue(packet.getGoldAmount());
+		}
 	}
 
 }

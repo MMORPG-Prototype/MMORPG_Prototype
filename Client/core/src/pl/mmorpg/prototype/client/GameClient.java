@@ -9,11 +9,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerDispatcher;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.packethandlers.SimplePacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.SettingsChoosingState;
 import pl.mmorpg.prototype.client.states.StateManager;
-import pl.mmorpg.prototype.clientservercommon.registering.PacketsRegisterer;
+import pl.mmorpg.prototype.clientservercommon.registering.PacketHandlersRegisterer;
 
 public class GameClient extends ApplicationAdapter
 {
@@ -34,18 +37,20 @@ public class GameClient extends ApplicationAdapter
         background = Assets.get("background.jpg");
         states = new StateManager();
         client = new Client();
-        playState = new PlayState(states, client);
-        client = initizlizeClient();
+        PacketHandlerDispatcher dispatcher = new PacketHandlerDispatcher();
+        PacketHandlerRegisterer registerer = new SimplePacketHandlerRegisterer(dispatcher);
+        playState = new PlayState(states, client, registerer);
+        client = initizlizeClient(dispatcher);
         states.push(playState);
         states.push(new SettingsChoosingState(client, states));
         // Gdx.input.setCursorCatched(true); 
     }
 
-    private Client initizlizeClient()
+    private Client initizlizeClient(PacketHandlerDispatcher dispatcher)
     {
         Kryo kryo = client.getKryo();
-        kryo = PacketsRegisterer.registerPackets(kryo);
-        clientListener = new ClientListener(playState, states);
+        kryo = PacketHandlersRegisterer.registerPackets(kryo);
+        clientListener = new ClientListener(dispatcher, playState, states);
         client.addListener(clientListener);
         client.start();
         return client;

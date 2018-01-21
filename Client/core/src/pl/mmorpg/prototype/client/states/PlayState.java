@@ -56,6 +56,7 @@ import pl.mmorpg.prototype.client.objects.graphic.helpers.ObjectHighlighter;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.path.search.BestFirstPathFinder;
 import pl.mmorpg.prototype.client.path.search.PathFinder;
 import pl.mmorpg.prototype.client.path.search.collisionDetectors.CollisionDetector;
@@ -112,6 +113,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private final ObjectHighlighter objectHighlighter = new ObjectHighlighter(clientGraphics);
 	private final TiledMapRenderer mapRenderer;
 	private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+	private final PacketHandlerRegisterer packetHandlerRegisterer;
 	private final TiledMap map = Assets.get("Map/tiled3.tmx");
 	private final OrthographicCamera camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
 	private PixelCollisionMap<GameObject> collisionMap = createCollisionMap(camera);
@@ -122,9 +124,10 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private float currentGameMouseX = -1f;
 	private float currentGameMouseY = -1f;
 
-	public PlayState(StateManager states, Client client)
+	public PlayState(StateManager states, Client client, PacketHandlerRegisterer packetHandlerRegisterer)
 	{
 		this.client = client;
+		this.packetHandlerRegisterer = packetHandlerRegisterer;
 		inputHandler = new NullInputHandler();
 		player = new NullPlayer();
 		this.states = states;
@@ -141,7 +144,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		player.initialize(character);
 		add(player);
 		gameObjects.put((long) character.getId(), player);
-		userInterface = new UserInterface(this, character);
+		userInterface = new UserInterface(this, character, packetHandlerRegisterer);
 		initializeInputHandlers();
 		insertMapObjectsIntoCollisionMap(collisionMap, map);
 		addClouds();

@@ -14,7 +14,7 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 
 import pl.mmorpg.prototype.clientservercommon.Settings;
-import pl.mmorpg.prototype.clientservercommon.registering.PacketsRegisterer;
+import pl.mmorpg.prototype.clientservercommon.registering.PacketHandlersRegisterer;
 import pl.mmorpg.prototype.server.commandUtils.CommandHandler;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.CannotBindServerException;
@@ -70,7 +70,7 @@ public class GameServer extends ApplicationAdapter
     {
         server = new Server();
         Kryo serverKryo = server.getKryo();
-        serverKryo = PacketsRegisterer.registerPackets(serverKryo);
+        serverKryo = PacketHandlersRegisterer.registerPackets(serverKryo);
         return server;
     }
 

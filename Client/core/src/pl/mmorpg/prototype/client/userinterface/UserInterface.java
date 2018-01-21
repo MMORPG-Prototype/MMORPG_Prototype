@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.esotericsoftware.minlog.Log;
 
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
@@ -26,6 +27,7 @@ import pl.mmorpg.prototype.client.objects.icons.DraggableIcon;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.spells.SpellFactory;
@@ -84,11 +86,11 @@ public class UserInterface
 
 	private final PlayState linkedState;
 
-	public UserInterface(PlayState linkedState, UserCharacterDataPacket character)
+	public UserInterface(PlayState linkedState, UserCharacterDataPacket character, PacketHandlerRegisterer registerer)
 	{
 		this.linkedState = linkedState;
 		menuDialog = new MenuDialog(this);
-		inventoryDialog = new InventoryDialog(this, character.getGold());
+		inventoryDialog = new InventoryDialog(this, character.getGold(), registerer);
 		statisticsDialog = new StatisticsDialog(character);
 		shortcutBarDialog = new ShortcutBarPane(this);
 		hpMpDialog = new HitPointManaPointPane(character);
@@ -512,6 +514,7 @@ public class UserInterface
 			questBoardDialog.removeQuestPosition(questName);
 		} catch (CannotFindSpecifiedDialogTypeException e)
 		{
+			Log.warn(e.getMessage());
 		}
 	}
 
@@ -551,7 +554,4 @@ public class UserInterface
 		Spell spell = SpellFactory.produce(spellIdentifer);
 		spellListDialog.addSpell(spell);
 	}
-
-
-
 }
