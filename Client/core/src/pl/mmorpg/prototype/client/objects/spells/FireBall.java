@@ -9,15 +9,16 @@ import pl.mmorpg.prototype.client.objects.CustomAnimation;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.GraphicObjectsContainer;
 import pl.mmorpg.prototype.client.objects.graphic.ExplosionAnimation;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 
 public class FireBall extends ThrowableObject
 {
     private CustomAnimation<TextureRegion> fireBallAnimation;
     
-    public FireBall(long id, CollisionMap<GameObject> linkedCollisionMap)
+    public FireBall(long id, CollisionMap<GameObject> linkedCollisionMap, PacketHandlerRegisterer registerer)
     {
-        super(Assets.get("32x32.bmp"), id, linkedCollisionMap);
+        super(Assets.get("32x32.bmp"), id, linkedCollisionMap, registerer);
         Texture textureSheet = Assets.get("fireballSheet.png");
         fireBallAnimation = new CustomAnimation<>(0.16f,
                 TextureRegion.split(textureSheet, textureSheet.getWidth() / 3, textureSheet.getHeight()));

@@ -3,7 +3,11 @@ package pl.mmorpg.prototype.client.objects;
 import com.badlogic.gdx.graphics.Texture;
 
 import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
+import pl.mmorpg.prototype.client.packethandlers.GameObjectTargetPacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.Directions;
+import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 
 public abstract class MovableGameObject extends GameObject
 {
@@ -16,12 +20,14 @@ public abstract class MovableGameObject extends GameObject
 	private final MoveInfo currentMoveInfo = new MoveInfo();
 	private CollisionMap<GameObject> linkedCollisionMap;
 
-	public MovableGameObject(Texture lookout, long id, CollisionMap<GameObject> linkedCollisionMap)
+	public MovableGameObject(Texture lookout, long id, CollisionMap<GameObject> linkedCollisionMap,
+			PacketHandlerRegisterer registerer)
 	{
-		super(lookout, id);
+		super(lookout, id, registerer);
 		this.linkedCollisionMap = linkedCollisionMap;
 		targetX = getX();
 		targetY = getY();
+		registerPacketHandler(new ObjectRepositionPacketHandler());
 	}
 
 	public void initPosition(float x, float y)
@@ -171,5 +177,22 @@ public abstract class MovableGameObject extends GameObject
 	public void setStepSpeed(float stepSpeed)
 	{
 		this.stepSpeed = stepSpeed;
+	}
+
+	private class ObjectRepositionPacketHandler extends PacketHandlerBase<ObjectRepositionPacket>
+			implements GameObjectTargetPacketHandler<ObjectRepositionPacket>
+	{
+		@Override
+		protected void doHandle(ObjectRepositionPacket packet)
+		{
+			setX(packet.x);
+			setY(packet.y);
+		}
+
+		@Override
+		public long getObjectId()
+		{
+			return getId();
+		}
 	}
 }

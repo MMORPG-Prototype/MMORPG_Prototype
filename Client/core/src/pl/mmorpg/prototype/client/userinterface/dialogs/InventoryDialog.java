@@ -27,6 +27,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLa
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.InventoryPage;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.InventoryTextField;
+import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 
@@ -162,12 +163,6 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	public void addItem(Item newItem, ItemInventoryPosition inventoryPosition)
 	{
 		getField(inventoryPosition).put(newItem);
-	}
-
-	public void updateGoldValue(int goldAmount)
-	{
-		goldLabel.setValue(goldAmount);
-		goldLabel.update();
 	}
 
 	@Override
@@ -331,7 +326,21 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		@Override
 		protected void doHandle(GoldReceivePacket packet)
 		{
-			updateGoldValue(packet.getGoldAmount());
+			System.out.println("Inventory gold update");
+			goldLabel.setValue(goldLabel.getValue() + packet.getGoldAmount());
+			goldLabel.update();
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private class GoldAmountChangePacketHandler extends PacketHandlerBase<GoldAmountChangePacket>
+	{
+		@Override
+		protected void doHandle(GoldAmountChangePacket packet)
+		{
+			System.out.println("Inventory gold change ");
+			goldLabel.setValue( packet.getNewGoldAmount());
+			goldLabel.update();
 		}
 	}
 

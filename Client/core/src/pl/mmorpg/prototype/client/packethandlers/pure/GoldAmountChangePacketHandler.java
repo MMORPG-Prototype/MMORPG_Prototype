@@ -16,7 +16,8 @@ public class GoldAmountChangePacketHandler extends PacketHandlerBase<GoldAmountC
 	@Override
 	public void doHandle(GoldAmountChangePacket packet)
 	{
-		playState.updateCharacterGold(packet.getNewGoldAmount());
+		System.out.println("Disabled");
+		//playState.updateCharacterGold(packet.getNewGoldAmount());
 	}
 
 }

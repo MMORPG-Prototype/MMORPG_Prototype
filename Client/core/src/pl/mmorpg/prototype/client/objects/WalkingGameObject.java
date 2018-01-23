@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.Directions;
 
@@ -20,9 +21,10 @@ public abstract class WalkingGameObject extends MovableGameObject
 	private TextureRegion textureToDraw;
 	private float animationFrameDuration = 0.16f;
 
-	public WalkingGameObject(TextureSheetAnimationInfo sheetInfo, long id, CollisionMap<GameObject> linkedCollisionMap)
+	public WalkingGameObject(TextureSheetAnimationInfo sheetInfo, long id, CollisionMap<GameObject> linkedCollisionMap,
+			PacketHandlerRegisterer registerer)
 	{
-		super(Assets.get("nullTexture.png"), id, linkedCollisionMap);
+		super(Assets.get("nullTexture.png"), id, linkedCollisionMap, registerer);
 
 		Texture charactersTexture = sheetInfo.texture;
 		TextureRegion[][] charactersTextures = Sprite.split(charactersTexture,
@@ -42,11 +44,12 @@ public abstract class WalkingGameObject extends MovableGameObject
 		moveRightAnimation.setPlayMode(PlayMode.LOOP);
 	}
 
-	public WalkingGameObject(long id, CustomAnimation<TextureRegion> moveLeftAnimation,
-			CustomAnimation<TextureRegion> moveRightAnimation, CustomAnimation<TextureRegion> moveDownAnimation,
-			CustomAnimation<TextureRegion> moveUpAnimation, CollisionMap<GameObject> linkedCollisionMap)
+	public WalkingGameObject(long id, PacketHandlerRegisterer registerer, 
+			CustomAnimation<TextureRegion> moveLeftAnimation, CustomAnimation<TextureRegion> moveRightAnimation, 
+			CustomAnimation<TextureRegion> moveDownAnimation, CustomAnimation<TextureRegion> moveUpAnimation, 
+			CollisionMap<GameObject> linkedCollisionMap)
 	{
-		super(Assets.get("nullTexture.png"), id, linkedCollisionMap);
+		super(Assets.get("nullTexture.png"), id, linkedCollisionMap, registerer);
 		this.moveLeftAnimation = moveLeftAnimation;
 		this.moveRightAnimation = moveRightAnimation;
 		this.moveDownAnimation = moveDownAnimation;

@@ -3,7 +3,6 @@ package pl.mmorpg.prototype.client.packethandlers.pure;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.states.PlayState;
-import pl.mmorpg.prototype.clientservercommon.packets.GameObjectTargetPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 
 public class ObjectRepositionPacketHandler extends PacketHandlerBase<ObjectRepositionPacket>
@@ -29,9 +28,9 @@ public class ObjectRepositionPacketHandler extends PacketHandlerBase<ObjectRepos
 		return objectExist(packet);
 	}
 	
-	private boolean objectExist(GameObjectTargetPacket packet)
+	private boolean objectExist(ObjectRepositionPacket packet)
 	{
-		return playState.getObject(packet.id) != null;
+		return playState.getObject(packet.getTargetId()) != null;
 	}
 
 	@Override

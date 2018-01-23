@@ -6,6 +6,7 @@ import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.client.objects.AttackingGameObject;
 import pl.mmorpg.prototype.client.objects.CustomAnimation;
 import pl.mmorpg.prototype.client.objects.GameObject;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 
 public abstract class Monster extends AttackingGameObject
@@ -13,17 +14,17 @@ public abstract class Monster extends AttackingGameObject
 	protected MonsterProperties properties;
 
 	protected Monster(TextureSheetAnimationInfo sheetInfo, long id, MonsterProperties properties,
-			CollisionMap<GameObject> collisionMap)
+			CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
 	{
-		super(sheetInfo, id, collisionMap);
+		super(sheetInfo, id, collisionMap, registerer);
 		this.properties = properties;
 	}
 
-	public Monster(long id, CustomAnimation<TextureRegion> moveLeftAnimation,
+	public Monster(long id, PacketHandlerRegisterer registerer, CustomAnimation<TextureRegion> moveLeftAnimation,
 			CustomAnimation<TextureRegion> moveRightAnimation, CustomAnimation<TextureRegion> moveDownAnimation,
 			CustomAnimation<TextureRegion> moveUpAnimation, MonsterProperties properties, CollisionMap<GameObject> collisionMap)
 	{
-		super(id, moveLeftAnimation, moveRightAnimation, moveDownAnimation, moveUpAnimation, collisionMap);
+		super(id, registerer, moveLeftAnimation, moveRightAnimation, moveDownAnimation, moveUpAnimation, collisionMap);
 		this.properties = properties;
 	}
 	

@@ -4,8 +4,15 @@ import pl.mmorpg.prototype.clientservercommon.packets.GameObjectTargetPacket;
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
-public class ObjectRepositionPacket extends GameObjectTargetPacket
+public class ObjectRepositionPacket implements GameObjectTargetPacket
 {
+	public long id;
 	public float x;
 	public float y;
+	
+	@Override
+	public long getTargetId()
+	{
+		return id;
+	}
 }

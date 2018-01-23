@@ -20,7 +20,7 @@ public abstract class MovePacketHandler extends PacketHandlerBase<GameObjectTarg
 	@Override
 	public void handle(Connection connection, GameObjectTargetPacket packet)
 	{
-		MovableGameObject operationTarget = (MovableGameObject) playState.getObject(packet.id);
+		MovableGameObject operationTarget = (MovableGameObject) playState.getObject(packet.getTargetId());
 		this.perform(operationTarget, playState.getCollisionMap());	
 	}
 	

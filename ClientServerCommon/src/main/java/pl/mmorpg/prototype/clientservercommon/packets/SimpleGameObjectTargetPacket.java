@@ -3,16 +3,14 @@ package pl.mmorpg.prototype.clientservercommon.packets;
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
-public class ObjectRemovePacket
+public class SimpleGameObjectTargetPacket implements GameObjectTargetPacket
 {
-	public long id;
-
-	public ObjectRemovePacket()
-	{
-	}
+	public long id = -1;
 	
-	public ObjectRemovePacket(long id)
+	@Override
+	public long getTargetId()
 	{
-		this.id = id;
+		return id;
 	}
+
 }

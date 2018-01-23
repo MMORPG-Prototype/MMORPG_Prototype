@@ -387,12 +387,6 @@ public class UserInterface
 		}
 	}
 
-	public void updateGoldAmountInInventory(int goldAmount)
-	{
-		InventoryDialog inventory = (InventoryDialog) dialogs.searchForDialog(InventoryDialog.class);
-		inventory.updateGoldValue(goldAmount);
-	}
-
 	public void openShopDialog(ShopItem[] shopItems, long shopId)
 	{
 		if (!dialogs.hasIdentifiableDialog(shopId))

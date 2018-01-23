@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import pl.mmorpg.prototype.client.exceptions.CannotCreatePacketHandlerException;
 import pl.mmorpg.prototype.client.exceptions.GameException;
+import pl.mmorpg.prototype.clientservercommon.packets.GameObjectTargetPacket;
 
 public class PacketHandlerDispatcher
 {
@@ -40,12 +41,37 @@ public class PacketHandlerDispatcher
 		Type genericInterface = packetHandlerClass.getGenericSuperclass();
 		return (Class<?>)((ParameterizedType) genericInterface).getActualTypeArguments()[0];
 	}
-
+	
 	public void dispatchPacket(Object packet)
 	{
-		packetHandlers.get(packet.getClass()).forEach(handler -> handler.handle(packet));
+		if(packet instanceof GameObjectTargetPacket)
+			dispatchPacket((GameObjectTargetPacket)packet);
+		else
+			packetHandlers.get(packet.getClass()).forEach(handler -> handler.handle(packet));
 	}
 	
+	public void dispatchPacket(GameObjectTargetPacket packet)
+	{
+		try
+		{
+			GameObjectTargetPacketHandler<Object> packetHandler = findProperHandler(packet);
+			packetHandler.handle(packet);
+		}
+		catch (GameException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	private GameObjectTargetPacketHandler<Object> findProperHandler(GameObjectTargetPacket packet)
+	{
+		Collection<PacketHandler<Object>> collection = packetHandlers.get(packet.getClass());
+		for(PacketHandler<Object> packetHandler : collection)
+			if(packetHandler instanceof GameObjectTargetPacketHandler && ((GameObjectTargetPacketHandler<Object>) packetHandler).getObjectId() == packet.getTargetId())
+				return (GameObjectTargetPacketHandler<Object>)packetHandler;
+		throw new GameException("Cannot find proper packet handler for id: " + packet.getTargetId()
+				+ ", it was probably not registered");
+	}
+
 	public void removeHandler(PacketHandler<Object> packetHandler)
 	{
 		Class<?> packetType = getPacketType(packetHandler);
@@ -70,7 +96,8 @@ public class PacketHandlerDispatcher
 		Class<?>[] declaredClasses = objectContainingDefinitionOfPrivatePacketHandlers.getClass().getDeclaredClasses();
 		Arrays.stream(declaredClasses)
 			.filter(this::isPacketHandlerClass)
-			.map(packethandlerClass -> tryCreatingInstance(packethandlerClass, objectContainingDefinitionOfPrivatePacketHandlers))
+			.map(packethandlerClass -> tryCreatingInstance(packethandlerClass,
+					objectContainingDefinitionOfPrivatePacketHandlers))
 			.forEach(this::registerHandler);
 	}
 

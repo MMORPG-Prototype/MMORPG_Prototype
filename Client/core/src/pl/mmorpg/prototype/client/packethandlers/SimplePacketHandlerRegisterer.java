@@ -15,11 +15,18 @@ public class SimplePacketHandlerRegisterer implements PacketHandlerRegisterer
 	{
 		packetHandlerDispatcher.registerHandler(packetHandler);	
 	}
-
+	
 	@Override
 	public void registerPrivateClassPacketHandlers(Object objectContainingDefinitionOfPrivatePacketHandlers)
 	{
 		packetHandlerDispatcher.registerPrivateClassPacketHandlers(objectContainingDefinitionOfPrivatePacketHandlers);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public void unregister(PacketHandler packetHandler)
+	{
+		packetHandlerDispatcher.removeHandler(packetHandler);
 	}
 	
 }

@@ -1,5 +1,8 @@
 package pl.mmorpg.prototype.client.objects;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -7,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 import pl.mmorpg.prototype.client.collision.interfaces.RectangleCollisionObject;
+import pl.mmorpg.prototype.client.packethandlers.NullPacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandler;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.Identifiable;
 
@@ -14,10 +20,13 @@ public abstract class GameObject extends Sprite implements RectangleCollisionObj
 {
     private long id;
     private int layer = 0;
+	private Collection<PacketHandler<?>> activePacketHandlers = new ArrayList<>();
+	private PacketHandlerRegisterer registerer;
 
-    public GameObject(Texture lookout, long id)
+    public GameObject(Texture lookout, long id, PacketHandlerRegisterer registerer)
     {
         super(lookout);
+		this.registerer = registerer;
         super.setRegion(lookout);
         this.setId(id);
     }
@@ -50,13 +59,20 @@ public abstract class GameObject extends Sprite implements RectangleCollisionObj
         this.id = id;
     }
 
-    public String getIdentifier()
-    {
-        return ObjectsIdentifier.getObjectIdentifier(getClass());
-    }
-
     public void onRemoval(GraphicObjectsContainer graphics)
     {
+    }
+    
+    public void registerPacketHandler(PacketHandler<?> packetHandler)
+	{
+		activePacketHandlers.add(packetHandler);
+		registerer.register(packetHandler);
+	}
+    
+    public void unregisterHandlers(PacketHandlerRegisterer registerer)
+    {
+    	activePacketHandlers.forEach(handler -> registerer.unregister(handler));
+    	activePacketHandlers.clear();
     }
 
 	public int getLayer()
@@ -75,7 +91,7 @@ public abstract class GameObject extends Sprite implements RectangleCollisionObj
 
 		public CollisionMapGameObject(Rectangle rectangle, int id)
 		{
-			super(Assets.get("nullTexture.png"), id);
+			super(Assets.get("nullTexture.png"), id, new NullPacketHandlerRegisterer());
 			this.rectangle = rectangle;
 		}
 		

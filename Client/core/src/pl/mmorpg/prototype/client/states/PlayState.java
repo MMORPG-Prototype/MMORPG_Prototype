@@ -41,6 +41,7 @@ import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.GraphicObjectsContainer;
 import pl.mmorpg.prototype.client.objects.NullPlayer;
+import pl.mmorpg.prototype.client.objects.ObjectsFactory;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.objects.graphic.BloodAnimation;
 import pl.mmorpg.prototype.client.objects.graphic.DefinedAreaCloudCluster;
@@ -55,7 +56,9 @@ import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
 import pl.mmorpg.prototype.client.objects.graphic.helpers.ObjectHighlighter;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
+import pl.mmorpg.prototype.client.objects.monsters.MonstersFactory;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.path.search.BestFirstPathFinder;
 import pl.mmorpg.prototype.client.path.search.PathFinder;
@@ -77,7 +80,10 @@ import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
@@ -89,7 +95,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
@@ -105,7 +110,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 {
 	private static final int CAMERA_WIDTH = 900;
 	private static final int CAMERA_HEIGHT = 500;
-
 	private final Client client;
 	private final StateManager states;
 	private final Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
@@ -134,13 +138,13 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		camera.setToOrtho(false);
 		camera.viewportWidth = CAMERA_WIDTH;
 		camera.viewportHeight = CAMERA_HEIGHT;
-
+		packetHandlerRegisterer.registerPrivateClassPacketHandlers(this);
 		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
 	}
 
 	public void initialize(UserCharacterDataPacket character)
 	{
-		player = new Player(character.getId(), collisionMap);
+		player = new Player(character.getId(), collisionMap, packetHandlerRegisterer);
 		player.initialize(character);
 		add(player);
 		gameObjects.put((long) character.getId(), player);
@@ -290,6 +294,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		GraphicObjectsContainer graphics = this;
 		collisionMap.remove(object);
 		object.onRemoval(graphics);
+		object.unregisterHandlers(packetHandlerRegisterer);
 		if (object == player)
 			playerHasDied();
 		else if (player.hasLockedOnTarget(object))
@@ -330,6 +335,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		isInitalized = false;
 		inputHandler = new NullInputHandler();
+		gameObjects.values().forEach(object -> object.unregisterHandlers(packetHandlerRegisterer));
 		gameObjects.clear();
 		clientGraphics.clear();
 		userInterface.clear();
@@ -560,13 +566,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		userInterface.decreaseGoldFromContainerDialog(containerId, goldAmount);
 	}
 
-	public void characterReceivedGold(int goldAmount)
-	{
-		MonsterProperties properties = player.getProperties();
-		properties.gold += goldAmount;
-		userInterface.updateGoldAmountInInventory(properties.gold);
-	}
-
 	public void updateHp(long targetId, int newHp)
 	{
 		Monster target = (Monster) getObject(targetId);
@@ -603,12 +602,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		Item item = ItemFactory.produceItem(packet.getItem());
 		ShopItem shopItem = new ShopItem(item, packet.getPrice());
 		return shopItem;
-	}
-
-	public void updateCharacterGold(int newGoldAmount)
-	{
-		player.getProperties().gold = newGoldAmount;
-		userInterface.updateGoldAmountInInventory(newGoldAmount);
 	}
 
 	public void scriptExecutionErrorReceived(String error)
@@ -701,6 +694,44 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void add(Function<CollisionMap<GameObject>, GameObject> movableObjectCreator)
 	{
 		add(movableObjectCreator.apply(collisionMap));
+	}
+	
+	@SuppressWarnings("unused")
+	private class MonsterCreationPacketHandler extends PacketHandlerBase<MonsterCreationPacket>
+	{
+		private final MonstersFactory monstersFactory = new MonstersFactory(packetHandlerRegisterer);
+		
+		@Override
+		protected void doHandle(MonsterCreationPacket packet)
+		{
+			System.out.println("Monster creation");
+			Monster newMonster = monstersFactory.produce(packet, collisionMap);
+			PlayState.this.add(newMonster);
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private class ObjectCreationPacketHandler extends PacketHandlerBase<ObjectCreationPacket>
+	{
+		private final ObjectsFactory objectsFactory = new ObjectsFactory(packetHandlerRegisterer);
+		
+		@Override
+		protected void doHandle(ObjectCreationPacket packet)
+		{
+			System.out.println("Object creation");
+			GameObject newObject = objectsFactory.produce(packet, collisionMap);
+			PlayState.this.add(newObject);
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private class ObjectRemovePacketHandler extends PacketHandlerBase<ObjectRemovePacket>
+	{
+		@Override
+		protected void doHandle(ObjectRemovePacket packet)
+		{
+			removeObject(packet.id);
+		}
 	}
 
 }

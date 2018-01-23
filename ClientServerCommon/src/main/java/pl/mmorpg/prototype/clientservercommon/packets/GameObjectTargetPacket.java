@@ -1,6 +1,9 @@
 package pl.mmorpg.prototype.clientservercommon.packets;
 
-public class GameObjectTargetPacket
+import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
+
+@Registerable
+public interface GameObjectTargetPacket
 {
-	public long id;
+	long getTargetId();
 }

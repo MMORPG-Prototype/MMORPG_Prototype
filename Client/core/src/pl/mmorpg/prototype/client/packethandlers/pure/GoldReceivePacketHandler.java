@@ -16,7 +16,7 @@ public class GoldReceivePacketHandler extends PacketHandlerBase<GoldReceivePacke
 	@Override
 	public void doHandle(GoldReceivePacket packet)
 	{
-		playState.characterReceivedGold(packet.getGoldAmount());
+		System.out.println("Gold packet handler disabled");
 	}
 
 }

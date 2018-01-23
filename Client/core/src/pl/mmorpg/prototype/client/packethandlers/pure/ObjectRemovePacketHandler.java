@@ -16,7 +16,8 @@ public class ObjectRemovePacketHandler extends PacketHandlerBase<ObjectRemovePac
 	@Override
 	public void doHandle(ObjectRemovePacket packet)
 	{
-		playState.removeObject(packet.id);	
-	}
+		System.out.println("Unused removal packet handler");
+		//playState.removeObject(packet.id);	
+	} 
 
 }
