@@ -3,11 +3,11 @@ package pl.mmorpg.prototype.client.packethandlers;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import pl.mmorpg.prototype.client.exceptions.CannotCreatePacketHandlerException;
 import pl.mmorpg.prototype.client.exceptions.GameException;
@@ -22,8 +22,8 @@ public class PacketHandlerDispatcher
 		Class<?> packetType = getPacketType(packetHandler);
 		Collection<PacketHandler<Object>> packetHandlerGroup = packetHandlers.get(packetType);
 		if(packetHandlerGroup == null)
-		{
-			packetHandlerGroup = new ArrayList<>();
+		{ 
+			packetHandlerGroup = new LinkedBlockingDeque<>();
 			packetHandlers.put(packetType, packetHandlerGroup);
 		}
 		packetHandlerGroup.add(packetHandler);
@@ -47,7 +47,14 @@ public class PacketHandlerDispatcher
 		if(packet instanceof GameObjectTargetPacket)
 			dispatchPacket((GameObjectTargetPacket)packet);
 		else
-			packetHandlers.get(packet.getClass()).forEach(handler -> handler.handle(packet));
+		{
+			Collection<PacketHandler<Object>> packetHandlerGroup = packetHandlers.get(packet.getClass());
+			synchronized (packetHandlerGroup)
+			{
+				
+			}
+			packetHandlerGroup.forEach(handler -> handler.handle(packet));
+		}
 	}
 	
 	public void dispatchPacket(GameObjectTargetPacket packet)

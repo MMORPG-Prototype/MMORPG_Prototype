@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.communication.UserInfo;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChoosingCharacterDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.CreatingCharacterDialog;
@@ -15,22 +17,25 @@ import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
-public class ChoosingCharacterState implements State
+public class ChoosingCharacterState extends PacketHandlingState
 {
 	private Stage stage = Assets.getStage();
 	private ChoosingCharacterDialog choosingDialog;
 	private CreatingCharacterDialog creatingDialog;
 	private Client client;
 	private StateManager states;
+	private PacketHandlerRegisterer packetHandlerRegisterer;
 
-	public ChoosingCharacterState(Client client, StateManager states)
+	public ChoosingCharacterState(Client client, StateManager states, PacketHandlerRegisterer packetHandlerRegisterer)
 	{
 		this.client = client;
 		this.states = states;
+		this.packetHandlerRegisterer = packetHandlerRegisterer;
 		creatingDialog = new CreatingCharacterDialog(this);
 		GetUserCharactersPacket getUserCharactersPacket = new GetUserCharactersPacket();
 		getUserCharactersPacket.username = UserInfo.username;
 		client.sendTCP(getUserCharactersPacket);
+		registerHandler(packetHandlerRegisterer, new CharacterCreationReplyPacketHandler());
 	}
 
 	@Override
@@ -71,21 +76,6 @@ public class ChoosingCharacterState implements State
 		creatingDialog.show(stage);		
 	}
 
-	public void userCharacterCreationReplyReceived(CharacterCreationReplyPacket creationPacket)
-	{
-		if(creationPacket.isCreated())
-		{
-			choosingDialog.add(creationPacket.getCharacter());
-			choosingDialog.clearErrorMessage();
-			choosingDialog.show(stage);
-		}
-		else
-		{
-			creatingDialog.setErrorMessage(creationPacket.getErrorMessage());
-			creatingDialog.show(stage);
-		}
-	}
-	
 	public void userSubmitedCharacterCreation(String nickname)
 	{
 		CharacterCreationPacket packet = new CharacterCreationPacket();
@@ -102,7 +92,28 @@ public class ChoosingCharacterState implements State
 	public void userCancelledChoosing()
 	{
 		client.sendTCP(new LogoutPacket());
-		states.set(new AuthenticationState(client, states));
+		states.set(new AuthenticationState(client, states, packetHandlerRegisterer));
 	}
+	
+	private class CharacterCreationReplyPacketHandler extends PacketHandlerBase<CharacterCreationReplyPacket>
+	{
+		@Override
+		protected void doHandle(CharacterCreationReplyPacket creationPacket)
+		{
+			if(creationPacket.isCreated())
+			{
+				choosingDialog.add(creationPacket.getCharacter());
+				choosingDialog.clearErrorMessage();
+				choosingDialog.show(stage);
+			}
+			else
+			{
+				creatingDialog.setErrorMessage(creationPacket.getErrorMessage());
+				creatingDialog.show(stage);
+			}
+		}
+	}
+	
+	
 
 }

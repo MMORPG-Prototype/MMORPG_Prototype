@@ -10,22 +10,26 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.chat.ChatPane;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 
-public class ChatDialog extends Dialog
+public class ChatDialog extends Dialog 
 {
 	private TextField chatTextField;
 	private UserInterface linkedInterface;
 	private ChatPane chatPane;
 
-	public ChatDialog(UserInterface linkedInterface)
+	public ChatDialog(UserInterface linkedInterface, PacketHandlerRegisterer packetHandlerRegisterer)
 	{
 		super("Chat", Settings.DEFAULT_SKIN);
 		this.linkedInterface = linkedInterface;
+		packetHandlerRegisterer.register(new ChatMessageReplyPacketHandler());
+		
 		setBounds(0, 0, 400, 200);
 		Button closeButton = new CloseButton(this); 
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
@@ -64,11 +68,6 @@ public class ChatDialog extends Dialog
 			
 	}
 
-	public void addMessage(ChatMessageReplyPacket packet)
-	{
-		chatPane.addMessage(packet);		
-	};
-	
 	@Override
 	public void setVisible(boolean visible)
 	{
@@ -80,5 +79,13 @@ public class ChatDialog extends Dialog
 		chatTextField.setText("");	
 		super.setVisible(visible);
 	}
-
+	
+	private class ChatMessageReplyPacketHandler extends PacketHandlerBase<ChatMessageReplyPacket>
+	{
+		@Override
+		protected void doHandle(ChatMessageReplyPacket packet)
+		{
+			chatPane.addMessage(packet);	
+		}
+	}
 }

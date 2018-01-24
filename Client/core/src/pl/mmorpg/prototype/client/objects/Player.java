@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.client.objects.monsters.HealthBarMonster;
 import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo;
+import pl.mmorpg.prototype.client.packethandlers.GameObjectTargetPacketHandler;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -83,7 +84,8 @@ public class Player extends HealthBarMonster
         getProperties().mp = manaPoints;
     }
     
-    private class GoldReceivePacketHandler extends PacketHandlerBase<GoldReceivePacket>
+    private class GoldReceivePacketHandler extends PacketHandlerBase<GoldReceivePacket> 
+    	implements GameObjectTargetPacketHandler<GoldReceivePacket>
     {
 		@Override
 		protected void doHandle(GoldReceivePacket packet)
@@ -91,14 +93,27 @@ public class Player extends HealthBarMonster
 			System.out.println("Player gold packet handling");
 			getProperties().gold += packet.getGoldAmount();
 		}
+
+		@Override
+		public long getObjectId()
+		{
+			return getId();
+		}
     }
     
     private class GoldAmountChangePacketHandler extends PacketHandlerBase<GoldAmountChangePacket>
+		implements GameObjectTargetPacketHandler<GoldAmountChangePacket>
     {
 		@Override
 		protected void doHandle(GoldAmountChangePacket packet)
 		{
 			getProperties().gold = packet.getNewGoldAmount();
+		}
+		
+		@Override
+		public long getObjectId()
+		{
+			return getId();
 		}
     }
     

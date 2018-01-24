@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.client;
 
+import java.util.function.Consumer;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,6 +17,7 @@ import pl.mmorpg.prototype.client.packethandlers.SimplePacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.SettingsChoosingState;
+import pl.mmorpg.prototype.client.states.State;
 import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.registering.PacketHandlersRegisterer;
 
@@ -35,16 +38,17 @@ public class GameClient extends ApplicationAdapter
         mousePointer = Assets.get("cursor.gif"); 
         batch = Assets.getBatch();
         background = Assets.get("background.jpg");
-        states = new StateManager();
-        client = new Client();
         PacketHandlerDispatcher dispatcher = new PacketHandlerDispatcher();
         PacketHandlerRegisterer registerer = new SimplePacketHandlerRegisterer(dispatcher);
+        Consumer<State> disposeState = state -> state.unregisterHandlers(registerer);
+		states = new StateManager(disposeState);
+        client = new Client();
         playState = new PlayState(states, client, registerer);
         client = initizlizeClient(dispatcher);
         states.push(playState);
-        states.push(new SettingsChoosingState(client, states));
+        states.push(new SettingsChoosingState(client, states, registerer));
         // Gdx.input.setCursorCatched(true); 
-    }
+    } 
 
     private Client initizlizeClient(PacketHandlerDispatcher dispatcher)
     {

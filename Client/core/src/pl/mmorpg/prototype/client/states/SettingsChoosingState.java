@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.esotericsoftware.kryonet.Client;
 
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.userinterface.dialogs.AskForIpDialog;
 
@@ -13,12 +14,14 @@ public class SettingsChoosingState implements State
 	private final Client client;
 	private final Stage stage = Assets.getStage();
 	private final StateManager states;
+	private final PacketHandlerRegisterer registerer;
 	private ConnectionInfo connectionInfo = null;
 
-	public SettingsChoosingState(Client client, StateManager states)
+	public SettingsChoosingState(Client client, StateManager states, PacketHandlerRegisterer registerer)
 	{
 		this.client = client;
 		this.states = states;
+		this.registerer = registerer;
 		Gdx.input.setInputProcessor(stage);
 
 		AskForIpDialog dialog = new AskForIpDialog(this, new ConnectionInfo("localhost"));
@@ -39,7 +42,7 @@ public class SettingsChoosingState implements State
 		if(connectionInfo != null)
 		{
 			stage.dispose();
-			states.set(new ConnectionState(client, states, connectionInfo));
+			states.set(new ConnectionState(client, states, registerer, connectionInfo));
 		}
 
 	}

@@ -5,6 +5,8 @@ import java.io.IOException;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.esotericsoftware.kryonet.Client;
 
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+
 public class ConnectionState implements State
 {
 	private final StateManager states;
@@ -13,11 +15,14 @@ public class ConnectionState implements State
 	private int currentTryout = 0;
 
 	private Thread connectThread;
+	private PacketHandlerRegisterer registerer;
 
-	public ConnectionState(Client client, StateManager states, ConnectionInfo connectionInfo)
+	public ConnectionState(Client client, StateManager states, PacketHandlerRegisterer registerer,
+			ConnectionInfo connectionInfo)
 	{
 		this.client = client;
 		this.states = states;
+		this.registerer = registerer;
 		client.start();
 		connectThread = new Thread(() -> tryConnecting(client, connectionInfo));
 		connectThread.start();
@@ -46,9 +51,9 @@ public class ConnectionState implements State
 	public void update(float deltaTime)
 	{
 		if (client.isConnected())
-			states.set(new AuthenticationState(client, states));
+			states.set(new AuthenticationState(client, states, registerer));
 		else if (!connectThread.isAlive())
-			states.set(new SettingsChoosingState(client, states));
+			states.set(new SettingsChoosingState(client, states, registerer));
 	}
 
 	@Override

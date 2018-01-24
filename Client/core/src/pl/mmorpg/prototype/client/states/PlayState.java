@@ -84,6 +84,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
@@ -100,6 +101,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerIte
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
@@ -328,7 +330,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		client.sendTCP(new DisconnectPacket());
 		reset();
-		states.push(new SettingsChoosingState(client, states));
+		states.push(new SettingsChoosingState(client, states, packetHandlerRegisterer));
 	}
 
 	private void reset()
@@ -361,40 +363,21 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void userWantsToChangeCharacter()
 	{
 		client.sendTCP(new CharacterChangePacket());
-		states.push(new ChoosingCharacterState(client, states));
+		states.push(new ChoosingCharacterState(client, states, packetHandlerRegisterer));
 		reset();
 	}
 
 	public void userWantsToLogOut()
 	{
 		client.sendTCP(new LogoutPacket());
-		states.push(new AuthenticationState(client, states));
+		states.push(new AuthenticationState(client, states, packetHandlerRegisterer));
 		reset();
-	}
-
-	public void newItemPacketReceived(CharacterItemDataPacket itemData)
-	{
-		Item newItem = ItemFactory.produceItem(itemData);
-		ItemInventoryPosition position = new ItemInventoryPosition(itemData.getInventoryPageNumber(),
-				new Point(itemData.getInventoryX(), itemData.getInventoryY()));
-
-		userInterface.addItemToInventory(newItem, position);
-		userInterface.increaseQuickAccessDialogNumbers(newItem);
 	}
 
 	public void userWantsToSendMessage(String message)
 	{
 		ChatMessagePacket packet = PacketsMaker.makeChatMessagePacket(message);
 		client.sendTCP(packet);
-	}
-
-	public void chatMessagePacketReceived(ChatMessageReplyPacket packet)
-	{
-		userInterface.addMessageToDialogChat(packet);
-		GameObject source = gameObjects.get(packet.sourceCharacterId);
-		GameWorldLabel message = new GameWorldLabel(packet.getMessage(), source);
-		if (!clientGraphics.offer(message))
-			Log.warn("Couldn't add graphic object ");
 	}
 
 	public void userLeftClickedOnGameBoard(float x, float y)
@@ -450,13 +433,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		return (player.getX() - camera.viewportWidth / 2 + x * camera.viewportWidth / Settings.GAME_WIDTH)
 				- player.getWidth() / 2;
-	}
-
-	public void monsterTargeted(Long monsterId)
-	{
-		GameObject target = gameObjects.get(monsterId);
-		player.lockOnTarget(target);
-		System.out.println("Monster targeted " + gameObjects.get(monsterId));
 	}
 
 	public boolean has(long targetId)
@@ -544,11 +520,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		OpenContainterPacket packet = PacketsMaker.makeContainterOpeningPacket(getRealX(x), getRealY(y));
 		client.sendTCP(packet);
-	}
-
-	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold, long containerId)
-	{
-		userInterface.containerOpened(contentItems, gold, containerId);
 	}
 
 	public void containerItemRemovalPacketReceived(ContainerItemRemovalPacket packet)
@@ -731,6 +702,58 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		protected void doHandle(ObjectRemovePacket packet)
 		{
 			removeObject(packet.id);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class PlayerCreationPacketHandler extends PacketHandlerBase<PlayerCreationPacket>
+	{
+		@Override
+		protected void doHandle(PlayerCreationPacket packet)
+		{
+			Player player = new Player(packet.id, collisionMap, packetHandlerRegisterer);
+			player.initialize(packet.data);
+			add(player);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class CharacterItemDataPacketHandler extends PacketHandlerBase<CharacterItemDataPacket>
+	{
+		@Override
+		protected void doHandle(CharacterItemDataPacket itemData)
+		{
+			Item newItem = ItemFactory.produceItem(itemData);
+			ItemInventoryPosition position = new ItemInventoryPosition(itemData.getInventoryPageNumber(),
+					new Point(itemData.getInventoryX(), itemData.getInventoryY()));
+
+			userInterface.addItemToInventory(newItem, position);
+			userInterface.increaseQuickAccessDialogNumbers(newItem);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class CharacterMonsterTargetingReplyPacketHandler extends PacketHandlerBase<MonsterTargetingReplyPacket>
+	{
+		@Override
+		protected void doHandle(MonsterTargetingReplyPacket packet)
+		{
+			GameObject target = gameObjects.get(packet.monsterId);
+			player.lockOnTarget(target);
+			System.out.println("Monster targeted " + target);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class ChatMessageReplyPacketHandler extends PacketHandlerBase<ChatMessageReplyPacket>
+	{
+		@Override
+		protected void doHandle(ChatMessageReplyPacket packet)
+		{
+			GameObject source = gameObjects.get(packet.sourceCharacterId);
+			GameWorldLabel message = new GameWorldLabel(packet.getMessage(), source);
+			if (!clientGraphics.offer(message))
+				Log.warn("Couldn't add graphic object ");
 		}
 	}
 

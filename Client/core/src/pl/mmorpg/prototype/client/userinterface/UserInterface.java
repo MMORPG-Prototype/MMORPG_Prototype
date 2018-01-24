@@ -27,6 +27,7 @@ import pl.mmorpg.prototype.client.objects.icons.DraggableIcon;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -53,7 +54,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemQuickAccessIcon;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
-import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -97,7 +98,7 @@ public class UserInterface
 		itemQuickAccessDialog = new ItemQuickAccessDialog(this);
 		spellQuickAccessDialog = new SpellQuickAccessDialog(this);
 		equipmentDialog = new EquipmentDialog();
-		chatDialog = new ChatDialog(this);
+		chatDialog = new ChatDialog(this, registerer);
 		consoleDialog = new ConsoleDialog(this);
 		questListDialog = new QuestListDialog();
 		spellListDialog = new SpellListDialog(this);
@@ -106,6 +107,19 @@ public class UserInterface
 		addDialogsToStage();
 		dialogs.hideKeyMappedDialogs();
 
+		addListeners(linkedState);
+		registerHandlers(registerer);
+	}
+
+	private void addListeners(PlayState linkedState)
+	{
+		addLeftClickListener(linkedState);
+		addRightClickListener(linkedState);
+		addMouseMoveListener(linkedState);
+	}
+	
+	private void addLeftClickListener(PlayState linkedState)
+	{
 		stage.addListener(new ClickListener(Buttons.LEFT)
 		{
 			@Override
@@ -118,6 +132,10 @@ public class UserInterface
 				}
 			}
 		});
+	}
+
+	private void addRightClickListener(PlayState linkedState)
+	{
 		stage.addListener(new ClickListener(Buttons.RIGHT)
 		{
 			@Override
@@ -130,6 +148,10 @@ public class UserInterface
 				}
 			}
 		});
+	}
+	
+	private void addMouseMoveListener(PlayState linkedState)
+	{
 		stage.addListener(new InputListener() 
 		{
 			@Override
@@ -139,6 +161,12 @@ public class UserInterface
 				return super.mouseMoved(event, x, y);
 			}
 		});
+	}
+	
+
+	private void registerHandlers(PacketHandlerRegisterer registerer)
+	{
+		registerer.register(new ContainerContentPacketHandler());
 	}
 
 	public void mapDialogsWithKeys()
@@ -304,12 +332,7 @@ public class UserInterface
 	{
 		linkedState.userWantsToSendMessage(message);
 	}
-
-	public void addMessageToDialogChat(ChatMessageReplyPacket packet)
-	{
-		chatDialog.addMessage(packet);
-	}
-
+	
 	public void updateStatsDialog()
 	{
 		statisticsDialog.updateStatistics();
@@ -334,12 +357,6 @@ public class UserInterface
 	{
 		Item item = (Item) inventoryDialog.useItem(itemId);
 		itemQuickAccessDialog.decreaseNumberOfItems(item.getIdentifier());
-	}
-
-	public void containerOpened(CharacterItemDataPacket[] contentItems, int gold, long containerId)
-	{
-		if (!dialogs.hasIdentifiableDialog(containerId))
-			Gdx.app.postRunnable(() -> createAndOpenContainerDialog(contentItems, gold, containerId));
 	}
 
 	private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, int gold, long containerId)
@@ -547,5 +564,16 @@ public class UserInterface
 	{
 		Spell spell = SpellFactory.produce(spellIdentifer);
 		spellListDialog.addSpell(spell);
+	}
+	
+	private class ContainerContentPacketHandler extends PacketHandlerBase<ContainerContentPacket>
+	{
+		@Override
+		protected void doHandle(ContainerContentPacket packet)
+		{
+			if (!dialogs.hasIdentifiableDialog(packet.getContainerId()))
+				Gdx.app.postRunnable(() -> createAndOpenContainerDialog(
+						packet.getContentItems(), packet.getGoldAmount(), packet.getContainerId()));	
+		}
 	}
 }
