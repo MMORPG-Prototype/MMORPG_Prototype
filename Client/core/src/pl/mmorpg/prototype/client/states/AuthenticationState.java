@@ -71,7 +71,7 @@ public class AuthenticationState extends PacketHandlingState
 
 	public void userWantsToRegister()
 	{
-		states.push(new RegisterationState(client, states));
+		states.push(new RegisterationState(client, states, registerer));
 	}
 
 	public void userPressedCancel()

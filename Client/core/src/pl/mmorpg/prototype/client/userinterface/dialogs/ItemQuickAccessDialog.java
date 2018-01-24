@@ -12,19 +12,25 @@ import pl.mmorpg.prototype.client.exceptions.NoSuchItemInQuickAccessBarException
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemQuickAccessIcon;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.InventoryTextField;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 
 public class ItemQuickAccessDialog extends QuickAccessDialog<ItemQuickAccessIcon>
 {
 	private UserInterface linkedInterface;
+	private ItemCounter itemCounter;
 
-	public ItemQuickAccessDialog(UserInterface linkedInterface)
+	public ItemQuickAccessDialog(UserInterface linkedInterface, ItemCounter itemCounter, PacketHandlerRegisterer registerer)
 	{
 		super("Quick access");
 		this.linkedInterface = linkedInterface;
+		this.itemCounter = itemCounter;
+		registerer.registerPrivateClassPacketHandlers(this);
 		this.setX(430);
 	}
 
@@ -101,11 +107,20 @@ public class ItemQuickAccessDialog extends QuickAccessDialog<ItemQuickAccessIcon
 		getValidIcons(identifier).forEach(icon -> icon.increaseItemNumber(itemCount));
 	}
 
-	public void putItem(String itemIdentifier, int cellPosition, ItemCounter itemCounter)
+	public void putItem(String itemIdentifier, int cellPosition)
 	{
 		ItemQuickAccessIcon icon = new ItemQuickAccessIcon(itemIdentifier, itemCounter);
 		ButtonField<ItemQuickAccessIcon> quickAccessField = quickAccessButtons.get(cellPosition);
 		quickAccessField.put(icon);
+	}
+	
+	public class ItemPutInQuickAccessBarPacketHandler extends PacketHandlerBase<ItemPutInQuickAccessBarPacket>
+	{
+		@Override
+		protected void doHandle(ItemPutInQuickAccessBarPacket packet)
+		{
+			putItem(packet.getItemIdentifier(), packet.getCellPosition());
+		}
 	}
 
 }

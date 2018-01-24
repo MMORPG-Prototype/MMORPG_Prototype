@@ -30,6 +30,8 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.Inv
 import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemStackPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemSwapPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 
 public class InventoryDialog extends Dialog implements ItemCounter
@@ -281,16 +283,6 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		destinationField.put(targetItem);
 	}
 
-	public void swapItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
-	{
-		ButtonField<Item> firstField = getField(firstPosition);
-		ButtonField<Item> secondField = getField(secondPosition);
-		Item firstItem = firstField.getContent();
-		Item secondItem = secondField.getContent();
-		firstField.put(secondItem);
-		secondField.put(firstItem);
-	}
-
 	@Override
 	public int countItems(String itemIdentifier)
 	{
@@ -309,16 +301,6 @@ public class InventoryDialog extends Dialog implements ItemCounter
 				return item;
 		}
 		return null;
-	}
-
-	public void stackItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
-	{
-		ButtonField<Item> firstField = getField(firstPosition);
-		ButtonField<Item> secondField = getField(secondPosition);
-		Item firstItem = firstField.getContent();
-		Item secondItem = secondField.getContent();
-		firstField.removeContent();
-		((StackableItem)secondItem).stackWith((StackableItem)firstItem);
 	}
 
 	@SuppressWarnings("unused")
@@ -356,6 +338,55 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			ItemInventoryPosition destinationPosition = new ItemInventoryPosition(packet.getDestinationPageNumber(),
 					new Point(packet.getDestinationPageX(), packet.getDestinationPageY()));
 			repositionItem(sourcePosition, destinationPosition);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class InventoryItemStackPacketHandler extends PacketHandlerBase<InventoryItemStackPacket>
+	{
+		@Override
+		protected void doHandle(InventoryItemStackPacket packet)
+		{
+			ItemInventoryPosition firstPosition = new ItemInventoryPosition(packet.getFirstPositionPageNumber(),
+					new Point(packet.getFirstPositionPageX(), packet.getFirstPositionPageY()));
+			ItemInventoryPosition secondPosition = new ItemInventoryPosition(packet.getSecondPositionPageNumber(),
+					new Point(packet.getSecondPositionPageX(), packet.getSecondPositionPageY()));
+			stackItems(firstPosition, secondPosition);
+		}
+		
+		private void stackItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
+		{
+			ButtonField<Item> firstField = getField(firstPosition);
+			ButtonField<Item> secondField = getField(secondPosition);
+			Item firstItem = firstField.getContent();
+			Item secondItem = secondField.getContent();
+			firstField.removeContent();
+			((StackableItem)secondItem).stackWith((StackableItem)firstItem);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class InventoryItemSwapPacketHandler extends PacketHandlerBase<InventoryItemSwapPacket>
+	{
+		@Override
+		protected void doHandle(InventoryItemSwapPacket packet)
+		{
+			ItemInventoryPosition firstPosition = new ItemInventoryPosition(packet.getFirstPositionPageNumber(),
+					new Point(packet.getFirstPositionPageX(), packet.getFirstPositionPageY()));
+			ItemInventoryPosition secondPosition = new ItemInventoryPosition(packet.getSecondPositionPageNumber(),
+					new Point(packet.getSecondPositionPageX(), packet.getSecondPositionPageY()));
+
+			swapItems(firstPosition, secondPosition);		
+		}
+		
+		private void swapItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
+		{
+			ButtonField<Item> firstField = getField(firstPosition);
+			ButtonField<Item> secondField = getField(secondPosition);
+			Item firstItem = firstField.getContent();
+			Item secondItem = secondField.getContent();
+			firstField.put(secondItem);
+			secondField.put(firstItem);
 		}
 	}
 

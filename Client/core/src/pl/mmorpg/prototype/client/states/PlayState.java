@@ -79,10 +79,11 @@ import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
@@ -92,17 +93,13 @@ import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
@@ -440,24 +437,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		return gameObjects.get(targetId) != null;
 	}
 
-	public void mpChangeByItemUsagePacketReceived(MpChangeByItemUsagePacket packet)
-	{
-		Monster target = (Monster) gameObjects.get(packet.getMonsterTargetId());
-		target.getProperties().mp -= packet.getMpChange();
-		ManaReplenishLabel manaReplenishLabel = new ManaReplenishLabel(String.valueOf(packet.getMpChange()), target);
-		clientGraphics.add(manaReplenishLabel);
-		if (target == player)
-		{
-			UserCharacterDataPacket data = player.getData();
-			data.setManaPoints(data.getManaPoints() + packet.getMpChange());
-		}
-	}
-
-	public void itemUsagePacketReceived(ItemUsagePacket packet)
-	{
-		userInterface.itemUsed(packet.getItemId());
-	}
-
 	private void damagePacketReceived(long targetId, int damage,
 			BiFunction<Integer, GameObject, GraphicGameObject> damageLabelCreator)
 	{
@@ -477,11 +456,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 				(damage, target) -> new NormalDamageLabel(damage, target));
 	}
 
-	public void playerUsedMana(int manaDrain)
-	{
-		player.manaDrained(manaDrain);
-		userInterface.updateHitPointManaPointDialog();
-	}
+
 
 	public void userRightClickedOnGameBoard(float x, float y)
 	{
@@ -493,18 +468,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	public void showTimedErrorMessage(String errorMessage, float timeout)
 	{
 		userInterface.showTimedErrorMessage(errorMessage, timeout);
-	}
-
-	public void updateMp(long targetId, int newMp)
-	{
-		Monster target = (Monster) getObject(targetId);
-		target.getProperties().mp = newMp;
-		if (target == player)
-		{
-			UserCharacterDataPacket data = player.getData();
-			data.setManaPoints(newMp);
-			userInterface.updateHitPointManaPointDialog();
-		}
 	}
 
 	public void openShopDialog(ShopItemPacket[] shopItemsPacket, long shopId)
@@ -524,16 +487,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		ConsoleDialog console = userInterface.getDialogs().searchForDialog(ConsoleDialog.class);
 		console.addErrorMessage(error);
-	}
-
-	public void swapItemsInInventory(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
-	{
-		userInterface.swapItemsInInventory(firstPosition, secondPosition);
-	}
-
-	public void putItemInQuickAccessBarPacketReceived(ItemPutInQuickAccessBarPacket packet)
-	{
-		userInterface.putItemInQuickAccessBar(packet.getItemIdentifier(), packet.getCellPosition());
 	}
 
 	public void putSpellInQuickAccessBarPacketReceived(SpellPutInQuickAccessBarPacket packet)
@@ -556,11 +509,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		userInterface.openNewQuestRewardDialog(packet);
 	}
 
-	public void itemRewardRemovePacketReceived(ItemRewardRemovePacket packet)
-	{
-		userInterface.removeItemFromQuestRewardContainer(packet);
-	}
-
 	public void questRewardGoldRemovalPacketReceived(QuestRewardGoldRemovalPacket packet)
 	{
 		userInterface.removeGoldFromQuestRewardDialog(packet.getGoldAmount());
@@ -577,28 +525,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		userInterface.removeQuestPositionFromQuestBoardDialog(questStatePacket.getQuestName());
 		Quest quest = QuestCreator.create(questStatePacket);
 		questInfoReceived(quest);
-	}
-
-	public void npcStartDialogPacketReceived(NpcStartDialogPacket packet)
-	{
-		Npc npc = (Npc) gameObjects.get(packet.getNpcId());
-		userInterface.openNpcConversationDialog(npc, packet.getSpeech(), packet.getPossibleAnswers());
-	}
-
-	public void continueNpcConversation(NpcContinueDialogPacket packet)
-	{
-		userInterface.continueNpcConversation(packet);
-	}
-
-	public void inventoryItemStackPacketReceived(ItemInventoryPosition firstPosition,
-			ItemInventoryPosition secondPosition)
-	{
-		userInterface.stackItemsInInventoryDialog(firstPosition, secondPosition);
-	}
-
-	public void knownSpellInfoReceived(SpellIdentifiers spellIdentifer)
-	{
-		userInterface.addSpellToSpellListDialog(spellIdentifer);
 	}
 
 	public void add(Function<CollisionMap<GameObject>, GameObject> movableObjectCreator)
@@ -767,6 +693,25 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	}
 
 	@SuppressWarnings("unused")
+	private class MpChangeByItemUsagePacketHandler extends PacketHandlerBase<MpChangeByItemUsagePacket>
+	{
+		@Override
+		protected void doHandle(MpChangeByItemUsagePacket packet)
+		{
+			Monster target = (Monster) gameObjects.get(packet.getMonsterTargetId());
+			target.getProperties().mp -= packet.getMpChange();
+			ManaReplenishLabel manaReplenishLabel = new ManaReplenishLabel(String.valueOf(packet.getMpChange()), target);
+			clientGraphics.add(manaReplenishLabel);
+			if (target == player)
+			{
+				UserCharacterDataPacket data = player.getData();
+				data.setManaPoints(data.getManaPoints() + packet.getMpChange());
+			}
+			
+		}
+	}
+
+	@SuppressWarnings("unused")
 	private class HpUpdatePacketHandler extends PacketHandlerBase<HpUpdatePacket>
 	{
 		@Override
@@ -786,7 +731,61 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 				data.setHitPoints(newHp);
 				userInterface.updateHitPointManaPointDialog();
 			}
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private class MpUpdatePacketHandler extends PacketHandlerBase<MpUpdatePacket>
+	{
+		@Override
+		protected void doHandle(MpUpdatePacket packet)
+		{
+			updateMp(packet.getId(), packet.getNewMp());
+		}
+		
+		private void updateMp(long targetId, int newMp)
+		{
+			Monster target = (Monster) getObject(targetId);
+			target.getProperties().mp = newMp;
+			if (target == player)
+			{
+				UserCharacterDataPacket data = player.getData();
+				data.setManaPoints(newMp);
+				userInterface.updateHitPointManaPointDialog();
+			}
+		}
+	}
 
+
+	@SuppressWarnings("unused")
+	private class ManaDrainPacketHandler extends PacketHandlerBase<ManaDrainPacket>
+	{
+		@Override
+		protected void doHandle(ManaDrainPacket packet)
+		{
+			playerUsedMana(packet.getManaDrained());
+		}
+		
+		private void playerUsedMana(int manaDrain)
+		{
+			player.manaDrained(manaDrain);
+			userInterface.updateHitPointManaPointDialog();
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class NpcStartDialogPacketHandler extends PacketHandlerBase<NpcStartDialogPacket>
+	{
+		@Override
+		protected void doHandle(NpcStartDialogPacket packet)
+		{
+			openNpcConversationDialog(packet.getNpcId(), packet.getSpeech(), packet.getPossibleAnswers());
+		}
+		
+		private void openNpcConversationDialog(long npcId, String speech, String[] possibleAnswers)
+		{
+			Npc npc = (Npc) gameObjects.get(npcId);
+			userInterface.openNpcConversationDialog(npc, speech, possibleAnswers);
 		}
 	}
 	

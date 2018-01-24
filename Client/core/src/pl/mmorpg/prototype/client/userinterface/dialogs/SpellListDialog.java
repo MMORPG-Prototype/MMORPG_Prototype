@@ -4,16 +4,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.spells.SpellFactory;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.spell.SpellListPane;
+import pl.mmorpg.prototype.clientservercommon.packets.KnownSpellInfoPacket;
 
 public class SpellListDialog extends Dialog
 {
 	private SpellListPane spellListPane;
 
-	public SpellListDialog(UserInterface userInterface)
+	public SpellListDialog(UserInterface userInterface, PacketHandlerRegisterer packetHandlerRegisterer)
 	{
 		super("Spells", Settings.DEFAULT_SKIN);
 		Button closeButton = new CloseButton(this); 
@@ -24,11 +28,24 @@ public class SpellListDialog extends Dialog
         this.getContentTable().row();
         this.setHeight(150);
         this.setWidth(470);
+        
+        packetHandlerRegisterer.registerPrivateClassPacketHandlers(this);
 	}
 	
-	public void addSpell(Spell spell)
+	
+	public class KnownSpellInfoPacketHandler extends PacketHandlerBase<KnownSpellInfoPacket>
 	{
-		spellListPane.addSpell(spell);
+		@Override
+		protected void doHandle(KnownSpellInfoPacket packet)
+		{
+			Spell spell = SpellFactory.produce(packet.getSpellIdentifer());
+			addSpell(spell);
+		}
+		
+		private void addSpell(Spell spell)
+		{
+			spellListPane.addSpell(spell);
+		}
 	}
 
 }

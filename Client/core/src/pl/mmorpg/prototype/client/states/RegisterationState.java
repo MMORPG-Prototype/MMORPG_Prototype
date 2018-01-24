@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.esotericsoftware.kryonet.Client;
 
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.userinterface.dialogs.RegisterationDialog;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationReplyPacket;
@@ -16,12 +18,13 @@ public class RegisterationState implements State
 	private Stage stage = new Stage();
 	private RegisterationDialog dialog = new RegisterationDialog(this);
 
-	public RegisterationState(Client client, StateManager states)
+	public RegisterationState(Client client, StateManager states, PacketHandlerRegisterer registerer)
 	{
 		this.client = client;
 		this.states = states;
 		dialog.show(stage);
 		Gdx.input.setInputProcessor(stage);
+		registerer.register(new RegisterationReplyPacketHandler());
 	}
 
 	@Override
@@ -45,15 +48,19 @@ public class RegisterationState implements State
 	{
 		client.sendTCP(registerationData);
 	}
-
-	public void registerationReplyReceived(RegisterationReplyPacket replyPacket)
+	
+	public class RegisterationReplyPacketHandler extends PacketHandlerBase<RegisterationReplyPacket>
 	{
-		if (replyPacket.isRegistered)
-			states.pop();
-		else
+		@Override
+		protected void doHandle(RegisterationReplyPacket replyPacket)
 		{
-			dialog.setErrorMessage(replyPacket.errorMessage);
-			dialog.show(stage);
+			if (replyPacket.isRegistered)
+				states.pop();
+			else
+			{
+				dialog.setErrorMessage(replyPacket.errorMessage);
+				dialog.show(stage);
+			}
 		}
 	}
 

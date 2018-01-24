@@ -31,7 +31,6 @@ import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.resources.Assets;
-import pl.mmorpg.prototype.client.spells.SpellFactory;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ConsoleDialog;
@@ -55,6 +54,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemQuickAcce
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -97,20 +97,20 @@ public class UserInterface
 		statisticsDialog = new StatisticsDialog(character);
 		shortcutBarDialog = new ShortcutBarPane(this);
 		hpMpDialog = new HitPointManaPointPane(character, registerer);
-		itemQuickAccessDialog = new ItemQuickAccessDialog(this);
+		itemQuickAccessDialog = new ItemQuickAccessDialog(this, (ItemCounter) inventoryDialog, registerer);
 		spellQuickAccessDialog = new SpellQuickAccessDialog(this);
 		equipmentDialog = new EquipmentDialog();
 		chatDialog = new ChatDialog(this, registerer);
 		consoleDialog = new ConsoleDialog(this);
 		questListDialog = new QuestListDialog();
-		spellListDialog = new SpellListDialog(this);
+		spellListDialog = new SpellListDialog(this, registerer);
 		mapDialogsWithKeys();
 		mapOtherDialogs();
 		addDialogsToStage();
 		dialogs.hideKeyMappedDialogs();
 
 		addListeners(linkedState);
-		registerHandlers(registerer);
+		registerer.registerPrivateClassPacketHandlers(this);
 	}
 
 	private void addListeners(PlayState linkedState)
@@ -165,14 +165,6 @@ public class UserInterface
 		});
 	}
 	
-
-	private void registerHandlers(PacketHandlerRegisterer registerer)
-	{
-		registerer.register(new ContainerContentPacketHandler());
-		registerer.register(new ContainerGoldRemovalPacketHandler());
-		registerer.register(new ContainerItemRemovalPacketHandler());
-	}
-
 	public void mapDialogsWithKeys()
 	{
 		dialogs.map(Keys.T, chatDialog);
@@ -347,12 +339,6 @@ public class UserInterface
 		linkedState.userWantsToLogOut();
 	}
 
-	public void itemUsed(long itemId)
-	{
-		Item item = (Item) inventoryDialog.useItem(itemId);
-		itemQuickAccessDialog.decreaseNumberOfItems(item.getIdentifier());
-	}
-
 	private void createAndOpenContainerDialog(CharacterItemDataPacket[] contentItems, int gold, long containerId)
 	{
 		ItemPositionSupplier desiredItemPositionSupplier = inventoryDialog::getDesiredItemPositionFor;
@@ -405,11 +391,6 @@ public class UserInterface
 		linkedState.send(PacketsMaker.makeScriptCodePacket(command));
 	}
 
-	public void swapItemsInInventory(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
-	{
-		inventoryDialog.swapItems(firstPosition, secondPosition);
-	}
-
 	public Item searchForItem(String itemIdentifier)
 	{
 		return inventoryDialog.searchForItem(itemIdentifier);
@@ -425,11 +406,6 @@ public class UserInterface
 		if (item instanceof StackableItem)
 			return ((StackableItem) item).getItemCount();
 		return 1;
-	}
-
-	public void putItemInQuickAccessBar(String itemIdentifier, int cellPosition)
-	{
-		itemQuickAccessDialog.putItem(itemIdentifier, cellPosition, (ItemCounter) inventoryDialog);
 	}
 	
 	public void putSpellInQuickAccessBar(SpellIdentifiers spellIdentifier, int cellPosition)
@@ -471,12 +447,6 @@ public class UserInterface
 		dialogs.add(questRewardDialog);
 	}
 
-	public void removeItemFromQuestRewardContainer(ItemRewardRemovePacket packet)
-	{
-		QuestRewardDialog dialog = dialogs.searchForDialog(QuestRewardDialog.class);
-		dialog.removeItem(packet.getItemIdentifier(), packet.getNumberOfItems());
-	}
-
 	public void removeGoldFromQuestRewardDialog(int goldAmount)
 	{
 		QuestRewardDialog dialog = dialogs.searchForDialog(QuestRewardDialog.class);
@@ -514,34 +484,18 @@ public class UserInterface
 		dialogs.add(newDialog);
 	}
 
-	public void continueNpcConversation(NpcContinueDialogPacket packet)
-	{
-		NpcConversationDialog npcConversationDialog = dialogs.getIdentifiableDialog(packet.getNpcId());
-		npcConversationDialog.update(packet.getSpeech(), packet.getPossibleAnswers());
-	}
-
-	public void stackItemsInInventoryDialog(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
-	{
-		inventoryDialog.stackItems(firstPosition, secondPosition);
-	}
-
 	public void focus(Actor actor)
 	{
 		stage.setKeyboardFocus(actor);
 		stage.setScrollFocus(actor);
-	}
-
-	public void addSpellToSpellListDialog(SpellIdentifiers spellIdentifer)
-	{
-		Spell spell = SpellFactory.produce(spellIdentifer);
-		spellListDialog.addSpell(spell);
 	}
 	
 	public void updateHitPointManaPointDialog()
 	{
 		hpMpDialog.updateValues();
 	}
-	
+
+	@SuppressWarnings("unused")
 	private class ContainerContentPacketHandler extends PacketHandlerBase<ContainerContentPacket>
 	{
 		@Override
@@ -552,7 +506,8 @@ public class UserInterface
 						packet.getContentItems(), packet.getGoldAmount(), packet.getContainerId()));	
 		}
 	}
-	
+
+	@SuppressWarnings("unused")
 	private class ContainerGoldRemovalPacketHandler extends PacketHandlerBase<ContainerGoldRemovalPacket>
 	{
 		@Override
@@ -571,6 +526,7 @@ public class UserInterface
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private class ContainerItemRemovalPacketHandler extends PacketHandlerBase<ContainerItemRemovalPacket>
 	{
 		@Override
@@ -586,6 +542,54 @@ public class UserInterface
 				ContainerDialog dialog = dialogs.getIdentifiableDialog(containerId);
 				dialog.removeItem(itemId);
 			}
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class ItemRewardRemovePacketHandler extends PacketHandlerBase<ItemRewardRemovePacket>
+	{
+		@Override
+		protected void doHandle(ItemRewardRemovePacket packet)
+		{
+			removeItemFromQuestRewardContainer(packet.getItemIdentifier(), packet.getNumberOfItems());
+		}
+		
+		private void removeItemFromQuestRewardContainer(String itemIdentifier, int numberOfItems)
+		{
+			QuestRewardDialog dialog = dialogs.searchForDialog(QuestRewardDialog.class);
+			dialog.removeItem(itemIdentifier, numberOfItems);			
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
+	{
+		@Override
+		protected void doHandle(ItemUsagePacket packet)
+		{
+			itemUsed(packet.getItemId());
+		}
+		
+		private void itemUsed(long itemId)
+		{
+			Item item = (Item) inventoryDialog.useItem(itemId);
+			itemQuickAccessDialog.decreaseNumberOfItems(item.getIdentifier());
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class NpcContinueDialogPacketHandler extends PacketHandlerBase<NpcContinueDialogPacket>
+	{
+		@Override
+		protected void doHandle(NpcContinueDialogPacket packet)
+		{
+			continueNpcConversation(packet.getNpcId(), packet.getSpeech(), packet.getPossibleAnswers());
+		}
+		
+		private void continueNpcConversation(long npcId, String speech, String[] possibleAnswers)
+		{
+			NpcConversationDialog npcConversationDialog = dialogs.getIdentifiableDialog(npcId);
+			npcConversationDialog.update(speech, possibleAnswers);			
 		}
 	}
 }
