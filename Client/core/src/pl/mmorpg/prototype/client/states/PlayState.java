@@ -78,6 +78,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
@@ -97,7 +98,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
@@ -440,32 +440,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		return gameObjects.get(targetId) != null;
 	}
 
-	public void experienceGainPacketReceived(ExperienceGainPacket packet)
-	{
-		Player target = (Player) gameObjects.get(packet.getTargetId());
-		GraphicGameObject experienceGainLabel = new ExperienceGainLabel(String.valueOf(packet.getExperience()), target);
-		clientGraphics.add(experienceGainLabel);
-		if (target == player)
-		{
-			target.addExperience(packet.getExperience());
-			userInterface.updateStatsDialog();
-		}
-	}
-
-	public void hpChangeByItemUsagePacketReceived(HpChangeByItemUsagePacket packet)
-	{
-		Monster target = (Monster) gameObjects.get(packet.getMonsterTargetId());
-		target.getProperties().hp += packet.getHpChange();
-		HealLabel healLabel = new HealLabel(String.valueOf(packet.getHpChange()), target);
-		clientGraphics.add(healLabel);
-		if (target == player)
-		{
-			UserCharacterDataPacket data = player.getData();
-			data.setHitPoints(data.getHitPoints() + packet.getHpChange());
-			userInterface.updateHpMpDialog();
-		}
-	}
-
 	public void mpChangeByItemUsagePacketReceived(MpChangeByItemUsagePacket packet)
 	{
 		Monster target = (Monster) gameObjects.get(packet.getMonsterTargetId());
@@ -476,7 +450,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		{
 			UserCharacterDataPacket data = player.getData();
 			data.setManaPoints(data.getManaPoints() + packet.getMpChange());
-			userInterface.updateHpMpDialog();
 		}
 	}
 
@@ -498,12 +471,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			userInterface.updateHitPointManaPointDialog();
 	}
 
-	public void fireDamagePacketReceived(FireDamagePacket packet)
-	{
-		damagePacketReceived(packet.getTargetId(), packet.getDamage(),
-				(damage, target) -> new FireDamageLabel(damage, target));
-	}
-
 	public void normalDamagePacketReceived(NormalDamagePacket packet)
 	{
 		damagePacketReceived(packet.getTargetId(), packet.getDamage(),
@@ -522,32 +489,10 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		client.sendTCP(packet);
 	}
 
-	public void containerItemRemovalPacketReceived(ContainerItemRemovalPacket packet)
-	{
-		userInterface.removeContainerItem(packet.getContainerId(), packet.getItemId());
-	}
 
 	public void showTimedErrorMessage(String errorMessage, float timeout)
 	{
 		userInterface.showTimedErrorMessage(errorMessage, timeout);
-	}
-
-	public void decreaseGoldFromDialogInterface(long containerId, int goldAmount)
-	{
-		userInterface.decreaseGoldFromContainerDialog(containerId, goldAmount);
-	}
-
-	public void updateHp(long targetId, int newHp)
-	{
-		Monster target = (Monster) getObject(targetId);
-		target.getProperties().hp = newHp;
-		if (target == player)
-		{
-			UserCharacterDataPacket data = player.getData();
-			data.setHitPoints(newHp);
-			userInterface.updateHpMpDialog();
-		}
-
 	}
 
 	public void updateMp(long targetId, int newMp)
@@ -558,7 +503,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		{
 			UserCharacterDataPacket data = player.getData();
 			data.setManaPoints(newMp);
-			userInterface.updateHpMpDialog();
+			userInterface.updateHitPointManaPointDialog();
 		}
 	}
 
@@ -579,12 +524,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		ConsoleDialog console = userInterface.getDialogs().searchForDialog(ConsoleDialog.class);
 		console.addErrorMessage(error);
-	}
-
-	public void repositionItemInInventory(ItemInventoryPosition sourcePosition,
-			ItemInventoryPosition destinationPosition)
-	{
-		userInterface.repositionItemInInventory(sourcePosition, destinationPosition);
 	}
 
 	public void swapItemsInInventory(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
@@ -757,4 +696,98 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		}
 	}
 
+	@SuppressWarnings("unused")
+	private class ExperienceGainPacketHandler extends PacketHandlerBase<ExperienceGainPacket>
+	{
+		@Override
+		protected void doHandle(ExperienceGainPacket packet)
+		{
+			Player target = (Player) gameObjects.get(packet.getTargetId());
+			GraphicGameObject experienceGainLabel = new ExperienceGainLabel(String.valueOf(packet.getExperience()), target);
+			clientGraphics.add(experienceGainLabel);
+			if (target == player)
+			{
+				target.addExperience(packet.getExperience());
+				userInterface.updateStatsDialog();
+			}
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class FireDamagePacketHandler extends PacketHandlerBase<FireDamagePacket>
+	{
+		@Override
+		protected void doHandle(FireDamagePacket packet)
+		{
+			damagePacketReceived(packet.getTargetId(), packet.getDamage(),
+					(damage, target) -> new FireDamageLabel(damage, target));
+		}
+		
+		@Override
+	    public boolean canBeHandled(FireDamagePacket packet)
+	    {
+	        return isInitialized() && has(packet.getTargetId());
+	    }
+	}
+	
+	@SuppressWarnings("unused")
+	private class NormalDamagePacketHandler extends PacketHandlerBase<NormalDamagePacket>
+	{
+		@Override
+		protected void doHandle(NormalDamagePacket packet)
+		{
+			damagePacketReceived(packet.getTargetId(), packet.getDamage(),
+					(damage, target) -> new NormalDamageLabel(damage, target));
+		}
+		
+	    @Override
+	    public boolean canBeHandled(NormalDamagePacket packet)
+	    {
+	        return isInitialized() && has(packet.getTargetId());
+	    }
+	}
+
+	@SuppressWarnings("unused")
+	private class HpChangeByItemUsagePacketHandler extends PacketHandlerBase<HpChangeByItemUsagePacket>
+	{
+		@Override
+		protected void doHandle(HpChangeByItemUsagePacket packet)
+		{
+			Monster target = (Monster) gameObjects.get(packet.getMonsterTargetId());
+			target.getProperties().hp += packet.getHpChange();
+			HealLabel healLabel = new HealLabel(String.valueOf(packet.getHpChange()), target);
+			clientGraphics.add(healLabel);
+			if (target == player)
+			{
+				UserCharacterDataPacket data = player.getData();
+				data.setHitPoints(data.getHitPoints() + packet.getHpChange());
+			}
+		}
+		
+	}
+
+	@SuppressWarnings("unused")
+	private class HpUpdatePacketHandler extends PacketHandlerBase<HpUpdatePacket>
+	{
+		@Override
+		protected void doHandle(HpUpdatePacket packet)
+		{
+			updateHp(packet.getId(), packet.getNewHp());
+			
+		}
+		
+		private void updateHp(long targetId, int newHp)
+		{
+			Monster target = (Monster) getObject(targetId);
+			target.getProperties().hp = newHp;
+			if (target == player)
+			{
+				UserCharacterDataPacket data = player.getData();
+				data.setHitPoints(newHp);
+				userInterface.updateHitPointManaPointDialog();
+			}
+
+		}
+	}
+	
 }

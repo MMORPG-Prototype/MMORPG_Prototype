@@ -29,6 +29,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.Inv
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.InventoryTextField;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 
 public class InventoryDialog extends Dialog implements ItemCounter
@@ -341,6 +342,20 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			System.out.println("Inventory gold change ");
 			goldLabel.setValue( packet.getNewGoldAmount());
 			goldLabel.update();
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class InventoryItemRepositionPacketHandler extends PacketHandlerBase<InventoryItemRepositionPacket>
+	{
+		@Override
+		protected void doHandle(InventoryItemRepositionPacket packet)
+		{
+			ItemInventoryPosition sourcePosition = new ItemInventoryPosition(packet.getSourcePageNumber(),
+					new Point(packet.getSourcePageX(), packet.getSourcePageY()));
+			ItemInventoryPosition destinationPosition = new ItemInventoryPosition(packet.getDestinationPageNumber(),
+					new Point(packet.getDestinationPageX(), packet.getDestinationPageY()));
+			repositionItem(sourcePosition, destinationPosition);
 		}
 	}
 

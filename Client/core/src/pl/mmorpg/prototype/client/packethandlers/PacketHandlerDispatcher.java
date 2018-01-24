@@ -44,40 +44,44 @@ public class PacketHandlerDispatcher
 	
 	public void dispatchPacket(Object packet)
 	{
-		if(packet instanceof GameObjectTargetPacket)
-			dispatchPacket((GameObjectTargetPacket)packet);
-		else
-		{
-			Collection<PacketHandler<Object>> packetHandlerGroup = packetHandlers.get(packet.getClass());
-			synchronized (packetHandlerGroup)
-			{
-				
-			}
-			packetHandlerGroup.forEach(handler -> handler.handle(packet));
-		}
-	}
-	
-	public void dispatchPacket(GameObjectTargetPacket packet)
-	{
 		try
 		{
-			GameObjectTargetPacketHandler<Object> packetHandler = findProperHandler(packet);
-			packetHandler.handle(packet);
-		}
-		catch (GameException e) {
+			if (packet instanceof GameObjectTargetPacket)
+				dispatchGameObjectTargetPacket((GameObjectTargetPacket) packet);
+			else
+				dispatchNormalPacket(packet);
+		} catch (GameException e)
+		{
 			System.err.println(e.getMessage());
 		}
+	}
+
+	private void dispatchNormalPacket(Object packet)
+	{
+		Collection<PacketHandler<Object>> packetHandlerGroup = packetHandlers.get(packet.getClass());
+		if (packetHandlerGroup == null)
+			throw new GameException("Ommiting packet handling: " + packet + ", no handler registered");
+		packetHandlerGroup.forEach(handler -> handler.handle(packet));
+	}
+	
+	public void dispatchGameObjectTargetPacket(GameObjectTargetPacket packet)
+	{
+		GameObjectTargetPacketHandler<Object> packetHandler = findProperHandler(packet);
+		packetHandler.handle(packet);
 	}
 
 	private GameObjectTargetPacketHandler<Object> findProperHandler(GameObjectTargetPacket packet)
 	{
 		Collection<PacketHandler<Object>> collection = packetHandlers.get(packet.getClass());
+		if(collection == null)
+			throw new GameException("Ommiting packet handling: " + packet + ", no handler registered");
+		
 		for(PacketHandler<Object> packetHandler : collection)
 			if(packetHandler instanceof GameObjectTargetPacketHandler && ((GameObjectTargetPacketHandler<Object>) packetHandler).getObjectId() == packet.getTargetId())
 				return (GameObjectTargetPacketHandler<Object>)packetHandler;
-		throw new GameException("Cannot find proper packet handler for id: " + packet.getTargetId()
-				+ ", it was probably not registered");
+		throw new GameException("Ommiting packet handling: " + packet + ", no handler registered");
 	}
+	
 
 	public void removeHandler(PacketHandler<Object> packetHandler)
 	{

@@ -60,6 +60,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerGoldRemovalPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
@@ -94,7 +96,7 @@ public class UserInterface
 		inventoryDialog = new InventoryDialog(this, character.getGold(), registerer);
 		statisticsDialog = new StatisticsDialog(character);
 		shortcutBarDialog = new ShortcutBarPane(this);
-		hpMpDialog = new HitPointManaPointPane(character);
+		hpMpDialog = new HitPointManaPointPane(character, registerer);
 		itemQuickAccessDialog = new ItemQuickAccessDialog(this);
 		spellQuickAccessDialog = new SpellQuickAccessDialog(this);
 		equipmentDialog = new EquipmentDialog();
@@ -167,6 +169,8 @@ public class UserInterface
 	private void registerHandlers(PacketHandlerRegisterer registerer)
 	{
 		registerer.register(new ContainerContentPacketHandler());
+		registerer.register(new ContainerGoldRemovalPacketHandler());
+		registerer.register(new ContainerItemRemovalPacketHandler());
 	}
 
 	public void mapDialogsWithKeys()
@@ -338,19 +342,9 @@ public class UserInterface
 		statisticsDialog.updateStatistics();
 	}
 
-	public void updateHitPointManaPointDialog()
-	{
-		hpMpDialog.updateValues();
-	}
-
 	public void userWantsToLogOut()
 	{
 		linkedState.userWantsToLogOut();
-	}
-
-	public void updateHpMpDialog()
-	{
-		hpMpDialog.updateValues();
 	}
 
 	public void itemUsed(long itemId)
@@ -375,16 +369,6 @@ public class UserInterface
 				Gdx.graphics.getHeight() - Gdx.input.getY() - containerDialog.getHeight());
 	}
 
-	public void removeContainerItem(long containerId, long itemId)
-	{
-		if (dialogs.hasIdentifiableDialog(containerId))
-		{
-			ContainerDialog dialog = dialogs.getIdentifiableDialog(containerId);
-			dialog.removeItem(itemId);
-		}
-
-	}
-
 	public void showTimedErrorMessage(String errorMessage, float timeout)
 	{
 		Label label = new TimedLabel(errorMessage, timeout);
@@ -395,14 +379,7 @@ public class UserInterface
 		stage.addActor(label);
 	}
 
-	public void decreaseGoldFromContainerDialog(long containerId, int goldAmount)
-	{
-		if (dialogs.hasIdentifiableDialog(containerId))
-		{
-			ContainerDialog containerDialog = (ContainerDialog) dialogs.getIdentifiableDialog(containerId);
-			containerDialog.updateGoldByDecreasingBy(goldAmount);
-		}
-	}
+
 
 	public void openShopDialog(ShopItem[] shopItems, long shopId)
 	{
@@ -426,12 +403,6 @@ public class UserInterface
 	public void sendCommandToExecute(String command)
 	{
 		linkedState.send(PacketsMaker.makeScriptCodePacket(command));
-	}
-
-	public void repositionItemInInventory(ItemInventoryPosition sourcePosition,
-			ItemInventoryPosition destinationPosition)
-	{
-		inventoryDialog.repositionItem(sourcePosition, destinationPosition);
 	}
 
 	public void swapItemsInInventory(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
@@ -566,6 +537,11 @@ public class UserInterface
 		spellListDialog.addSpell(spell);
 	}
 	
+	public void updateHitPointManaPointDialog()
+	{
+		hpMpDialog.updateValues();
+	}
+	
 	private class ContainerContentPacketHandler extends PacketHandlerBase<ContainerContentPacket>
 	{
 		@Override
@@ -574,6 +550,42 @@ public class UserInterface
 			if (!dialogs.hasIdentifiableDialog(packet.getContainerId()))
 				Gdx.app.postRunnable(() -> createAndOpenContainerDialog(
 						packet.getContentItems(), packet.getGoldAmount(), packet.getContainerId()));	
+		}
+	}
+	
+	private class ContainerGoldRemovalPacketHandler extends PacketHandlerBase<ContainerGoldRemovalPacket>
+	{
+		@Override
+		protected void doHandle(ContainerGoldRemovalPacket packet)
+		{
+			decreaseGoldFromContainerDialog(packet.getContainerId(), packet.getGoldAmount());
+		}
+		
+		private void decreaseGoldFromContainerDialog(long containerId, int goldAmount)
+		{
+			if (dialogs.hasIdentifiableDialog(containerId))
+			{
+				ContainerDialog containerDialog = (ContainerDialog) dialogs.getIdentifiableDialog(containerId);
+				containerDialog.updateGoldByDecreasingBy(goldAmount);
+			}
+		}
+	}
+	
+	private class ContainerItemRemovalPacketHandler extends PacketHandlerBase<ContainerItemRemovalPacket>
+	{
+		@Override
+		protected void doHandle(ContainerItemRemovalPacket packet)
+		{
+			removeContainerItem(packet.getContainerId(), packet.getItemId());	
+		}
+		
+		private void removeContainerItem(long containerId, long itemId)
+		{
+			if (dialogs.hasIdentifiableDialog(containerId))
+			{
+				ContainerDialog dialog = dialogs.getIdentifiableDialog(containerId);
+				dialog.removeItem(itemId);
+			}
 		}
 	}
 }
