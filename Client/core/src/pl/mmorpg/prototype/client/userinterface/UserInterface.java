@@ -1,5 +1,7 @@
 package pl.mmorpg.prototype.client.userinterface;
 
+import java.util.stream.Stream;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -20,6 +22,7 @@ import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.exceptions.CannotFindSpecifiedDialogTypeException;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
+import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
 import pl.mmorpg.prototype.client.items.StackableItem;
@@ -30,6 +33,7 @@ import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.quests.Quest;
+import pl.mmorpg.prototype.client.quests.QuestCreator;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
@@ -55,8 +59,14 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
+import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -65,6 +75,8 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerIte
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 
 public class UserInterface
 {
@@ -98,7 +110,7 @@ public class UserInterface
 		shortcutBarDialog = new ShortcutBarPane(this);
 		hpMpDialog = new HitPointManaPointPane(character, registerer);
 		itemQuickAccessDialog = new ItemQuickAccessDialog(this, (ItemCounter) inventoryDialog, registerer);
-		spellQuickAccessDialog = new SpellQuickAccessDialog(this);
+		spellQuickAccessDialog = new SpellQuickAccessDialog(this, registerer);
 		equipmentDialog = new EquipmentDialog();
 		chatDialog = new ChatDialog(this, registerer);
 		consoleDialog = new ConsoleDialog(this);
@@ -355,31 +367,6 @@ public class UserInterface
 				Gdx.graphics.getHeight() - Gdx.input.getY() - containerDialog.getHeight());
 	}
 
-	public void showTimedErrorMessage(String errorMessage, float timeout)
-	{
-		Label label = new TimedLabel(errorMessage, timeout);
-		label.setColor(Color.RED);
-		label.setX(960);
-		label.setY(55);
-
-		stage.addActor(label);
-	}
-
-
-
-	public void openShopDialog(ShopItem[] shopItems, long shopId)
-	{
-		if (!dialogs.hasIdentifiableDialog(shopId))
-		{
-			ShopDialog shop = new ShopDialog("Shop", shopId, shopItems, popUpInfoStage, this,
-					(PacketsSender) linkedState);
-			shop.setPosition(0, 100);
-			shop.pack();
-			dialogs.add(shop);
-			stage.addActor(shop);
-		}
-	}
-
 	public void addDialog(Dialog dialog)
 	{
 		dialogs.add(dialog);
@@ -407,26 +394,10 @@ public class UserInterface
 			return ((StackableItem) item).getItemCount();
 		return 1;
 	}
-	
-	public void putSpellInQuickAccessBar(SpellIdentifiers spellIdentifier, int cellPosition)
-	{
-		spellQuickAccessDialog.putSpell(spellIdentifier, cellPosition);
-	}
 
 	public ItemInventoryPosition getSuitePositionInInventoryFor(ShopItem item)
 	{
 		return inventoryDialog.getDesiredItemPositionFor(item.getItem());
-	}
-
-	public void addInfoMessageToConsole(String message)
-	{
-		consoleDialog.addMessage(message);
-	}
-
-	public void questBoardClicked(QuestDataPacket[] quests, long questBoardId)
-	{
-		if (!dialogs.hasIdentifiableDialog(questBoardId))
-			showQuestDialog(quests, questBoardId);
 	}
 
 	private void showQuestDialog(QuestDataPacket[] quests, long questBoardId)
@@ -435,27 +406,6 @@ public class UserInterface
 		positionDialogNearMouse(questDialog);
 		stage.addActor(questDialog);
 		dialogs.add(questDialog);
-	}
-
-	public void openNewQuestRewardDialog(QuestFinishedRewardPacket rewardPacket)
-	{
-		ItemPositionSupplier desiredItemPositionSupplier = inventoryDialog::getDesiredItemPositionFor;
-		QuestRewardDialog questRewardDialog = new QuestRewardDialog(dialogs, dialogIdSupplier.getId(), rewardPacket,
-				desiredItemPositionSupplier, (PacketsSender) linkedState);
-		positionDialogNearMouse(questRewardDialog);
-		stage.addActor(questRewardDialog);
-		dialogs.add(questRewardDialog);
-	}
-
-	public void removeGoldFromQuestRewardDialog(int goldAmount)
-	{
-		QuestRewardDialog dialog = dialogs.searchForDialog(QuestRewardDialog.class);
-		dialog.updateGoldByDecreasingBy(goldAmount);
-	}
-
-	public void addQuestToQuestListDialog(Quest quest)
-	{
-		questListDialog.addQuest(quest);
 	}
 
 	public void removeQuestPositionFromQuestBoardDialog(String questName)
@@ -590,6 +540,171 @@ public class UserInterface
 		{
 			NpcConversationDialog npcConversationDialog = dialogs.getIdentifiableDialog(npcId);
 			npcConversationDialog.update(speech, possibleAnswers);			
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class QuestAcceptedPacketHandler extends PacketHandlerBase<QuestAcceptedPacket>
+	{
+		@Override
+		protected void doHandle(QuestAcceptedPacket packet)
+		{
+			QuestStateInfoPacket questStatePacket = packet.getQuestStatePacket();
+			removeQuestPositionFromQuestBoardDialog(questStatePacket.getQuestName());
+			Quest quest = QuestCreator.create(questStatePacket);
+			questListDialog.addQuest(quest);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class QuestStateInfoPacketArrayHandler extends PacketHandlerBase<QuestStateInfoPacket[]>
+	{
+		@Override
+		protected void doHandle(QuestStateInfoPacket[] packets)
+		{
+			for (QuestStateInfoPacket packet : packets)
+			{
+				Quest quest = QuestCreator.create(packet);
+				questListDialog.addQuest(quest);
+			}
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class QuestBoardInfoPacketHandler extends PacketHandlerBase<QuestBoardInfoPacket>
+	{
+		@Override
+		protected void doHandle(QuestBoardInfoPacket packet)
+		{
+			questBoardClicked(packet.getQuests(), packet.getQuestBoardId());
+		}
+		
+		private void questBoardClicked(QuestDataPacket[] quests, long questBoardId)
+		{
+			if (!dialogs.hasIdentifiableDialog(questBoardId))
+				showQuestDialog(quests, questBoardId);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class QuestFinishedRewardPacketHandler extends PacketHandlerBase<QuestFinishedRewardPacket>
+	{
+		@Override
+		protected void doHandle(QuestFinishedRewardPacket packet)
+		{
+			openNewQuestRewardDialog(packet);
+		}
+		
+		private void openNewQuestRewardDialog(QuestFinishedRewardPacket rewardPacket)
+		{
+			ItemPositionSupplier desiredItemPositionSupplier = inventoryDialog::getDesiredItemPositionFor;
+			QuestRewardDialog questRewardDialog = new QuestRewardDialog(dialogs, dialogIdSupplier.getId(), rewardPacket,
+					desiredItemPositionSupplier, (PacketsSender) linkedState);
+			positionDialogNearMouse(questRewardDialog);
+			stage.addActor(questRewardDialog);
+			dialogs.add(questRewardDialog);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class QuestRewardGoldRemovalPacketHandler extends PacketHandlerBase<QuestRewardGoldRemovalPacket>
+	{
+		@Override
+		protected void doHandle(QuestRewardGoldRemovalPacket packet)
+		{
+			removeGoldFromQuestRewardDialog(packet.getGoldAmount());
+		}
+
+		private void removeGoldFromQuestRewardDialog(int goldAmount)
+		{
+			QuestRewardDialog dialog = dialogs.searchForDialog(QuestRewardDialog.class);
+			dialog.updateGoldByDecreasingBy(goldAmount);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class ScriptExecutionErrorPacketHandler extends PacketHandlerBase<ScriptExecutionErrorPacket>
+	{
+		@Override
+		protected void doHandle(ScriptExecutionErrorPacket packet)
+		{
+			ConsoleDialog console = dialogs.searchForDialog(ConsoleDialog.class);
+			console.addErrorMessage(packet.getError());
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class ScriptResultInfoPacketHandler extends PacketHandlerBase<ScriptResultInfoPacket>
+	{
+		@Override
+		protected void doHandle(ScriptResultInfoPacket packet)
+		{
+			addInfoMessageToConsole(packet.getMessage());
+		}
+		
+		private void addInfoMessageToConsole(String message)
+		{
+			consoleDialog.addMessage(message);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class ShopItemsPacketHandler extends PacketHandlerBase<ShopItemsPacket>
+	{
+		@Override
+		protected void doHandle(ShopItemsPacket packet)
+		{
+			openShopDialog(packet.getShopItems(), packet.getShopId());
+		}
+		
+		private void openShopDialog(ShopItemPacket[] shopItemsPacket, long shopId)
+		{
+			ShopItem[] shopItems = Stream.of(shopItemsPacket)
+					.map(this::makeShopItem)
+					.toArray(ShopItem[]::new);
+			openShopDialog(shopItems, shopId);
+		}
+
+		private ShopItem makeShopItem(ShopItemPacket packet)
+		{
+			Item item = ItemFactory.produceItem(packet.getItem());
+			ShopItem shopItem = new ShopItem(item, packet.getPrice());
+			return shopItem;
+		}
+		
+		private void openShopDialog(ShopItem[] shopItems, long shopId)
+		{
+			if (!dialogs.hasIdentifiableDialog(shopId))
+			{
+				ShopDialog shop = new ShopDialog("Shop", shopId, shopItems, popUpInfoStage, UserInterface.this,
+						(PacketsSender) linkedState);
+				shop.setPosition(0, 100);
+				shop.pack();
+				dialogs.add(shop);
+				stage.addActor(shop);
+			}
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class UnacceptableOperationPacketHandler extends PacketHandlerBase<UnacceptableOperationPacket>
+	{
+		private static final float DEFAULT_MESSAGE_TIMEOUT = 5.0f;
+		
+		@Override
+		protected void doHandle(UnacceptableOperationPacket packet)
+		{
+			showTimedErrorMessage(packet.getErrorMessage(), DEFAULT_MESSAGE_TIMEOUT);
+		}
+		
+		private void showTimedErrorMessage(String errorMessage, float timeout)
+		{
+			Label label = new TimedLabel(errorMessage, timeout);
+			label.setColor(Color.RED);
+			label.setX(960);
+			label.setY(55);
+
+			stage.addActor(label);
 		}
 	}
 }

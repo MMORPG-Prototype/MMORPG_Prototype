@@ -8,9 +8,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -26,7 +24,6 @@ import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.minlog.Log;
 
-import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.client.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.client.collision.pixelmap.UndefinedStaticObjectCreator;
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
@@ -65,13 +62,9 @@ import pl.mmorpg.prototype.client.path.search.PathFinder;
 import pl.mmorpg.prototype.client.path.search.collisionDetectors.CollisionDetector;
 import pl.mmorpg.prototype.client.path.search.collisionDetectors.GameObjectCollisionDetector;
 import pl.mmorpg.prototype.client.path.search.distanceComparators.ManhattanDistanceComparator;
-import pl.mmorpg.prototype.client.quests.Quest;
-import pl.mmorpg.prototype.client.quests.QuestCreator;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
-import pl.mmorpg.prototype.client.userinterface.ShopItem;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ConsoleDialog;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
@@ -87,12 +80,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -102,8 +89,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
 {
@@ -456,82 +441,12 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 				(damage, target) -> new NormalDamageLabel(damage, target));
 	}
 
-
-
 	public void userRightClickedOnGameBoard(float x, float y)
 	{
 		OpenContainterPacket packet = PacketsMaker.makeContainterOpeningPacket(getRealX(x), getRealY(y));
 		client.sendTCP(packet);
 	}
 
-
-	public void showTimedErrorMessage(String errorMessage, float timeout)
-	{
-		userInterface.showTimedErrorMessage(errorMessage, timeout);
-	}
-
-	public void openShopDialog(ShopItemPacket[] shopItemsPacket, long shopId)
-	{
-		ShopItem[] shopItems = Stream.of(shopItemsPacket).map(this::makeShopItem).toArray(ShopItem[]::new);
-		userInterface.openShopDialog(shopItems, shopId);
-	}
-
-	private ShopItem makeShopItem(ShopItemPacket packet)
-	{
-		Item item = ItemFactory.produceItem(packet.getItem());
-		ShopItem shopItem = new ShopItem(item, packet.getPrice());
-		return shopItem;
-	}
-
-	public void scriptExecutionErrorReceived(String error)
-	{
-		ConsoleDialog console = userInterface.getDialogs().searchForDialog(ConsoleDialog.class);
-		console.addErrorMessage(error);
-	}
-
-	public void putSpellInQuickAccessBarPacketReceived(SpellPutInQuickAccessBarPacket packet)
-	{
-		userInterface.putSpellInQuickAccessBar(packet.getSpellIdentifier(), packet.getCellPosition());
-	}
-
-	public void scriptResultInfoPacketReceived(ScriptResultInfoPacket packet)
-	{
-		userInterface.addInfoMessageToConsole(packet.getMessage());
-	}
-
-	public void questBoardInfoPacketReceived(QuestBoardInfoPacket packet)
-	{
-		userInterface.questBoardClicked(packet.getQuests(), packet.getQuestBoardId());
-	}
-
-	public void questFinishedRewardPacketReceived(QuestFinishedRewardPacket packet)
-	{
-		userInterface.openNewQuestRewardDialog(packet);
-	}
-
-	public void questRewardGoldRemovalPacketReceived(QuestRewardGoldRemovalPacket packet)
-	{
-		userInterface.removeGoldFromQuestRewardDialog(packet.getGoldAmount());
-	}
-
-	public void questInfoReceived(Quest quest)
-	{
-		userInterface.addQuestToQuestListDialog(quest);
-	}
-
-	public void questAcceptedPacketReceived(QuestAcceptedPacket packet)
-	{
-		QuestStateInfoPacket questStatePacket = packet.getQuestStatePacket();
-		userInterface.removeQuestPositionFromQuestBoardDialog(questStatePacket.getQuestName());
-		Quest quest = QuestCreator.create(questStatePacket);
-		questInfoReceived(quest);
-	}
-
-	public void add(Function<CollisionMap<GameObject>, GameObject> movableObjectCreator)
-	{
-		add(movableObjectCreator.apply(collisionMap));
-	}
-	
 	@SuppressWarnings("unused")
 	private class MonsterCreationPacketHandler extends PacketHandlerBase<MonsterCreationPacket>
 	{

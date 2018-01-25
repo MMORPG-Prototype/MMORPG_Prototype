@@ -36,6 +36,7 @@ public class ChoosingCharacterState extends PacketHandlingState
 		getUserCharactersPacket.username = UserInfo.username;
 		client.sendTCP(getUserCharactersPacket);
 		registerHandler(packetHandlerRegisterer, new CharacterCreationReplyPacketHandler());
+		registerHandler(packetHandlerRegisterer, new UserCharacterDataArrayPacketHandler());
 	}
 
 	@Override
@@ -54,14 +55,6 @@ public class ChoosingCharacterState extends PacketHandlingState
 	public void reactivate()
 	{
 	}
-
-	public void userCharactersDataReceived(UserCharacterDataPacket[] userCharacters)
-	{
-		choosingDialog = new ChoosingCharacterDialog(this, userCharacters);
-		choosingDialog.show(stage);
-		Gdx.input.setInputProcessor(stage);
-	}
-
 
 	public void characterChoosen(UserCharacterDataPacket userCharacterDataPacket)
 	{
@@ -114,6 +107,15 @@ public class ChoosingCharacterState extends PacketHandlingState
 		}
 	}
 	
-	
+	private class UserCharacterDataArrayPacketHandler extends PacketHandlerBase<UserCharacterDataPacket[]>
+	{
+		@Override
+		protected void doHandle(UserCharacterDataPacket[] userCharacters)
+		{
+			choosingDialog = new ChoosingCharacterDialog(ChoosingCharacterState.this, userCharacters);
+			choosingDialog.show(stage);
+			Gdx.input.setInputProcessor(stage);
+		}
+	}
 
 }
