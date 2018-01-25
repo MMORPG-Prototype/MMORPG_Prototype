@@ -36,13 +36,13 @@ public abstract class PacketHandlerBase<T extends Object> implements PacketHandl
 	}
 
 	@Override
-	public boolean canBeHandled(Object packet)
+	public boolean canBeHandled(T packet)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canBeOmmited(Object packet)
+	public boolean canBeOmmited(T packet)
 	{
 		return false;
 	}
