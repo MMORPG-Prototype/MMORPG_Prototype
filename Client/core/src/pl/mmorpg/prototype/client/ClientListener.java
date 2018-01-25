@@ -1,14 +1,10 @@
 package pl.mmorpg.prototype.client;
 
-import java.util.Collection;
-
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.minlog.Log;
 
-import pl.mmorpg.prototype.client.packethandlers.PacketHandler;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerDispatcher;
-import pl.mmorpg.prototype.client.packethandlers.PacketHandlerFactory;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
@@ -20,19 +16,6 @@ public class ClientListener extends Listener
 	public ClientListener(final PacketHandlerDispatcher packetHandlerDispatcher, final PlayState playState, final StateManager states)
 	{
 		this.packetHandlerDispatcher = packetHandlerDispatcher;
-		registerPacketHandlers(new PacketHandlerFactory(playState, states));
-	}
-
-	private void registerPacketHandlers(PacketHandlerFactory packetHandlerFactory)
-	{
-		 Collection<PacketHandler<? extends Object>> packetHandlers = packetHandlerFactory.produceAll();
-		 packetHandlers.forEach(this::registerPacketHandler);
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void registerPacketHandler(PacketHandler<? extends Object> packetHandler)
-	{
-		packetHandlerDispatcher.registerHandler((PacketHandler<Object>) packetHandler);
 	}
 
 	@Override
