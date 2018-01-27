@@ -16,8 +16,6 @@ services:
   mmorpg_db:
     container_name: mmorpg_db
     image: mysql:5.7.15
-    ports:
-      - 3306:3306
     restart: on-failure
     environment:
       - MYSQL_ROOT_PASSWORD=root
