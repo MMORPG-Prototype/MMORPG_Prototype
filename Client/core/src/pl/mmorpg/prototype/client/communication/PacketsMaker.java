@@ -20,6 +20,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryIte
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedFromQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveGoldRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
@@ -31,7 +32,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.spells.HealS
 
 public class PacketsMaker
 {
-
 	public static ObjectRemovePacket makeRemovalPacket(int id)
 	{
 		return new ObjectRemovePacket(id);
@@ -203,6 +203,13 @@ public class PacketsMaker
 	public static HealSpellUsagePacket makeHealSpellUsagePacket()
 	{
 		return new HealSpellUsagePacket();
+	}
+	
+	public static OpenShopPacket makeOpenShopPacket(long shopNpcId)
+	{
+		OpenShopPacket packet = new OpenShopPacket();
+		packet.setShopNpcId(shopNpcId);
+		return packet;
 	}
 
 }

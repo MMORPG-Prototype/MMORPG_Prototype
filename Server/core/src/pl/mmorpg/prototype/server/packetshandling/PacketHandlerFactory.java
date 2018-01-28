@@ -29,6 +29,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryIte
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedFromQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveGoldRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
@@ -52,6 +53,7 @@ import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveRightPack
 import pl.mmorpg.prototype.server.packetshandling.characteractions.MoveUpPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.NpcConversationAnwserChoosenPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.OpenContainerPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.OpenShopPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.RetrieveGoldRewardPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.RetrieveItemRewardPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.SpellPutInQuickAccessBarPacketHandler;
@@ -121,6 +123,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(AcceptQuestPacket.class, new AcceptQuestPacketHandler(gameDataRetriever));
 		packetHandlers.put(NpcConversationAnwserChoosenPacket.class,
 				new NpcConversationAnwserChoosenPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(OpenShopPacket.class, new OpenShopPacketHandler(playState));
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
 	}

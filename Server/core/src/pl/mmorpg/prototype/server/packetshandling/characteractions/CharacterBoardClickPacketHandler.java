@@ -9,7 +9,6 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import com.esotericsoftware.kryonet.Connection;
 
-import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
@@ -23,8 +22,6 @@ import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.ineractivestaticobjects.QuestBoard;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.QuestDialogNpc;
-import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopItemWrapper;
-import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopNpc;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
 import pl.mmorpg.prototype.server.quests.events.Event;
@@ -57,11 +54,9 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 
 	private void clientBoardClickProperHandle(Connection connection, GameObject target, PlayerCharacter source)
 	{
-		// TODO: refactor, implement collicion detection on clent side, so he 
+		// TODO: refactor, implement collision detection on client side, so he 
 		// can tell what he wants to do directly
-		if (target instanceof ShopNpc)
-			sendShopItemsInfo(connection, (ShopNpc) target);
-		else if (target instanceof QuestDialogNpc)
+		if (target instanceof QuestDialogNpc)
 			propagateQuestDialogEvent((QuestDialogNpc) target, source);
 		else if (target instanceof Monster)
 			tryToTargetMonster(connection, (Monster) target, source);
@@ -73,14 +68,7 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 			throw new NotImplementedException("Not implemented");
 
 	}
-
-	private void sendShopItemsInfo(Connection connection, ShopNpc source)
-	{
-		Collection<ShopItemWrapper> availableItems = source.getAvailableItems();
-		ShopItemsPacket shopItemsPacket = PacketsMaker.makeShopItemsPacket(availableItems, source.getId());
-		connection.sendTCP(shopItemsPacket);
-	}
-
+	
 	private void propagateQuestDialogEvent(QuestDialogNpc npc, PlayerCharacter player)
 	{
 		Event talkWithNpcEvent = new NpcDialogStartEvent(npc, (PacketsSender)playState);

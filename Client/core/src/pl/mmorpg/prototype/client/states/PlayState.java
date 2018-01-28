@@ -55,6 +55,7 @@ import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.objects.monsters.MonstersFactory;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
+import pl.mmorpg.prototype.client.objects.monsters.npcs.Shop;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.path.search.BestFirstPathFinder;
@@ -84,7 +85,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
@@ -367,13 +367,25 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		float realX = getRealX(x);
 		float realY = getRealY(y);
 		drawPathTo(realX, realY);
-		BoardClickPacket packet = PacketsMaker.makeBoardClickPacket(realX, realY);
-		client.sendTCP(packet);
+		sendProperLeftClickedPacket(realX, realY);
 		GameObject object = collisionMap.getObject((int) realX, (int) realY);
 		if (object != null)
 			System.out.println("Id: " + object.getId() + ", " + object);
 
 		System.out.println("X: " + realX + ", Y: " + realY);
+	}
+
+	private void sendProperLeftClickedPacket(float realX, float realY)
+	{
+		GameObject object = collisionMap.getObject((int) realX, (int) realY);
+		Object packet;
+		
+		if(object instanceof Shop)
+			packet = PacketsMaker.makeOpenShopPacket(object.getId());
+		else	
+			packet = PacketsMaker.makeBoardClickPacket(realX, realY);
+		
+		client.sendTCP(packet);
 	}
 
 	private void drawPathTo(float x, float y)

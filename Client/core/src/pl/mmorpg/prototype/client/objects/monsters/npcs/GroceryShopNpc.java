@@ -8,7 +8,7 @@ import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.NpcNames;
 
-public class GroceryShopNpc extends Npc
+public class GroceryShopNpc extends Npc implements Shop
 {
 	public GroceryShopNpc(long id, CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
 	{

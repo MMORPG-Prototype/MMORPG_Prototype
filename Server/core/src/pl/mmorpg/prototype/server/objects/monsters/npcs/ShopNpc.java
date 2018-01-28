@@ -9,7 +9,7 @@ import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.states.PlayState;
 
-public abstract class ShopNpc extends Npc
+public abstract class ShopNpc extends Npc implements Shop
 {
 	private Map<Long, ShopItemWrapper> availableItems;
 
@@ -21,11 +21,13 @@ public abstract class ShopNpc extends Npc
 				.collect(Collectors.toMap((ShopItemWrapper wrapper) -> wrapper.getItem().getId(), Function.identity()));
 	}
 
+	@Override
 	public Collection<ShopItemWrapper> getAvailableItems()
 	{
 		return availableItems.values();
 	}
 
+	@Override
 	public ShopItemWrapper getItemWrapper(long itemId)
 	{
 		return availableItems.get(itemId);
