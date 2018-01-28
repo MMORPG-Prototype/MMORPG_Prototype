@@ -7,6 +7,8 @@ import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class HitPointManaPointPane extends ScrollPane
@@ -19,8 +21,7 @@ public class HitPointManaPointPane extends ScrollPane
 		super(createDialog(character));
 		dialog = dialogInitializer;
 		initiazlizePosition();
-		packetHandlerRegisterer.register(new HpChangeByItemUsagePacketHandler());
-		packetHandlerRegisterer.register(new HpUpdatePacketHandler());
+		packetHandlerRegisterer.registerPrivateClassPacketHandlers(this);
 	} 
 	
 	private static HitPointManaPointDialog createDialog(UserCharacterDataPacket character)
@@ -42,6 +43,7 @@ public class HitPointManaPointPane extends ScrollPane
 		dialog.update();
 	}
 	
+	@SuppressWarnings("unused")
 	private class HpChangeByItemUsagePacketHandler extends PacketHandlerBase<HpChangeByItemUsagePacket>
 	{
 		@Override
@@ -50,11 +52,32 @@ public class HitPointManaPointPane extends ScrollPane
 			dialog.update();
 		}
 	}
-	
+
+	@SuppressWarnings("unused")
 	private class HpUpdatePacketHandler extends PacketHandlerBase<HpUpdatePacket>
 	{
 		@Override
 		protected void doHandle(HpUpdatePacket packet)
+		{
+			dialog.update();
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class MpChangeByItemUsagePacketHandler extends PacketHandlerBase<MpChangeByItemUsagePacket>
+	{
+		@Override
+		protected void doHandle(MpChangeByItemUsagePacket packet)
+		{
+			dialog.update();
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class MpUpdatePacketHandler extends PacketHandlerBase<MpUpdatePacket>
+	{
+		@Override
+		protected void doHandle(MpUpdatePacket packet)
 		{
 			dialog.update();
 		}
