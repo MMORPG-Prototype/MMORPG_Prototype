@@ -15,12 +15,10 @@ import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
-import pl.mmorpg.prototype.server.exceptions.CannotTargetItselfException;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.ineractivestaticobjects.QuestBoard;
-import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
@@ -58,8 +56,6 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 		// can tell what he wants to do directly
 		if (target instanceof QuestDialogNpc)
 			propagateQuestDialogEvent((QuestDialogNpc) target, source);
-		else if (target instanceof Monster)
-			tryToTargetMonster(connection, (Monster) target, source);
 		else if (target instanceof QuestBoard)
 			sendQuestBoardInfo(connection, (QuestBoard) target);
 		else if (target.getClass().getSimpleName().contains("NullGameObject"))
@@ -74,18 +70,6 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 		Event talkWithNpcEvent = new NpcDialogStartEvent(npc, (PacketsSender)playState);
 		talkWithNpcEvent.addReceiver(player);
 		playState.enqueueEvent(talkWithNpcEvent);
-	}
-
-	private void tryToTargetMonster(Connection connection, Monster target, PlayerCharacter source)
-	{
-		try
-		{
-			playState.objectTargeted(source, target);
-			connection.sendTCP(PacketsMaker.makeTargetingReplyPacket(target));
-		} catch (CannotTargetItselfException e)
-		{
-			connection.sendTCP(PacketsMaker.makeUnacceptableOperationPacket("Cannot target itself"));
-		}
 	}
 
 	private void sendQuestBoardInfo(Connection connection, QuestBoard questBoard)

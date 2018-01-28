@@ -36,6 +36,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQu
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellRemovedFromQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TargetMonsterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.spells.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.spells.HealSpellUsagePacket;
 import pl.mmorpg.prototype.server.UserInfo;
@@ -60,6 +61,7 @@ import pl.mmorpg.prototype.server.packetshandling.characteractions.SpellPutInQui
 import pl.mmorpg.prototype.server.packetshandling.characteractions.SpellRemovedFromQuickAccessBarPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakeItemFromContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakingGoldFromContainerPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.TargetMonsterPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.spell.usage.FireballSpellUsagePacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.spell.usage.HealSpellUsagePacketHandler;
 import pl.mmorpg.prototype.server.states.PlayState;
@@ -124,6 +126,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(NpcConversationAnwserChoosenPacket.class,
 				new NpcConversationAnwserChoosenPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(OpenShopPacket.class, new OpenShopPacketHandler(playState));
+		packetHandlers.put(TargetMonsterPacket.class, new TargetMonsterPacketHandler(playState, gameDataRetriever));
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
 	}

@@ -27,6 +27,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQu
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellRemovedFromQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TargetMonsterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.spells.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.spells.HealSpellUsagePacket;
 
@@ -209,6 +210,13 @@ public class PacketsMaker
 	{
 		OpenShopPacket packet = new OpenShopPacket();
 		packet.setShopNpcId(shopNpcId);
+		return packet;
+	}
+	
+	public static TargetMonsterPacket makeTargetMonsterPacket(long monsterId)
+	{
+		TargetMonsterPacket packet = new TargetMonsterPacket();
+		packet.setMonsterId(monsterId);
 		return packet;
 	}
 

@@ -382,6 +382,8 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		
 		if(object instanceof Shop)
 			packet = PacketsMaker.makeOpenShopPacket(object.getId());
+		else if(object instanceof Monster)
+			packet = PacketsMaker.makeTargetMonsterPacket(object.getId());
 		else	
 			packet = PacketsMaker.makeBoardClickPacket(realX, realY);
 		
