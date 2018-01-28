@@ -20,12 +20,10 @@ import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.CannotBindServerException;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
-import pl.mmorpg.prototype.server.states.StateManager;
 
 public class GameServer extends ApplicationAdapter
 {
     private Batch batch;
-    private StateManager states;
     private Server server;
     private PlayState playState;
 
@@ -37,15 +35,13 @@ public class GameServer extends ApplicationAdapter
     {
         startCommandHandlerOnNewThread();
         Assets.loadAssets();
-        states = new StateManager();
         batch = Assets.getBatch();
         server = initializeServer();
 
-        playState = new PlayState(server, states);
+        playState = new PlayState(server);
         server.addListener(
                 new ServerListener(loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
         bindServer();
-        states.push(playState);
     }
 
     private void startCommandHandlerOnNewThread()
@@ -92,13 +88,13 @@ public class GameServer extends ApplicationAdapter
         update();
         clearScreen();
         batch.begin();
-        states.render(batch);
+        playState.render(batch);
         batch.end();
     }
 
     private void update()
     {
-        states.update(Gdx.graphics.getDeltaTime());
+    	playState.update(Gdx.graphics.getDeltaTime());
     }
 
     private void clearScreen()

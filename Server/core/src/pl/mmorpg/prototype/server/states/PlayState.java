@@ -55,7 +55,6 @@ import pl.mmorpg.prototype.server.resources.Assets;
 public class PlayState extends State implements GameObjectsContainer, PacketsSender
 {
 	private final Server server;
-	private final StateManager states;
 	private final PixelCollisionMap<GameObject> collisionMap = new PixelCollisionMap<>(6400, 4800,
 			GameObject.NULL_OBJECT);
 	private final StackableCollisionMap<MonsterBody> deadBodiesCollisionMap = new LayerCollisionMap<>(214, 160, 30, 30);
@@ -71,10 +70,9 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private final OrthographicCamera camera = new OrthographicCamera();
 	private final ServerInputHandler inputHandler = new ServerInputHandler(new PlayStateInputActions(camera));
 
-	public PlayState(Server server, StateManager states)
+	public PlayState(Server server)
 	{
 		this.server = server;
-		this.states = states;
 		rewardForFisnishedQuestObserver = new RewardForFinishedQuestObserver(this, this);
 		questEventsHandler = new EventsHandler(rewardForFisnishedQuestObserver);
 		camera.setToOrtho(false);
