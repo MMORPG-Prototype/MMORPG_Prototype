@@ -28,7 +28,7 @@
 				</property>
 			</activation>
 			<properties>
-		       <server.ip>mmorpg.nazwa.pl</server.ip>
+		       <server.ip>world-medieval.com</server.ip>
 		   </properties>
 		</profile>
 	</profiles>
