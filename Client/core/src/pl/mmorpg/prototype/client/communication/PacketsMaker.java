@@ -14,7 +14,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.GetQuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
@@ -53,14 +52,6 @@ public class PacketsMaker
 	{
 		ChatMessagePacket packet = new ChatMessagePacket();
 		packet.setMessage(message);
-		return packet;
-	}
-
-	public static BoardClickPacket makeBoardClickPacket(float x, float y)
-	{
-		BoardClickPacket packet = new BoardClickPacket();
-		packet.gameX = (int) x;
-		packet.gameY = (int) y;
 		return packet;
 	}
 

@@ -369,31 +369,32 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		float realX = getRealX(x);
 		float realY = getRealY(y);
 		drawPathTo(realX, realY);
-		sendProperLeftClickedPacket(realX, realY);
 		GameObject object = collisionMap.getObject((int) realX, (int) realY);
+		sendProperLeftClickedPacket(object);
 		if (object != null)
 			System.out.println("Id: " + object.getId() + ", " + object);
 
 		System.out.println("X: " + realX + ", Y: " + realY);
 	}
 
-	private void sendProperLeftClickedPacket(float realX, float realY)
+	private void sendProperLeftClickedPacket(GameObject object)
 	{
-		GameObject object = collisionMap.getObject((int) realX, (int) realY);
-		Object packet;
-		
+		Object packet = createProperLeftClickedPacket(object);
+		if(packet != null)
+			client.sendTCP(packet);
+	}
+
+	private Object createProperLeftClickedPacket(GameObject object)
+	{
 		if(object instanceof Shop)
-			packet = PacketsMaker.makeOpenShopPacket(object.getId());
+			return PacketsMaker.makeOpenShopPacket(object.getId());
 		else if(object instanceof QuestDialogNpc)
-			packet = PacketsMaker.makeNpcDialogStartPacket(object.getId());
+			return PacketsMaker.makeNpcDialogStartPacket(object.getId());
 		else if(object instanceof Monster)
-			packet = PacketsMaker.makeTargetMonsterPacket(object.getId());
+			return PacketsMaker.makeTargetMonsterPacket(object.getId());
 		else if(object instanceof QuestBoard)
-			packet = PacketsMaker.makeGetQuestBoardInfoPacket(object.getId());
-		else	
-			packet = PacketsMaker.makeBoardClickPacket(realX, realY);
-		
-		client.sendTCP(packet);
+			return PacketsMaker.makeGetQuestBoardInfoPacket(object.getId());
+		return null;
 	}
 
 	private void drawPathTo(float x, float y)

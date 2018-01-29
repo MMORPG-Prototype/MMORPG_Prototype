@@ -23,7 +23,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveLeftPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveRightPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.GetQuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
@@ -45,7 +44,6 @@ import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.AcceptQuestPacketHandler;
-import pl.mmorpg.prototype.server.packetshandling.characteractions.BoardClickPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.GetQuestBoardInfoPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.InventoryItemRepositionRequestPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemPutInQuickAccessBarPacketHandler;
@@ -98,7 +96,6 @@ public class PacketHandlerFactory
 		packetHandlers.put(MoveUpPacket.class, new MoveUpPacketHandler(playState));
 		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(playState));
 		packetHandlers.put(ChatMessagePacket.class, new ChatMessagePacketHandler(server, gameDataRetriever));
-		packetHandlers.put(BoardClickPacket.class, new BoardClickPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(ItemUsagePacket.class, new ItemUsagePacketHandler(gameDataRetriever, playState, server));
 		packetHandlers.put(FireballSpellUsagePacket.class,
 				new FireballSpellUsagePacketHandler(gameDataRetriever, playState));
