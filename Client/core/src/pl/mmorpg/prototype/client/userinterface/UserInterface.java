@@ -114,7 +114,7 @@ public class UserInterface
 		equipmentDialog = new EquipmentDialog();
 		chatDialog = new ChatDialog(this, registerer);
 		consoleDialog = new ConsoleDialog(this);
-		questListDialog = new QuestListDialog();
+		questListDialog = new QuestListDialog(registerer);
 		spellListDialog = new SpellListDialog(this, registerer);
 		mapDialogsWithKeys();
 		mapOtherDialogs();
