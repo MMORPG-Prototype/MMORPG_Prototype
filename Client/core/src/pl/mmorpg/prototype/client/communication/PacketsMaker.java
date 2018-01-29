@@ -20,6 +20,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.GetQuestBoar
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedFromQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcDialogStartPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenShopPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveGoldRewardPacket;
@@ -225,6 +226,13 @@ public class PacketsMaker
 	{
 		GetQuestBoardInfoPacket packet = new GetQuestBoardInfoPacket();
 		packet.setQuestBoardId(questBoardId);
+		return packet;
+	}
+
+	public static NpcDialogStartPacket makeNpcDialogStartPacket(long npcId)
+	{
+		NpcDialogStartPacket packet = new NpcDialogStartPacket();
+		packet.setNpcId(npcId);
 		return packet;
 	}
 

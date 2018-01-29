@@ -56,6 +56,7 @@ import pl.mmorpg.prototype.client.objects.interactive.QuestBoard;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.objects.monsters.MonstersFactory;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
+import pl.mmorpg.prototype.client.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Shop;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
@@ -383,6 +384,8 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		
 		if(object instanceof Shop)
 			packet = PacketsMaker.makeOpenShopPacket(object.getId());
+		else if(object instanceof QuestDialogNpc)
+			packet = PacketsMaker.makeNpcDialogStartPacket(object.getId());
 		else if(object instanceof Monster)
 			packet = PacketsMaker.makeTargetMonsterPacket(object.getId());
 		else if(object instanceof QuestBoard)
