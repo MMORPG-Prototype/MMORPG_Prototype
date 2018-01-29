@@ -24,7 +24,7 @@ public class SettingsChoosingState implements State
 		this.registerer = registerer;
 		Gdx.input.setInputProcessor(stage);
 
-		AskForIpDialog dialog = new AskForIpDialog(this, new ConnectionInfo("localhost"));
+		AskForIpDialog dialog = new AskForIpDialog(this, new DefaultConnectionInfo());
 		dialog.show(stage);
 	}
 
@@ -55,6 +55,7 @@ public class SettingsChoosingState implements State
 	@Override
 	public void reactivate()
 	{
+		Gdx.input.setInputProcessor(stage);
 	}
 
 }

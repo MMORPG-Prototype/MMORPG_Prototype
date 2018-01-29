@@ -15,8 +15,9 @@ import pl.mmorpg.prototype.client.packethandlers.PacketHandlerDispatcher;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.packethandlers.SimplePacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
+import pl.mmorpg.prototype.client.states.ConnectionState;
+import pl.mmorpg.prototype.client.states.DefaultConnectionInfo;
 import pl.mmorpg.prototype.client.states.PlayState;
-import pl.mmorpg.prototype.client.states.SettingsChoosingState;
 import pl.mmorpg.prototype.client.states.State;
 import pl.mmorpg.prototype.client.states.StateManager;
 import pl.mmorpg.prototype.clientservercommon.registering.PacketHandlersRegisterer;
@@ -46,7 +47,7 @@ public class GameClient extends ApplicationAdapter
         playState = new PlayState(states, client, registerer);
         client = initizlizeClient(dispatcher);
         states.push(playState);
-        states.push(new SettingsChoosingState(client, states, registerer));
+        states.push(new ConnectionState(client, states, registerer, new DefaultConnectionInfo()));
         // Gdx.input.setCursorCatched(true); 
     } 
 

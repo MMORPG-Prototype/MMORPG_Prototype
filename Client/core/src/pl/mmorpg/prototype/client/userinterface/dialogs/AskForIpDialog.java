@@ -15,8 +15,8 @@ public class AskForIpDialog extends Dialog
 	private final TextField ipField;
 	private final SettingsChoosingState linkedState;
 	private final IntegerField tcpPortField;
-	private final IntegerField udpPortField;
 	private static final int MAX_PORT_DIGITS = 5;
+	private final IntegerField udpPortField;
 
 	public AskForIpDialog(SettingsChoosingState state, ConnectionInfo defaultConnection)
 	{
@@ -36,7 +36,12 @@ public class AskForIpDialog extends Dialog
 		this.getContentTable().row();
 		
 		this.button("Ok", DialogResults.OK);
-		button("Cancel", DialogResults.CANCEL);
+		this.button("Cancel", DialogResults.CANCEL);
+	}
+	
+	public void simulatePressOkButton()
+	{
+		result(DialogResults.OK);
 	}
 
 	@Override

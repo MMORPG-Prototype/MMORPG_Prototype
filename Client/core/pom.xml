@@ -4,6 +4,35 @@
 	<groupId>mmorpgClient-core</groupId>
 	<artifactId>mmorpgClient-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	
+	<profiles>
+		<profile>
+		<id>dev</id>
+			<activation>
+				<property>
+					<name>env.PRODUCTION</name>
+					<value>!true</value>
+				</property>
+			</activation>
+			<properties>
+		       <server.ip>localhost</server.ip>
+		   </properties>
+		</profile>
+		
+		<profile>
+		<id>production</id>
+			<activation>
+				<property>
+					<name>env.PRODUCTION</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<properties>
+		       <server.ip>mmorpg.nazwa.pl</server.ip>
+		   </properties>
+		</profile>
+	</profiles>
+
 	<build>
 
 		<resources>
@@ -114,8 +143,6 @@
 			<version>0.39</version>
 			<scope>test</scope>
 		</dependency>
-
-
 
 	</dependencies>
 </project>
