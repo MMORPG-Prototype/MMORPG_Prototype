@@ -16,6 +16,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionP
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.GetQuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedFromQuickAccessBarPacket;
@@ -217,6 +218,13 @@ public class PacketsMaker
 	{
 		TargetMonsterPacket packet = new TargetMonsterPacket();
 		packet.setMonsterId(monsterId);
+		return packet;
+	}
+
+	public static GetQuestBoardInfoPacket makeGetQuestBoardInfoPacket(long questBoardId)
+	{
+		GetQuestBoardInfoPacket packet = new GetQuestBoardInfoPacket();
+		packet.setQuestBoardId(questBoardId);
 		return packet;
 	}
 

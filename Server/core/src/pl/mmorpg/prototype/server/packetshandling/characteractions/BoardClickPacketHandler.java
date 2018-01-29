@@ -1,24 +1,15 @@
 package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.NotImplementedException;
 
 import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
-import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.database.entities.Character;
-import pl.mmorpg.prototype.server.database.entities.Quest;
-import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MapCollisionUnknownObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
-import pl.mmorpg.prototype.server.objects.ineractivestaticobjects.QuestBoard;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
@@ -26,12 +17,12 @@ import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.quests.events.NpcDialogStartEvent;
 import pl.mmorpg.prototype.server.states.PlayState;
 
-public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardClickPacket>
+public class BoardClickPacketHandler extends PacketHandlerBase<BoardClickPacket>
 {
 	private PlayState playState;
 	private GameDataRetriever gameData;
 
-	public CharacterBoardClickPacketHandler(PlayState playState, GameDataRetriever gameData)
+	public BoardClickPacketHandler(PlayState playState, GameDataRetriever gameData)
 	{
 		this.playState = playState;
 		this.gameData = gameData;
@@ -56,8 +47,6 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 		// can tell what he wants to do directly
 		if (target instanceof QuestDialogNpc)
 			propagateQuestDialogEvent((QuestDialogNpc) target, source);
-		else if (target instanceof QuestBoard)
-			sendQuestBoardInfo(connection, (QuestBoard) target);
 		else if (target.getClass().getSimpleName().contains("NullGameObject"))
 			;//ignore
 		else
@@ -70,14 +59,6 @@ public class CharacterBoardClickPacketHandler extends PacketHandlerBase<BoardCli
 		Event talkWithNpcEvent = new NpcDialogStartEvent(npc, (PacketsSender)playState);
 		talkWithNpcEvent.addReceiver(player);
 		playState.enqueueEvent(talkWithNpcEvent);
-	}
-
-	private void sendQuestBoardInfo(Connection connection, QuestBoard questBoard)
-	{
-		Collection<CharactersQuests> characterQuests = gameData.getCharacterQuestsByConnectionId(connection.getID());
-		List<Quest> quests = characterQuests.stream().map(CharactersQuests::getQuest).collect(Collectors.toList());
-		Predicate<Quest> shouldQuestBeIncluded = quest -> !quests.contains(quest);
-		connection.sendTCP(PacketsMaker.makeQuestBoardInfoPacket(questBoard, shouldQuestBeIncluded));
 	}
 
 }

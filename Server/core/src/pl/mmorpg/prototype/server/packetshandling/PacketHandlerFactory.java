@@ -25,6 +25,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BoardClickPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.GetQuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedFromQuickAccessBarPacket;
@@ -43,7 +44,8 @@ import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.exceptions.UnknownPacketTypeException;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.AcceptQuestPacketHandler;
-import pl.mmorpg.prototype.server.packetshandling.characteractions.CharacterBoardClickPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.BoardClickPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.GetQuestBoardInfoPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.InventoryItemRepositionRequestPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemPutInQuickAccessBarPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.ItemRemovedFromQuickAccessBarPacketHandler;
@@ -94,7 +96,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(MoveUpPacket.class, new MoveUpPacketHandler(playState));
 		packetHandlers.put(MoveDownPacket.class, new MoveDownPacketHandler(playState));
 		packetHandlers.put(ChatMessagePacket.class, new ChatMessagePacketHandler(server, gameDataRetriever));
-		packetHandlers.put(BoardClickPacket.class, new CharacterBoardClickPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(BoardClickPacket.class, new BoardClickPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(ItemUsagePacket.class, new ItemUsagePacketHandler(gameDataRetriever, playState, server));
 		packetHandlers.put(FireballSpellUsagePacket.class,
 				new FireballSpellUsagePacketHandler(gameDataRetriever, playState));
@@ -127,6 +129,7 @@ public class PacketHandlerFactory
 				new NpcConversationAnwserChoosenPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(OpenShopPacket.class, new OpenShopPacketHandler(playState));
 		packetHandlers.put(TargetMonsterPacket.class, new TargetMonsterPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(GetQuestBoardInfoPacket.class, new GetQuestBoardInfoPacketHandler(playState, gameDataRetriever));
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());
 	}
