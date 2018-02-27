@@ -4,10 +4,10 @@
 	<groupId>mmorpgClient-core</groupId>
 	<artifactId>mmorpgClient-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	
+
 	<profiles>
 		<profile>
-		<id>dev</id>
+			<id>dev</id>
 			<activation>
 				<property>
 					<name>env.PRODUCTION</name>
@@ -15,12 +15,12 @@
 				</property>
 			</activation>
 			<properties>
-		       <server.ip>localhost</server.ip>
-		   </properties>
+				<server.ip>localhost</server.ip>
+			</properties>
 		</profile>
-		
+
 		<profile>
-		<id>production</id>
+			<id>production</id>
 			<activation>
 				<property>
 					<name>env.PRODUCTION</name>
@@ -28,8 +28,8 @@
 				</property>
 			</activation>
 			<properties>
-		       <server.ip>world-medieval.com</server.ip>
-		   </properties>
+				<server.ip>world-medieval.com</server.ip>
+			</properties>
 		</profile>
 	</profiles>
 
@@ -101,7 +101,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.5.8</version>
+			<version>1.7.25</version>
 		</dependency>
 
 		<dependency>
@@ -110,12 +110,7 @@
 			<version>1.9.6</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.opengamma.strata</groupId>
-			<artifactId>strata-collect</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-
+		<!-- Tests -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
