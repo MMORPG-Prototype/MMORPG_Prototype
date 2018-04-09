@@ -1,10 +1,6 @@
-# MMORPG Medieval Game &nbsp; [![Build Status](http://mmorpg.nazwa.pl:8080/buildStatus/icon?job=MMORPG&style=plastic)](http://mmorpg.nazwa.pl:8080/job/MMORPG/)
+# MMORPG Medieval Game &nbsp; 
 ## How to play
-	Client app can be downloaded here: 
-	http://mmorpg.nazwa.pl/app/
-	The game server is constantly running, to connect enter "mmorpg.nazwa.pl" in adress field.
-	You can also obviously run server locally.
-	It is always the lastest version as is is updated via CI jenkins server.
+	The game server and CI server are no longer running, you can run server locally.
 	
 ### Some description
 	MMORPG game where player can connect to server, register, log in, and create character. The information about this is saved in mysql database.   
