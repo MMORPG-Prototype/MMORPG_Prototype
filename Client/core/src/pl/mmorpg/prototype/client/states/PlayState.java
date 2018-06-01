@@ -220,19 +220,19 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	
 	public void onMouseMove(float x, float y)
 	{
+		currentGameMouseX = getRealX(x);
+		currentGameMouseY = getRealY(y);
 		highlightHoveredObject(x, y);
 	}
 
 	private void highlightHoveredObject(float x, float y)
 	{
-		currentGameMouseX = getRealX(x);
-		currentGameMouseY = getRealY(y);
 		GameObject object = collisionMap.getObject((int) currentGameMouseX, (int) currentGameMouseY);
 		if (object != null)
 		{
 			Supplier<Boolean> graphicRemovalCondition = () -> !object.getCollisionRect()
 					.contains(currentGameMouseX, currentGameMouseY);
-			objectHighlighter.highlight(object, graphicRemovalCondition);
+			objectHighlighter.putEffect(object, graphicRemovalCondition);
 		}
 	}
 
