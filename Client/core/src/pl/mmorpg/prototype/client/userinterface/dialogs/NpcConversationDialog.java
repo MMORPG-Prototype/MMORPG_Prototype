@@ -7,8 +7,8 @@ import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.AutoCleanupOnCloseButtonDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.ClickableLabel;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.LineBreaker;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.MouseHoverHighlightingClickableLabel;
 
 public class NpcConversationDialog extends AutoCleanupOnCloseButtonDialog
 {
@@ -36,7 +36,7 @@ public class NpcConversationDialog extends AutoCleanupOnCloseButtonDialog
 		{
 			Runnable onClickAction = () -> packetsSender
 					.send(PacketsMaker.makeNpcConversationAnwserChoosenPacket(npc.getId(), anwser));
-			Label label = new ClickableLabel(anwser, onClickAction);
+			Label label = new MouseHoverHighlightingClickableLabel(anwser, onClickAction);
 			getContentTable().add(label);
 			getContentTable().row();
 		}
