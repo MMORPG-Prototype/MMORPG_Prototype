@@ -50,7 +50,9 @@ import pl.mmorpg.prototype.client.objects.graphic.GraphicGameObject;
 import pl.mmorpg.prototype.client.objects.graphic.HealLabel;
 import pl.mmorpg.prototype.client.objects.graphic.ManaReplenishLabel;
 import pl.mmorpg.prototype.client.objects.graphic.NormalDamageLabel;
+import pl.mmorpg.prototype.client.objects.graphic.helpers.ObjectGraphicEffectPlacer;
 import pl.mmorpg.prototype.client.objects.graphic.helpers.ObjectHighlighter;
+import pl.mmorpg.prototype.client.objects.graphic.helpers.ObjectInfoDisplayer;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.interactive.QuestBoard;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
@@ -100,7 +102,8 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private final StateManager states;
 	private final Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
 	private final BlockingQueue<GraphicGameObject> clientGraphics = new LinkedBlockingQueue<>();
-	private final ObjectHighlighter objectHighlighter = new ObjectHighlighter(clientGraphics);
+	private final ObjectGraphicEffectPlacer objectHighlighter = new ObjectHighlighter(clientGraphics);
+	private final ObjectGraphicEffectPlacer objectInfoDisplayer = new ObjectInfoDisplayer(clientGraphics);
 	private final TiledMapRenderer mapRenderer;
 	private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
 	private final PacketHandlerRegisterer packetHandlerRegisterer;
@@ -211,6 +214,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 		graphicObjectsUpdate(deltaTime);
 		objectHighlighter.update();
+		objectInfoDisplayer.update();
 		cameraUpdate();
 		collisionMap.update((int) (camera.position.x - 50 - camera.viewportWidth / 2),
 				(int) (camera.position.y - 50 - camera.viewportHeight / 2));
@@ -222,10 +226,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		currentGameMouseX = getRealX(x);
 		currentGameMouseY = getRealY(y);
-		highlightHoveredObject(x, y);
+		highlightHoveredObject();
+		displayInfoOfHoveredObject();
 	}
 
-	private void highlightHoveredObject(float x, float y)
+	private void highlightHoveredObject()
 	{
 		GameObject object = collisionMap.getObject((int) currentGameMouseX, (int) currentGameMouseY);
 		if (object != null)
@@ -233,6 +238,17 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			Supplier<Boolean> graphicRemovalCondition = () -> !object.getCollisionRect()
 					.contains(currentGameMouseX, currentGameMouseY);
 			objectHighlighter.putEffect(object, graphicRemovalCondition);
+		}
+	}
+
+	private void displayInfoOfHoveredObject()
+	{
+		GameObject object = collisionMap.getObject((int) currentGameMouseX, (int) currentGameMouseY);
+		if (object != null)
+		{
+			Supplier<Boolean> graphicRemovalCondition = () -> !object.getCollisionRect()
+					.contains(currentGameMouseX, currentGameMouseY);
+			objectInfoDisplayer.putEffect(object, graphicRemovalCondition);
 		}
 	}
 

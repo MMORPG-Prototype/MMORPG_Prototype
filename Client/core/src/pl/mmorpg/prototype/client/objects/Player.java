@@ -41,6 +41,7 @@ public class Player extends HealthBarMonster
     public void initialize(UserCharacterDataPacket characterData)
     {
         this.data = characterData;
+        this.setName(characterData.getNickname());
         setProperties(new PlayerPropertiesBuilder(characterData).build());
         recreateHealthBar();
         initPosition(data.getStartingX(), data.getStartingY());

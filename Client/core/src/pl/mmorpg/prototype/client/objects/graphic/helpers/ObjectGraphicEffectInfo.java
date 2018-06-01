@@ -5,8 +5,8 @@ import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.objects.graphic.GraphicGameObject;
 
 @Data
-public class ObjectGraphicEffectInfo<T extends GraphicGameObject>
+public class ObjectGraphicEffectInfo
 {
 	private final GameObject gameObject;
-	private final T graphicEffect;
+	private final GraphicGameObject graphicEffect;
 }

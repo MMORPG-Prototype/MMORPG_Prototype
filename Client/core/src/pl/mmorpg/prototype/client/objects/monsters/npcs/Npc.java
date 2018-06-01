@@ -9,17 +9,11 @@ import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.NpcDef
 
 public abstract class Npc extends Monster
 {
-	private final String name;
-	
 	protected Npc(String name, TextureSheetAnimationInfo sheetInfo, long id, CollisionMap<GameObject> collisionMap,
 			PacketHandlerRegisterer registerer)
 	{
 		super(sheetInfo, id, new NpcDefaultPropertiesBuilder().build(), collisionMap, registerer);
-		this.name = name;
+		super.setName(name);
 	}
 
-	public String getName()
-	{
-		return name;
-	}
 }

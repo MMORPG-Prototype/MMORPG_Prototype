@@ -18,17 +18,24 @@ import pl.mmorpg.prototype.clientservercommon.Identifiable;
 
 public abstract class GameObject extends Sprite implements RectangleCollisionObject, Identifiable
 {
-    private long id;
+    private final long id;
     private int layer = 0;
-	private Collection<PacketHandler<?>> activePacketHandlers = new ArrayList<>();
-	private PacketHandlerRegisterer registerer;
+    private String name;
+	private final Collection<PacketHandler<?>> activePacketHandlers = new ArrayList<>();
+	private final PacketHandlerRegisterer registerer;
 
     public GameObject(Texture lookout, long id, PacketHandlerRegisterer registerer)
     {
+    	this(lookout, id, registerer, "No name");
+    }
+    
+    public GameObject(Texture lookout, long id, PacketHandlerRegisterer registerer, String name)
+    {
         super(lookout);
 		this.registerer = registerer;
+		this.id = id;
         super.setRegion(lookout);
-        this.setId(id);
+        this.setName(name);
     }
     
     @Override
@@ -52,11 +59,6 @@ public abstract class GameObject extends Sprite implements RectangleCollisionObj
     public long getId()
     {
         return id;
-    }
-
-    public void setId(long id)
-    {
-        this.id = id;
     }
 
     public void onRemoval(GraphicObjectsContainer graphics)
@@ -85,6 +87,16 @@ public abstract class GameObject extends Sprite implements RectangleCollisionObj
 		this.layer = layer;
 	}
 	
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
 	public static class CollisionMapGameObject extends GameObject
 	{
 		private Rectangle rectangle;
