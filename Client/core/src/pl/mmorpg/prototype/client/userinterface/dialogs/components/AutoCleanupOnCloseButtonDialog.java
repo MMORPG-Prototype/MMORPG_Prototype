@@ -37,6 +37,7 @@ public class AutoCleanupOnCloseButtonDialog extends Dialog implements Identifiab
 	public void cleanUpItself()
 	{
 		closeButton.cleanUpDialog();
+		onClose();
 	}
 	
 	public void onClose()

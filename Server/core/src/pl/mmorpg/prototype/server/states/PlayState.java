@@ -75,8 +75,9 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		rewardForFisnishedQuestObserver = new RewardForFinishedQuestObserver(this, this);
 		questEventsHandler = new EventsHandler(rewardForFisnishedQuestObserver);
 		camera.setToOrtho(false);
-		camera.viewportWidth = 3000;
-		camera.viewportHeight = 1600;
+		//low values not to use too much cpu during debugging
+		camera.viewportWidth = 700;
+		camera.viewportHeight = 400;
 
 		TiledMap map = Assets.get("Map/tiled2.tmx");
 		Integer mapHeight = getMapProperty(map, "height")*getMapProperty(map, "tileheight");

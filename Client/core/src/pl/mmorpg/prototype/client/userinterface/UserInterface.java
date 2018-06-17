@@ -39,6 +39,7 @@ import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ConsoleDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ContainerDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.DialogUtils;
 import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
@@ -55,6 +56,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.SpellListDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.SpellQuickAccessDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemQuickAccessIcon;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.StackableItemsSplitDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
@@ -131,7 +133,7 @@ public class UserInterface
 		addRightClickListener(linkedState);
 		addMouseMoveListener(linkedState);
 	}
-	
+
 	private void addLeftClickListener(PlayState linkedState)
 	{
 		stage.addListener(new ClickListener(Buttons.LEFT)
@@ -163,10 +165,10 @@ public class UserInterface
 			}
 		});
 	}
-	
+
 	private void addMouseMoveListener(PlayState linkedState)
 	{
-		stage.addListener(new InputListener() 
+		stage.addListener(new InputListener()
 		{
 			@Override
 			public boolean mouseMoved(InputEvent event, float x, float y)
@@ -176,7 +178,7 @@ public class UserInterface
 			}
 		});
 	}
-	
+
 	public void mapDialogsWithKeys()
 	{
 		dialogs.map(Keys.T, chatDialog);
@@ -252,9 +254,21 @@ public class UserInterface
 			mousePointerToIcon.icon = (DraggableIcon) inventoryField.getContent();
 		else if (mousePointerToIcon.icon != null && mousePointerToIcon.icon instanceof Item)
 		{
-			InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
-					.makeInventoryItemRepositionRequestPacket(((Item) mousePointerToIcon.icon).getId(), cellPosition);
-			((PacketsSender) linkedState).send(inventoryItemRepositionRequestPacket);
+			if (mousePointerToIcon.icon instanceof StackableItem && 
+					(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyJustPressed(Keys.SHIFT_RIGHT)))
+			{
+				Dialog splitItemsDialog = new StackableItemsSplitDialog((StackableItem) mousePointerToIcon.icon, dialogs,
+						dialogIdSupplier.getId());
+				DialogUtils.centerPosition(splitItemsDialog);
+				addDialog(splitItemsDialog);
+			} else
+			{
+				InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
+						.makeInventoryItemRepositionRequestPacket(((Item) mousePointerToIcon.icon).getId(),
+								cellPosition);
+				((PacketsSender) linkedState).send(inventoryItemRepositionRequestPacket);
+			}
+
 			mousePointerToIcon.icon = null;
 		}
 	}
@@ -314,8 +328,7 @@ public class UserInterface
 		{
 			buttonField.removeContent();
 			((PacketsSender) linkedState).send(PacketsMaker.makeSpellRemovedFromQuickAccessBarPacket(cellPosition));
-		}
-		else if (!(heldIcon instanceof Spell))
+		} else if (!(heldIcon instanceof Spell))
 			return;
 		else
 		{
@@ -340,7 +353,7 @@ public class UserInterface
 	{
 		linkedState.userWantsToSendMessage(message);
 	}
-	
+
 	public void updateStatsDialog()
 	{
 		statisticsDialog.updateStatistics();
@@ -439,7 +452,7 @@ public class UserInterface
 		stage.setKeyboardFocus(actor);
 		stage.setScrollFocus(actor);
 	}
-	
+
 	public void updateHitPointManaPointDialog()
 	{
 		hpMpDialog.updateValues();
@@ -452,8 +465,8 @@ public class UserInterface
 		protected void doHandle(ContainerContentPacket packet)
 		{
 			if (!dialogs.hasIdentifiableDialog(packet.getContainerId()))
-				Gdx.app.postRunnable(() -> createAndOpenContainerDialog(
-						packet.getContentItems(), packet.getGoldAmount(), packet.getContainerId()));	
+				Gdx.app.postRunnable(() -> createAndOpenContainerDialog(packet.getContentItems(),
+						packet.getGoldAmount(), packet.getContainerId()));
 		}
 	}
 
@@ -465,7 +478,7 @@ public class UserInterface
 		{
 			decreaseGoldFromContainerDialog(packet.getContainerId(), packet.getGoldAmount());
 		}
-		
+
 		private void decreaseGoldFromContainerDialog(long containerId, int goldAmount)
 		{
 			if (dialogs.hasIdentifiableDialog(containerId))
@@ -475,16 +488,16 @@ public class UserInterface
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private class ContainerItemRemovalPacketHandler extends PacketHandlerBase<ContainerItemRemovalPacket>
 	{
 		@Override
 		protected void doHandle(ContainerItemRemovalPacket packet)
 		{
-			removeContainerItem(packet.getContainerId(), packet.getItemId());	
+			removeContainerItem(packet.getContainerId(), packet.getItemId());
 		}
-		
+
 		private void removeContainerItem(long containerId, long itemId)
 		{
 			if (dialogs.hasIdentifiableDialog(containerId))
@@ -503,11 +516,11 @@ public class UserInterface
 		{
 			removeItemFromQuestRewardContainer(packet.getItemIdentifier(), packet.getNumberOfItems());
 		}
-		
+
 		private void removeItemFromQuestRewardContainer(String itemIdentifier, int numberOfItems)
 		{
 			QuestRewardDialog dialog = dialogs.searchForDialog(QuestRewardDialog.class);
-			dialog.removeItem(itemIdentifier, numberOfItems);			
+			dialog.removeItem(itemIdentifier, numberOfItems);
 		}
 	}
 
@@ -519,7 +532,7 @@ public class UserInterface
 		{
 			itemUsed(packet.getItemId());
 		}
-		
+
 		private void itemUsed(long itemId)
 		{
 			Item item = (Item) inventoryDialog.useItem(itemId);
@@ -535,11 +548,11 @@ public class UserInterface
 		{
 			continueNpcConversation(packet.getNpcId(), packet.getSpeech(), packet.getPossibleAnswers());
 		}
-		
+
 		private void continueNpcConversation(long npcId, String speech, String[] possibleAnswers)
 		{
 			NpcConversationDialog npcConversationDialog = dialogs.getIdentifiableDialog(npcId);
-			npcConversationDialog.update(speech, possibleAnswers);			
+			npcConversationDialog.update(speech, possibleAnswers);
 		}
 	}
 
@@ -578,7 +591,7 @@ public class UserInterface
 		{
 			questBoardClicked(packet.getQuests(), packet.getQuestBoardId());
 		}
-		
+
 		private void questBoardClicked(QuestDataPacket[] quests, long questBoardId)
 		{
 			if (!dialogs.hasIdentifiableDialog(questBoardId))
@@ -594,7 +607,7 @@ public class UserInterface
 		{
 			openNewQuestRewardDialog(packet);
 		}
-		
+
 		private void openNewQuestRewardDialog(QuestFinishedRewardPacket rewardPacket)
 		{
 			ItemPositionSupplier desiredItemPositionSupplier = inventoryDialog::getDesiredItemPositionFor;
@@ -641,7 +654,7 @@ public class UserInterface
 		{
 			addInfoMessageToConsole(packet.getMessage());
 		}
-		
+
 		private void addInfoMessageToConsole(String message)
 		{
 			consoleDialog.addMessage(message);
@@ -656,12 +669,10 @@ public class UserInterface
 		{
 			openShopDialog(packet.getShopItems(), packet.getShopId());
 		}
-		
+
 		private void openShopDialog(ShopItemPacket[] shopItemsPacket, long shopId)
 		{
-			ShopItem[] shopItems = Stream.of(shopItemsPacket)
-					.map(this::makeShopItem)
-					.toArray(ShopItem[]::new);
+			ShopItem[] shopItems = Stream.of(shopItemsPacket).map(this::makeShopItem).toArray(ShopItem[]::new);
 			openShopDialog(shopItems, shopId);
 		}
 
@@ -671,7 +682,7 @@ public class UserInterface
 			ShopItem shopItem = new ShopItem(item, packet.getPrice());
 			return shopItem;
 		}
-		
+
 		private void openShopDialog(ShopItem[] shopItems, long shopId)
 		{
 			if (!dialogs.hasIdentifiableDialog(shopId))
@@ -690,13 +701,13 @@ public class UserInterface
 	private class UnacceptableOperationPacketHandler extends PacketHandlerBase<UnacceptableOperationPacket>
 	{
 		private static final float DEFAULT_MESSAGE_TIMEOUT = 5.0f;
-		
+
 		@Override
 		protected void doHandle(UnacceptableOperationPacket packet)
 		{
 			showTimedErrorMessage(packet.getErrorMessage(), DEFAULT_MESSAGE_TIMEOUT);
 		}
-		
+
 		private void showTimedErrorMessage(String errorMessage, float timeout)
 		{
 			Label label = new TimedLabel(errorMessage, timeout);

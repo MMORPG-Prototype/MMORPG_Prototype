@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
-public abstract class Icon extends Actor
+public class Icon extends Actor
 {
 	private static final float WIDTH_INVENTORY = 32;
 	private static final float HEIGHT_INVENTORY = 32;
@@ -17,12 +17,29 @@ public abstract class Icon extends Actor
 
 	public Icon(Texture texture)
 	{
+		this(texture, WIDTH_INVENTORY, WIDTH_INVENTORY);
+	}
+	
+	public Icon(Texture texture, float width, float height)
+	{
 		sprite = new Sprite(texture);
 		drawable = new SpriteDrawable(sprite);
-		setWidth(WIDTH_INVENTORY);
-		setHeight(HEIGHT_INVENTORY);
-		drawable.setMinWidth(WIDTH_INVENTORY);
-		drawable.setMinHeight(HEIGHT_INVENTORY);
+		setWidth(width);
+		setHeight(height);
+	}
+	
+	@Override
+	public void setWidth(float width)
+	{
+		super.setWidth(width);
+		drawable.setMinWidth(width);
+	}
+	
+	@Override
+	public void setHeight(float height)
+	{
+		super.setHeight(height);
+		drawable.setMinHeight(height);
 	}
 	
 	protected Sprite getSprite()
@@ -63,6 +80,6 @@ public abstract class Icon extends Actor
 	
 	public void draw(Batch batch, float x, float y)
     {
-        batch.draw(sprite.getTexture(), x, y, WIDTH_INVENTORY, HEIGHT_INVENTORY);
+        batch.draw(sprite.getTexture(), x, y, getWidth(), getHeight());
     }
 }
