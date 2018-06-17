@@ -104,11 +104,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private final BlockingQueue<GraphicGameObject> clientGraphics = new LinkedBlockingQueue<>();
 	private final ObjectGraphicEffectPlacer objectHighlighter = new ObjectHighlighter(clientGraphics);
 	private final ObjectGraphicEffectPlacer objectInfoDisplayer = new ObjectInfoDisplayer(clientGraphics);
-	private final TiledMapRenderer mapRenderer;
 	private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
 	private final PacketHandlerRegisterer packetHandlerRegisterer;
-	private final TiledMap map = Assets.get("Map/tiled3.tmx");
 	private final OrthographicCamera camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
+	private TiledMap map;
+	private TiledMapRenderer mapRenderer;
 	private PixelCollisionMap<GameObject> collisionMap = createCollisionMap(camera);
 	private InputProcessorAdapter inputHandler;
 	private Player player;
@@ -116,6 +116,8 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private boolean isInitalized = false;
 	private float currentGameMouseX = -1f;
 	private float currentGameMouseY = -1f;
+	private int mapWidth = Integer.MAX_VALUE;
+	private int mapHeight = Integer.MAX_VALUE;
 
 	public PlayState(StateManager states, Client client, PacketHandlerRegisterer packetHandlerRegisterer)
 	{
@@ -128,11 +130,15 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		camera.viewportWidth = CAMERA_WIDTH;
 		camera.viewportHeight = CAMERA_HEIGHT;
 		packetHandlerRegisterer.registerPrivateClassPacketHandlers(this);
-		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
 	}
 
 	public void initialize(UserCharacterDataPacket character)
 	{
+		map = Assets.get(String.format("Map/%s.tmx", character.getStartingMap()));
+		mapWidth = map.getProperties().get("width", Integer.class) * map.getProperties().get("tilewidth", Integer.class);
+		mapHeight = map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class);
+		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
+		
 		player = new Player(character.getId(), collisionMap, packetHandlerRegisterer);
 		player.initialize(character);
 		add(player);
@@ -255,6 +261,15 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private void cameraUpdate()
 	{
 		camera.position.set(player.getX() - player.getWidth() / 2, player.getY() - player.getHeight() / 2, 0);
+		if (camera.position.x < camera.viewportWidth / 2)
+			camera.position.x = camera.viewportWidth / 2;
+		if (camera.position.y < camera.viewportHeight / 2)
+			camera.position.y = camera.viewportHeight / 2;
+		if (camera.position.x > mapWidth - camera.viewportWidth / 2)
+			camera.position.x = mapWidth - camera.viewportWidth / 2;
+		if (camera.position.y > mapHeight - camera.viewportHeight / 2)
+			camera.position.y = mapHeight - camera.viewportHeight / 2;
+		
 		camera.update();
 	}
 

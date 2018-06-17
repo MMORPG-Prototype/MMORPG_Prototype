@@ -19,4 +19,5 @@ public class UserCharacterDataPacket
 	private Integer dexitirity;
 	private Integer startingX;
 	private Integer startingY;
+	private String startingMap;
 }

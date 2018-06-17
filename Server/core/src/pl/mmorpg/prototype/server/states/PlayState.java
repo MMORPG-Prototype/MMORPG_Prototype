@@ -55,14 +55,13 @@ import pl.mmorpg.prototype.server.resources.Assets;
 public class PlayState extends State implements GameObjectsContainer, PacketsSender
 {
 	private final Server server;
-	private final PixelCollisionMap<GameObject> collisionMap = new PixelCollisionMap<>(6400, 4800,
-			GameObject.NULL_OBJECT);
+	private final PixelCollisionMap<GameObject> collisionMap;
 	private final StackableCollisionMap<MonsterBody> deadBodiesCollisionMap = new LayerCollisionMap<>(214, 160, 30, 30);
 	private final Map<Long, GameObject> gameObjects = new ConcurrentHashMap<>();
 	private final Map<Long, GameContainer> gameContainers = new ConcurrentHashMap<>();
 	private final TiledMapRenderer mapRenderer;
-	private final GameObjectsFactory objectsFactory = new GameObjectsFactory(collisionMap, this);
-	private final MonsterSpawner monsterSpawner = new MonsterSpawner(objectsFactory);
+	private final GameObjectsFactory objectsFactory;
+	private final MonsterSpawner monsterSpawner;
 	private final Map<Integer, GameCommandsHandler> gameCommandsHandlers = new HashMap<>();
 	private final RewardForFinishedQuestObserver rewardForFisnishedQuestObserver;
 	private final EventsHandler questEventsHandler;
@@ -79,8 +78,15 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		camera.viewportWidth = 3000;
 		camera.viewportHeight = 1600;
 
-		collisionMap.setScale(1);
-		TiledMap map = loadMap();
+		TiledMap map = Assets.get("Map/tiled2.tmx");
+		Integer mapHeight = getMapProperty(map, "height")*getMapProperty(map, "tileheight");
+		Integer mapWidth = getMapProperty(map, "width")*getMapProperty(map, "tilewidth");
+		collisionMap = new PixelCollisionMap<>(mapWidth, mapHeight, 1, GameObject.NULL_OBJECT);		
+		
+		objectsFactory = new GameObjectsFactory(collisionMap, this);
+		monsterSpawner = new MonsterSpawner(objectsFactory);
+
+		loadMap(map);
 
 		if (ServerSettings.isHeadless)
 			mapRenderer = new NullOrthogonalTiledMapRenderer();
@@ -92,13 +98,16 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		addNpcs();
 		addGameObject(ObjectsIdentifiers.QUEST_BOARD, 100, 100);
 	}
-
-	private TiledMap loadMap()
+	
+	private Integer getMapProperty(TiledMap map, String name)
 	{
-		TiledMap map = Assets.get("Map/tiled2.tmx");
+		return map.getProperties().get(name, Integer.class);
+	}
+
+	private void loadMap(TiledMap map)
+	{
 		loadCollision(map);
 		loadSpawners(map);
-		return map;
 	}
 
 	private void loadCollision(TiledMap map)

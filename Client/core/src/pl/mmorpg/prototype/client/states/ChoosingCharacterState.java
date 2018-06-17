@@ -31,12 +31,12 @@ public class ChoosingCharacterState extends PacketHandlingState
 		this.client = client;
 		this.states = states;
 		this.packetHandlerRegisterer = packetHandlerRegisterer;
+		registerHandler(packetHandlerRegisterer, new CharacterCreationReplyPacketHandler());
+		registerHandler(packetHandlerRegisterer, new UserCharacterDataArrayPacketHandler());
 		creatingDialog = new CreatingCharacterDialog(this);
 		GetUserCharactersPacket getUserCharactersPacket = new GetUserCharactersPacket();
 		getUserCharactersPacket.username = UserInfo.username;
 		client.sendTCP(getUserCharactersPacket);
-		registerHandler(packetHandlerRegisterer, new CharacterCreationReplyPacketHandler());
-		registerHandler(packetHandlerRegisterer, new UserCharacterDataArrayPacketHandler());
 	}
 
 	@Override

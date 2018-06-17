@@ -136,6 +136,7 @@ public class PacketsMaker
 		packet.setGold(character.getGold());
 		packet.setStartingX(character.getLastLocationX());
 		packet.setStartingY(character.getLastLocationY());
+		packet.setStartingMap(character.getLastLocationMap());
 		return packet;
 	}
 

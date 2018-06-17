@@ -68,6 +68,9 @@ public class Character implements Serializable
 
 	@Column(name = "last_location_y")
 	private Integer lastLocationY = 96;
+	
+	@Column(name = "last_location_map", nullable = false)
+	private String lastLocationMap = "tiled2";
 
 	@OneToMany(mappedBy = "character")
 	@MapKey(name = "fieldPosition")
