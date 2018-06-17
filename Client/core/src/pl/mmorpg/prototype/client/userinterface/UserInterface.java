@@ -536,7 +536,10 @@ public class UserInterface
 		private void itemUsed(long itemId)
 		{
 			Item item = (Item) inventoryDialog.useItem(itemId);
-			itemQuickAccessDialog.decreaseNumberOfItems(item.getIdentifier());
+			if(item != null)
+				itemQuickAccessDialog.decreaseNumberOfItems(item.getIdentifier());
+			else
+				Log.warn("Something is wrong with item usage!");
 		}
 	}
 
