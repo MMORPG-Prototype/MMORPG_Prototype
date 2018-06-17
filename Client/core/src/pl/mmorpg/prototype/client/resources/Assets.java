@@ -226,7 +226,7 @@ public class Assets
 
 	private static CustomStage createStage()
 	{
-		return new CustomStage(new ScalingViewport(Scaling.stretch, Settings.GAME_WIDTH, Settings.GAME_HEIGHT));
+		return new CustomStage(new ScalingViewport(Scaling.stretch, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT));
 	}
 
 	public static SpriteBatch getBatch()

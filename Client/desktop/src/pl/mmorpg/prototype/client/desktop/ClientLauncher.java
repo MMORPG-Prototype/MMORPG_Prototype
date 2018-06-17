@@ -11,8 +11,8 @@ public class ClientLauncher
     public static void main(String[] args)
     {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = Settings.GAME_WIDTH;
-        config.height = Settings.GAME_HEIGHT;
+        config.width = Settings.WINDOW_WIDTH;
+        config.height = Settings.WINDOW_HEIGHT;
         config.vSyncEnabled = false;
         new LwjglApplication(new GameClient(), config);
     }

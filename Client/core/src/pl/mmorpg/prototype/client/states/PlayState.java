@@ -261,6 +261,12 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private void cameraUpdate()
 	{
 		camera.position.set(player.getX() - player.getWidth() / 2, player.getY() - player.getHeight() / 2, 0);
+		holdCameraInGameWorld();
+		camera.update();
+	}
+
+	private void holdCameraInGameWorld()
+	{
 		if (camera.position.x < camera.viewportWidth / 2)
 			camera.position.x = camera.viewportWidth / 2;
 		if (camera.position.y < camera.viewportHeight / 2)
@@ -269,8 +275,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			camera.position.x = mapWidth - camera.viewportWidth / 2;
 		if (camera.position.y > mapHeight - camera.viewportHeight / 2)
 			camera.position.y = mapHeight - camera.viewportHeight / 2;
-		
-		camera.update();
 	}
 
 	private void graphicObjectsUpdate(float deltaTime)
@@ -457,16 +461,14 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		return clientGraphics.offer(new FadingRedRectangle(new Rectangle(point.x, point.y, 10, 10)));
 	}
 
-	private float getRealY(float y)
+	private float getRealY(float mouseY)
 	{
-		return player.getY() - camera.viewportHeight / 2 + y * camera.viewportHeight / Settings.GAME_HEIGHT
-				- player.getHeight() / 2;
+		return camera.position.y - camera.viewportHeight / 2 + mouseY * camera.viewportHeight / Settings.WINDOW_HEIGHT;
 	}
 
-	private float getRealX(float x)
+	private float getRealX(float mouseX)
 	{
-		return (player.getX() - camera.viewportWidth / 2 + x * camera.viewportWidth / Settings.GAME_WIDTH)
-				- player.getWidth() / 2;
+		return camera.position.x - camera.viewportWidth / 2 + mouseX * camera.viewportWidth / Settings.WINDOW_WIDTH;
 	}
 
 	public boolean has(long targetId)

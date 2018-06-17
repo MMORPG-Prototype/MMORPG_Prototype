@@ -17,8 +17,8 @@ public class ServerLauncher
 	{
 		initializeSpring(args);
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = Settings.GAME_WIDTH;
-		config.height = Settings.GAME_HEIGHT; 
+		config.width = Settings.WINDOW_WIDTH;
+		config.height = Settings.WINDOW_HEIGHT; 
 		new LwjglApplication(new GameServer(), config);
 	}
 
