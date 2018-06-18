@@ -35,6 +35,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveGold
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellRemovedFromQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SplitItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TargetMonsterPacket;
@@ -61,6 +62,7 @@ import pl.mmorpg.prototype.server.packetshandling.characteractions.RetrieveGoldR
 import pl.mmorpg.prototype.server.packetshandling.characteractions.RetrieveItemRewardPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.SpellPutInQuickAccessBarPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.SpellRemovedFromQuickAccessBarPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.characteractions.SplitItemsPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakeItemFromContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TakingGoldFromContainerPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TargetMonsterPacketHandler;
@@ -118,6 +120,7 @@ public class PacketHandlerFactory
 				new SpellPutInQuickAccessBarPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(SpellRemovedFromQuickAccessBarPacket.class,
 				new SpellRemovedFromQuickAccessBarPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(SplitItemsPacket.class, new SplitItemsPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(RetrieveItemRewardPacket.class,
 				new RetrieveItemRewardPacketHandler(gameDataRetriever, playState));
 		packetHandlers.put(RetrieveGoldRewardPacket.class,

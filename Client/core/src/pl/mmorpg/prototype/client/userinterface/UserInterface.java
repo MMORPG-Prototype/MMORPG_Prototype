@@ -54,9 +54,10 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
 import pl.mmorpg.prototype.client.userinterface.dialogs.SpellListDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.SpellQuickAccessDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.StackableItemsSplitSingleStackDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.StackableItemsSplitWithSecondStackDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemQuickAccessIcon;
-import pl.mmorpg.prototype.client.userinterface.dialogs.components.StackableItemsSplitDialog;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
@@ -254,11 +255,10 @@ public class UserInterface
 			mousePointerToIcon.icon = (DraggableIcon) inventoryField.getContent();
 		else if (mousePointerToIcon.icon != null && mousePointerToIcon.icon instanceof Item)
 		{
-			if (mousePointerToIcon.icon instanceof StackableItem && 
-					(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyJustPressed(Keys.SHIFT_RIGHT)))
+			if (mousePointerToIcon.icon instanceof StackableItem
+					&& (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyJustPressed(Keys.SHIFT_RIGHT)))
 			{
-				Dialog splitItemsDialog = new StackableItemsSplitDialog((StackableItem) mousePointerToIcon.icon, dialogs,
-						dialogIdSupplier.getId());
+				Dialog splitItemsDialog = createSplitItemsDialog(cellPosition);
 				DialogUtils.centerPosition(splitItemsDialog);
 				addDialog(splitItemsDialog);
 			} else
@@ -271,6 +271,18 @@ public class UserInterface
 
 			mousePointerToIcon.icon = null;
 		}
+	}
+
+	private Dialog createSplitItemsDialog(ItemInventoryPosition cellPosition)
+	{
+		Item destinationItem = inventoryDialog.getItem(cellPosition);
+		if (destinationItem instanceof StackableItem)
+			return new StackableItemsSplitWithSecondStackDialog((StackableItem) mousePointerToIcon.icon,
+					(StackableItem) destinationItem, cellPosition, dialogs, (PacketsSender) linkedState,
+					dialogIdSupplier.getId());
+		
+		return new StackableItemsSplitSingleStackDialog((StackableItem) mousePointerToIcon.icon, cellPosition, dialogs,
+				(PacketsSender) linkedState, dialogIdSupplier.getId());
 	}
 
 	public void userWantsToDisconnect()
@@ -536,7 +548,7 @@ public class UserInterface
 		private void itemUsed(long itemId)
 		{
 			Item item = (Item) inventoryDialog.useItem(itemId);
-			if(item != null)
+			if (item != null)
 				itemQuickAccessDialog.decreaseNumberOfItems(item.getIdentifier());
 			else
 				Log.warn("Something is wrong with item usage!");

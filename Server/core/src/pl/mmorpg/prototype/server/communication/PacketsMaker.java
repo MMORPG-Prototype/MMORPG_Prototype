@@ -46,6 +46,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueD
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.StackableItemAmountChangePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
 import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.CharacterItem;
@@ -549,6 +550,17 @@ public class PacketsMaker
 	{
 		KnownSpellInfoPacket packet = new KnownSpellInfoPacket();
 		packet.setSpellIdentifer(spell.getIdentifier());
+		return packet;
+	}
+
+	public static StackableItemAmountChangePacket makeStackableItemAmountChangePacket(int itemRemovalAmount,
+			InventoryPosition position)
+	{
+		StackableItemAmountChangePacket packet = new StackableItemAmountChangePacket();
+		packet.setItemAmount(itemRemovalAmount);
+		packet.setItemPageNumber(position.getInventoryPageNumber());
+		packet.setItemPageX(position.getInventoryX());
+		packet.setItemPageY(position.getInventoryY());
 		return packet;
 	}
 

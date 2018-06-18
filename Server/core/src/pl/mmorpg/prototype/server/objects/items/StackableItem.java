@@ -24,6 +24,11 @@ public abstract class StackableItem extends Item
     {
         return count;
     }
+    
+    public void modifyAmount(int delta)
+    {
+    	count += delta;
+    }
 
 	public void stackWith(StackableItem newItem)
 	{

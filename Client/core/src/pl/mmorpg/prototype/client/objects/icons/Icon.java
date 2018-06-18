@@ -17,7 +17,7 @@ public class Icon extends Actor
 
 	public Icon(Texture texture)
 	{
-		this(texture, WIDTH_INVENTORY, WIDTH_INVENTORY);
+		this(texture, WIDTH_INVENTORY, HEIGHT_INVENTORY);
 	}
 	
 	public Icon(Texture texture, float width, float height)

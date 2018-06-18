@@ -26,6 +26,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveGold
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellRemovedFromQuickAccessBarPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SplitItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TargetMonsterPacket;
@@ -226,5 +227,15 @@ public class PacketsMaker
 		packet.setNpcId(npcId);
 		return packet;
 	}
-
+	
+	public static SplitItemsPacket makeSplitItemsPacket(Item item, int splitItemAmount, ItemInventoryPosition destination)
+	{
+		SplitItemsPacket packet = new SplitItemsPacket();
+		packet.setSourceItemId(item.getId());
+		packet.setDestinationPageNumber(destination.getPageNumber());
+		packet.setDestinationPageX(destination.getPosition().x);
+		packet.setDestinationPageY(destination.getPosition().y);
+		packet.setSplitItemAmount(splitItemAmount);
+		return packet;
+	}
 }

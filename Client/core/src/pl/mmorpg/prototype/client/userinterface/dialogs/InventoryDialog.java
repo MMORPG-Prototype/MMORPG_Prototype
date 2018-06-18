@@ -33,6 +33,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPac
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemStackPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemSwapPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.StackableItemAmountChangePacket;
 
 public class InventoryDialog extends Dialog implements ItemCounter
 {
@@ -44,7 +45,8 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	private final UserInterface linkedInterface;
 	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
 
-	public InventoryDialog(UserInterface linkedInterface, Integer initialGoldAmmount, PacketHandlerRegisterer registerer)
+	public InventoryDialog(UserInterface linkedInterface, Integer initialGoldAmmount,
+			PacketHandlerRegisterer registerer)
 	{
 		super("Inventory", Settings.DEFAULT_SKIN);
 		this.linkedInterface = linkedInterface;
@@ -118,6 +120,12 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	public Item getItem(Point position)
 	{
 		ButtonField<Item> field = inventoryPages.get(currentPageIndex).getField(position);
+		return field.getContent();
+	}
+	
+	public Item getItem(ItemInventoryPosition cellPosition)
+	{
+		ButtonField<Item> field = inventoryPages.get(cellPosition.getPageNumber()).getField(cellPosition.getPosition());
 		return field.getContent();
 	}
 
@@ -212,14 +220,14 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		}
 		throw new NoFreeFieldException();
 	}
-	
-    public ItemInventoryPosition getDesiredItemPositionFor(Item item)
-    {
-        if (item instanceof StackableItem)
-            return getFieldWithSuiteTypeStackableItemFor(item.getIdentifier());
-        else
-            return getFreeInventoryPosition();
-    }
+
+	public ItemInventoryPosition getDesiredItemPositionFor(Item item)
+	{
+		if (item instanceof StackableItem)
+			return getFieldWithSuiteTypeStackableItemFor(item.getIdentifier());
+		else
+			return getFreeInventoryPosition();
+	}
 
 	public ItemInventoryPosition getDesiredItemPositionFor(String itemIdentifier, int numberOfItems)
 	{
@@ -230,15 +238,15 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	}
 
 	private boolean isStackableType(String itemIdentifier)
-    {
-	    // TODO: Should refactor
-	    CharacterItemDataPacket packet = new CharacterItemDataPacket();
-	    packet.setIdentifier(itemIdentifier);
-	    Item item = ItemFactory.produceItem(packet);
-	    return item instanceof StackableItem;
-    }
+	{
+		// TODO: Should refactor
+		CharacterItemDataPacket packet = new CharacterItemDataPacket();
+		packet.setIdentifier(itemIdentifier);
+		Item item = ItemFactory.produceItem(packet);
+		return item instanceof StackableItem;
+	}
 
-    public ItemInventoryPosition getFieldWithSuiteTypeStackableItemFor(String itemIdentifier)
+	public ItemInventoryPosition getFieldWithSuiteTypeStackableItemFor(String itemIdentifier)
 	{
 		try
 		{
@@ -251,11 +259,14 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	private ItemInventoryPosition getFieldWithSameTypeItem(String itemIdentifier)
 	{
-		for(int pageIndex=0; pageIndex<numberOfPages; pageIndex++)
-			try{
+		for (int pageIndex = 0; pageIndex < numberOfPages; pageIndex++)
+			try
+			{
 				return getFieldWithSameTypeItem(itemIdentifier, pageIndex);
-			}catch(NoSuchFieldException e){}
-		
+			} catch (NoSuchFieldException e)
+			{
+			}
+
 		throw new NoSuchFieldException();
 	}
 
@@ -314,7 +325,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			goldLabel.update();
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private class GoldAmountChangePacketHandler extends PacketHandlerBase<GoldAmountChangePacket>
 	{
@@ -322,7 +333,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		protected void doHandle(GoldAmountChangePacket packet)
 		{
 			System.out.println("Inventory gold change ");
-			goldLabel.setValue( packet.getNewGoldAmount());
+			goldLabel.setValue(packet.getNewGoldAmount());
 			goldLabel.update();
 		}
 	}
@@ -353,7 +364,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 					new Point(packet.getSecondPositionPageX(), packet.getSecondPositionPageY()));
 			stackItems(firstPosition, secondPosition);
 		}
-		
+
 		private void stackItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
 		{
 			ButtonField<Item> firstField = getField(firstPosition);
@@ -361,7 +372,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			Item firstItem = firstField.getContent();
 			Item secondItem = secondField.getContent();
 			firstField.removeContent();
-			((StackableItem)secondItem).stackWith((StackableItem)firstItem);
+			((StackableItem) secondItem).stackWith((StackableItem) firstItem);
 		}
 	}
 
@@ -376,9 +387,9 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			ItemInventoryPosition secondPosition = new ItemInventoryPosition(packet.getSecondPositionPageNumber(),
 					new Point(packet.getSecondPositionPageX(), packet.getSecondPositionPageY()));
 
-			swapItems(firstPosition, secondPosition);		
+			swapItems(firstPosition, secondPosition);
 		}
-		
+
 		private void swapItems(ItemInventoryPosition firstPosition, ItemInventoryPosition secondPosition)
 		{
 			ButtonField<Item> firstField = getField(firstPosition);
@@ -390,4 +401,17 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		}
 	}
 
+	@SuppressWarnings("unused")
+	private class StackableItemAmountChangePacketHandler extends PacketHandlerBase<StackableItemAmountChangePacket>
+	{
+		@Override
+		protected void doHandle(StackableItemAmountChangePacket packet)
+		{
+			ItemInventoryPosition fieldPosition = new ItemInventoryPosition(packet.getItemPageNumber(),
+					new Point(packet.getItemPageX(), packet.getItemPageY()));
+			StackableItem item = (StackableItem) getField(fieldPosition).getContent();
+			item.modifyAmount(packet.getItemAmount());
+		}
+
+	}
 }

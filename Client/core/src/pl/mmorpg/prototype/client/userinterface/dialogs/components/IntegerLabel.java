@@ -14,5 +14,10 @@ public class IntegerLabel extends Label
 	{
 		setText(String.valueOf(value));
 	}
+	
+	public int getIntValue()
+	{
+		return Integer.valueOf(getText().toString());
+	}
 
 }
