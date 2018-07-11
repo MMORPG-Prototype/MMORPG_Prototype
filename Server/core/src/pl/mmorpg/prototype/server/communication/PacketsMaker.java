@@ -400,7 +400,7 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static QuestBoardInfoPacket makeQUestBoardInfoPacket(QuestBoard questBoard)
+	public static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestBoard questBoard)
 	{
 		Predicate<Quest> shouldIncludeQuest = q -> true;
 		return makeQuestBoardInfoPacket(questBoard, shouldIncludeQuest);
