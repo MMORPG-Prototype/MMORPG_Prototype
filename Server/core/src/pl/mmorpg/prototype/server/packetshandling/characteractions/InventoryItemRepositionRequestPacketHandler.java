@@ -39,17 +39,18 @@ public class InventoryItemRepositionRequestPacketHandler extends PacketHandlerBa
 			connection.sendTCP(
 					PacketsMaker.makeInventoryItemRepositionPacket(sourcePosition, desiredPosition));
 			item.setInventoryPosition(desiredPosition);
-		} else if(itemInDestinationPosition instanceof StackableItem && 
+		} else if (sourcePosition.equals(desiredPosition))
+			connection.sendTCP(PacketsMaker.makeUnacceptableOperationPacket("Item cannot be stacked with itself"));
+		else if (itemInDestinationPosition instanceof StackableItem &&
 				itemInDestinationPosition.getIdentifier().equals(item.getIdentifier()))
 		{
 			connection.sendTCP(PacketsMaker.makeInventoryItemStackPacket(sourcePosition, desiredPosition));
-			((StackableItem)itemInDestinationPosition).stackWith((StackableItem)item);
+			((StackableItem) itemInDestinationPosition).stackWith((StackableItem) item);
 			playerCharacter.removeItem(item.getId());
-		}
-		else
+		} else
 		{
 			connection.sendTCP(PacketsMaker.makeInventoryItemSwapPacket(sourcePosition, desiredPosition));
-			itemInDestinationPosition.setInventoryPosition(sourcePosition);;
+			itemInDestinationPosition.setInventoryPosition(sourcePosition);
 			item.setInventoryPosition(desiredPosition);
 		}
 	}

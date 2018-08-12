@@ -21,6 +21,4 @@ public class InventoryPosition
 
 	@Column(name = "inventory_y", nullable = false)
 	private Integer inventoryY;
-	
-	
 }

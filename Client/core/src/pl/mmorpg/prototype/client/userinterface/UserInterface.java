@@ -252,10 +252,10 @@ public class UserInterface
 	public void inventoryFieldClicked(ButtonField<Item> inventoryField, ItemInventoryPosition cellPosition)
 	{
 		if (mousePointerToIcon.icon == null && inventoryField.hasContent())
-			mousePointerToIcon.icon = (DraggableIcon) inventoryField.getContent();
-		else if (mousePointerToIcon.icon != null && mousePointerToIcon.icon instanceof Item)
+			mousePointerToIcon.icon = inventoryField.getContent();
+		else if (mousePointerToIcon.icon instanceof Item)
 		{
-			if (mousePointerToIcon.icon instanceof StackableItem
+			if (mousePointerToIcon.icon instanceof StackableItem && ((StackableItem)mousePointerToIcon.icon).getItemCount() > 1
 					&& (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyJustPressed(Keys.SHIFT_RIGHT)))
 			{
 				Dialog splitItemsDialog = createSplitItemsDialog(cellPosition);
