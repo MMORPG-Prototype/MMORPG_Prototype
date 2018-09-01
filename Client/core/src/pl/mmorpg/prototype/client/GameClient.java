@@ -45,13 +45,13 @@ public class GameClient extends ApplicationAdapter
 		states = new StateManager(disposeState);
         client = new Client();
         playState = new PlayState(states, client, registerer);
-        client = initizlizeClient(dispatcher);
+        client = initializeClient(dispatcher);
         states.push(playState);
         states.push(new ConnectionState(client, states, registerer, new DefaultConnectionInfo()));
         // Gdx.input.setCursorCatched(true); 
     } 
 
-    private Client initizlizeClient(PacketHandlerDispatcher dispatcher)
+    private Client initializeClient(PacketHandlerDispatcher dispatcher)
     {
         Kryo kryo = client.getKryo();
         kryo = PacketHandlersRegisterer.registerPackets(kryo);

@@ -9,12 +9,12 @@ import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ConnectionStateDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.ConnectingInProgressDialog;
 
 public class ConnectionState implements State
 {
 	private final Stage stage = Assets.getStage();
-	private final ConnectionStateDialog connectionDialog = new ConnectionStateDialog();
+	private final ConnectingInProgressDialog connectionDialog = new ConnectingInProgressDialog();
 	private final StateManager states;
 	private final Client client;
 	private final int maxTryouts = 3;

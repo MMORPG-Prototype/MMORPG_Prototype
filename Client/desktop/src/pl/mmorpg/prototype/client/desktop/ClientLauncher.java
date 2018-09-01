@@ -2,8 +2,7 @@ package pl.mmorpg.prototype.client.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-
-import pl.mmorpg.prototype.client.GameClient;
+import pl.mmorpg.prototype.client.GameLoader;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 
 public class ClientLauncher
@@ -14,6 +13,6 @@ public class ClientLauncher
         config.width = Settings.WINDOW_WIDTH;
         config.height = Settings.WINDOW_HEIGHT;
         config.vSyncEnabled = false;
-        new LwjglApplication(new GameClient(), config);
+        new LwjglApplication(new GameLoader(), config);
     }
 }

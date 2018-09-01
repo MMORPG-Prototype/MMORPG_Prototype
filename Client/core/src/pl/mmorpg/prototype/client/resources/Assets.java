@@ -39,21 +39,44 @@ import pl.mmorpg.prototype.clientservercommon.Settings;
 
 public class Assets
 {
-	private static Map<String, Class<?>> classTypes = new HashMap<String, Class<?>>();
-	private static AssetManager assets = new AssetManager();
-	private static BitmapFont font = new BitmapFont();
-	private static Map<String, Skin> skins = new HashMap<>();
-	private static SpriteBatch batch = new ShaderBatch(0.05f, 1.1f);
-	private static SpriteBatch backupBatch = new SpriteBatch();
-	private static List<CustomStage> stages = new LinkedList<>();
+	private static Map<String, Class<?>> classTypes;
+	private static AssetManager assets;
+	private static BitmapFont font;
+	private static Map<String, Skin> skins;
+	private static SpriteBatch batch;
+	private static SpriteBatch backupBatch;
+	private static Collection<CustomStage> stages;
+	private static LinkedList<Runnable> tasksToExecute = new LinkedList<>();
 
-	static
+	public static void loadPreparationSteps()
 	{
-		loadSeveralStages();
-		assets.setLoader(TiledMap.class, new TmxMapLoader());
-		addClassTypes();
-		loadSkins();
-		loadOthers();
+		tasksToExecute.add(Assets::initializeFields);
+		tasksToExecute.add(Assets::loadSeveralStages);
+		tasksToExecute.add(Assets::addClassTypes);
+		tasksToExecute.add(() -> assets.setLoader(TiledMap.class, new TmxMapLoader()));
+		tasksToExecute.add(Assets::loadSkins);
+		tasksToExecute.add(Assets::loadOthers);
+	}
+
+	public static void executeNextPreparationStep()
+	{
+		tasksToExecute.removeFirst().run();
+	}
+
+	public static boolean preparationFinished()
+	{
+		return tasksToExecute.isEmpty();
+	}
+
+	private static void initializeFields()
+	{
+		classTypes = new HashMap<>();
+		assets = new AssetManager();
+		font = new BitmapFont();
+		skins = new HashMap<>();
+		batch = new ShaderBatch(0.05f, 1.1f);
+		backupBatch = new SpriteBatch();
+		stages = new LinkedList<>();
 	}
 
 	private static void loadSeveralStages()
@@ -85,19 +108,19 @@ public class Assets
 	}
 
 	private static Set<String> getClasspathResources(Set<String> filesExtensions)
-    {
+	{
 		Collection<URL> classpathJars = classpathJars();
 		System.out.println(classpathJars.size());
 		classpathJars.forEach(System.out::println);
 		ConfigurationBuilder configuration = new ConfigurationBuilder()
-                .setUrls(classpathJars)
-                .setScanners(new ResourcesScanner());
-        configuration.setInputsFilter(Assets::isValidResourcePath);
-        Reflections reflections = new Reflections(configuration);
-        Set<String> resources = reflections.getResources(getResourcePattern(filesExtensions));
-        return resources;
-    }
-	
+				.setUrls(classpathJars)
+				.setScanners(new ResourcesScanner());
+		configuration.setInputsFilter(Assets::isValidResourcePath);
+		Reflections reflections = new Reflections(configuration);
+		Set<String> resources = reflections.getResources(getResourcePattern(filesExtensions));
+		return resources;
+	}
+
 	private static Collection<URL> classpathJars()
 	{
 		String property = System.getProperty("java.class.path");
@@ -105,8 +128,8 @@ public class Assets
 		String[] classpathJars = property.split(";");
 		String userDir = System.getProperty("user.dir");
 		List<URL> result = Arrays.stream(classpathJars)
-			.map(jar -> toURL(userDir, jar))
-			.collect(Collectors.toList());
+				.map(jar -> toURL(userDir, jar))
+				.collect(Collectors.toList());
 		return result;
 	}
 
@@ -115,9 +138,9 @@ public class Assets
 		try
 		{
 			String path = jar.trim().replace(" ", "%20");
-			if(!new File(path).isAbsolute())
+			if (!new File(path).isAbsolute())
 				return new URL("file:\\" + userDir + '\\' + path);
-			
+
 			return new URL("file:\\" + path);
 		} catch (MalformedURLException e)
 		{
@@ -126,29 +149,32 @@ public class Assets
 	}
 
 	private static Pattern getResourcePattern(Set<String> filesExtensions)
-    {
-        return Pattern.compile(".+\\." + getCombinedExtensions(filesExtensions));
-    }
+	{
+		return Pattern.compile(".+\\." + getCombinedExtensions(filesExtensions));
+	}
 
 	private static String getCombinedExtensions(Set<String> filesExtensions)
 	{
 		StringBuilder strBuilder = new StringBuilder();
 		strBuilder.append('(');
 		String joinedExtensions = filesExtensions.stream()
-		.collect(Collectors.joining("|"));
+				.collect(Collectors.joining("|"));
 		strBuilder.append(joinedExtensions);
 		strBuilder.append(')');
 		return strBuilder.toString();
 	}
-	
+
 	private static boolean isValidResourcePath(String resourcePath)
-    {
-        return !resourcePath.startsWith("com") && 
-               !resourcePath.startsWith("org") && 
-               !resourcePath.startsWith("junit") &&
-               !resourcePath.startsWith("lombok") &&
-               (!resourcePath.startsWith("UISkins") || resourcePath.endsWith("json"));
-    }
+	{
+		return !resourcePath.startsWith("com.") &&
+				!resourcePath.startsWith("org.") &&
+				!resourcePath.startsWith("junit.") &&
+				!resourcePath.startsWith("lombok.") &&
+				!resourcePath.startsWith("javax.") &&
+				!resourcePath.startsWith("sun.") &&
+				(!resourcePath.startsWith("UISkins.") || resourcePath.endsWith(".json")) &&
+				!resourcePath.contains("/");
+	}
 
 	public static void loadOthers()
 	{
@@ -156,8 +182,6 @@ public class Assets
 
 		for (String path : resourcesPaths)
 			assets.load(path, getClassFromPath(path));
-
-		assets.finishLoading();
 	}
 
 	private static Class<?> getClassFromPath(String path)
@@ -173,6 +197,16 @@ public class Assets
 	{
 		int extensionStartIndex = path.lastIndexOf('.') + 1;
 		return path.substring(extensionStartIndex);
+	}
+
+	public static float getLoadingProgress()
+	{
+		return assets.getProgress();
+	}
+
+	public static void update()
+	{
+		assets.update(10);
 	}
 
 	public static <T> T get(String fileName)
@@ -233,7 +267,7 @@ public class Assets
 	{
 		return batch;
 	}
-	
+
 	public static SpriteBatch getBackupBatch()
 	{
 		return backupBatch;
