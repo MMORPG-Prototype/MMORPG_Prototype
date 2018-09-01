@@ -29,7 +29,7 @@ public class FireballAbility extends TimedAbility
         fireball.setTarget(target);
         fireball.setPosition(source.getX(), source.getY());
         linkedContainer.add(fireball);
-        packetSender.sendToAll(PacketsMaker.makeCreationPacket(fireball));
+        packetSender.sendToAll(PacketsMaker.makeCreationPacket(fireball, target));
 	}
 
 

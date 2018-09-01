@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.esotericsoftware.kryonet.Client;
 
-import pl.mmorpg.prototype.client.communication.UserInfo;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -89,7 +88,6 @@ public class AuthenticationState extends PacketHandlingState
 		{
 			if(replyPacket.isAuthenticated)
 			{
-				UserInfo.username = authenticationDialog.getUsername();
 				stage.dispose();
 				states.set(new ChoosingCharacterState(client, states, registerer));
 			}

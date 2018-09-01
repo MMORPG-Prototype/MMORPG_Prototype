@@ -15,14 +15,14 @@ import pl.mmorpg.prototype.clientservercommon.packets.GameObjectTargetPacket;
 
 public class PacketHandlerDispatcher
 {
-	private final Map<Class<? extends Object>, Collection<PacketHandler<Object>>> packetHandlers = new ConcurrentHashMap<>();
+	private final Map<Class<?>, Collection<PacketHandler<Object>>> packetHandlers = new ConcurrentHashMap<>();
 
 	public void registerHandler(PacketHandler<Object> packetHandler)
 	{
 		Class<?> packetType = getPacketType(packetHandler);
 		Collection<PacketHandler<Object>> packetHandlerGroup = packetHandlers.get(packetType);
 		if(packetHandlerGroup == null)
-		{ 
+		{
 			packetHandlerGroup = new LinkedBlockingDeque<>();
 			packetHandlers.put(packetType, packetHandlerGroup);
 		}
@@ -37,11 +37,11 @@ public class PacketHandlerDispatcher
 			if (genericInterface instanceof ParameterizedType
 					&& ((ParameterizedType) genericInterface).getRawType() == PacketHandler.class)
 				return (Class<?>) ((ParameterizedType) genericInterface).getActualTypeArguments()[0];
-		
+
 		Type genericInterface = packetHandlerClass.getGenericSuperclass();
 		return (Class<?>)((ParameterizedType) genericInterface).getActualTypeArguments()[0];
 	}
-	
+
 	public void dispatchPacket(Object packet)
 	{
 		try
@@ -60,15 +60,15 @@ public class PacketHandlerDispatcher
 	{
 		Collection<PacketHandler<Object>> packetHandlerGroup = packetHandlers.get(packet.getClass());
 		if (packetHandlerGroup == null)
-			throw newOmmitingPacketException(packet);
+			throw newOmittingPacketException(packet);
 		packetHandlerGroup.forEach(handler -> handler.handle(packet));
 	}
 
-	private GameException newOmmitingPacketException(Object packet)
+	private GameException newOmittingPacketException(Object packet)
 	{
-		return new GameException("Ommiting packet handling: " + packet.getClass().getSimpleName() + ", no handler registered");
+		return new GameException("Omitting packet handling: " + packet.getClass().getSimpleName() + ", no handler registered");
 	}
-	
+
 	public void dispatchGameObjectTargetPacket(GameObjectTargetPacket packet)
 	{
 		GameObjectTargetPacketHandler<Object> packetHandler = findProperHandler(packet);
@@ -79,14 +79,14 @@ public class PacketHandlerDispatcher
 	{
 		Collection<PacketHandler<Object>> collection = packetHandlers.get(packet.getClass());
 		if(collection == null)
-			throw newOmmitingPacketException(packet);
-		
+			throw newOmittingPacketException(packet);
+
 		for(PacketHandler<Object> packetHandler : collection)
 			if(packetHandler instanceof GameObjectTargetPacketHandler && ((GameObjectTargetPacketHandler<Object>) packetHandler).getObjectId() == packet.getTargetId())
 				return (GameObjectTargetPacketHandler<Object>)packetHandler;
-		throw newOmmitingPacketException(packet);
+		throw newOmittingPacketException(packet);
 	}
-	
+
 
 	public void removeHandler(PacketHandler<Object> packetHandler)
 	{
@@ -98,12 +98,12 @@ public class PacketHandlerDispatcher
 		if(packetHandlerGroup.isEmpty())
 			packetHandlers.remove(packetType);
 	}
-	
+
 	public void tryHandlingUnhandledPackets()
 	{
 		packetHandlers.values()
 			.stream()
-			.flatMap(a -> a.stream())
+			.flatMap(Collection::stream)
 			.forEach(PacketHandler::tryHandlingUnhandledPackets);
 	}
 
@@ -112,19 +112,19 @@ public class PacketHandlerDispatcher
 		Class<?>[] declaredClasses = objectContainingDefinitionOfPrivatePacketHandlers.getClass().getDeclaredClasses();
 		Arrays.stream(declaredClasses)
 			.filter(this::isPacketHandlerClass)
-			.map(packethandlerClass -> tryCreatingInstance(packethandlerClass,
+			.map(packetHandlerClass -> tryCreatingInstance(packetHandlerClass,
 					objectContainingDefinitionOfPrivatePacketHandlers))
 			.forEach(this::registerHandler);
 	}
 
-	
+
 	private PacketHandler<Object> tryCreatingInstance(Class<?> packetHandlerClass,
 			Object objectContainingDefinitionOfPrivatePacketHandlers)
 	{
 		try
 		{
 			Constructor<?> packetHandlerConstructor = packetHandlerClass
-					.getDeclaredConstructor(new Class[] { objectContainingDefinitionOfPrivatePacketHandlers.getClass() });
+					.getDeclaredConstructor(objectContainingDefinitionOfPrivatePacketHandlers.getClass());
 			packetHandlerConstructor.setAccessible(true);
 			@SuppressWarnings("unchecked")
 			PacketHandler<Object> packetHandler = (PacketHandler<Object>) packetHandlerConstructor.newInstance(new Object[] { objectContainingDefinitionOfPrivatePacketHandlers });

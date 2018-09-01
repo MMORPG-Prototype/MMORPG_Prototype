@@ -32,7 +32,7 @@ public class CreatingCharacterDialog extends Dialog
 	protected void result(Object object)
 	{
 		if(object.equals(DialogResults.OK))
-			linkedState.userSubmitedCharacterCreation(nicknameField.getText());
+			linkedState.userSubmittedCharacterCreation(nicknameField.getText());
 		else
 			linkedState.userCancelledCharacterCreation();
 	}

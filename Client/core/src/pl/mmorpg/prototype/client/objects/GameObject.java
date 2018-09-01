@@ -73,7 +73,7 @@ public abstract class GameObject extends Sprite implements RectangleCollisionObj
     
     public void unregisterHandlers(PacketHandlerRegisterer registerer)
     {
-    	activePacketHandlers.forEach(handler -> registerer.unregister(handler));
+    	activePacketHandlers.forEach(registerer::unregister);
     	activePacketHandlers.clear();
     }
 

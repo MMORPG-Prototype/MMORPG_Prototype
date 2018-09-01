@@ -33,7 +33,7 @@ public class SpellListDialog extends Dialog
 	}
 	
 	
-	public class KnownSpellInfoPacketHandler extends PacketHandlerBase<KnownSpellInfoPacket>
+	private class KnownSpellInfoPacketHandler extends PacketHandlerBase<KnownSpellInfoPacket>
 	{
 		@Override
 		protected void doHandle(KnownSpellInfoPacket packet)

@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.client.objects.graphic.helpers;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Supplier;
@@ -33,6 +34,15 @@ public abstract class ObjectGraphicEffectPlacer
 	
 	public void update()
 	{
-		affectedObjects.values().removeIf(info -> info.getGraphicEffect().shouldDelete());
+		Iterator<ObjectGraphicEffectInfo> iterator = affectedObjects.values().iterator();
+		while(iterator.hasNext())
+		{
+			ObjectGraphicEffectInfo effectInfo = iterator.next();
+			if(effectInfo.getGraphicEffect().shouldDelete())
+			{
+				effectInfo.getGraphicEffect().dispose();
+				iterator.remove();
+			}
+		}
 	}
 }

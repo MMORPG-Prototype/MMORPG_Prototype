@@ -10,6 +10,7 @@ import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.exceptions.UserIsNotInGameException;
+import pl.mmorpg.prototype.server.exceptions.UserNotConnectedException;
 import pl.mmorpg.prototype.server.quests.QuestTask;
 
 public class GameDataRetriever
@@ -23,15 +24,20 @@ public class GameDataRetriever
 		this.authenticatedClientsKeyClientId = authenticatedClientsKeyClientId;
 	}
 	
-	public Character getUserCharacterByConnectionId(int clientId)
+	public Character getUserCharacterByConnectionId(int connectionId)
 	{
-		if(!authenticatedClientsKeyClientId.containsKey(clientId))
-			return null;
-		User user = authenticatedClientsKeyClientId.get(clientId);
+		User user = getUserByConnectionId(connectionId);
 		Integer userId = user.getId();
 		if(!loggedUsersKeyUserId.containsKey(userId))
 			return null;
 		return loggedUsersKeyUserId.get(userId).userCharacter;
+	}
+
+	public User getUserByConnectionId(int connectionId)
+	{
+		if(!authenticatedClientsKeyClientId.containsKey(connectionId))
+			throw new UserNotConnectedException(connectionId);
+		return authenticatedClientsKeyClientId.get(connectionId);
 	}
 	
 	public int getCharacterIdByConnectionId(int id)
@@ -40,8 +46,7 @@ public class GameDataRetriever
         if (userCharacter == null)
             throw new UserIsNotInGameException();
 
-        int characterId = userCharacter.getId();
-        return characterId;
+		return userCharacter.getId();
     }
 	
 	public Collection<CharactersQuests> getCharacterQuestsByConnectionId(int id)

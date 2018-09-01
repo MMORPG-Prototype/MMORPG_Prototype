@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.sun.xml.internal.ws.api.ComponentFeature;
 
 public class Icon extends Actor
 {
@@ -82,4 +83,6 @@ public class Icon extends Actor
     {
         batch.draw(sprite.getTexture(), x, y, getWidth(), getHeight());
     }
+
+
 }

@@ -31,7 +31,7 @@ public class FireballSpell implements OffensiveSpell
 		fireball.setTarget(target);
 		fireball.setPosition(character.getX(), character.getY());
 		gameObjectsContainer.add(fireball);
-		packetsSender.sendToAll(PacketsMaker.makeCreationPacket(fireball));
+		packetsSender.sendToAll(PacketsMaker.makeCreationPacket(fireball, target));
 	    packetsSender.sendTo(character.getConnectionId(), PacketsMaker.makeManaDrainPacket(getNeededMana()));
 	    character.spellUsed(this);
 	}

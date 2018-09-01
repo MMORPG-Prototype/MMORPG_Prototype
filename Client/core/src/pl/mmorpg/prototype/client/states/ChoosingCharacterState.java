@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.esotericsoftware.kryonet.Client;
 
-import pl.mmorpg.prototype.client.communication.UserInfo;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -36,7 +35,6 @@ public class ChoosingCharacterState extends PacketHandlingState
 		
 		creatingDialog = new CreatingCharacterDialog(this);
 		GetUserCharactersPacket getUserCharactersPacket = new GetUserCharactersPacket();
-		getUserCharactersPacket.username = UserInfo.username;
 		client.sendTCP(getUserCharactersPacket);
 	}
 
@@ -70,7 +68,7 @@ public class ChoosingCharacterState extends PacketHandlingState
 		creatingDialog.show(stage);		
 	}
 
-	public void userSubmitedCharacterCreation(String nickname)
+	public void userSubmittedCharacterCreation(String nickname)
 	{
 		CharacterCreationPacket packet = new CharacterCreationPacket();
 		packet.setNickname(nickname);

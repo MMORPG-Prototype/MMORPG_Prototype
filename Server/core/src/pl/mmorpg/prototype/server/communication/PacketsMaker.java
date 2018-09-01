@@ -4,32 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
-import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.GoldAmountChangePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.GoldReceivePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemRepositionPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemStackPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.InventoryItemSwapPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ItemRewardPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.KnownSpellInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestTaskInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.*;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -66,6 +41,7 @@ import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopItemWrapper;
+import pl.mmorpg.prototype.server.objects.monsters.spells.objects.ThrowableObject;
 import pl.mmorpg.prototype.server.quests.QuestTask;
 
 public class PacketsMaker
@@ -78,6 +54,27 @@ public class PacketsMaker
 		packet.x = object.getX();
 		packet.y = object.getY();
 		return packet;
+	}
+
+	public static ThrowableObjectCreationPacket makeCreationPacket(ThrowableObject throwableObject, Monster target)
+	{
+		ThrowableObjectCreationPacket packet = new ThrowableObjectCreationPacket();
+		packet.id = throwableObject.getId();
+		packet.identifier = throwableObject.getIdentifier();
+		packet.x = throwableObject.getX();
+		packet.y = throwableObject.getY();
+		packet.targetData = makeObjectBasicData(target);
+		return packet;
+	}
+
+	private static ObjectBasicData makeObjectBasicData(GameObject object)
+	{
+		ObjectBasicData data = new ObjectBasicData();
+		data.id = object.getId();
+		data.identifier = object.getIdentifier();
+		data.x = object.getX();
+		data.y = object.getY();
+		return data;
 	}
 
 	public static MonsterCreationPacket makeCreationPacket(Monster monster)

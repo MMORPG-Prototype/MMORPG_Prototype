@@ -54,6 +54,11 @@ public abstract class ThrowableObject extends MovableGameObject
 		return target != null;
 	}
 
+	public Monster getTarget()
+	{
+		return target;
+	}
+
 	public void setTarget(Monster target)
 	{
 		this.target = target;
@@ -70,5 +75,6 @@ public abstract class ThrowableObject extends MovableGameObject
 		setPosition(getX() - flyingVector.x, getY() - flyingVector.y);
 		sendRepositionPacket();
 	}
+
 
 }

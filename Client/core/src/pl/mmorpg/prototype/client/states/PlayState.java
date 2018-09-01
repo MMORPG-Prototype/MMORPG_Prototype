@@ -35,11 +35,7 @@ import pl.mmorpg.prototype.client.input.PlayInputContinuousHandler;
 import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
-import pl.mmorpg.prototype.client.objects.GameObject;
-import pl.mmorpg.prototype.client.objects.GraphicObjectsContainer;
-import pl.mmorpg.prototype.client.objects.NullPlayer;
-import pl.mmorpg.prototype.client.objects.ObjectsFactory;
-import pl.mmorpg.prototype.client.objects.Player;
+import pl.mmorpg.prototype.client.objects.*;
 import pl.mmorpg.prototype.client.objects.graphic.BloodAnimation;
 import pl.mmorpg.prototype.client.objects.graphic.DefinedAreaCloudCluster;
 import pl.mmorpg.prototype.client.objects.graphic.ExperienceGainLabel;
@@ -60,6 +56,7 @@ import pl.mmorpg.prototype.client.objects.monsters.MonstersFactory;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Shop;
+import pl.mmorpg.prototype.client.objects.spells.ThrowableObject;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.path.search.BestFirstPathFinder;
@@ -71,20 +68,7 @@ import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.clientservercommon.Settings;
-import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ManaDrainPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.MonsterCreationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.MpUpdatePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.PlayerCreationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.*;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
@@ -138,7 +122,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		mapWidth = map.getProperties().get("width", Integer.class) * map.getProperties().get("tilewidth", Integer.class);
 		mapHeight = map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class);
 		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
-		
+
 		player = new Player(character.getId(), collisionMap, packetHandlerRegisterer);
 		player.initialize(character);
 		add(player);
@@ -168,7 +152,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		return map.getProperties().get("width", Integer.class) *
 				map.getProperties().get("tilewidth", Integer.class);
 	}
-	
+
 	private float getMapHeight(TiledMap map)
 	{
 		return map.getProperties().get("height", Integer.class) *
@@ -227,7 +211,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		inputHandler.process();
 		userInterface.update();
 	}
-	
+
 	public void onMouseMove(float x, float y)
 	{
 		currentGameMouseX = getRealX(x);
@@ -373,8 +357,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	private static PixelCollisionMap<GameObject> createCollisionMap(Camera camera)
 	{
-		UndefinedStaticObjectCreator<GameObject> collisionObjectCreator = (rectangle,
-				id) -> new GameObject.CollisionMapGameObject(rectangle, id);
+		UndefinedStaticObjectCreator<GameObject> collisionObjectCreator = GameObject.CollisionMapGameObject::new;
 		return new PixelCollisionMap<>(CAMERA_WIDTH + 100, CAMERA_HEIGHT + 100, (int) camera.position.x,
 				(int) camera.position.y, collisionObjectCreator);
 	}
@@ -505,7 +488,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private class MonsterCreationPacketHandler extends PacketHandlerBase<MonsterCreationPacket>
 	{
 		private final MonstersFactory monstersFactory = new MonstersFactory(packetHandlerRegisterer);
-		
+
 		@Override
 		protected void doHandle(MonsterCreationPacket packet)
 		{
@@ -514,12 +497,26 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			PlayState.this.add(newMonster);
 		}
 	}
-	
+
+	@SuppressWarnings("unused")
+	private class ThrowableObjectCreationPacketHandler extends PacketHandlerBase<ThrowableObjectCreationPacket>
+	{
+		private final ThrowableObjectsFactory throwableObjectsFactory = new ThrowableObjectsFactory(packetHandlerRegisterer);
+
+		@Override
+		protected void doHandle(ThrowableObjectCreationPacket packet)
+		{
+			System.out.println("Throwable object creation");
+			ThrowableObject object = throwableObjectsFactory.produce(packet, collisionMap);
+			PlayState.this.add(object);
+		}
+	}
+
 	@SuppressWarnings("unused")
 	private class ObjectCreationPacketHandler extends PacketHandlerBase<ObjectCreationPacket>
 	{
 		private final ObjectsFactory objectsFactory = new ObjectsFactory(packetHandlerRegisterer);
-		
+
 		@Override
 		protected void doHandle(ObjectCreationPacket packet)
 		{
@@ -528,7 +525,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			PlayState.this.add(newObject);
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private class ObjectRemovePacketHandler extends PacketHandlerBase<ObjectRemovePacket>
 	{
@@ -617,14 +614,14 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			damagePacketReceived(packet.getTargetId(), packet.getDamage(),
 					(damage, target) -> new FireDamageLabel(damage, target));
 		}
-		
+
 		@Override
 	    public boolean canBeHandled(FireDamagePacket packet)
 	    {
 	        return isInitialized() && has(packet.getTargetId());
 	    }
 	}
-	
+
 	@SuppressWarnings("unused")
 	private class NormalDamagePacketHandler extends PacketHandlerBase<NormalDamagePacket>
 	{
@@ -634,7 +631,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			damagePacketReceived(packet.getTargetId(), packet.getDamage(),
 					(damage, target) -> new NormalDamageLabel(damage, target));
 		}
-		
+
 	    @Override
 	    public boolean canBeHandled(NormalDamagePacket packet)
 	    {
@@ -658,7 +655,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 				data.setHitPoints(data.getHitPoints() + packet.getHpChange());
 			}
 		}
-		
+
 	}
 
 	@SuppressWarnings("unused")
@@ -676,7 +673,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 				UserCharacterDataPacket data = player.getData();
 				data.setManaPoints(data.getManaPoints() + packet.getMpChange());
 			}
-			
+
 		}
 	}
 
@@ -687,9 +684,9 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		protected void doHandle(HpUpdatePacket packet)
 		{
 			updateHp(packet.getId(), packet.getNewHp());
-			
+
 		}
-		
+
 		private void updateHp(long targetId, int newHp)
 		{
 			Monster target = (Monster) getObject(targetId);
@@ -702,7 +699,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private class MpUpdatePacketHandler extends PacketHandlerBase<MpUpdatePacket>
 	{
@@ -711,7 +708,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		{
 			updateMp(packet.getId(), packet.getNewMp());
 		}
-		
+
 		private void updateMp(long targetId, int newMp)
 		{
 			Monster target = (Monster) getObject(targetId);
@@ -734,7 +731,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		{
 			playerUsedMana(packet.getManaDrained());
 		}
-		
+
 		private void playerUsedMana(int manaDrain)
 		{
 			player.manaDrained(manaDrain);
@@ -750,12 +747,12 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		{
 			openNpcConversationDialog(packet.getNpcId(), packet.getSpeech(), packet.getPossibleAnswers());
 		}
-		
+
 		private void openNpcConversationDialog(long npcId, String speech, String[] possibleAnswers)
 		{
 			Npc npc = (Npc) gameObjects.get(npcId);
 			userInterface.openNpcConversationDialog(npc, speech, possibleAnswers);
 		}
 	}
-	
+
 }

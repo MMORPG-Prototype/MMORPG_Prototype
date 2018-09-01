@@ -87,7 +87,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(CharacterChangePacket.class, new CharacterChangePacketHandler(loggedUsersKeyUserId,
 				authenticatedClientsKeyClientId, playState, server));
 		packetHandlers.put(DisconnectPacket.class, new DisconnectPacketHandler());
-		packetHandlers.put(GetUserCharactersPacket.class, new GetUserCharacterPacketHandler(server));
+		packetHandlers.put(GetUserCharactersPacket.class, new GetUserCharacterPacketHandler(gameDataRetriever));
 		packetHandlers.put(LogoutPacket.class,
 				new LogoutPacketHandler(loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
 		packetHandlers.put(RegisterationPacket.class, new RegisterationPacketHandler(server));

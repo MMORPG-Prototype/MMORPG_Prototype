@@ -21,6 +21,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
+import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.server.ServerSettings;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionMap;
@@ -44,6 +45,7 @@ import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.GameObjectsFactory;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
+import pl.mmorpg.prototype.server.objects.monsters.spells.objects.ThrowableObject;
 import pl.mmorpg.prototype.server.objects.spawners.MonsterSpawner;
 import pl.mmorpg.prototype.server.objects.spawners.MonsterSpawnerUnit;
 import pl.mmorpg.prototype.server.quests.events.Event;
@@ -63,7 +65,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private final GameObjectsFactory objectsFactory;
 	private final MonsterSpawner monsterSpawner;
 	private final Map<Integer, GameCommandsHandler> gameCommandsHandlers = new HashMap<>();
-	private final RewardForFinishedQuestObserver rewardForFisnishedQuestObserver;
+	private final RewardForFinishedQuestObserver rewardForFinishedQuestObserver;
 	private final EventsHandler questEventsHandler;
 
 	private final OrthographicCamera camera = new OrthographicCamera();
@@ -72,8 +74,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	public PlayState(Server server)
 	{
 		this.server = server;
-		rewardForFisnishedQuestObserver = new RewardForFinishedQuestObserver(this, this);
-		questEventsHandler = new EventsHandler(rewardForFisnishedQuestObserver);
+		rewardForFinishedQuestObserver = new RewardForFinishedQuestObserver(this, this);
+		questEventsHandler = new EventsHandler(rewardForFinishedQuestObserver);
 		camera.setToOrtho(false);
 		//low values not to use too much cpu during debugging
 		camera.viewportWidth = 700;
@@ -159,6 +161,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		add(gameObject);
 		if (gameObject instanceof Monster)
 			sendToAll(PacketsMaker.makeCreationPacket((Monster) gameObject));
+		else if(gameObject instanceof ThrowableObject)
+		 	sendToAll(PacketsMaker.makeCreationPacket((ThrowableObject) gameObject, ((ThrowableObject)gameObject).getTarget()));
 		else
 			sendToAll(PacketsMaker.makeCreationPacket(gameObject));
 	}

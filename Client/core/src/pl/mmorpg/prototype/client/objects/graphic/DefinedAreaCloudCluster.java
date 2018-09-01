@@ -10,7 +10,7 @@ public class DefinedAreaCloudCluster extends GraphicGameObject
 	private final float width;
 	private final float height;
 	private Collection<Clouds> cloudCluster = new ArrayList<>();
-	
+
 	public DefinedAreaCloudCluster(float width, float height)
 	{
 		this.width = width;
@@ -22,11 +22,11 @@ public class DefinedAreaCloudCluster extends GraphicGameObject
 	{
 		int cloudTextureWidth = Clouds.getTexture().getWidth();
 		int cloudTextureHeight = Clouds.getTexture().getHeight();
-		int numberOfCloudsInWidth = (int) Math.ceil(width/cloudTextureWidth);
-		int numberOfCloudsInHeight = (int) Math.ceil(height/cloudTextureHeight);
-		for(int i=0; i< numberOfCloudsInWidth; i++)
-			for(int j=0; j<numberOfCloudsInHeight; j++)
-				cloudCluster.add(new Clouds(i*cloudTextureWidth, j*cloudTextureHeight));
+		int numberOfCloudsInWidth = (int) Math.ceil(width / cloudTextureWidth);
+		int numberOfCloudsInHeight = (int) Math.ceil(height / cloudTextureHeight);
+		for (int i = 0; i < numberOfCloudsInWidth; i++)
+			for (int j = 0; j < numberOfCloudsInHeight; j++)
+				cloudCluster.add(new Clouds(i * cloudTextureWidth, j * cloudTextureHeight));
 	}
 
 	@Override

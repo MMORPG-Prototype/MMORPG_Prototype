@@ -52,7 +52,7 @@ public class ButtonField<T extends Icon> extends Button implements Container<T>
 	@Override
 	public void put(T content)
 	{
-		Reference<T> reference = new Reference<T>(content);
+		Reference<T> reference = new Reference<>(content);
 		this.removeActor(nullImage);
 		if (this.itemReference != null)
 			this.removeActor(this.itemReference);

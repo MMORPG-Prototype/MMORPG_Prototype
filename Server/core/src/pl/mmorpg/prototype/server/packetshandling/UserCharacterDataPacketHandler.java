@@ -1,7 +1,6 @@
 package pl.mmorpg.prototype.server.packetshandling;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -27,6 +26,7 @@ import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
+import pl.mmorpg.prototype.server.objects.monsters.spells.objects.ThrowableObject;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharacterDataPacket>
@@ -48,10 +48,10 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 	@Override
 	public void handle(Connection connection, UserCharacterDataPacket packet)
 	{
-		userChoosenCharcter(packet.getId(), connection);
+		userChosenCharacter(packet.getId(), connection);
 	}
 
-	private void userChoosenCharcter(int userCharacterId, Connection connection)
+	private void userChosenCharacter(int userCharacterId, Connection connection)
 	{
 		Character character = characterRepo.findOneAndFetchEverythingRelated(userCharacterId);
 
@@ -61,7 +61,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 		sendCurrentGameObjectsInfo(connection);
 		PlayerCharacter newPlayer = new PlayerCharacter(character, playState, clientId);
 		Collection<Item> playerItems = getPlayerItems(newPlayer);
-		playerItems.forEach((item) -> newPlayer.addItemDenyStacking(item));
+		playerItems.forEach(newPlayer::addItemDenyStacking);
 		playState.add(newPlayer);
 		server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
 		sendItemsDataToClient(playerItems, connection);
@@ -74,16 +74,15 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 	private Collection<Item> getPlayerItems(PlayerCharacter newPlayer)
 	{
 		CharacterItemRepository itemRepo = SpringContext.getBean(CharacterItemRepository.class);
-		List<Item> characterItems = itemRepo.findByCharacter_Id((int) newPlayer.getId()).stream()
-				.map(dbItem -> convertToGameItem(dbItem)).collect(Collectors.toList());
 
-		return characterItems;
+		return itemRepo.findByCharacter_Id((int) newPlayer.getId()).stream()
+				.map(this::convertToGameItem)
+				.collect(Collectors.toList());
 	}
 
 	private Item convertToGameItem(CharacterItem item)
 	{
-		Item result = GameItemsFactory.produce(item, IdSupplier.getId());
-		return result;
+		return GameItemsFactory.produce(item, IdSupplier.getId());
 	}
 
 	private void sendCurrentGameObjectsInfo(Connection connection)
@@ -95,6 +94,8 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 				connection.sendTCP(PacketsMaker.makeCreationPacket((PlayerCharacter) object));
 			else if (object instanceof Monster)
 				connection.sendTCP(PacketsMaker.makeCreationPacket((Monster) object));
+			else if (object instanceof ThrowableObject)
+				connection.sendTCP(PacketsMaker.makeCreationPacket((ThrowableObject)object, ((ThrowableObject)object).getTarget()));
 			else
 				connection.sendTCP(PacketsMaker.makeCreationPacket(object));
 		}

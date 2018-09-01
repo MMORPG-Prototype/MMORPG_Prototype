@@ -10,23 +10,24 @@ import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.Character;
+import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
 
 public class GetUserCharacterPacketHandler extends PacketHandlerBase<GetUserCharactersPacket>
 {
-	private Server server;
+	private final GameDataRetriever gameDataRetriever;
 
-	public GetUserCharacterPacketHandler(Server server)
+	public GetUserCharacterPacketHandler(GameDataRetriever gameDataRetriever)
 	{
-		this.server = server;
+		this.gameDataRetriever = gameDataRetriever;
 	}
 
 	@Override
 	public void handle(Connection connection, GetUserCharactersPacket packet)
 	{
-		CharacterRepository characterRepo = (CharacterRepository) SpringContext
-				.getBean(CharacterRepository.class);
-		List<Character> userCharacters = characterRepo.findByUser_Username(packet.username);
+		User user = gameDataRetriever.getUserByConnectionId(connection.getID());
+		CharacterRepository characterRepo = SpringContext.getBean(CharacterRepository.class);
+		List<Character> userCharacters = characterRepo.findByUser_Username(user.getUsername());
 		UserCharacterDataPacket[] charactersPackets = new UserCharacterDataPacket[userCharacters.size()];
 		int i = 0;
 		for (Character character : userCharacters)
@@ -34,7 +35,7 @@ public class GetUserCharacterPacketHandler extends PacketHandlerBase<GetUserChar
 			charactersPackets[i] = PacketsMaker.makeCharacterPacket(character);
 			i++;
 		}
-		server.sendToTCP(connection.getID(), charactersPackets);
+		connection.sendTCP(charactersPackets);
 	}
 
 }

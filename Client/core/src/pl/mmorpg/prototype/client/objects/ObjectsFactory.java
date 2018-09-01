@@ -77,7 +77,7 @@ public class ObjectsFactory
 
     private static class ObjectIdentifierNotFoundException extends GameException
     {
-        public ObjectIdentifierNotFoundException(String identifier)
+        private ObjectIdentifierNotFoundException(String identifier)
         {
             super("Identifier: " + identifier);
         }

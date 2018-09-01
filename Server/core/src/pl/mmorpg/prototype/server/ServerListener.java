@@ -48,9 +48,16 @@ public class ServerListener extends Listener
     @Override
     public void received(Connection connection, Object object)
     {
-        PacketHandler packetHandler = packetHandlersFactory.produce(object);
-        packetHandler.handle(object, connection);
-        Log.info("Packet received, client id: " + connection.getID() + ", packet: " + object);
+        try {
+            PacketHandler packetHandler = packetHandlersFactory.produce(object);
+            packetHandler.handle(object, connection);
+            Log.info("Packet received, client id: " + connection.getID() + ", packet: " + object);
+        }
+        catch (Exception e)
+        {
+            Log.error("Could not handle packet: " + object);
+            e.printStackTrace();
+        }
     }
 
 }
