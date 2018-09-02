@@ -97,7 +97,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private InputProcessorAdapter inputHandler;
 	private Player player;
 	private UserInterface userInterface;
-	private boolean isInitalized = false;
+	private boolean isInitialized = false;
 	private float currentGameMouseX = -1f;
 	private float currentGameMouseY = -1f;
 	private int mapWidth = Integer.MAX_VALUE;
@@ -131,7 +131,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		initializeInputHandlers();
 		insertMapObjectsIntoCollisionMap(collisionMap, map);
 		addClouds();
-		isInitalized = true;
+		isInitialized = true;
 	}
 
 	private void initializeInputHandlers()
@@ -161,7 +161,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	public boolean isInitialized()
 	{
-		return isInitalized;
+		return isInitialized;
 	}
 
 	@Override
@@ -338,7 +338,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	private void reset()
 	{
-		isInitalized = false;
+		isInitialized = false;
 		inputHandler = new NullInputHandler();
 		gameObjects.values().forEach(object -> object.unregisterHandlers(packetHandlerRegisterer));
 		gameObjects.clear();
@@ -472,12 +472,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			userInterface.updateHitPointManaPointDialog();
 	}
 
-	public void normalDamagePacketReceived(NormalDamagePacket packet)
-	{
-		damagePacketReceived(packet.getTargetId(), packet.getDamage(),
-				(damage, target) -> new NormalDamageLabel(damage, target));
-	}
-
 	public void userRightClickedOnGameBoard(float x, float y)
 	{
 		OpenContainterPacket packet = PacketsMaker.makeContainterOpeningPacket(getRealX(x), getRealY(y));
@@ -606,13 +600,30 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	}
 
 	@SuppressWarnings("unused")
+	private class LevelUpPacketHandler extends PacketHandlerBase<LevelUpPacket>
+	{
+		@Override
+		protected void doHandle(LevelUpPacket packet)
+		{
+			Player target = (Player) gameObjects.get(packet.getTargetId());
+			// temp TODO
+			GraphicGameObject experienceGainLabel = new ExperienceGainLabel("1", target);
+			clientGraphics.add(experienceGainLabel);
+			if (target == player)
+			{
+				target.addLevel();
+				userInterface.updateStatsDialog();
+			}
+		}
+	}
+
+	@SuppressWarnings("unused")
 	private class FireDamagePacketHandler extends PacketHandlerBase<FireDamagePacket>
 	{
 		@Override
 		protected void doHandle(FireDamagePacket packet)
 		{
-			damagePacketReceived(packet.getTargetId(), packet.getDamage(),
-					(damage, target) -> new FireDamageLabel(damage, target));
+			damagePacketReceived(packet.getTargetId(), packet.getDamage(), FireDamageLabel::new);
 		}
 
 		@Override
@@ -628,8 +639,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		@Override
 		protected void doHandle(NormalDamagePacket packet)
 		{
-			damagePacketReceived(packet.getTargetId(), packet.getDamage(),
-					(damage, target) -> new NormalDamageLabel(damage, target));
+			damagePacketReceived(packet.getTargetId(), packet.getDamage(), NormalDamageLabel::new);
 		}
 
 	    @Override

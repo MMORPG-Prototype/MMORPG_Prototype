@@ -34,8 +34,7 @@ public class ReflectionResourceUtils
 				.setScanners(new ResourcesScanner());
 		configuration.setInputsFilter(inputsFilter);
 		Reflections reflections = new Reflections(configuration);
-		Set<String> resources = reflections.getResources(getResourcePattern(filesExtensions));
-		return resources;
+		return reflections.getResources(getResourcePattern(filesExtensions));
 	}
 	
 	private static Pattern getResourcePattern(Set<String> filesExtensions)
@@ -65,8 +64,7 @@ public class ReflectionResourceUtils
 	{
 		String property = System.getProperty("java.class.path");
 		System.out.println("Classpath: " + property);
-		String[] classpathJars = property.split(";");
-		return classpathJars;
+		return property.split(";");
 	}
 
 	private static Stream<URL> getUsedJars(String[] classpathJars)

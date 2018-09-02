@@ -59,7 +59,7 @@ public class LevelUpDialog extends Dialog
 		getContentTable().add(manaAddButton);
 		getContentTable().row();
 		text("Dexitirity: ").left();
-		dexitirityValueLabel = new Label(character.getDexitirity().toString(), getSkin());
+		dexitirityValueLabel = new Label(character.getDexterity().toString(), getSkin());
 		text(dexitirityValueLabel).right();
 		
 		Button dexitirityAddButton = new Button(Settings.DEFAULT_SKIN, "maximize");
@@ -68,7 +68,7 @@ public class LevelUpDialog extends Dialog
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				dexitirityAddButtonClicked();
+				dexterityAddButtonClicked();
 			}
 		});
 		getContentTable().add(dexitirityAddButton);
@@ -85,9 +85,9 @@ public class LevelUpDialog extends Dialog
 		userPressedAddButton();
 	}
 	
-	private void dexitirityAddButtonClicked()
+	private void dexterityAddButtonClicked()
 	{
-		character.setDexitirity(character.getDexitirity() + 1);
+		character.setDexterity(character.getDexterity() + 1);
 		userPressedAddButton();
 	}
 	
@@ -113,7 +113,7 @@ public class LevelUpDialog extends Dialog
 	{
 		strengthValueLabel.setText(character.getStrength().toString());
 		magicValueLabel.setText(character.getMagic().toString());
-		dexitirityValueLabel.setText(character.getDexitirity().toString());
+		dexitirityValueLabel.setText(character.getDexterity().toString());
 		pointsValueLabel.setText(String.valueOf(statPoints));
 	}
 

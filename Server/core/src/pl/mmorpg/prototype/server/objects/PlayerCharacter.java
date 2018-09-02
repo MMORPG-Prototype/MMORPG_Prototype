@@ -46,7 +46,7 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 	@Override
     public void killed(Monster target)
     {
-        linkedState.playerKilled(this, target);
+        linkedState.playerKilledMonster(this, target);
         super.killed(target);
     }
 
@@ -69,7 +69,7 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 
 	public void updateUserCharacterProperties()
 	{
-		userCharacter.setDexitirity(properties.dexitirity);
+		userCharacter.setDexterity(properties.dexitirity);
 		userCharacter.setExperience(properties.experience);
 		userCharacter.setGold(properties.gold);
 		userCharacter.setHitPoints(properties.hp);
@@ -91,6 +91,19 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 	{
 		getProperties().gold = gold;
 		userCharacter.setGold(gold);
+	}
+
+	public void addExperience(int experience)
+	{
+		getProperties().experience += experience;
+		userCharacter.setExperience(userCharacter.getExperience() + experience);
+	}
+
+	public void addLevel(int levelUpPoints)
+	{
+		getProperties().level += 1;
+		userCharacter.setLevel(userCharacter.getLevel() + 1);
+		userCharacter.setLevelUpPoints(userCharacter.getLevelUpPoints() + levelUpPoints);
 	}
 
 	@Override
@@ -139,5 +152,5 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 	{
 		return (T) knownSpells.get(type);
 	}
-	 
+
 }

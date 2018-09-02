@@ -18,12 +18,12 @@ public class CharacterCreator
 	{
 		CharacterRepository characterRepo = SpringContext.getBean(CharacterRepository.class);
 		CharacterCreationReplyPacket replyPacket = new CharacterCreationReplyPacket();
-		if(characterRepo.findByNickname(packet.getNickname()) != null)
+		if (characterRepo.findByNickname(packet.getNickname()) != null)
 		{
 			replyPacket.setErrorMessage("There is already player with this nickname!");
 			return replyPacket;
-		}	
-		
+		}
+
 		UserRepository userRepo = SpringContext.getBean(UserRepository.class);
 		Character character = new Character();
 		character.setNickname(packet.getNickname());

@@ -1,9 +1,5 @@
 package pl.mmorpg.prototype.server.communication;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.function.Predicate;
-
 import pl.mmorpg.prototype.clientservercommon.packets.*;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
@@ -11,26 +7,9 @@ import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemData
 import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerGoldRemovalPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.StackableItemAmountChangePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.*;
 import pl.mmorpg.prototype.server.database.entities.Character;
-import pl.mmorpg.prototype.server.database.entities.CharacterItem;
-import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
-import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
-import pl.mmorpg.prototype.server.database.entities.ItemReward;
-import pl.mmorpg.prototype.server.database.entities.Quest;
-import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
-import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.server.database.entities.*;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.objects.GameObject;
@@ -43,6 +22,10 @@ import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopItemWrapper;
 import pl.mmorpg.prototype.server.objects.monsters.spells.objects.ThrowableObject;
 import pl.mmorpg.prototype.server.quests.QuestTask;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.function.Predicate;
 
 public class PacketsMaker
 {
@@ -130,7 +113,8 @@ public class PacketsMaker
 		packet.setExperience(character.getExperience());
 		packet.setStrength(character.getStrength());
 		packet.setMagic(character.getMagic());
-		packet.setDexitirity(character.getDexitirity());
+		packet.setDexterity(character.getDexterity());
+		packet.setLevelUpPoints(character.getLevelUpPoints());
 		packet.setGold(character.getGold());
 		packet.setStartingX(character.getLastLocationX());
 		packet.setStartingY(character.getLastLocationY());
@@ -196,6 +180,14 @@ public class PacketsMaker
 		return packet;
 	}
 
+	public static LevelUpPacket makeLevelUpPacket(long id, int levelUpPoints)
+	{
+		LevelUpPacket levelUpPacket = new LevelUpPacket();
+		levelUpPacket.setTargetId(id);
+		levelUpPacket.setLevelUpPoints(levelUpPoints);
+		return levelUpPacket;
+	}
+
 	public static HpChangeByItemUsagePacket makeHpNotifiedIncreasePacket(int delta, long targetId)
 	{
 		HpChangeByItemUsagePacket packet = new HpChangeByItemUsagePacket();
@@ -255,9 +247,7 @@ public class PacketsMaker
 	{
 		int inventoryPage = 1;
 		int inventoryPositionY = 1;
-		CharacterItemDataPacket makeItemPacket = makeItemPacket(item, inventoryPage, inventoryPositionX,
-				inventoryPositionY);
-		return makeItemPacket;
+		return makeItemPacket(item, inventoryPage, inventoryPositionX, inventoryPositionY);
 	}
 
 	public static ContainerItemRemovalPacket makeContainerItemRemovalPacket(long containerId, long itemId)
@@ -497,7 +487,7 @@ public class PacketsMaker
 	public static NpcStartDialogPacket makeNpcStartDialogPacket(long npcId, String speech,
 			Collection<String> possibleAnswers)
 	{
-		String[] possibleAnswersInArray = possibleAnswers.stream().toArray(String[]::new);
+		String[] possibleAnswersInArray = possibleAnswers.toArray(new String[0]);
 		return makeNpcStartDialogPacket(npcId, speech, possibleAnswersInArray);
 	}
 
@@ -513,7 +503,7 @@ public class PacketsMaker
 	public static NpcContinueDialogPacket makeNpcContinueDialogPacket(long npcId, String speech,
 			Collection<String> possibleAnswers)
 	{
-		String[] possibleAnswersInArray = possibleAnswers.stream().toArray(String[]::new);
+		String[] possibleAnswersInArray = possibleAnswers.toArray(new String[0]);
 		return makeNpcContinueDialogPacket(npcId, speech, possibleAnswersInArray);
 	}
 

@@ -83,8 +83,7 @@ public class Assets
 
 	public static <T> T get(String fileName)
 	{
-		T asset = assets.get(fileName);
-		return asset;
+		return assets.get(fileName);
 	}
 
 	public static <T> T get(String fileName, Class<T> classType)

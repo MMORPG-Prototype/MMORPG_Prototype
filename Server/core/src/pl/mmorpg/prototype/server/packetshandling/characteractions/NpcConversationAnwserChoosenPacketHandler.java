@@ -30,7 +30,7 @@ public class NpcConversationAnwserChoosenPacketHandler extends PacketHandlerBase
 		Npc npc = (Npc)playState.getObject(packet.getNpcId());
 		Event npcDialogEvent = new NpcDialogEvent(packet.getAnwser(), npc, (PacketsSender)playState);
 		npcDialogEvent.addReceiver(player);
-		playState.enqueueEvent(npcDialogEvent);
+		playState.enqueueQuestEvent(npcDialogEvent);
 	}
 
 }

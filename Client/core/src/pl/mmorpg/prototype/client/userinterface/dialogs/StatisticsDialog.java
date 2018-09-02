@@ -18,7 +18,8 @@ public class StatisticsDialog extends Dialog
 	private Label maxManaPointsValueLabel;
 	private Label strengthValueLabel;
 	private Label magicValueLabel;
-	private Label dexitirityValueLabel;
+	private Label dexterityValueLabel;
+	private Label levelUpPointsLabel;
 
 	public StatisticsDialog(UserCharacterDataPacket character)
 	{
@@ -55,9 +56,13 @@ public class StatisticsDialog extends Dialog
 		magicValueLabel = new Label(character.getMagic().toString(), getSkin());
 		text(magicValueLabel).right();
 		getContentTable().row();
-		text("Dexitirity: ").left();
-		dexitirityValueLabel = new Label(character.getDexitirity().toString(), getSkin());
-		text(dexitirityValueLabel).right();
+		text("Dexterity: ").left();
+		dexterityValueLabel = new Label(character.getDexterity().toString(), getSkin());
+		text(dexterityValueLabel).right();
+		getContentTable().row();
+		text("Level up points: ").left();
+		levelUpPointsLabel = new Label(character.getLevelUpPoints().toString(), getSkin());
+		text(levelUpPointsLabel).right();
 		getContentTable().row();
 
 		this.setX(0);
@@ -73,7 +78,8 @@ public class StatisticsDialog extends Dialog
 		maxManaPointsValueLabel.setText(CharacterStatsCalculator.getMaxMP(character).toString());
 		strengthValueLabel.setText(character.getStrength().toString());
 		magicValueLabel.setText(character.getMagic().toString());
-		dexitirityValueLabel.setText(character.getDexitirity().toString());	
+		dexterityValueLabel.setText(character.getDexterity().toString());
+		levelUpPointsLabel.setText(character.getLevelUpPoints().toString());
 	}
 
 	

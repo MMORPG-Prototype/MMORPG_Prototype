@@ -1,22 +1,20 @@
 package pl.mmorpg.prototype.collision;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mmorpg.prototype.server.collision.interfaces.CollisionObjectsContainer;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionObject;
 import pl.mmorpg.prototype.server.collision.stackablemap.ObjectsContainer;
 import pl.mmorpg.prototype.server.exceptions.DuplicateObjectException;
 import pl.mmorpg.prototype.server.exceptions.ThereIsNoSuchObjectToRemoveException;
 
-@RunWith(MockitoJUnitRunner.class)
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
 public class ObjectsContainerTests
 {
 	@Mock
@@ -24,7 +22,7 @@ public class ObjectsContainerTests
 	
 	private CollisionObjectsContainer<StackableCollisionObject> container;
 	
-	@Before
+	@BeforeEach
 	public void createContainer()
 	{
 		container = new ObjectsContainer<>();
@@ -38,7 +36,7 @@ public class ObjectsContainerTests
 		.thenReturn(1);
 		container.insertObject(object);
 		assertTrue(container.getObjects().contains(object));
-		assertTrue(container.getObjects().size() == 1);
+		assertEquals(1, container.getObjects().size());
 	}
 	
 	@Test
@@ -52,23 +50,23 @@ public class ObjectsContainerTests
 		assertTrue(container.getObjects().isEmpty());
 	}
 	
-	@Test(expected = DuplicateObjectException.class)
+	@Test
 	public void insertSameObjectTwice_shouldThrowDuplicateObjectIdException()
 	{
 		Mockito
 		.when(object.getCollisionContainerId())
 		.thenReturn(1);
 		container.insertObject(object);
-		container.insertObject(object);
+		assertThrows(DuplicateObjectException.class, () -> container.insertObject(object));
 	}
 	
-	@Test(expected = ThereIsNoSuchObjectToRemoveException.class)
+	@Test
 	public void removeNotInsertedObject_shouldThrowThereIsNoSuchObjectToRemoveException()
 	{
 		Mockito
 		.when(object.getCollisionContainerId())
 		.thenReturn(1);
-		container.removeOrThrow((object));
+		assertThrows(ThereIsNoSuchObjectToRemoveException.class, () -> container.removeOrThrow(object));
 	}
 	
 	@Test

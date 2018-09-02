@@ -21,9 +21,9 @@ import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
-import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 import pl.mmorpg.prototype.server.ServerSettings;
 import pl.mmorpg.prototype.server.UserInfo;
+import pl.mmorpg.prototype.server.calculation.LevelCalculator;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionMap;
 import pl.mmorpg.prototype.server.collision.pixelmap.IntegerRectangle;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
@@ -82,10 +82,10 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		camera.viewportHeight = 400;
 
 		TiledMap map = Assets.get("Map/tiled2.tmx");
-		Integer mapHeight = getMapProperty(map, "height")*getMapProperty(map, "tileheight");
-		Integer mapWidth = getMapProperty(map, "width")*getMapProperty(map, "tilewidth");
-		collisionMap = new PixelCollisionMap<>(mapWidth, mapHeight, 1, GameObject.NULL_OBJECT);		
-		
+		Integer mapHeight = getMapProperty(map, "height") * getMapProperty(map, "tileheight");
+		Integer mapWidth = getMapProperty(map, "width") * getMapProperty(map, "tilewidth");
+		collisionMap = new PixelCollisionMap<>(mapWidth, mapHeight, 1, GameObject.NULL_OBJECT);
+
 		objectsFactory = new GameObjectsFactory(collisionMap, this);
 		monsterSpawner = new MonsterSpawner(objectsFactory);
 
@@ -101,7 +101,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		addNpcs();
 		addGameObject(ObjectsIdentifiers.QUEST_BOARD, 100, 100);
 	}
-	
+
 	private Integer getMapProperty(TiledMap map, String name)
 	{
 		return map.getProperties().get(name, Integer.class);
@@ -124,7 +124,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	{
 		MapObjects objects = map.getLayers().get("SpawnAreasLayer").getObjects();
 		Array<RectangleMapObject> spawnerInfos = objects.getByType(RectangleMapObject.class);
-		spawnerInfos.forEach(spawnerElement -> addSpawner(spawnerElement));
+		spawnerInfos.forEach(this::addSpawner);
 	}
 
 	private void addSpawner(RectangleMapObject spawnerElement)
@@ -161,8 +161,9 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		add(gameObject);
 		if (gameObject instanceof Monster)
 			sendToAll(PacketsMaker.makeCreationPacket((Monster) gameObject));
-		else if(gameObject instanceof ThrowableObject)
-		 	sendToAll(PacketsMaker.makeCreationPacket((ThrowableObject) gameObject, ((ThrowableObject)gameObject).getTarget()));
+		else if (gameObject instanceof ThrowableObject)
+			sendToAll(PacketsMaker
+					.makeCreationPacket((ThrowableObject) gameObject, ((ThrowableObject) gameObject).getTarget()));
 		else
 			sendToAll(PacketsMaker.makeCreationPacket(gameObject));
 	}
@@ -266,16 +267,31 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		source.targetMonster(target);
 	}
 
-	public void playerKilled(PlayerCharacter playerCharacter, Monster target)
+	public void playerKilledMonster(PlayerCharacter playerCharacter, Monster target)
 	{
-		sendToAll(
-				PacketsMaker.makeExperienceGainPacket(playerCharacter.getId(), target.getProperties().experienceGain));
+		handleExperienceGain(playerCharacter, target);
 		Event monsterKilledEvent = new MonsterKilledEvent(target.getIdentifier());
 		monsterKilledEvent.addReceiver(playerCharacter);
-		enqueueEvent(monsterKilledEvent);
+		enqueueQuestEvent(monsterKilledEvent);
 	}
 
-	public void enqueueEvent(Event event)
+	private void handleExperienceGain(PlayerCharacter playerCharacter, Monster target)
+	{
+		int playerLevel = playerCharacter.getProperties().level;
+		int previousExperience = playerCharacter.getProperties().experience;
+		int experienceGain = target.getProperties().experienceGain;
+		if (new LevelCalculator().doesQualifyForLevelingUp(playerLevel, previousExperience, experienceGain))
+		{
+			int levelUpPoints = 5;
+			playerCharacter.addLevel(levelUpPoints);
+			sendToAll(PacketsMaker.makeLevelUpPacket(playerCharacter.getId(), levelUpPoints));
+		}
+
+		playerCharacter.addExperience(target.getProperties().experienceGain);
+		sendToAll(PacketsMaker.makeExperienceGainPacket(playerCharacter.getId(), target.getProperties().experienceGain));
+	}
+
+	public void enqueueQuestEvent(Event event)
 	{
 		questEventsHandler.enqueueEvent(event);
 	}

@@ -36,7 +36,7 @@ public class NpcDialogStartPacketHandler extends PacketHandlerBase<NpcDialogStar
 	{
 		Event talkWithNpcEvent = new NpcDialogStartEvent(npc, (PacketsSender)playState);
 		talkWithNpcEvent.addReceiver(player);
-		playState.enqueueEvent(talkWithNpcEvent);
+		playState.enqueueQuestEvent(talkWithNpcEvent);
 	}
 
 }

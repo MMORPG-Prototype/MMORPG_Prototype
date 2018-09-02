@@ -6,7 +6,7 @@ import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 
 public interface Event
 {
-    public Collection<PlayerCharacter> getReceivers();
+    Collection<PlayerCharacter> getReceivers();
     
-    public void addReceiver(PlayerCharacter receiver);
+    void addReceiver(PlayerCharacter receiver);
 }

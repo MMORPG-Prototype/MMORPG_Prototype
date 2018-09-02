@@ -16,7 +16,8 @@ public class UserCharacterDataPacket
 	private Integer experience;
 	private Integer strength;
 	private Integer magic;
-	private Integer dexitirity;
+	private Integer levelUpPoints;
+	private Integer dexterity;
 	private Integer startingX;
 	private Integer startingY;
 	private String startingMap;

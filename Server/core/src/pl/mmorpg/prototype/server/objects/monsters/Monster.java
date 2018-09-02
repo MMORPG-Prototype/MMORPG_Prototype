@@ -103,8 +103,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
         float selfCenterY = getY() + getHeight() / 2;
         float targetCenterY = targetedMonster.getY() + targetedMonster.getHeight() / 2;
         float deltaY = targetCenterY - selfCenterY;
-        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        return distance;
+		return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 
     private void normalAttack(Monster target)
@@ -185,7 +184,6 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 
     public void killed(Monster target)
     {
-        properties.experience += target.properties.experienceGain;
         targetedMonster = null;
     }
 

@@ -57,8 +57,11 @@ public class Character implements Serializable
 	@Column(name = "magic", nullable = false)
 	private Integer magic = 5;
 
-	@Column(name = "dexitirity", nullable = false)
-	private Integer dexitirity = 5;
+	@Column(name = "dexterity", nullable = false)
+	private Integer dexterity = 5;
+
+	@Column(name = "levelUpPoints", nullable = false)
+	private Integer levelUpPoints = 0;
 
 	@Column(name = "gold", nullable = false)
 	private Integer gold = 100;

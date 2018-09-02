@@ -1,34 +1,34 @@
 package pl.mmorpg.prototype.collision;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.awt.Point;
-import java.util.Collection;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionMap;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionObject;
 import pl.mmorpg.prototype.server.collision.stackablemap.LayerCollisionMap;
 import pl.mmorpg.prototype.server.exceptions.OutOfBoundsException;
 
-@RunWith(MockitoJUnitRunner.class)
+import java.awt.*;
+import java.util.Collection;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(MockitoExtension.class)
 public class LayerCollisionMapTests
 {
 	private StackableCollisionMap<StackableCollisionObject> collisionMap;
 	private static final int containerWidth = 10;
 	private static final int containerHeight = 10;
-	
+
 	@Mock
 	private StackableCollisionObject object;
 
-	@Before
+	@BeforeEach
 	public void createCollisionMap()
 	{
 		collisionMap = new LayerCollisionMap<>(6, 6, containerWidth, containerHeight);
@@ -37,10 +37,10 @@ public class LayerCollisionMapTests
 	@Test
 	public void insertObjectOnPosition0_0_shouldBeAbleToRetrieveIt()
 	{
-		instertObjectOnPoistion_shouldBeAbleToRetreiveIt(calcPosition(0, 0));
+		insertObjectOnPosition_shouldBeAbleToRetrieveIt(calcPosition(0, 0));
 	}
 
-	private void instertObjectOnPoistion_shouldBeAbleToRetreiveIt(Point position)
+	private void insertObjectOnPosition_shouldBeAbleToRetrieveIt(Point position)
 	{
 		Mockito
 		.when(object.getCenter())
@@ -54,14 +54,14 @@ public class LayerCollisionMapTests
 	@Test
 	public void insertObjectOnPosition4_4_shouldBeAbleToRetrieveIt()
 	{
-		instertObjectOnPoistion_shouldBeAbleToRetreiveIt(calcPosition(4, 4));
+		insertObjectOnPosition_shouldBeAbleToRetrieveIt(calcPosition(4, 4));
 	}
-	
+
 	private Point calcPosition(int x, int y)
 	{
 		return new Point(x*containerWidth, y*containerHeight);
 	}
-	
+
 	@Test
 	public void insertObjectThenRemove_shouldRsetrieveNothing()
 	{
@@ -73,7 +73,7 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(1, 1));
 		assertTrue(collisionObjects.isEmpty());
 	}
-	
+
 	@Test
 	public void insertObject1_1_thenMoveRight_shouldBeOn2_1()
 	{
@@ -85,7 +85,7 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(2, 1));
 		assertTrue(collisionObjects.contains(object));
 	}
-	
+
 	@Test
 	public void insertObject2_1_thenMoveRight_shouldBeOn3_1()
 	{
@@ -97,7 +97,7 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(3, 1));
 		assertTrue(collisionObjects.contains(object));
 	}
-	
+
 	@Test
 	public void insertObject2_1_thenMoveRight2_1_shouldBeEmpty()
 	{
@@ -109,7 +109,7 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(2, 1));
 		assertTrue(collisionObjects.isEmpty());
 	}
-	
+
 	@Test
 	public void insertObject1_1_thenMoveRight1_1_shouldBeEmpty()
 	{
@@ -121,7 +121,7 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(1, 1));
 		assertTrue(collisionObjects.isEmpty());
 	}
-	
+
 	@Test
 	public void insertObject2_2_thenMoveDown_shouldBeOn2_3()
 	{
@@ -133,7 +133,7 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(2, 3));
 		assertTrue(collisionObjects.contains(object));
 	}
-	
+
 	@Test
 	public void insertObject2_3_thenMoveUp_shouldBeOn2_2()
 	{
@@ -145,7 +145,7 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(2, 2));
 		assertTrue(collisionObjects.contains(object));
 	}
-	
+
 	@Test
 	public void insertObject2_2_thenMoveDownTwice_shouldBeOn2_4()
 	{
@@ -161,7 +161,7 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(2, 4));
 		assertTrue(collisionObjects.contains(object));
 	}
-	
+
 	@Test
 	public void insertObject2_2_thenMoveLeft_shouldBeOn1_2()
 	{
@@ -173,7 +173,7 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(1, 2));
 		assertTrue(collisionObjects.contains(object));
 	}
-	
+
 	@Test
 	public void insertObject3_2_thenMoveLeftThreeTimes_shouldBeOn0_2()
 	{
@@ -193,7 +193,7 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(0, 2));
 		assertTrue(collisionObjects.contains(object));
 	}
-	
+
 	@Test
 	public void insertObject4_4_thenMoveUpDownLeftTwiceRight_shouldBeOn3_4()
 	{
@@ -221,15 +221,15 @@ public class LayerCollisionMapTests
 		Collection<StackableCollisionObject> collisionObjects = collisionMap.getCollisionObjectsFromSingleContainer(calcPosition(3, 4));
 		assertTrue(collisionObjects.contains(object));
 	}
-	
-	@Test(expected = OutOfBoundsException.class)
+
+	@Test
 	public void insertObjectOnBorder5_5_thenMoveDown_shouldThrowOutOfBoundsException()
 	{
 		Mockito
 		.when(object.getCenter())
-		.thenReturn(calcPosition(5, 5)); 
+		.thenReturn(calcPosition(5, 5));
 		collisionMap.insert(object);
-		collisionMap.moveDown(object);
+		assertThrows(OutOfBoundsException.class, () -> collisionMap.moveDown(object));
 	}
 
 	@Test
@@ -240,12 +240,9 @@ public class LayerCollisionMapTests
 		Mockito
 		.when(secondCollisionObject.isColliding(firstCollisionObject))
 		.thenReturn(true);
-		Mockito
-		.when(firstCollisionObject.isColliding(secondCollisionObject))
-		.thenReturn(true);
 		collisionMap.insert(firstCollisionObject);
 		collisionMap.insert(secondCollisionObject);
-		
+
 		Collection<StackableCollisionObject> collidingObjects = collisionMap.getCollidingObjects(firstCollisionObject);
 		assertTrue(!collidingObjects.contains(firstCollisionObject));
 		assertTrue(collidingObjects.contains(secondCollisionObject));
@@ -259,16 +256,13 @@ public class LayerCollisionMapTests
 		collisionMap.insert(firstCollisionObject);
 		collisionMap.insert(secondCollisionObject);
 		Mockito
-		.when(firstCollisionObject.isColliding(secondCollisionObject))
-		.thenReturn(true);
-		Mockito
 		.when(secondCollisionObject.isColliding(firstCollisionObject))
 		.thenReturn(true);
 		Collection<StackableCollisionObject> collidingObjects = collisionMap.getCollidingObjects(firstCollisionObject);
 		assertTrue(!collidingObjects.contains(firstCollisionObject));
 		assertTrue(collidingObjects.contains(secondCollisionObject));
 	}
-	
+
 	@Test
 	public void detectCollidingObject0_0And1_1Collision()
 	{
@@ -277,16 +271,13 @@ public class LayerCollisionMapTests
 		collisionMap.insert(firstCollisionObject);
 		collisionMap.insert(secondCollisionObject);
 		Mockito
-		.when(firstCollisionObject.isColliding(secondCollisionObject))
-		.thenReturn(true);
-		Mockito
 		.when(secondCollisionObject.isColliding(firstCollisionObject))
 		.thenReturn(true);
 		Collection<StackableCollisionObject> collidingObjects = collisionMap.getCollidingObjects(firstCollisionObject);
 		assertTrue(!collidingObjects.contains(firstCollisionObject));
 		assertTrue(collidingObjects.contains(secondCollisionObject));
 	}
-	
+
 	@Test
 	public void detectCollidingObject5_5And5_4Collision()
 	{
@@ -294,9 +285,6 @@ public class LayerCollisionMapTests
 		StackableCollisionObject secondCollisionObject = mockObject(calcPosition(5, 4));
 		collisionMap.insert(firstCollisionObject);
 		collisionMap.insert(secondCollisionObject);
-		Mockito
-		.when(firstCollisionObject.isColliding(secondCollisionObject))
-		.thenReturn(true);
 		Mockito
 		.when(secondCollisionObject.isColliding(firstCollisionObject))
 		.thenReturn(true);
@@ -315,5 +303,5 @@ public class LayerCollisionMapTests
 		return object;
 	}
 
-	
+
 }
