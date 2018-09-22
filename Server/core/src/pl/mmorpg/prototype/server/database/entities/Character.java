@@ -54,8 +54,8 @@ public class Character implements Serializable
 	@Column(name = "strength", nullable = false)
 	private Integer strength = 5;
 
-	@Column(name = "magic", nullable = false)
-	private Integer magic = 5;
+	@Column(name = "intelligence", nullable = false)
+	private Integer intelligence = 5;
 
 	@Column(name = "dexterity", nullable = false)
 	private Integer dexterity = 5;

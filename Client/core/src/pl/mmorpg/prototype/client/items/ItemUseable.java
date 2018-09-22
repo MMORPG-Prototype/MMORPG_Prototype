@@ -7,5 +7,5 @@ public interface ItemUseable
 {
 	void use(Monster target, PacketsSender packetSender);
 	
-	void useIterfaceUpdate();
+	void useInterfaceUpdate();
 }

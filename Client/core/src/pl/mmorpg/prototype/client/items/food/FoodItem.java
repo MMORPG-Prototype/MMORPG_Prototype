@@ -28,7 +28,7 @@ public abstract class FoodItem extends StackableItem implements ItemUseable
 	}
 
 	@Override
-	public void useIterfaceUpdate()
+	public void useInterfaceUpdate()
 	{
 		decreaseItemCount();
 	}

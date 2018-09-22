@@ -18,6 +18,10 @@ import pl.mmorpg.prototype.clientservercommon.packets.NpcConversationAnwserChoos
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.UseLevelUpPointOnDexterityPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnIntelligenceSpentSuccessfullyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.UseLevelUpPointOnIntelligencePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.UseLevelUpPointOnStrengthPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveDownPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveLeftPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveRightPacket;
@@ -68,6 +72,9 @@ import pl.mmorpg.prototype.server.packetshandling.characteractions.TakingGoldFro
 import pl.mmorpg.prototype.server.packetshandling.characteractions.TargetMonsterPacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.spell.usage.FireballSpellUsagePacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.characteractions.spell.usage.HealSpellUsagePacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.levelup.UseLevelUpPointOnDexterityPacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.levelup.UseLevelUpPointOnIntelligencePacketHandler;
+import pl.mmorpg.prototype.server.packetshandling.levelup.UseLevelUpPointOnStrengthPacketHandler;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class PacketHandlerFactory
@@ -133,6 +140,9 @@ public class PacketHandlerFactory
 		packetHandlers.put(GetQuestBoardInfoPacket.class,
 				new GetQuestBoardInfoPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(NpcDialogStartPacket.class, new NpcDialogStartPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(UseLevelUpPointOnStrengthPacket.class, new UseLevelUpPointOnStrengthPacketHandler(gameDataRetriever));
+		packetHandlers.put(UseLevelUpPointOnIntelligencePacket.class, new UseLevelUpPointOnIntelligencePacketHandler(gameDataRetriever));
+		packetHandlers.put(UseLevelUpPointOnDexterityPacket.class, new UseLevelUpPointOnDexterityPacketHandler(gameDataRetriever));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

@@ -73,6 +73,10 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnDexteritySpentSuccessfullyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnIntelligenceSpentSuccessfullyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnStrengthSpentSuccessfullyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGainPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
@@ -436,7 +440,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private void drawPath(Collection<? extends Point> path)
 	{
 		path.forEach(this::addPathElement);
-
 	}
 
 	private boolean addPathElement(Point point)
@@ -476,6 +479,32 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		OpenContainterPacket packet = PacketsMaker.makeContainterOpeningPacket(getRealX(x), getRealY(y));
 		client.sendTCP(packet);
+	}
+
+	public void userDistributedLevelUpPoint(Object packetToSend)
+	{
+		client.sendTCP(packetToSend);
+	}
+
+	private void strengthPointAllocated()
+	{
+		player.addStrength();
+		player.decreaseLevelUpPoints();
+		userInterface.levelUpPointAllocated();
+	}
+
+	private void intelligencePointAllocated()
+	{
+		player.addIntelligence();
+		player.decreaseLevelUpPoints();
+		userInterface.levelUpPointAllocated();
+	}
+
+	private void dexterityPointAllocated()
+	{
+		player.addDexterity();
+		player.decreaseLevelUpPoints();
+		userInterface.levelUpPointAllocated();
 	}
 
 	@SuppressWarnings("unused")
@@ -606,14 +635,47 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		protected void doHandle(LevelUpPacket packet)
 		{
 			Player target = (Player) gameObjects.get(packet.getTargetId());
-			// temp TODO
+			// temp TODO make new effect/label for leveling up
 			GraphicGameObject experienceGainLabel = new ExperienceGainLabel("1", target);
 			clientGraphics.add(experienceGainLabel);
 			if (target == player)
 			{
-				target.addLevel();
+				target.addLevel(packet.getLevelUpPoints());
+				userInterface.openLevelUpPointsDialog();
 				userInterface.updateStatsDialog();
 			}
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class UseLevelUpPointOnStrengthPacketReplyHandler extends PacketHandlerBase<LevelUpPointOnStrengthSpentSuccessfullyPacket>
+	{
+		@Override
+		protected void doHandle(LevelUpPointOnStrengthSpentSuccessfullyPacket packet)
+		{
+			strengthPointAllocated();
+		}
+
+	}
+
+	@SuppressWarnings("unused")
+	private class UseLevelUpPointOnIntelligencePacketReplyHandler extends PacketHandlerBase<LevelUpPointOnIntelligenceSpentSuccessfullyPacket>
+	{
+		@Override
+		protected void doHandle(LevelUpPointOnIntelligenceSpentSuccessfullyPacket packet)
+		{
+			intelligencePointAllocated();
+		}
+
+	}
+
+	@SuppressWarnings("unused")
+	private class UseLevelUpPointOnDexterityReplyPacketHandler extends PacketHandlerBase<LevelUpPointOnDexteritySpentSuccessfullyPacket>
+	{
+		@Override
+		protected void doHandle(LevelUpPointOnDexteritySpentSuccessfullyPacket packet)
+		{
+			dexterityPointAllocated();
 		}
 	}
 

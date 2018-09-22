@@ -6,7 +6,7 @@ public class CharacterStatsCalculator
 {
 	public static Integer getMaxHP(UserCharacterDataPacket character)
 	{
-		return getMaxHp(character.getLevel(), character.getStrength(), character.getMagic(), character.getDexterity());
+		return getMaxHp(character.getLevel(), character.getStrength(), character.getIntelligence(), character.getDexterity());
 	}
 	
 	public static Integer getMaxHp(Integer level, Integer strength, Integer magic, Integer dexitirity)
@@ -14,12 +14,12 @@ public class CharacterStatsCalculator
 		return 100;
 	}
 	
-	public static Integer getMaxMP(UserCharacterDataPacket character)
+	public static Integer getMaxMp(UserCharacterDataPacket character)
 	{
-		return getMaxHp(character.getLevel(), character.getStrength(), character.getMagic(), character.getDexterity());
+		return getMaxMp(character.getLevel(), character.getStrength(), character.getIntelligence(), character.getDexterity());
 	}
 	
-	public static Integer getMaxMP(Integer level, Integer strength, Integer magic, Integer dexitirity)
+	public static Integer getMaxMp(Integer level, Integer strength, Integer magic, Integer dexitirity)
 	{
 		return 100;
 	}

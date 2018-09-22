@@ -27,7 +27,7 @@ public abstract class Potion extends StackableItem implements ItemUseable
 	}
 	
 	@Override
-	public void useIterfaceUpdate()
+	public void useInterfaceUpdate()
 	{
 		decreaseItemCount();
 	}

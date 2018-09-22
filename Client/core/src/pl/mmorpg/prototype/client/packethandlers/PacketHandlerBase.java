@@ -1,6 +1,5 @@
 package pl.mmorpg.prototype.client.packethandlers;
 
-import com.esotericsoftware.minlog.Log;
 import pl.mmorpg.prototype.client.exceptions.ExceptionHandler;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public abstract class PacketHandlerBase<T extends Object> implements PacketHandl
 		ExceptionHandler.handle(() -> {
 			if (canBeHandled(packet))
 				doHandle(packet);
-			else if (!canBeOmmited(packet))
+			else if (!canBeOmitted(packet))
 				packetsToHandle.add(packet);
 		});
 	}
@@ -36,7 +35,7 @@ public abstract class PacketHandlerBase<T extends Object> implements PacketHandl
 				{
 					doHandle(packet);
 					it.remove();
-				} else if (canBeOmmited(packet))
+				} else if (canBeOmitted(packet))
 					it.remove();
 			}
 		});
@@ -49,7 +48,7 @@ public abstract class PacketHandlerBase<T extends Object> implements PacketHandl
 	}
 
 	@Override
-	public boolean canBeOmmited(T packet)
+	public boolean canBeOmitted(T packet)
 	{
 		return false;
 	}

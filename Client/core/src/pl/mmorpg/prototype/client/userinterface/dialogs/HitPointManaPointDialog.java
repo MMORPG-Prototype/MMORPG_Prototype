@@ -21,7 +21,7 @@ public class HitPointManaPointDialog extends Dialog
 		this.linkedData = character;
 		hitPoints = new ProgressBar(0, CharacterStatsCalculator.getMaxHP(character), 1.0f, false, Settings.DEFAULT_SKIN);
 		hitPoints.setColor(new Color(1.0f, 0.2f, 0.2f, 0.9f));
-		manaPoints = new ProgressBar(0, CharacterStatsCalculator.getMaxMP(character), 1.0f, false, Settings.DEFAULT_SKIN);
+		manaPoints = new ProgressBar(0, CharacterStatsCalculator.getMaxMp(character), 1.0f, false, Settings.DEFAULT_SKIN);
 		manaPoints.setColor(new Color(0.2f, 0.2f, 1.0f, 0.9f));
 		
 		this.getContentTable().row();

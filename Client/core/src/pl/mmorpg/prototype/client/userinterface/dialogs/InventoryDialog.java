@@ -197,11 +197,11 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 	public ItemUseable useItem(long itemId)
 	{
-		ItemUseable item = null;
+		ItemUseable item;
 		for (InventoryPage inventoryPage : inventoryPages)
 			if ((item = inventoryPage.useIfHas(itemId)) != null)
 				return item;
-		return item;
+		return null;
 	}
 
 	public ItemInventoryPosition getFreeInventoryPosition()

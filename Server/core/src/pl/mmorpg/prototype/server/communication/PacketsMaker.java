@@ -6,6 +6,10 @@ import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnDexteritySpentSuccessfullyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnIntelligenceSpentSuccessfullyPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnStrengthSpentSuccessfullyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.*;
 import pl.mmorpg.prototype.server.database.entities.Character;
@@ -112,7 +116,7 @@ public class PacketsMaker
 		packet.setNickname(character.getNickname());
 		packet.setExperience(character.getExperience());
 		packet.setStrength(character.getStrength());
-		packet.setMagic(character.getMagic());
+		packet.setIntelligence(character.getIntelligence());
 		packet.setDexterity(character.getDexterity());
 		packet.setLevelUpPoints(character.getLevelUpPoints());
 		packet.setGold(character.getGold());
@@ -186,6 +190,21 @@ public class PacketsMaker
 		levelUpPacket.setTargetId(id);
 		levelUpPacket.setLevelUpPoints(levelUpPoints);
 		return levelUpPacket;
+	}
+
+	public static LevelUpPointOnStrengthSpentSuccessfullyPacket makeLevelUpPointOnStrengthSpentSuccessfullyPacket()
+	{
+		return new LevelUpPointOnStrengthSpentSuccessfullyPacket();
+	}
+
+	public static LevelUpPointOnIntelligenceSpentSuccessfullyPacket makeLevelUpPointOnIntelligenceSpentSuccessfullyPacket()
+	{
+		return new LevelUpPointOnIntelligenceSpentSuccessfullyPacket();
+	}
+
+	public static LevelUpPointOnDexteritySpentSuccessfullyPacket makeLevelUpPointOnDexteritySpentSuccessfullyPacket()
+	{
+		return new LevelUpPointOnDexteritySpentSuccessfullyPacket();
 	}
 
 	public static HpChangeByItemUsagePacket makeHpNotifiedIncreasePacket(int delta, long targetId)
@@ -550,5 +569,4 @@ public class PacketsMaker
 		packet.setItemPageY(position.getInventoryY());
 		return packet;
 	}
-
 }

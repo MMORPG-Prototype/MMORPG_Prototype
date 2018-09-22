@@ -69,14 +69,14 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 
 	public void updateUserCharacterProperties()
 	{
-		userCharacter.setDexterity(properties.dexitirity);
+		userCharacter.setDexterity(properties.dexterity);
 		userCharacter.setExperience(properties.experience);
 		userCharacter.setGold(properties.gold);
 		userCharacter.setHitPoints(properties.hp);
 		userCharacter.setLastLocationX((int)getX());
 		userCharacter.setLastLocationY((int)getY());
 		userCharacter.setLevel(properties.level);
-		userCharacter.setMagic(properties.magic);
+		userCharacter.setIntelligence(properties.intelligence);
 		userCharacter.setManaPoints(properties.mp);
 		userCharacter.setStrength(properties.strength);
 	}

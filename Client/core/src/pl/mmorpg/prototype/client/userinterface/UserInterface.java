@@ -27,7 +27,6 @@ import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.objects.icons.DraggableIcon;
-import pl.mmorpg.prototype.client.objects.icons.Icon;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
@@ -37,27 +36,7 @@ import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.quests.QuestCreator;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.PlayState;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ChatDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ConsoleDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ContainerDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.DialogUtils;
-import pl.mmorpg.prototype.client.userinterface.dialogs.EquipmentDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.HitPointManaPointPane;
-import pl.mmorpg.prototype.client.userinterface.dialogs.InventoryDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ItemCounter;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ItemQuickAccessDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.MenuDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.NpcConversationDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.QuestBoardDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.QuestListDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.QuestRewardDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ShopDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.ShortcutBarPane;
-import pl.mmorpg.prototype.client.userinterface.dialogs.SpellListDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.SpellQuickAccessDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.StackableItemsSplitSingleStackDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.StackableItemsSplitWithSecondStackDialog;
-import pl.mmorpg.prototype.client.userinterface.dialogs.StatisticsDialog;
+import pl.mmorpg.prototype.client.userinterface.dialogs.*;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemQuickAccessIcon;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
@@ -98,6 +77,7 @@ public class UserInterface
 	private final ConsoleDialog consoleDialog;
 	private final QuestListDialog questListDialog;
 	private final SpellListDialog spellListDialog;
+	private final LevelUpDialog levelUpDialog;
 	private final ActorManipulator dialogs = new ActorManipulator();
 	private final DialogIdSupplier dialogIdSupplier = new DialogIdSupplier();
 
@@ -120,10 +100,12 @@ public class UserInterface
 		consoleDialog = new ConsoleDialog(this);
 		questListDialog = new QuestListDialog(registerer);
 		spellListDialog = new SpellListDialog(this, registerer);
+		levelUpDialog = new LevelUpDialog(this, character);
 		mapDialogsWithKeys();
 		mapOtherDialogs();
 		addDialogsToStage();
 		dialogs.hideKeyMappedDialogs();
+		levelUpDialog.setVisible(false);
 
 		addListeners(linkedState);
 		registerer.registerPrivateClassPacketHandlers(this);
@@ -199,6 +181,7 @@ public class UserInterface
 		dialogs.add(hpMpDialog);
 		dialogs.add(itemQuickAccessDialog);
 		dialogs.add(spellQuickAccessDialog);
+		dialogs.add(levelUpDialog);
 	}
 
 	private void addDialogsToStage()
@@ -215,6 +198,7 @@ public class UserInterface
 		stage.addActor(consoleDialog);
 		stage.addActor(questListDialog);
 		stage.addActor(spellListDialog);
+		stage.addActor(levelUpDialog);
 	}
 
 	public void draw(SpriteBatch batch)
@@ -357,9 +341,9 @@ public class UserInterface
 		mousePointerToIcon.icon = spellButtonField.getContent();
 	}
 
-	public void userDistributedStatPoints()
+	public void userDistributedLevelUpPoint(Object packetToSend)
 	{
-		statisticsDialog.updateStatistics();
+		linkedState.userDistributedLevelUpPoint(packetToSend);
 	}
 
 	public void userWantsToSendMessage(String message)
@@ -469,6 +453,18 @@ public class UserInterface
 	public void updateHitPointManaPointDialog()
 	{
 		hpMpDialog.updateValues();
+	}
+
+	public void openLevelUpPointsDialog()
+	{
+		levelUpDialog.updateShownValues();
+		levelUpDialog.setVisible(true);
+	}
+
+	public void levelUpPointAllocated()
+	{
+		levelUpDialog.updateShownValues();
+		statisticsDialog.updateStatistics();
 	}
 
 	@SuppressWarnings("unused")

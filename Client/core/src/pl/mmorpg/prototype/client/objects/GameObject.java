@@ -105,6 +105,7 @@ public abstract class GameObject extends Sprite implements RectangleCollisionObj
 		{
 			super(Assets.get("nullTexture.png"), id, new NullPacketHandlerRegisterer());
 			this.rectangle = rectangle;
+			setBounds(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		}
 		
 		@Override

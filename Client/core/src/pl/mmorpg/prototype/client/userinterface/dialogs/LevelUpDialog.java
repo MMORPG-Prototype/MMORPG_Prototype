@@ -8,23 +8,27 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.levelup.*;
 
 public class LevelUpDialog extends Dialog
 {
 	private final UserCharacterDataPacket character;
 	private final UserInterface linkedInterface;
-	private final Label pointsValueLabel;
+	private final Label levelUpPointsValueLabel;
 	private final Label strengthValueLabel;
-	private final Label magicValueLabel;
-	private final Label dexitirityValueLabel;
-	private int statPoints = 10;
+	private final Label intelligenceValueLabel;
+	private final Label dexterityValueLabel;
 
 	public LevelUpDialog(UserInterface linkedInterface, UserCharacterDataPacket character)
 	{
-		super("You have leveld up!", Settings.DEFAULT_SKIN);
+		super("You have leveled up!", Settings.DEFAULT_SKIN);
 		this.linkedInterface = linkedInterface;
 		this.character = character;
+
+		Button closeButton = new CloseButton(this);
+		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 
 		getContentTable().row();
 		text("Strength: ").left();
@@ -44,9 +48,9 @@ public class LevelUpDialog extends Dialog
 		getContentTable().add(strengthAddButton);
 		getContentTable().row();
 		text("Magic: ").left();
-		magicValueLabel = new Label(character.getMagic().toString(), getSkin());
-		text(magicValueLabel).right();
-		
+		intelligenceValueLabel = new Label(character.getIntelligence().toString(), getSkin());
+		text(intelligenceValueLabel).right();
+
 		Button manaAddButton = new Button(Settings.DEFAULT_SKIN, "maximize");
 		manaAddButton.addListener(new ClickListener()
 		{
@@ -58,12 +62,12 @@ public class LevelUpDialog extends Dialog
 		});
 		getContentTable().add(manaAddButton);
 		getContentTable().row();
-		text("Dexitirity: ").left();
-		dexitirityValueLabel = new Label(character.getDexterity().toString(), getSkin());
-		text(dexitirityValueLabel).right();
-		
-		Button dexitirityAddButton = new Button(Settings.DEFAULT_SKIN, "maximize");
-		dexitirityAddButton.addListener(new ClickListener()
+		text("Dexterity: ").left();
+		dexterityValueLabel = new Label(character.getDexterity().toString(), getSkin());
+		text(dexterityValueLabel).right();
+
+		Button dexterityAddButton = new Button(Settings.DEFAULT_SKIN, "maximize");
+		dexterityAddButton.addListener(new ClickListener()
 		{
 			@Override
 			public void clicked(InputEvent event, float x, float y)
@@ -71,50 +75,40 @@ public class LevelUpDialog extends Dialog
 				dexterityAddButtonClicked();
 			}
 		});
-		getContentTable().add(dexitirityAddButton);
+		getContentTable().add(dexterityAddButton);
 		getContentTable().row();
 		text("Points to spend: ").left();
-		pointsValueLabel = new Label(String.valueOf(statPoints), getSkin());
-		text(pointsValueLabel).right();
+		levelUpPointsValueLabel = new Label(String.valueOf(character.getLevelUpPoints()), getSkin());
+		text(levelUpPointsValueLabel).right();
 		pack();
 	}
-	
+
 	private void strengthAddButtonClicked()
 	{
-		character.setStrength(character.getStrength() + 1);
-		userPressedAddButton();
+		if (character.getLevelUpPoints() > 0)
+			linkedInterface.userDistributedLevelUpPoint(new UseLevelUpPointOnStrengthPacket());
 	}
-	
-	private void dexterityAddButtonClicked()
-	{
-		character.setDexterity(character.getDexterity() + 1);
-		userPressedAddButton();
-	}
-	
+
 	private void manaAddButtonClicked()
 	{
-		character.setMagic(character.getMagic() + 1);
-		userPressedAddButton();
+		if (character.getLevelUpPoints() > 0)
+			linkedInterface.userDistributedLevelUpPoint(new UseLevelUpPointOnIntelligencePacket());
 	}
 
-	private void userPressedAddButton()
+	private void dexterityAddButtonClicked()
 	{
-		statPoints--;
-		if(statPoints <= 0)
-		{
-			linkedInterface.userDistributedStatPoints();
-			pointsValueLabel.setText(String.valueOf(statPoints));
-			this.remove();
-		}
-		updateShownValues();
+		if (character.getLevelUpPoints() > 0)
+			linkedInterface.userDistributedLevelUpPoint(new UseLevelUpPointOnDexterityPacket());
 	}
 
-	private void updateShownValues()
+
+	public void updateShownValues()
 	{
 		strengthValueLabel.setText(character.getStrength().toString());
-		magicValueLabel.setText(character.getMagic().toString());
-		dexitirityValueLabel.setText(character.getDexterity().toString());
-		pointsValueLabel.setText(String.valueOf(statPoints));
+		intelligenceValueLabel.setText(character.getIntelligence().toString());
+		dexterityValueLabel.setText(character.getDexterity().toString());
+		levelUpPointsValueLabel.setText(String.valueOf(character.getLevelUpPoints()));
 	}
+
 
 }

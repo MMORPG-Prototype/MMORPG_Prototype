@@ -15,7 +15,7 @@ public class UserCharacterDataPacket
 	private String nickname;
 	private Integer experience;
 	private Integer strength;
-	private Integer magic;
+	private Integer intelligence;
 	private Integer levelUpPoints;
 	private Integer dexterity;
 	private Integer startingX;

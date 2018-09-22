@@ -14,9 +14,9 @@ public class MonsterProperties
 	public int maxMp;
 	public int hp;
 	public int mp;
-	public int dexitirity;
+	public int dexterity;
 	public int strength;
-	public int magic;
+	public int intelligence;
 	public int experience;
 	public int gold;
 	public int level;
@@ -82,15 +82,15 @@ public class MonsterProperties
 			return this;
 		}
 		
-		public Builder magic(int magic)
+		public Builder intelligence(int intelligence)
 		{
-			monsterProperties.magic = magic;
+			monsterProperties.intelligence = intelligence;
 			return this;
 		}
 
 		public Builder dexitirity(int dexitirity)
 		{
-			monsterProperties.dexitirity = dexitirity;
+			monsterProperties.dexterity = dexitirity;
 			return this;
 		}
 		

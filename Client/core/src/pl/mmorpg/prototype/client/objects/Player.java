@@ -69,10 +69,11 @@ public class Player extends HealthBarMonster
         data.setExperience(data.getExperience() + experienceGain);
     }
 
-	public void addLevel()
+	public void addLevel(int levelUpPoints)
 	{
 		getProperties().level += 1;
 		data.setLevel(data.getLevel() + 1);
+		data.setLevelUpPoints(data.getLevelUpPoints() + levelUpPoints);
 	}
 
     @Override
@@ -91,6 +92,29 @@ public class Player extends HealthBarMonster
         data.setManaPoints(manaPoints);
         getProperties().mp = manaPoints;
     }
+
+	public void addStrength()
+	{
+		getProperties().strength += 1;
+		data.setStrength(data.getStrength() + 1);
+	}
+
+	public void addIntelligence()
+	{
+		getProperties().intelligence += 1;
+		data.setIntelligence(data.getIntelligence() + 1);
+	}
+
+	public void addDexterity()
+	{
+		getProperties().strength += 1;
+		data.setDexterity(data.getDexterity() + 1);
+	}
+
+	public void decreaseLevelUpPoints()
+	{
+		data.setLevelUpPoints(data.getLevelUpPoints() - 1);
+	}
 
 	private class GoldReceivePacketHandler extends PacketHandlerBase<GoldReceivePacket>
     	implements GameObjectTargetPacketHandler<GoldReceivePacket>

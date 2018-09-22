@@ -115,7 +115,7 @@ public class InventoryPage extends VerticalGroup implements ItemCounter
 			if (item != null && item.getId() == itemId)
 			{
 				ItemUseable itemUseable = (ItemUseable)item;
-				itemUseable.useIterfaceUpdate();
+				itemUseable.useInterfaceUpdate();
 				if(item.shouldBeRemoved())
 					field.removeContent();
 				return itemUseable;

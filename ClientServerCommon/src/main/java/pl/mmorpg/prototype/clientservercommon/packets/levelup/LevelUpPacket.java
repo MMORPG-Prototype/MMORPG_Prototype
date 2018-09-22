@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.clientservercommon.packets;
+package pl.mmorpg.prototype.clientservercommon.packets.levelup;
 
 import lombok.Data;
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;

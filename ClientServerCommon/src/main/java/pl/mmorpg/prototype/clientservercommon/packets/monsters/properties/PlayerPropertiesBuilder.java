@@ -21,14 +21,14 @@ public class PlayerPropertiesBuilder extends MonsterProperties.Builder
 				.defense(5)
 				.hp(dataPacket.getHitPoints())
 				.mp(dataPacket.getManaPoints())
-				.maxMp(CharacterStatsCalculator.getMaxMP(dataPacket))
+				.maxMp(CharacterStatsCalculator.getMaxMp(dataPacket))
 		 		.maxHp(CharacterStatsCalculator.getMaxHP(dataPacket))
 		 		.gold(dataPacket.getGold())
 		 		.experience(dataPacket.getExperience())
 		 		.level(dataPacket.getLevel())
 		 		.dexitirity(dataPacket.getDexterity())
 		 		.strength(dataPacket.getStrength())
-		 		.magic(dataPacket.getMagic());
+		 		.intelligence(dataPacket.getIntelligence());
 		 return super.build();
 	}
 }

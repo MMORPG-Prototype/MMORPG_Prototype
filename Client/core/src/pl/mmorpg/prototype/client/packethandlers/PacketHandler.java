@@ -6,7 +6,7 @@ public interface PacketHandler<T extends Object>
 
 	boolean canBeHandled(T packet);
 	
-	boolean canBeOmmited(T packet);
+	boolean canBeOmitted(T packet);
 
 	void tryHandlingUnhandledPackets();
 }

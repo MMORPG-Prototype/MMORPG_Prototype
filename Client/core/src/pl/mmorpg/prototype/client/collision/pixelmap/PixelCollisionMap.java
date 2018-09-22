@@ -450,6 +450,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	@Override
 	public void clear()
 	{
+
 		insertedCollisionObjects.values().forEach(info -> remove(info.getObject()));
 	}
 
