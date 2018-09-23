@@ -1,27 +1,32 @@
 package pl.mmorpg.prototype.client.userinterface.dialogs;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.LevelUpProgressBar;
+import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLabel;
 import pl.mmorpg.prototype.clientservercommon.CharacterStatsCalculator;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 
 public class StatisticsDialog extends Dialog
 {
-	private UserCharacterDataPacket character;
-	private Label levelValueLabel;
-	private Label experienceValueLabel;
-	private Label maxHitPointsValueLabel;
-	private Label maxManaPointsValueLabel;
-	private Label strengthValueLabel;
-	private Label intelligenceValueLabel;
-	private Label dexterityValueLabel;
-	private Label levelUpPointsLabel;
+	private final UserCharacterDataPacket character;
+	private final Label levelValueLabel;
+	private final Label experienceValueLabel;
+	private final LevelUpProgressBar levelUpProgressBar;
+	private final Label levelUpProgressBarPercentsLabel;
+	private final Label maxHitPointsValueLabel;
+	private final Label maxManaPointsValueLabel;
+	private final Label strengthValueLabel;
+	private final Label intelligenceValueLabel;
+	private final Label dexterityValueLabel;
+	private final Label levelUpPointsLabel;
 
-	public StatisticsDialog(UserCharacterDataPacket character, Runnable openUpLevelUpDialogAction)
+	public StatisticsDialog(UserCharacterDataPacket character, Stage containerForPopUpDialog)
 	{
 		super("Statistics", Settings.DEFAULT_SKIN);
 		this.character = character;
@@ -39,6 +44,11 @@ public class StatisticsDialog extends Dialog
 		text("Experience: ").left();
 		experienceValueLabel = new Label(character.getExperience().toString(), getSkin());
 		text(experienceValueLabel).right();
+		getContentTable().row();
+		levelUpProgressBar = new LevelUpProgressBar(character.getExperience(), containerForPopUpDialog);
+		getContentTable().add(levelUpProgressBar).left();
+		levelUpProgressBarPercentsLabel = new Label(String.valueOf(levelUpProgressBar.getPercent()) + '%', getSkin());
+		text(levelUpProgressBarPercentsLabel).right();
 		getContentTable().row();
 		text("Max hit points: ").left();
 		maxHitPointsValueLabel = new Label(CharacterStatsCalculator.getMaxHP(character).toString(), getSkin());
@@ -80,6 +90,8 @@ public class StatisticsDialog extends Dialog
 		intelligenceValueLabel.setText(character.getIntelligence().toString());
 		dexterityValueLabel.setText(character.getDexterity().toString());
 		levelUpPointsLabel.setText(character.getLevelUpPoints().toString());
+		levelUpProgressBar.updateExperience(character.getExperience());
+		levelUpProgressBarPercentsLabel.setText(String.valueOf(levelUpProgressBar.getPercent()) + '%');
 	}
 
 	

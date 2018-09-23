@@ -90,7 +90,7 @@ public class UserInterface
 		this.linkedState = linkedState;
 		menuDialog = new MenuDialog(this);
 		inventoryDialog = new InventoryDialog(this, character.getGold(), registerer);
-		statisticsDialog = new StatisticsDialog(character);
+		statisticsDialog = new StatisticsDialog(character, stage);
 		shortcutBarDialog = new ShortcutBarPane(this);
 		hpMpDialog = new HitPointManaPointPane(character, registerer);
 		itemQuickAccessDialog = new ItemQuickAccessDialog(this, (ItemCounter) inventoryDialog, registerer);

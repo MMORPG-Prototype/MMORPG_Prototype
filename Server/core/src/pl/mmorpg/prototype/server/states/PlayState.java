@@ -23,7 +23,7 @@ import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.ServerSettings;
 import pl.mmorpg.prototype.server.UserInfo;
-import pl.mmorpg.prototype.server.calculation.LevelCalculator;
+import pl.mmorpg.prototype.clientservercommon.LevelCalculator;
 import pl.mmorpg.prototype.server.collision.interfaces.StackableCollisionMap;
 import pl.mmorpg.prototype.server.collision.pixelmap.IntegerRectangle;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
