@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.collision.pixelmap;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -450,8 +451,8 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	@Override
 	public void clear()
 	{
-
-		insertedCollisionObjects.values().forEach(info -> remove(info.getObject()));
+		Collection<CollisionObjectInfo<T>> values = new ArrayList(insertedCollisionObjects.values());
+		values.forEach(info -> remove(info.getObject()));
 	}
 
 	public void insertStaticObject(Rectangle rectangle)
