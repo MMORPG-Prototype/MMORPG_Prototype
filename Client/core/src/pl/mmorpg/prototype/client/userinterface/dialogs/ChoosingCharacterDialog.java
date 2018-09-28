@@ -68,7 +68,7 @@ public class ChoosingCharacterDialog extends Dialog
 		{
 			int checkedIndex = checkBoxes.getCheckedIndex();
 			if(checkedIndex != -1)		
-				linkedState.characterChoosen(characters.get(checkedIndex));
+				linkedState.characterChosen(characters.get(checkedIndex));
 			else
 			{
 				messageForUser.setText("Choose character, or create one");

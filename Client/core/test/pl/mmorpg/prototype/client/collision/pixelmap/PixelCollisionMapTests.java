@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.client.collision.pixelmap;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.awt.Point;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ import pl.mmorpg.prototype.client.collision.interfaces.ShiftableCollisionMap;
 public class PixelCollisionMapTests
 {
 	@Test
-	public void whenObjectsAreNearEachOtherShouldBeAbleToBeLeftAndUpShiftedProperely()
+	public void whenObjectsAreNearEachOtherShouldBeAbleToBeLeftAndUpShiftedProperly()
 	{
 		int width = 8;
 		int height = 8;

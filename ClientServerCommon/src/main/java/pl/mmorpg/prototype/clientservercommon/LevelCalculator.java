@@ -12,7 +12,7 @@ public class LevelCalculator
 		int level = 1;
 		while (experience >= getExperience(level))
 			level++;
-		return level;
+		return level - 1;
 	}
 
 	public boolean doesQualifyForLevelingUp(int currentLevel, long currentExperience, long experienceGain)
@@ -27,7 +27,9 @@ public class LevelCalculator
 
 	public long getCurrentLevelMinExperience(long currentExperience)
 	{
-		return getExperience(getLevel(currentExperience));
+		int level = getLevel(currentExperience);
+		long experience = getExperience(level);
+		return experience;
 	}
 
 	public long getCurrentLevelMaxExperience(long currentExperience)

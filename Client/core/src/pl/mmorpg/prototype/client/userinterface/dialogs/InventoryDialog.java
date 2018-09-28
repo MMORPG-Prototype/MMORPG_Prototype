@@ -75,7 +75,6 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		contentTable.add(switchButtons);
 		contentTable.row();
 		goldLabel.setValue(initialGoldAmmount);
-		goldLabel.update();
 		contentTable.add(goldLabel).left();
 		contentTable.row();
 
@@ -322,7 +321,6 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		{
 			System.out.println("Inventory gold update");
 			goldLabel.setValue(goldLabel.getValue() + packet.getGoldAmount());
-			goldLabel.update();
 		}
 	}
 
@@ -334,7 +332,6 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		{
 			System.out.println("Inventory gold change ");
 			goldLabel.setValue(packet.getNewGoldAmount());
-			goldLabel.update();
 		}
 	}
 

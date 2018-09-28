@@ -691,8 +691,7 @@ public class UserInterface
 		private ShopItem makeShopItem(ShopItemPacket packet)
 		{
 			Item item = ItemFactory.produceItem(packet.getItem());
-			ShopItem shopItem = new ShopItem(item, packet.getPrice());
-			return shopItem;
+			return new ShopItem(item, packet.getPrice());
 		}
 
 		private void openShopDialog(ShopItem[] shopItems, long shopId)

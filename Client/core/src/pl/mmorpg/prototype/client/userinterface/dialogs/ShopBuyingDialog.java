@@ -52,10 +52,7 @@ public class ShopBuyingDialog extends AutoCleanupOnCloseButtonDialog
 		Integer currentTotalPrice = totalPrice.getValue();
 		Integer validTotalPrice = numberOfItemsField.getValue() * item.getPrice();
 		if (!currentTotalPrice.equals(validTotalPrice))
-		{
 			totalPrice.setValue(validTotalPrice);
-			totalPrice.update();
-		}
 	}
 
 	private void tryToBuyAction(PacketsSender packetsSender, long shopId, UserInterface linkedInterface)

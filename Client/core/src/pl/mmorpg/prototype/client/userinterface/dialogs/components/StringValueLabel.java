@@ -24,6 +24,7 @@ public class StringValueLabel<T> extends Label
 	public void setValue(T obj)
 	{
 		value = obj;
+		update();
 	}
 	
 	public void update()

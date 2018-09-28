@@ -55,7 +55,7 @@ public class ChoosingCharacterState extends PacketHandlingState
 	{
 	}
 
-	public void characterChoosen(UserCharacterDataPacket userCharacterDataPacket)
+	public void characterChosen(UserCharacterDataPacket userCharacterDataPacket)
 	{
 		states.find(PlayState.class).initialize(userCharacterDataPacket);
 		client.sendTCP(userCharacterDataPacket);

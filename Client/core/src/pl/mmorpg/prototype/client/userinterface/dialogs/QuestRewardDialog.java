@@ -94,6 +94,5 @@ public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog
     public void updateGoldByDecreasingBy(int goldAmount)
     {
         goldLabel.setValue(goldLabel.getValue() - goldAmount);
-        goldLabel.update();
     }
 }

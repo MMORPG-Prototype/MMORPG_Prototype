@@ -15,11 +15,11 @@ import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 
 public class AuthenticationState extends PacketHandlingState
 {
-	private Stage stage = Assets.getStage();
-	private Client client;
-	private StateManager states;
-	private AuthenticationDialog authenticationDialog;
-	private PacketHandlerRegisterer registerer;
+	private final Stage stage = Assets.getStage();
+	private final Client client;
+	private final StateManager states;
+	private final AuthenticationDialog authenticationDialog;
+	private final PacketHandlerRegisterer registerer;
 
 	public AuthenticationState(Client client, StateManager states, PacketHandlerRegisterer registerer)
 	{

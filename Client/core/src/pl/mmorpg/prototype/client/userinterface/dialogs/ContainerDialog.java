@@ -112,7 +112,6 @@ public class ContainerDialog extends AutoCleanupOnCloseButtonDialog
 	public void updateGoldByDecreasingBy(int amount)
 	{
 		goldLabel.setValue(goldLabel.getValue() - amount);
-		goldLabel.update();
 	}
 
 }
