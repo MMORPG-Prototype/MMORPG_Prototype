@@ -30,7 +30,7 @@ public class Progress
     private int getNumberOfFinishedSteps()
     {
         return (int)questTasks.stream()
-                    .filter(step -> step.isFinished())
+                    .filter(QuestTask::isFinished)
                     .count();
     }
     

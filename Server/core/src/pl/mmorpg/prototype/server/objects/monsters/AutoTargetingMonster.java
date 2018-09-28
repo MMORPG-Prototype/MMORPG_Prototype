@@ -64,7 +64,7 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 
 	private void findPathTo(Monster monster)
 	{
-		//FIX modulos
+		//TODO FIX modulos
 		int modulo = 3;
 		Point startPoint = new Point((int) getX() - (int)getX()%modulo, (int) getY() - (int)getY()%modulo);
 		Point endPoint = new Point((int) monster.getX() - (int)monster.getX()% modulo, (int) monster.getY() - (int)monster.getY()%modulo);

@@ -23,7 +23,7 @@ public class CharactersQuestsTableSeeder implements TableSeeder
         Iterable<Quest> allQuests = questRepository.findAllFetchItemReward();
         Iterable<Character> allCharacters = characterRepository.findAll();
 
-        Collection<CharactersQuests> joinEntites = new LinkedList<CharactersQuests>();
+        Collection<CharactersQuests> joinEntites = new LinkedList<>();
         for (Character character : allCharacters)
             for (Quest quest : allQuests)
             {

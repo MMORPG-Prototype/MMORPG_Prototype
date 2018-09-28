@@ -6,13 +6,7 @@ import lombok.Data;
 public class QuestTask
 {
     private final String description;
-    private float percentFinished;
-    
-    public QuestTask(String description, float percentFinished)
-    {
-        this.description = description;
-        this.percentFinished = percentFinished;
-    }
+    private final float percentFinished;
     
     public boolean isFinished()
     {

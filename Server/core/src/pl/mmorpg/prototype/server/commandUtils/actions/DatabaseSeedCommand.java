@@ -24,7 +24,7 @@ public class DatabaseSeedCommand implements CommandAction
 	{
 		Collection<TableSeeder> seeders = getAllSeeders();
 		assertAllSeedersAreUsed(seeders);
-		seeders.forEach( seeder -> seeder.seed());
+		seeders.forEach(TableSeeder::seed);
 	}
 
 	private void assertAllSeedersAreUsed(Collection<TableSeeder> seeders)

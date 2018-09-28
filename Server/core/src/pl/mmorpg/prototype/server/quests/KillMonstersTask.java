@@ -15,7 +15,7 @@ public class KillMonstersTask extends QuestTaskBase<MonsterKilledEvent>
 
 	@JsonCreator
 	public KillMonstersTask(@JsonProperty("monsterIdentifier") String monsterIdentifier,
-			@JsonProperty("totalMonstersToKill") int monstersToKill)
+	                        @JsonProperty("totalMonstersToKill") int monstersToKill)
 	{
 		super(MonsterKilledEvent.class);
 		this.monsterIdentifier = monsterIdentifier;

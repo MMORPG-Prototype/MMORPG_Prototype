@@ -71,12 +71,12 @@ public class GameCommandsHandler
 		addItem(identifier, 1, inventoryX, inventoryY, inventoryPage);
 	}
 
-	public void addItem(String identifier, int ammount, int inventoryX, int inventoryY, int inventoryPage)
+	public void addItem(String identifier, int amount, int inventoryX, int inventoryY, int inventoryPage)
 			throws ScriptException
 	{
 		InventoryPosition position = new InventoryPosition(inventoryPage, inventoryX, inventoryY);
 		ItemIdentifiers itemIdentifier = tryConvertToItemIdentifier(identifier);
-		game.addItem(itemIdentifier, ammount, userInfo.userCharacter, position);
+		game.addItem(itemIdentifier, amount, userInfo.userCharacter, position);
 	}
 
 	private ItemIdentifiers tryConvertToItemIdentifier(String identifier) throws ScriptException

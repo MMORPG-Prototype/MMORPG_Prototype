@@ -415,8 +415,10 @@ public class PacketsMaker
 	public static QuestBoardInfoPacket makeQuestBoardInfoPacket(QuestBoard questBoard,
 			Predicate<Quest> shouldBeIncluded)
 	{
-		QuestDataPacket[] quests = questBoard.getQuests().stream().filter(shouldBeIncluded)
-				.map(PacketsMaker::makeQuestDataPacket).toArray(QuestDataPacket[]::new);
+		QuestDataPacket[] quests = questBoard.getQuests().stream()
+				.filter(shouldBeIncluded)
+				.map(PacketsMaker::makeQuestDataPacket)
+				.toArray(QuestDataPacket[]::new);
 
 		return makeQuestBoardInfoPacket(quests, questBoard.getId());
 	}
@@ -473,7 +475,9 @@ public class PacketsMaker
 
 	public static QuestStateInfoPacket[] makeQuestStateInfoPackets(Collection<CharactersQuests> quests)
 	{
-		return quests.stream().map(PacketsMaker::makeQuestStateInfoPacket).toArray(QuestStateInfoPacket[]::new);
+		return quests.stream()
+				.map(PacketsMaker::makeQuestStateInfoPacket)
+				.toArray(QuestStateInfoPacket[]::new);
 	}
 
 	public static QuestStateInfoPacket makeQuestStateInfoPacket(CharactersQuests characterQuest)
@@ -482,8 +486,10 @@ public class PacketsMaker
 		Quest quest = characterQuest.getQuest();
 		packet.setDescription(quest.getDescription());
 		packet.setQuestName(quest.getName());
-		QuestTaskInfoPacket[] questTasks = characterQuest.getQuestTasks().stream().map(QuestTaskWrapper::getQuestTask)
-				.map(PacketsMaker::makeQuestTaskInfoPacket).toArray(QuestTaskInfoPacket[]::new);
+		QuestTaskInfoPacket[] questTasks = characterQuest.getQuestTasks().stream()
+				.map(QuestTaskWrapper::getQuestTask)
+				.map(PacketsMaker::makeQuestTaskInfoPacket)
+				.toArray(QuestTaskInfoPacket[]::new);
 		packet.setQuestTasks(questTasks);
 		return packet;
 	}

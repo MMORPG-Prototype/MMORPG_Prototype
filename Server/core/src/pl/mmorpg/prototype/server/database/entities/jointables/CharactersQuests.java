@@ -35,7 +35,7 @@ public class CharactersQuests
     private CharactersQuestsKey key = new CharactersQuestsKey();
 
     @OneToMany(mappedBy = "charactersQuests", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Collection<QuestTaskWrapper> questTasks = new LinkedList<QuestTaskWrapper>();
+    private Collection<QuestTaskWrapper> questTasks = new LinkedList<>();
 
     @OneToMany(mappedBy = "charactersQuests", orphanRemoval = true, cascade = CascadeType.ALL)
     private Collection<CharactersQuestsItemReward> itemsReward = new ArrayList<>();
@@ -50,7 +50,7 @@ public class CharactersQuests
         initializeItemsReward(quest.getItemsReward());
         goldReward = quest.getGoldReward();
         Collection<QuestTask> nextTasks = quest.getQuestTask().getNextTasks();
-        initalizeCurrentQuestTasks(nextTasks);
+        initializeCurrentQuestTasks(nextTasks);
     }
 
     private void initializeItemsReward(Collection<QuestItemReward> itemsReward)
@@ -61,7 +61,7 @@ public class CharactersQuests
         this.itemsReward.addAll(convertedItemsReward);
     }
 
-    private void initalizeCurrentQuestTasks(Collection<QuestTask> nextTasks)
+    private void initializeCurrentQuestTasks(Collection<QuestTask> nextTasks)
     {
         nextTasks.forEach(task ->
         {

@@ -42,7 +42,7 @@ public class QuestProgress extends Table
 
     private void addMainProgressInfo(Progress progress)
     {
-        StringValueLabel<String> mainProgressLabel = new StringValueLabel<String>("Progress: ", getSkin(),
+        StringValueLabel<String> mainProgressLabel = new StringValueLabel<>("Progress: ", getSkin(),
                 progress.getHumanReadableInfo());
         this.add(mainProgressLabel);
         this.row();

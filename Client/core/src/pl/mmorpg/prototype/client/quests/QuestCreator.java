@@ -15,7 +15,6 @@ public class QuestCreator
                 .map(questTask -> new QuestTask(questTask.getDescription(), questTask.getPercentFinished()))
                 .collect(Collectors.toList());
         Progress progress = new Progress(questTasks);
-        Quest quest = new Quest(progress, packet.getQuestName(), packet.getDescription());
-        return quest;
+        return new Quest(progress, packet.getQuestName(), packet.getDescription());
     }
 }
