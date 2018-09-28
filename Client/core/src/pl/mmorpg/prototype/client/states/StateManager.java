@@ -1,16 +1,18 @@
 package pl.mmorpg.prototype.client.states;
 
+import java.util.Optional;
 import java.util.Stack;
 import java.util.function.Consumer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import pl.mmorpg.prototype.client.exceptions.GameException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchStateTypeException;
 
 public class StateManager
 {
-	private Stack<State> states = new Stack<State>();
+	private Stack<State> states = new Stack<>();
 	private Consumer<State> disposeState;
 
 	public StateManager(Consumer<State> disposeState)
@@ -18,34 +20,34 @@ public class StateManager
 		this.disposeState = disposeState;
 	}
 
-	public State usedState()
+	public synchronized State usedState()
 	{
 		return states.peek();
 	}
 
-	public void update(float deltaTime)
+	public synchronized void update(float deltaTime)
 	{
 		usedState().update(deltaTime);
 	}
 
-	public void render(SpriteBatch batch)
+	public synchronized void render(SpriteBatch batch)
 	{
 		usedState().render(batch);
 	}
 
-	public void set(State state)
+	public synchronized void set(State state)
 	{
 		State removedState = states.pop();
 		disposeState.accept(removedState);
 		states.push(state);
 	}
 
-	public void push(State state)
+	public synchronized void push(State state)
 	{
 		states.push(state);
 	}
 
-	public void pop()
+	public synchronized void pop()
 	{
 		states.pop();
 		usedState().reactivate();
@@ -53,18 +55,23 @@ public class StateManager
 			Gdx.app.exit();
 	}
 
-	public boolean empty()
+	public synchronized boolean empty()
 	{
 		return states.empty();
 	}
 
 	@SuppressWarnings(value = "unchecked")
-	public <T> T find(Class<T> stateType)
+	public synchronized <T> T find(Class<T> stateType)
+	{
+		return findOptionally(stateType)
+				.orElseThrow(NoSuchStateTypeException::new);
+	}
+
+	private <T> Optional<T> findOptionally(Class<T> stateType)
 	{
 		for (State state : states)
 			if (state.getClass().equals(stateType))
-				return (T) state;
-		throw new NoSuchStateTypeException();
+				return Optional.of((T) state);
+		return Optional.empty();
 	}
-
 }
