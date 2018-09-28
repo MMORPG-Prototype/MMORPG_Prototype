@@ -77,6 +77,7 @@ public class CharactersQuests
             QuestTaskWrapper questTaskWrapper = new QuestTaskWrapper();
             questTaskWrapper.setCharactersQuests(this);
             questTaskWrapper.setQuestTask(task);
+            task.setSourceTask(this);
             this.questTasks.add(questTaskWrapper);
         });
     }

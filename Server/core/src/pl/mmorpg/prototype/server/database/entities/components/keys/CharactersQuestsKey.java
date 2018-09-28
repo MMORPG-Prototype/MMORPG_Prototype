@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.Character;
 
@@ -16,6 +17,7 @@ import pl.mmorpg.prototype.server.database.entities.Character;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"character", "quest"})
 public class CharactersQuestsKey implements Serializable
 {
     @ManyToOne

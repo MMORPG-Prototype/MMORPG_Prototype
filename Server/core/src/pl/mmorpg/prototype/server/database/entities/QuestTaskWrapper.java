@@ -34,9 +34,10 @@ public class QuestTaskWrapper
         questTask.setSourceTask(charactersQuests);
     }
 
-    public QuestTask getQuestTask()
+    public void setQuestTask(QuestTask questTask)
     {
-        return questTask;
+        questTask.setSourceTask(charactersQuests);
+        this.questTask = questTask;
     }
 
 }
