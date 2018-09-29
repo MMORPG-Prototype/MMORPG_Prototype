@@ -10,4 +10,6 @@ public class QuestTaskInfoPacket
     private String description;
     
     private float percentFinished;
+
+    private QuestTaskInfoPacket[] nextTasks;
 }

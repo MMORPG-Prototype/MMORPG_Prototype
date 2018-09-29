@@ -8,10 +8,6 @@ public class Quest
     private final Progress progress;
     private final String questName;
     private final String description;
-    
-    public boolean isFinished()
-    {
-        return progress.isEveryStepsFinished();
-    }
-    
+    private final int[] finishedQuestTasksPath;
+    private final QuestTask rootTask;
 }

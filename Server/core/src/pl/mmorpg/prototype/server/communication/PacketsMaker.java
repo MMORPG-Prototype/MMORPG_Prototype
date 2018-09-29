@@ -444,7 +444,8 @@ public class PacketsMaker
 		QuestFinishedRewardPacket packet = new QuestFinishedRewardPacket();
 		packet.setGoldReward(quest.getGoldReward());
 		packet.setQuestName(quest.getName());
-		ItemRewardPacket[] itemReward = quest.getItemsReward().stream().map(PacketsMaker::makeItemRewardPacket)
+		ItemRewardPacket[] itemReward = quest.getItemsReward().stream()
+				.map(PacketsMaker::makeItemRewardPacket)
 				.toArray(ItemRewardPacket[]::new);
 		packet.setItemReward(itemReward);
 		return packet;
@@ -486,11 +487,9 @@ public class PacketsMaker
 		Quest quest = characterQuest.getQuest();
 		packet.setDescription(quest.getDescription());
 		packet.setQuestName(quest.getName());
-		QuestTaskInfoPacket[] questTasks = characterQuest.getQuestTasks().stream()
-				.map(QuestTaskWrapper::getQuestTask)
-				.map(PacketsMaker::makeQuestTaskInfoPacket)
-				.toArray(QuestTaskInfoPacket[]::new);
-		packet.setQuestTasks(questTasks);
+		QuestTask rootTask = characterQuest.getQuest().getQuestTask();
+		packet.setRootTask(makeQuestTaskInfoPacket(rootTask));
+		packet.setFinishedQuestTasksPath(characterQuest.getFinishedQuestTasksPath());
 		return packet;
 	}
 
@@ -499,6 +498,10 @@ public class PacketsMaker
 		QuestTaskInfoPacket packet = new QuestTaskInfoPacket();
 		packet.setDescription(questTask.getDescription());
 		packet.setPercentFinished(questTask.getPercentFinished());
+		QuestTaskInfoPacket[] nextTasks = questTask.getNextTasks().stream()
+				.map(PacketsMaker::makeQuestTaskInfoPacket)
+				.toArray(QuestTaskInfoPacket[]::new);
+		packet.setNextTasks(nextTasks);
 		return packet;
 	}
 

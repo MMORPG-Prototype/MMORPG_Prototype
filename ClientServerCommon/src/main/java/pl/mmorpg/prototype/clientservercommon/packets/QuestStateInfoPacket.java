@@ -10,6 +10,11 @@ public class QuestStateInfoPacket
     private String questName;
     
     private String description;
+
+    /**
+     * See CharactersQuests' entity field
+     */
+    private String finishedQuestTasksPath;
     
-    private QuestTaskInfoPacket[] questTasks;
+    private QuestTaskInfoPacket rootTask;
 }

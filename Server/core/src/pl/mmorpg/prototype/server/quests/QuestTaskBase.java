@@ -1,14 +1,14 @@
 package pl.mmorpg.prototype.server.quests;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.quests.observers.QuestFinishedObserver;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public abstract class QuestTaskBase<T extends Event> implements QuestTask
 {
@@ -17,10 +17,10 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
     
     @JsonProperty
     @QuestMakerIgnore
-    private Collection<QuestTask> nextTasks = new ArrayList<>(1);
+    private List<QuestTask> nextTasks = new ArrayList<>(1);
     
     @QuestMakerIgnore
-    private Class<T> desiredEventType;
+    private final Class<T> desiredEventType;
 
     private final Integer parentIndex;
 
@@ -33,7 +33,7 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
     @Override
     public void addNextTask(QuestTask task)
     {
-        nextTasks.add(task);        
+        nextTasks.add(task);
     }
     
     @Override
@@ -46,7 +46,7 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
     public void proceedToNextTasks()
     {
         Collection<QuestTaskWrapper> dbQuestTasks = new ArrayList<>();
-        for(QuestTask task : nextTasks)
+        for (QuestTask task : nextTasks)
         {
             QuestTaskWrapper wrapper = new QuestTaskWrapper();
             wrapper.setCharactersQuests(sourceTask);
@@ -61,7 +61,7 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
     }
     
     @Override
-    public Collection<QuestTask> getNextTasks()
+    public List<QuestTask> getNextTasks()
     {
         return nextTasks;
     }
