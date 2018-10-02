@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.client.spells.SpellFactory;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
@@ -33,7 +34,7 @@ public class SpellListDialog extends Dialog
 	}
 	
 	
-	private class KnownSpellInfoPacketHandler extends PacketHandlerBase<KnownSpellInfoPacket>
+	private class KnownSpellInfoPacketHandler extends UserInterfacePacketHandlerBase<KnownSpellInfoPacket>
 	{
 		@Override
 		protected void doHandle(KnownSpellInfoPacket packet)

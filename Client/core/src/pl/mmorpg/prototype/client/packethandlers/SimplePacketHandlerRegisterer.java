@@ -8,25 +8,31 @@ public class SimplePacketHandlerRegisterer implements PacketHandlerRegisterer
 	{
 		this.packetHandlerDispatcher = packetHandlerDispatcher;
 	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public void register(PacketHandler packetHandler)
 	{
-		packetHandlerDispatcher.registerHandler(packetHandler);	
+		packetHandlerDispatcher.registerHandler(packetHandler);
 	}
-	
+
 	@Override
 	public void registerPrivateClassPacketHandlers(Object objectContainingDefinitionOfPrivatePacketHandlers)
 	{
 		packetHandlerDispatcher.registerPrivateClassPacketHandlers(objectContainingDefinitionOfPrivatePacketHandlers);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("unchecked")
 	@Override
 	public void unregister(PacketHandler packetHandler)
 	{
 		packetHandlerDispatcher.removeHandler(packetHandler);
 	}
-	
+
+	@Override
+	public void unregister(PacketHandlerCategory category)
+	{
+		packetHandlerDispatcher.unregister(category);
+	}
+
 }

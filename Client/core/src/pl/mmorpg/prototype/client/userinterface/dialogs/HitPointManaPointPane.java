@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.HpUpdatePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.MpChangeByItemUsagePacket;
@@ -44,7 +45,7 @@ public class HitPointManaPointPane extends ScrollPane
 	}
 	
 	@SuppressWarnings("unused")
-	private class HpChangeByItemUsagePacketHandler extends PacketHandlerBase<HpChangeByItemUsagePacket>
+	private class HpChangeByItemUsagePacketHandler extends UserInterfacePacketHandlerBase<HpChangeByItemUsagePacket>
 	{
 		@Override
 		protected void doHandle(HpChangeByItemUsagePacket packet)
@@ -54,7 +55,7 @@ public class HitPointManaPointPane extends ScrollPane
 	}
 
 	@SuppressWarnings("unused")
-	private class HpUpdatePacketHandler extends PacketHandlerBase<HpUpdatePacket>
+	private class HpUpdatePacketHandler extends UserInterfacePacketHandlerBase<HpUpdatePacket>
 	{
 		@Override
 		protected void doHandle(HpUpdatePacket packet)
@@ -64,7 +65,7 @@ public class HitPointManaPointPane extends ScrollPane
 	}
 
 	@SuppressWarnings("unused")
-	private class MpChangeByItemUsagePacketHandler extends PacketHandlerBase<MpChangeByItemUsagePacket>
+	private class MpChangeByItemUsagePacketHandler extends UserInterfacePacketHandlerBase<MpChangeByItemUsagePacket>
 	{
 		@Override
 		protected void doHandle(MpChangeByItemUsagePacket packet)
@@ -74,7 +75,7 @@ public class HitPointManaPointPane extends ScrollPane
 	}
 
 	@SuppressWarnings("unused")
-	private class MpUpdatePacketHandler extends PacketHandlerBase<MpUpdatePacket>
+	private class MpUpdatePacketHandler extends UserInterfacePacketHandlerBase<MpUpdatePacket>
 	{
 		@Override
 		protected void doHandle(MpUpdatePacket packet)

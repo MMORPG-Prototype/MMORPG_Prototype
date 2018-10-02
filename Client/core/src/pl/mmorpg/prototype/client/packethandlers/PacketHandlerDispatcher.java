@@ -3,11 +3,13 @@ package pl.mmorpg.prototype.client.packethandlers;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.stream.Stream;
 
 import pl.mmorpg.prototype.client.exceptions.CannotCreatePacketHandlerException;
 import pl.mmorpg.prototype.client.exceptions.GameException;
@@ -16,6 +18,13 @@ import pl.mmorpg.prototype.clientservercommon.packets.GameObjectTargetPacket;
 public class PacketHandlerDispatcher
 {
 	private final Map<Class<?>, Collection<PacketHandler<Object>>> packetHandlers = new ConcurrentHashMap<>();
+	private final Map<PacketHandlerCategory, Collection<PacketHandler<Object>>> packetHandlersByCategory = new ConcurrentHashMap<>();
+
+	public PacketHandlerDispatcher()
+	{
+		Stream.of(PacketHandlerCategory.values())
+				.forEach(category -> packetHandlersByCategory.put(category, new ArrayList<>()));
+	}
 
 	public void registerHandler(PacketHandler<Object> packetHandler)
 	{
@@ -27,6 +36,7 @@ public class PacketHandlerDispatcher
 			packetHandlers.put(packetType, packetHandlerGroup);
 		}
 		packetHandlerGroup.add(packetHandler);
+		packetHandlersByCategory.get(packetHandler.getCategory()).add(packetHandler);
 	}
 
 	private Class<?> getPacketType(PacketHandler<Object> packetHandler)
@@ -97,6 +107,7 @@ public class PacketHandlerDispatcher
 		packetHandlerGroup.removeIf(existingHandler -> existingHandler == packetHandler);
 		if(packetHandlerGroup.isEmpty())
 			packetHandlers.remove(packetType);
+		packetHandlersByCategory.get(packetHandler.getCategory()).remove(packetHandler);
 	}
 
 	public void tryHandlingUnhandledPackets()
@@ -139,5 +150,11 @@ public class PacketHandlerDispatcher
 	private boolean isPacketHandlerClass(Class<?> packetHandlerCandidate)
 	{
 		return PacketHandler.class.isAssignableFrom(packetHandlerCandidate);
+	}
+
+	public void unregister(PacketHandlerCategory category)
+	{
+		Collection<PacketHandler<Object>> packetHandlers = new ArrayList<>(packetHandlersByCategory.get(category));
+		packetHandlers.forEach(this::removeHandler);
 	}
 }

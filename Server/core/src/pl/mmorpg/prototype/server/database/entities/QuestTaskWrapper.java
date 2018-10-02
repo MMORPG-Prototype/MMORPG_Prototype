@@ -1,12 +1,11 @@
 package pl.mmorpg.prototype.server.database.entities;
 
-import javax.persistence.*;
-
-import org.hibernate.annotations.Type;
-
 import lombok.Data;
+import org.hibernate.annotations.Type;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.quests.QuestTask;
+
+import javax.persistence.*;
 
 @Entity(name = "QuestTask")
 @Table(name = "quest_tasks")

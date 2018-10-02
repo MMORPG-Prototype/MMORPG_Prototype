@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.quest.QuestListPane;
@@ -29,7 +30,7 @@ public class QuestListDialog extends Dialog
     }
     
     @SuppressWarnings("unused")
-    private class QuestFinishedRewardPacketHandler extends PacketHandlerBase<QuestFinishedRewardPacket>
+    private class QuestFinishedRewardPacketHandler extends UserInterfacePacketHandlerBase<QuestFinishedRewardPacket>
     {
 		@Override
 		protected void doHandle(QuestFinishedRewardPacket packet)

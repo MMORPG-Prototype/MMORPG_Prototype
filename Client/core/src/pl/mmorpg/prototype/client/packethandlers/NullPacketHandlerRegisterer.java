@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.packethandlers;
 public class NullPacketHandlerRegisterer implements PacketHandlerRegisterer
 {
 	@Override
-	public void register(@SuppressWarnings("rawtypes") PacketHandler packetHandler)
+	public void register(PacketHandler packetHandler)
 	{
 	}
 
@@ -13,7 +13,12 @@ public class NullPacketHandlerRegisterer implements PacketHandlerRegisterer
 	}
 
 	@Override
-	public void unregister(@SuppressWarnings("rawtypes") PacketHandler packetHandler)
+	public void unregister(PacketHandler packetHandler)
+	{
+	}
+
+	@Override
+	public void unregister(PacketHandlerCategory category)
 	{
 	}
 }

@@ -32,6 +32,7 @@ import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.client.quests.Quest;
 import pl.mmorpg.prototype.client.quests.QuestCreator;
 import pl.mmorpg.prototype.client.resources.Assets;
@@ -468,7 +469,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class ContainerContentPacketHandler extends PacketHandlerBase<ContainerContentPacket>
+	private class ContainerContentPacketHandler extends UserInterfacePacketHandlerBase<ContainerContentPacket>
 	{
 		@Override
 		protected void doHandle(ContainerContentPacket packet)
@@ -480,7 +481,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class ContainerGoldRemovalPacketHandler extends PacketHandlerBase<ContainerGoldRemovalPacket>
+	private class ContainerGoldRemovalPacketHandler extends UserInterfacePacketHandlerBase<ContainerGoldRemovalPacket>
 	{
 		@Override
 		protected void doHandle(ContainerGoldRemovalPacket packet)
@@ -499,7 +500,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class ContainerItemRemovalPacketHandler extends PacketHandlerBase<ContainerItemRemovalPacket>
+	private class ContainerItemRemovalPacketHandler extends UserInterfacePacketHandlerBase<ContainerItemRemovalPacket>
 	{
 		@Override
 		protected void doHandle(ContainerItemRemovalPacket packet)
@@ -518,7 +519,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class ItemRewardRemovePacketHandler extends PacketHandlerBase<ItemRewardRemovePacket>
+	private class ItemRewardRemovePacketHandler extends UserInterfacePacketHandlerBase<ItemRewardRemovePacket>
 	{
 		@Override
 		protected void doHandle(ItemRewardRemovePacket packet)
@@ -534,7 +535,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class ItemUsagePacketHandler extends PacketHandlerBase<ItemUsagePacket>
+	private class ItemUsagePacketHandler extends UserInterfacePacketHandlerBase<ItemUsagePacket>
 	{
 		@Override
 		protected void doHandle(ItemUsagePacket packet)
@@ -553,7 +554,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class NpcContinueDialogPacketHandler extends PacketHandlerBase<NpcContinueDialogPacket>
+	private class NpcContinueDialogPacketHandler extends UserInterfacePacketHandlerBase<NpcContinueDialogPacket>
 	{
 		@Override
 		protected void doHandle(NpcContinueDialogPacket packet)
@@ -569,7 +570,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class QuestAcceptedPacketHandler extends PacketHandlerBase<QuestAcceptedPacket>
+	private class QuestAcceptedPacketHandler extends UserInterfacePacketHandlerBase<QuestAcceptedPacket>
 	{
 		@Override
 		protected void doHandle(QuestAcceptedPacket packet)
@@ -582,7 +583,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class QuestStateInfoPacketArrayHandler extends PacketHandlerBase<QuestStateInfoPacket[]>
+	private class QuestStateInfoPacketArrayHandler extends UserInterfacePacketHandlerBase<QuestStateInfoPacket[]>
 	{
 		@Override
 		protected void doHandle(QuestStateInfoPacket[] packets)
@@ -596,7 +597,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class QuestBoardInfoPacketHandler extends PacketHandlerBase<QuestBoardInfoPacket>
+	private class QuestBoardInfoPacketHandler extends UserInterfacePacketHandlerBase<QuestBoardInfoPacket>
 	{
 		@Override
 		protected void doHandle(QuestBoardInfoPacket packet)
@@ -612,7 +613,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class QuestFinishedRewardPacketHandler extends PacketHandlerBase<QuestFinishedRewardPacket>
+	private class QuestFinishedRewardPacketHandler extends UserInterfacePacketHandlerBase<QuestFinishedRewardPacket>
 	{
 		@Override
 		protected void doHandle(QuestFinishedRewardPacket packet)
@@ -632,7 +633,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class QuestRewardGoldRemovalPacketHandler extends PacketHandlerBase<QuestRewardGoldRemovalPacket>
+	private class QuestRewardGoldRemovalPacketHandler extends UserInterfacePacketHandlerBase<QuestRewardGoldRemovalPacket>
 	{
 		@Override
 		protected void doHandle(QuestRewardGoldRemovalPacket packet)
@@ -648,7 +649,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class ScriptExecutionErrorPacketHandler extends PacketHandlerBase<ScriptExecutionErrorPacket>
+	private class ScriptExecutionErrorPacketHandler extends UserInterfacePacketHandlerBase<ScriptExecutionErrorPacket>
 	{
 		@Override
 		protected void doHandle(ScriptExecutionErrorPacket packet)
@@ -659,7 +660,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class ScriptResultInfoPacketHandler extends PacketHandlerBase<ScriptResultInfoPacket>
+	private class ScriptResultInfoPacketHandler extends UserInterfacePacketHandlerBase<ScriptResultInfoPacket>
 	{
 		@Override
 		protected void doHandle(ScriptResultInfoPacket packet)
@@ -674,7 +675,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class ShopItemsPacketHandler extends PacketHandlerBase<ShopItemsPacket>
+	private class ShopItemsPacketHandler extends UserInterfacePacketHandlerBase<ShopItemsPacket>
 	{
 		@Override
 		protected void doHandle(ShopItemsPacket packet)
@@ -709,7 +710,7 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class UnacceptableOperationPacketHandler extends PacketHandlerBase<UnacceptableOperationPacket>
+	private class UnacceptableOperationPacketHandler extends UserInterfacePacketHandlerBase<UnacceptableOperationPacket>
 	{
 		private static final float DEFAULT_MESSAGE_TIMEOUT = 5.0f;
 

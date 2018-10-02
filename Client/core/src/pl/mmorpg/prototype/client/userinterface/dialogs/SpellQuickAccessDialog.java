@@ -8,6 +8,7 @@ import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.client.spells.SpellFactory;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
@@ -55,7 +56,7 @@ public class SpellQuickAccessDialog extends QuickAccessDialog<Spell>
 	}
 	
 	@SuppressWarnings("unused")
-	private class SpellPutInQuickAccessBarPacketHandler extends PacketHandlerBase<SpellPutInQuickAccessBarPacket>
+	private class SpellPutInQuickAccessBarPacketHandler extends UserInterfacePacketHandlerBase<SpellPutInQuickAccessBarPacket>
 	{
 		@Override
 		protected void doHandle(SpellPutInQuickAccessBarPacket packet)

@@ -58,6 +58,7 @@ import pl.mmorpg.prototype.client.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Shop;
 import pl.mmorpg.prototype.client.objects.spells.ThrowableObject;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
+import pl.mmorpg.prototype.client.packethandlers.PacketHandlerCategory;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.path.search.BestFirstPathFinder;
 import pl.mmorpg.prototype.client.path.search.PathFinder;
@@ -343,6 +344,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private void reset()
 	{
 		isInitialized = false;
+		packetHandlerRegisterer.unregister(PacketHandlerCategory.USER_INTERFACE);
 		inputHandler = new NullInputHandler();
 		gameObjects.values().forEach(object -> object.unregisterHandlers(packetHandlerRegisterer));
 		gameObjects.clear();

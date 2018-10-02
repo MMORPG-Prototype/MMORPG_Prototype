@@ -11,9 +11,9 @@ import pl.mmorpg.prototype.clientservercommon.packets.movement.MoveUpPacket;
 
 public class PlayInputContinuousHandler extends InputProcessorAdapter
 {
-	private Connection clientConnection;
-	private Player player;
-	private UserInterface userInterface;
+	private final Connection clientConnection;
+	private final Player player;
+	private final UserInterface userInterface;
 
 	public PlayInputContinuousHandler(UserInterface userInterface, Connection clientConnection, Player player)
 	{

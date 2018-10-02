@@ -20,6 +20,7 @@ import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
@@ -45,7 +46,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	private final UserInterface linkedInterface;
 	private final StringValueLabel<Integer> goldLabel = new StringValueLabel<>("Gold: ", Settings.DEFAULT_SKIN);
 
-	public InventoryDialog(UserInterface linkedInterface, Integer initialGoldAmmount,
+	public InventoryDialog(UserInterface linkedInterface, Integer initialGoldAmount,
 			PacketHandlerRegisterer registerer)
 	{
 		super("Inventory", Settings.DEFAULT_SKIN);
@@ -74,7 +75,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 		contentTable.add(switchButtons);
 		contentTable.row();
-		goldLabel.setValue(initialGoldAmmount);
+		goldLabel.setValue(initialGoldAmount);
 		contentTable.add(goldLabel).left();
 		contentTable.row();
 
@@ -314,7 +315,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	}
 
 	@SuppressWarnings("unused")
-	private class GoldReceivePacketHandler extends PacketHandlerBase<GoldReceivePacket>
+	private class GoldReceivePacketHandler extends UserInterfacePacketHandlerBase<GoldReceivePacket>
 	{
 		@Override
 		protected void doHandle(GoldReceivePacket packet)
@@ -325,7 +326,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	}
 
 	@SuppressWarnings("unused")
-	private class GoldAmountChangePacketHandler extends PacketHandlerBase<GoldAmountChangePacket>
+	private class GoldAmountChangePacketHandler extends UserInterfacePacketHandlerBase<GoldAmountChangePacket>
 	{
 		@Override
 		protected void doHandle(GoldAmountChangePacket packet)
@@ -336,7 +337,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	}
 
 	@SuppressWarnings("unused")
-	private class InventoryItemRepositionPacketHandler extends PacketHandlerBase<InventoryItemRepositionPacket>
+	private class InventoryItemRepositionPacketHandler extends UserInterfacePacketHandlerBase<InventoryItemRepositionPacket>
 	{
 		@Override
 		protected void doHandle(InventoryItemRepositionPacket packet)
@@ -350,7 +351,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	}
 
 	@SuppressWarnings("unused")
-	private class InventoryItemStackPacketHandler extends PacketHandlerBase<InventoryItemStackPacket>
+	private class InventoryItemStackPacketHandler extends UserInterfacePacketHandlerBase<InventoryItemStackPacket>
 	{
 		@Override
 		protected void doHandle(InventoryItemStackPacket packet)
@@ -374,7 +375,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	}
 
 	@SuppressWarnings("unused")
-	private class InventoryItemSwapPacketHandler extends PacketHandlerBase<InventoryItemSwapPacket>
+	private class InventoryItemSwapPacketHandler extends UserInterfacePacketHandlerBase<InventoryItemSwapPacket>
 	{
 		@Override
 		protected void doHandle(InventoryItemSwapPacket packet)
@@ -399,7 +400,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 	}
 
 	@SuppressWarnings("unused")
-	private class StackableItemAmountChangePacketHandler extends PacketHandlerBase<StackableItemAmountChangePacket>
+	private class StackableItemAmountChangePacketHandler extends UserInterfacePacketHandlerBase<StackableItemAmountChangePacket>
 	{
 		@Override
 		protected void doHandle(StackableItemAmountChangePacket packet)

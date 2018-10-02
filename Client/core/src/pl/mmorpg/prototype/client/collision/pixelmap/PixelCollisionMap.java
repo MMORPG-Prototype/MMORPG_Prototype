@@ -18,8 +18,8 @@ import pl.mmorpg.prototype.clientservercommon.Identifiable;
 public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable> implements ShiftableCollisionMap<T>
 {
 	private int nextStaticObjectId = -1;
-	private Object[][] collisionMap;
-	private Map<Long, CollisionObjectInfo<T>> insertedCollisionObjects = new ConcurrentHashMap<>();
+	private final Object[][] collisionMap;
+	private final Map<Long, CollisionObjectInfo<T>> insertedCollisionObjects = new ConcurrentHashMap<>();
 	private final UndefinedStaticObjectCreator<T> undefinedStaticObjectCreator;
 	private int shiftX = 0;
 	private int shiftY = 0;
@@ -125,7 +125,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	{
 		IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
 		shiftedCollision.x -= moveValue;
-		repositionWithBoundsChecking(moveValue, collision, shiftedCollision, object,
+		repositionWithBoundsChecking(collision, shiftedCollision, object,
 				() -> repositionCollisionOnlyGoingLeft(moveValue, collision, object));
 	}
 
@@ -160,7 +160,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	{
 		IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
 		shiftedCollision.x += moveValue;
-		repositionWithBoundsChecking(moveValue, collision, shiftedCollision, object,
+		repositionWithBoundsChecking(collision, shiftedCollision, object,
 				() -> repositionCollisionOnlyGoingRight(moveValue, collision, object));
 	}
 
@@ -195,12 +195,12 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	{
 		IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
 		shiftedCollision.y -= moveValue;
-		repositionWithBoundsChecking(moveValue, collision, shiftedCollision, object,
+		repositionWithBoundsChecking(collision, shiftedCollision, object,
 				() -> repositionCollisionOnlyGoingDown(moveValue, collision, object));
 	}
 
-	private void repositionWithBoundsChecking(int moveValue, IntegerRectangle collision,
-			IntegerRectangle shiftedCollision, T object, Runnable repositionInProperDirection)
+	private void repositionWithBoundsChecking(IntegerRectangle collision, IntegerRectangle shiftedCollision,
+	                                          T object, Runnable repositionInProperDirection)
 	{
 		CollisionObjectInfo<T> collisionObjectInfo = insertedCollisionObjects.get(object.getId());
 
@@ -252,7 +252,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	{
 		IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
 		shiftedCollision.y += moveValue;
-		repositionWithBoundsChecking(moveValue, collision, shiftedCollision, object,
+		repositionWithBoundsChecking(collision, shiftedCollision, object,
 				() -> repositionCollisionOnlyGoingUp(moveValue, collision, object));
 	}
 
@@ -360,7 +360,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 			IntegerRectangle collision = new IntegerRectangle(collisionRect);
 			IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
 			shiftedCollision.x -= shiftValue;
-			repositionWithBoundsChecking(shiftValue, collision, shiftedCollision, object,
+			repositionWithBoundsChecking(collision, shiftedCollision, object,
 					() -> insertCollisionGoingLeft(shiftValue, collision, object));
 		}
 	}
@@ -380,7 +380,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 			IntegerRectangle collision = new IntegerRectangle(collisionRect);
 			IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
 			shiftedCollision.x += shiftValue;
-			repositionWithBoundsChecking(shiftValue, collision, shiftedCollision, object,
+			repositionWithBoundsChecking(collision, shiftedCollision, object,
 					() -> insertCollisionGoingRight(shiftValue, collision, object));
 		}
 	}
@@ -406,7 +406,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 			IntegerRectangle collision = new IntegerRectangle(collisionRect);
 			IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
 			shiftedCollision.y -= shiftValue;
-			repositionWithBoundsChecking(shiftValue, collision, shiftedCollision, object,
+			repositionWithBoundsChecking(collision, shiftedCollision, object,
 					() -> insertCollisionGoingDown(shiftValue, collision, object));
 		}
 	}
@@ -424,7 +424,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 			IntegerRectangle collision = new IntegerRectangle(collisionRect);
 			IntegerRectangle shiftedCollision = new IntegerRectangle(collision);
 			shiftedCollision.y += shiftValue;
-			repositionWithBoundsChecking(shiftValue, collision, shiftedCollision, object,
+			repositionWithBoundsChecking(collision, shiftedCollision, object,
 					() -> insertCollisionGoingUp(shiftValue, collision, object));
 		}
 	}

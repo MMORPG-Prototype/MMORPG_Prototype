@@ -27,7 +27,7 @@
 			root
 		</property>
 		<property name="hibernate.connection.password">
-			<!-- no password -->
+			root
 		</property>
 
 		<!-- Echo all executed SQL to stdout -->

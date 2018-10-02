@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.CloseButton;
@@ -80,7 +81,7 @@ public class ChatDialog extends Dialog
 		super.setVisible(visible);
 	}
 	
-	private class ChatMessageReplyPacketHandler extends PacketHandlerBase<ChatMessageReplyPacket>
+	private class ChatMessageReplyPacketHandler extends UserInterfacePacketHandlerBase<ChatMessageReplyPacket>
 	{
 		@Override
 		protected void doHandle(ChatMessageReplyPacket packet)

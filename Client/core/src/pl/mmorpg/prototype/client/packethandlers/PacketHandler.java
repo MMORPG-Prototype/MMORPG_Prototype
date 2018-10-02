@@ -9,4 +9,9 @@ public interface PacketHandler<T extends Object>
 	boolean canBeOmitted(T packet);
 
 	void tryHandlingUnhandledPackets();
+
+	default PacketHandlerCategory getCategory()
+	{
+		return PacketHandlerCategory.DEFAULT;
+	}
 }

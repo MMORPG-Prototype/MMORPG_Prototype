@@ -14,6 +14,7 @@ import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemQuickAccessIcon;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
@@ -114,7 +115,7 @@ public class ItemQuickAccessDialog extends QuickAccessDialog<ItemQuickAccessIcon
 		quickAccessField.put(icon);
 	}
 	
-	public class ItemPutInQuickAccessBarPacketHandler extends PacketHandlerBase<ItemPutInQuickAccessBarPacket>
+	public class ItemPutInQuickAccessBarPacketHandler extends UserInterfacePacketHandlerBase<ItemPutInQuickAccessBarPacket>
 	{
 		@Override
 		protected void doHandle(ItemPutInQuickAccessBarPacket packet)
