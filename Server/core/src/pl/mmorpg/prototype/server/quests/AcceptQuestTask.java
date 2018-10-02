@@ -1,21 +1,19 @@
 package pl.mmorpg.prototype.server.quests;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import pl.mmorpg.prototype.server.quests.events.AcceptQuestEvent;
 
 public class AcceptQuestTask extends QuestTaskBase<AcceptQuestEvent>
 {
 	@QuestMakerIgnore
 	private boolean finished = false;
-	@JsonProperty
+
 	private final String questName;
 
-	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	public AcceptQuestTask(String questName)
+	public AcceptQuestTask(@JsonProperty("parentIndex") Integer parentIndex,
+	                       @JsonProperty("questName") String questName)
 	{
-		super(AcceptQuestEvent.class);
+		super(parentIndex, AcceptQuestEvent.class);
 		this.questName = questName;
 	}
 

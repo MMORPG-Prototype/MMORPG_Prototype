@@ -12,11 +12,16 @@ import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.quests.observers.QuestFinishedObserver;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-@JsonInclude(Include.NON_EMPTY)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public interface QuestTask extends Serializable
 {
     void addNextTask(QuestTask task);
+
+    /**
+     * Returns index of parent.children collection of this quest task
+     * Can be null
+     */
+    Integer getParentIndex();
 
     @JsonIgnore
     boolean isLastTaskInQuest();

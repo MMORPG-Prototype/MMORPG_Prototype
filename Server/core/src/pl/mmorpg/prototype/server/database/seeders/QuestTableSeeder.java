@@ -37,8 +37,8 @@ public class QuestTableSeeder implements TableSeeder
 		Quest quest = new Quest();
 		quest.setName(name);
 		quest.setDescription(description);
-		AcceptQuestTask rootTask = new AcceptQuestTask(name);
-		KillMonstersTask killMonsterTask = new KillMonstersTask(ObjectsIdentifiers.GREEN_DRAGON, 3);
+		AcceptQuestTask rootTask = new AcceptQuestTask(null, name);
+		KillMonstersTask killMonsterTask = new KillMonstersTask(0, ObjectsIdentifiers.GREEN_DRAGON, 3);
 		rootTask.addNextTask(killMonsterTask);
 		quest.setQuestTask(rootTask);
 		quest.setGoldReward(100);
@@ -54,8 +54,8 @@ public class QuestTableSeeder implements TableSeeder
 		Quest quest = new Quest();
 		quest.setName(name);
 		quest.setDescription(description);
-		AcceptQuestTask rootTask = new AcceptQuestTask(name);
-		NpcDialogTask talkWithNpcTask = new NpcDialogTask(NpcNames.QUEST_DIALOG_NPC, createDialog());
+		AcceptQuestTask rootTask = new AcceptQuestTask(null, name);
+		NpcDialogTask talkWithNpcTask = new NpcDialogTask(0, NpcNames.QUEST_DIALOG_NPC, createDialog());
 		rootTask.addNextTask(talkWithNpcTask);
 		quest.setQuestTask(rootTask);
 		quest.setGoldReward(100);
@@ -69,8 +69,8 @@ public class QuestTableSeeder implements TableSeeder
 	private DialogStep createDialog()
 	{
 		Map<String, DialogStep> furtherDialogs = new HashMap<>();
-		furtherDialogs.put("Anwser option 1", new DialogStep("I agree with you, here is the reward!"));
-		furtherDialogs.put("Anwser option 2", new DialogStep("I disagre, but here is the reward anyway..."));
+		furtherDialogs.put("Answer option 1", new DialogStep("I agree with you, here is the reward!"));
+		furtherDialogs.put("Answer option 2", new DialogStep("I disagree, but here is the reward anyway..."));
 		String speech = new LoremIpsum().getWords(50);
 		DialogStep dialogEntryPoint = new DialogStep(speech, furtherDialogs);
 		return dialogEntryPoint;

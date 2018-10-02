@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
@@ -41,16 +42,15 @@ public class EventsHandler
     
     private void processEvent(PlayerCharacter receiver, Event event)
     {
-        List<QuestTask> questTasks = getQuestTasks(receiver);
+        Stream<QuestTask> questTasks = getQuestTasks(receiver);
         questTasks.forEach(q -> q.handleEvent(event, observer));
     }
 
-    private List<QuestTask> getQuestTasks(PlayerCharacter playerCharacter)
+    private Stream<QuestTask> getQuestTasks(PlayerCharacter playerCharacter)
     {
         return playerCharacter.getUserCharacterData().getQuests().stream()
             .map(CharactersQuests::getQuestTasks)
             .flatMap(Collection::stream)
-            .map(QuestTaskWrapper::getQuestTask)
-            .collect(Collectors.toList());
+            .map(QuestTaskWrapper::getQuestTask);
     }
 }

@@ -12,7 +12,6 @@ import pl.mmorpg.prototype.server.helpers.CharacterCreator;
 
 public class CharacterCreationPacketHandler extends PacketHandlerBase<CharacterCreationPacket>
 {
-	
 	private Map<Integer, User> authenticatedClientsKeyClientId;
 	private Server server;
 

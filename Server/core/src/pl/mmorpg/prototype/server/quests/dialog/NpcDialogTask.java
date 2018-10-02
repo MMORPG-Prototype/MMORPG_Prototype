@@ -22,10 +22,11 @@ public class NpcDialogTask extends QuestTaskBase<NpcDialogEvent>
 	private boolean isFinished = false;
 
 	@JsonCreator
-	public NpcDialogTask(@JsonProperty("npcName") String npcName,
-			@JsonProperty("dialogEntryPoint") DialogStep dialogEntryPoint)
+	public NpcDialogTask(@JsonProperty("parentIndex") Integer parentIndex,
+	                     @JsonProperty("npcName") String npcName,
+	                     @JsonProperty("dialogEntryPoint") DialogStep dialogEntryPoint)
 	{
-		super(NpcDialogEvent.class);
+		super(parentIndex, NpcDialogEvent.class);
 		this.npcName = npcName;
 		this.dialogEntryPoint = dialogEntryPoint;
 		this.currentDialogStep = dialogEntryPoint;

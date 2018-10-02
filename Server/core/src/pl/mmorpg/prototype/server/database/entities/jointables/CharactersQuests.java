@@ -43,6 +43,15 @@ public class CharactersQuests
     @Column(name = "gold_reward", nullable = false)
     private Integer goldReward;
 
+	/**
+	 * Going from source task this column contains position index in parent.nextTasks collection
+	 * indexes of quest tasks finished. Null if no task was finished yet
+	 * For eg. 0,2 means that first task was on index 0, second was on index 2 in children
+	 * collection tasks of first one. Both tasks are finished.
+	 */
+	@Column(name = "finished_quest_tasks_path")
+	private String finishedQuestTasksPath;
+
     public CharactersQuests(Character character, Quest quest)
     {
         setCharacter(character);
@@ -93,5 +102,15 @@ public class CharactersQuests
     {
         key.setQuest(quest);
     }
+
+	public String getFinishedQuestTasksPath()
+	{
+		return finishedQuestTasksPath;
+	}
+
+	public void setFinishedQuestTasksPath(String finishedQuestTasksPath)
+	{
+		this.finishedQuestTasksPath = finishedQuestTasksPath;
+	}
 
 }

@@ -22,9 +22,12 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
     @QuestMakerIgnore
     private Class<T> desiredEventType;
 
-    public QuestTaskBase(Class<T> desiredEventType)
+    private final Integer parentIndex;
+
+    public QuestTaskBase(Integer parentIndex, Class<T> desiredEventType)
     {
         this.desiredEventType = desiredEventType;
+        this.parentIndex = parentIndex;
     }
     
     @Override
@@ -50,8 +53,11 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
             wrapper.setQuestTask(task);
             dbQuestTasks.add(wrapper);
         }
-     
+
         sourceTask.setQuestTasks(dbQuestTasks);
+        String newFinishedQuestTasksPath = parentIndex == null ? "0" :
+                sourceTask.getFinishedQuestTasksPath() + ',' + parentIndex;
+        sourceTask.setFinishedQuestTasksPath(newFinishedQuestTasksPath);
     }
     
     @Override
@@ -89,5 +95,9 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
     {
         observer.playerFinishedQuest(sourceTask.getCharacter().getId(), sourceTask.getQuest());
     }
-    
+
+    public Integer getParentIndex()
+    {
+        return parentIndex;
+    }
 }
