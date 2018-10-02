@@ -59,6 +59,7 @@ public class CharactersQuests
         initializeItemsReward(quest.getItemsReward());
         goldReward = quest.getGoldReward();
         Collection<QuestTask> nextTasks = quest.getQuestTask().getNextTasks();
+        setFinishedQuestTasksPath("0");
         initializeCurrentQuestTasks(nextTasks);
     }
 

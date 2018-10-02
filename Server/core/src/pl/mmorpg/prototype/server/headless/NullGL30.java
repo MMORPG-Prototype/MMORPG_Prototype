@@ -1577,7 +1577,6 @@ public class NullGL30 implements GL30
 	@Override
 	public void glVertexAttribPointer(int indx, int size, int type, boolean normalized, int stride, Buffer ptr)
 	{
-
 	}
 
 }
