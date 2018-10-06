@@ -12,8 +12,8 @@ import pl.mmorpg.prototype.client.exceptions.NoSuchStateTypeException;
 
 public class StateManager
 {
-	private Stack<State> states = new Stack<>();
-	private Consumer<State> disposeState;
+	private final Stack<State> states = new Stack<>();
+	private final Consumer<State> disposeState;
 
 	public StateManager(Consumer<State> disposeState)
 	{

@@ -20,18 +20,16 @@
 		<property name="hibernate.jdbc.lob.non_contextual_creation">true</property>
 
 		<property name="hibernate.connection.url">
-			jdbc:mysql://localhost:3306/mmorpgprototype?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC
+			jdbc:mysql://${database.host}:3306/mmorpgprototype?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC
 		</property>
 		<property name="hibernate.connection.username">
-			root
+			${database.username}
 		</property>
 		<property name="hibernate.connection.password">
-			root
+			${database.password}
 		</property>
 
-		<!-- Echo all executed SQL to stdout -->
-		<property name="show_sql">true</property>
-
+		<property name="show_sql">${database.show-sql}</property>
 		<property name="hbm2ddl.auto">update</property>
 
 	</session-factory>

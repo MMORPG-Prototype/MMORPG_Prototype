@@ -1574,6 +1574,7 @@ public class NullGL30 implements GL30
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void glVertexAttribPointer(int indx, int size, int type, boolean normalized, int stride, Buffer ptr)
 	{

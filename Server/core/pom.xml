@@ -27,7 +27,10 @@
 				</property>
 			</activation>
 			<properties>
-		       <database.host>localhost</database.host>
+				<database.host>localhost</database.host>
+				<database.username>root</database.username>
+				<database.password>root</database.password>
+				<database.show-sql>true</database.show-sql>
 		   </properties>
 		</profile>
 
@@ -40,7 +43,10 @@
 				</property>
 			</activation>
 			<properties>
-		       <database.host>mmorpg_db</database.host>
+				<database.host>mmorpg_db</database.host>
+				<database.username>root</database.username>
+				<database.password>root</database.password>
+				<database.show-sql>true</database.show-sql>
 		   </properties>
 		</profile>
 	</profiles>
@@ -123,28 +129,29 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.2.0</version>
+			<version>5.3.1</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-junit-jupiter</artifactId>
-			<version>2.21.0</version>
+			<version>2.23.0</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>2.21.0</version>
+			<version>2.23.0</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.16.16</version>
+			<version>1.18.2</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
