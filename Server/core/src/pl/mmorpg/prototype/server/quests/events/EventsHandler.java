@@ -1,12 +1,13 @@
 package pl.mmorpg.prototype.server.quests.events;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
+import pl.mmorpg.prototype.server.communication.PacketsSender;
+import pl.mmorpg.prototype.server.database.entities.Quest;
 import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
@@ -15,19 +16,22 @@ import pl.mmorpg.prototype.server.quests.observers.QuestFinishedObserver;
 
 public class EventsHandler
 {
+    private final EventPacketFactory eventPacketFactory = new EventPacketFactory();
     private final Queue<Event> eventQueue = new LinkedBlockingQueue<>();
     private final QuestFinishedObserver observer;
-    
-    public EventsHandler(QuestFinishedObserver observer)
+	private final PacketsSender packetsSender;
+
+	public EventsHandler(QuestFinishedObserver observer, PacketsSender packetsSender)
     {
         this.observer = observer;
-    }
-    
+		this.packetsSender = packetsSender;
+	}
+
     public void enqueueEvent(Event e)
     {
         eventQueue.add(e);
     }
-    
+
     public void processEvents()
     {
         while(!eventQueue.isEmpty())
@@ -39,18 +43,43 @@ public class EventsHandler
         Collection<PlayerCharacter> receivers = event.getReceivers();
         receivers.forEach(r -> processEvent(r, event));
     }
-    
+
     private void processEvent(PlayerCharacter receiver, Event event)
     {
-        Stream<QuestTask> questTasks = getQuestTasks(receiver);
-        questTasks.forEach(q -> q.handleEvent(event, observer));
-    }
+		Stream<Map.Entry<CharactersQuests, Collection<QuestTask>>> questTasks = getQuestTasks(receiver);
+		questTasks.forEach(task -> task.getValue().forEach(t -> {
+			boolean eventProcess = t.shouldProcess(event);
+			t.handleEvent(event, observer);
+			if(eventProcess)
+				packetsSender.sendTo(receiver.getConnectionId(), PacketsMaker.makeQuestStateInfoPacket(task.getKey()));
+		}));
+		sendEventPacket(receiver, event);
+	}
 
-    private Stream<QuestTask> getQuestTasks(PlayerCharacter playerCharacter)
+	private void sendEventPacket(PlayerCharacter receiver, Event event)
+	{
+		Object eventPacket = eventPacketFactory.makeEventPacket(event);
+		packetsSender.sendTo(receiver.getConnectionId(), eventPacket);
+	}
+
+	private void sendQuestUpdatePacket(PlayerCharacter receiver, Object eventPacket)
+	{
+		packetsSender.sendTo(receiver.getConnectionId(), eventPacket);
+	}
+
+	private Stream<Map.Entry<CharactersQuests, Collection<QuestTask>>> getQuestTasks(PlayerCharacter playerCharacter)
     {
-        return playerCharacter.getUserCharacterData().getQuests().stream()
-            .map(CharactersQuests::getQuestTasks)
-            .flatMap(Collection::stream)
-            .map(QuestTaskWrapper::getQuestTask);
-    }
+		return playerCharacter.getUserCharacterData().getQuests().stream()
+				.map(this::toCharactersQuestsQuestsTasksEntry);
+	}
+
+	private Map.Entry<CharactersQuests, Collection<QuestTask>> toCharactersQuestsQuestsTasksEntry(
+			CharactersQuests quest)
+	{
+		return new AbstractMap.SimpleEntry<>(quest,
+				quest.getQuestTasks().stream()
+						.map(QuestTaskWrapper::getQuestTask)
+						.collect(Collectors.toList())
+		);
+	}
 }

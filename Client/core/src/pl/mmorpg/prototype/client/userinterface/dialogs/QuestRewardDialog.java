@@ -19,7 +19,7 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.StringValueLa
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.quest.QuestRewardIcon;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemRewardPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
 
 public class QuestRewardDialog extends AutoCleanupOnCloseButtonDialog

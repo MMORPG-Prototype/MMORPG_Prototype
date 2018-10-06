@@ -120,7 +120,6 @@ public class ReflectionResourceUtils
 			return readManifestJars(in);
 		} catch (IOException e)
 		{
-			e.printStackTrace();
 			return ArrayUtils.EMPTY_STRING_ARRAY;
 		}
 	}

@@ -58,5 +58,4 @@ public interface QuestTask extends Serializable
     {
         return getPercentFinished() >= 100.0f;
     }
-
 }

@@ -43,10 +43,10 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestAcceptedPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestFinishedRewardPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestAcceptedPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestBoardInfoPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestFinishedRewardPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestStateInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptExecutionErrorPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptResultInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ShopItemPacket;
@@ -61,6 +61,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRe
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.MonsterKilledEventPacket;
 
 public class UserInterface
 {
@@ -579,6 +580,17 @@ public class UserInterface
 			removeQuestPositionFromQuestBoardDialog(questStatePacket.getQuestName());
 			Quest quest = QuestCreator.create(questStatePacket);
 			questListDialog.addQuest(quest);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class QuestStateInfoPacketHandler extends UserInterfacePacketHandlerBase<QuestStateInfoPacket>
+	{
+		@Override
+		protected void doHandle(QuestStateInfoPacket packet)
+		{
+			Quest quest = QuestCreator.create(packet);
+			questListDialog.updateQuest(quest);
 		}
 	}
 

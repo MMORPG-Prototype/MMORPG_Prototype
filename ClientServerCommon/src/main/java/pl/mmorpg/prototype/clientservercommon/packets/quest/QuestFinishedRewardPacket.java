@@ -1,6 +1,7 @@
-package pl.mmorpg.prototype.clientservercommon.packets;
+package pl.mmorpg.prototype.clientservercommon.packets.quest;
 
 import lombok.Data;
+import pl.mmorpg.prototype.clientservercommon.packets.ItemRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable

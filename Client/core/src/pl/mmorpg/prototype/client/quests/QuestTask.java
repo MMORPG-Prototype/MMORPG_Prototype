@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.client.quests;
 
 import lombok.Data;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestTaskInfoPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestTaskInfoPacket;
 
 import java.util.Arrays;
 

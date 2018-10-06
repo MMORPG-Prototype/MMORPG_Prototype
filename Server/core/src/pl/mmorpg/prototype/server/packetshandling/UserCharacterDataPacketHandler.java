@@ -8,7 +8,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.SpringContext;
-import pl.mmorpg.prototype.clientservercommon.packets.QuestStateInfoPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestStateInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.IdSupplier;

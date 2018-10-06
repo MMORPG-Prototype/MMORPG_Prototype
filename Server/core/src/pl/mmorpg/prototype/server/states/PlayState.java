@@ -65,7 +65,6 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private final GameObjectsFactory objectsFactory;
 	private final MonsterSpawner monsterSpawner;
 	private final Map<Integer, GameCommandsHandler> gameCommandsHandlers = new HashMap<>();
-	private final RewardForFinishedQuestObserver rewardForFinishedQuestObserver;
 	private final EventsHandler questEventsHandler;
 
 	private final OrthographicCamera camera = new OrthographicCamera();
@@ -74,8 +73,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	public PlayState(Server server)
 	{
 		this.server = server;
-		rewardForFinishedQuestObserver = new RewardForFinishedQuestObserver(this, this);
-		questEventsHandler = new EventsHandler(rewardForFinishedQuestObserver);
+		RewardForFinishedQuestObserver rewardForFinishedQuestObserver = new RewardForFinishedQuestObserver(this, this);
+		questEventsHandler = new EventsHandler(rewardForFinishedQuestObserver, (PacketsSender) this);
 		camera.setToOrtho(false);
 		//low values not to use too much cpu during debugging
 		camera.viewportWidth = 700;

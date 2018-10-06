@@ -25,4 +25,8 @@ public class QuestListPane extends ScrollPane
         Gdx.app.postRunnable(scrollingTask);
     }
 
+    public void updateQuest(Quest quest)
+    {
+        questList.updateQuest(quest);
+    }
 }

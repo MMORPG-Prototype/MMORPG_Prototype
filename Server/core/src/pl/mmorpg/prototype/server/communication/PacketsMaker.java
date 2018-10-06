@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.server.communication;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import pl.mmorpg.prototype.clientservercommon.packets.*;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
@@ -12,10 +13,16 @@ import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnInte
 import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnStrengthSpentSuccessfullyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.*;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.*;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.AcceptQuestEventPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.MonsterKilledEventPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.NpcDialogEventPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.NpcDialogStartEventPacket;
 import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.*;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
+import pl.mmorpg.prototype.server.exceptions.GameException;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
@@ -26,10 +33,15 @@ import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.npcs.ShopItemWrapper;
 import pl.mmorpg.prototype.server.objects.monsters.spells.objects.ThrowableObject;
 import pl.mmorpg.prototype.server.quests.QuestTask;
+import pl.mmorpg.prototype.server.quests.events.*;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PacketsMaker
 {
@@ -487,10 +499,48 @@ public class PacketsMaker
 		Quest quest = characterQuest.getQuest();
 		packet.setDescription(quest.getDescription());
 		packet.setQuestName(quest.getName());
-		QuestTask rootTask = characterQuest.getQuest().getQuestTask();
+		QuestTask rootTask = combineQuestDefinitionWithActualQuestState(characterQuest);
 		packet.setRootTask(makeQuestTaskInfoPacket(rootTask));
 		packet.setFinishedQuestTasksPath(characterQuest.getFinishedQuestTasksPath());
 		return packet;
+	}
+
+	private static QuestTask combineQuestDefinitionWithActualQuestState(CharactersQuests characterQuest)
+	{
+		QuestTask rootTask = deepCopy(characterQuest.getQuest().getQuestTask());
+		int[] finishedQuestTasksPathIndexes = Stream.of(characterQuest.getFinishedQuestTasksPath().split(","))
+				.mapToInt(Integer::valueOf)
+				.toArray();
+		QuestTask parentOfCurrentlyActiveQuestTasks = getParentOfCurrentlyActiveQuestTasks(rootTask,
+				finishedQuestTasksPathIndexes);
+		parentOfCurrentlyActiveQuestTasks.getNextTasks().clear();
+		List<QuestTask> currentlyActiveQuestTasks = characterQuest.getQuestTasks().stream()
+				.map(QuestTaskWrapper::getQuestTask)
+				.collect(Collectors.toList());
+		parentOfCurrentlyActiveQuestTasks.getNextTasks().addAll(currentlyActiveQuestTasks);
+		return rootTask;
+	}
+
+	private static QuestTask getParentOfCurrentlyActiveQuestTasks(QuestTask rootTask,
+			int[] finishedQuestTasksPathIndexes)
+	{
+		QuestTask currentTask = rootTask;
+		for (int i = 0; i < finishedQuestTasksPathIndexes.length - 1; i++)
+			currentTask = currentTask.getNextTasks().get(finishedQuestTasksPathIndexes[i]);
+		return currentTask;
+	}
+
+	private static QuestTask deepCopy(QuestTask questTask)
+	{
+		try
+		{
+			ObjectMapper objectMapper = new ObjectMapper();
+			byte[] bytes = objectMapper.writeValueAsBytes(questTask);
+			return objectMapper.readValue(bytes, QuestTask.class);
+		} catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static QuestTaskInfoPacket makeQuestTaskInfoPacket(QuestTask questTask)
@@ -577,5 +627,55 @@ public class PacketsMaker
 		packet.setItemPageX(position.getInventoryX());
 		packet.setItemPageY(position.getInventoryY());
 		return packet;
+	}
+
+	public static AcceptQuestEventPacket makeAcceptQuestEventPacket(Event event)
+	{
+		if (!(event instanceof AcceptQuestEvent))
+			throw new GameException("Wrong type of event" + event.getClass().getName());
+		return makeAcceptQuestEventPacket((AcceptQuestEvent) event);
+	}
+
+	public static AcceptQuestEventPacket makeAcceptQuestEventPacket(AcceptQuestEvent event)
+	{
+		return new AcceptQuestEventPacket();
+	}
+
+	public static MonsterKilledEventPacket makeMonsterKilledEvent(Event event)
+	{
+		if (!(event instanceof MonsterKilledEvent))
+			throw new GameException("Wrong type of event " + event.getClass().getName());
+		return makeMonsterKilledEvent((MonsterKilledEvent) event);
+	}
+
+	public static MonsterKilledEventPacket makeMonsterKilledEvent(MonsterKilledEvent event)
+	{
+		MonsterKilledEventPacket packet = new MonsterKilledEventPacket();
+		packet.setMonsterIdentifier(event.getMonsterIdentifier());
+		return packet;
+	}
+
+	public static NpcDialogEventPacket makeNpcDialogEventPacket(Event event)
+	{
+		if (!(event instanceof NpcDialogEvent))
+			throw new GameException("Wrong type of event " + event.getClass().getName());
+		return makeNpcDialogEventPacket((NpcDialogEvent) event);
+	}
+
+	public static NpcDialogEventPacket makeNpcDialogEventPacket(NpcDialogEvent event)
+	{
+		return new NpcDialogEventPacket();
+	}
+
+	public static NpcDialogStartEventPacket makeNpcDialogStartEventPacket(Event event)
+	{
+		if (!(event instanceof NpcDialogStartEvent))
+			throw new GameException("Wrong type of event " + event.getClass().getName());
+		return makeNpcDialogStartEventPacket((NpcDialogStartEvent) event);
+	}
+
+	public static NpcDialogStartEventPacket makeNpcDialogStartEventPacket(NpcDialogStartEvent event)
+	{
+		return new NpcDialogStartEventPacket();
 	}
 }

@@ -44,4 +44,10 @@ public class QuestProgress extends Table
         }
     }
 
+    public void updateData(Progress progress)
+    {
+		this.clear();
+        addCurrentTaskProgressInfo(progress);
+        this.pack();
+    }
 }

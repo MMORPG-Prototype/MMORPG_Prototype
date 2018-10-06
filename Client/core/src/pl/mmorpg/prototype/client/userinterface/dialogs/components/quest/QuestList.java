@@ -9,7 +9,7 @@ import pl.mmorpg.prototype.client.quests.Quest;
 
 public class QuestList extends Table
 {
-    private Map<String, QuestElement> quests = new HashMap<>();
+    private final Map<String, QuestElement> quests = new HashMap<>();
     
     public void addQuest(Quest quest)
     {
@@ -17,5 +17,11 @@ public class QuestList extends Table
         quests.put(quest.getQuestName(), questElement);
         this.add(questElement);
         this.row();
+    }
+
+    public void updateQuest(Quest quest)
+    {
+        QuestElement questElement = quests.get(quest.getQuestName());
+        questElement.updateData(quest);
     }
 }

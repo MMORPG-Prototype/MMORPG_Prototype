@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import com.esotericsoftware.kryonet.Connection;
 
-import pl.mmorpg.prototype.clientservercommon.packets.QuestBoardInfoPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.GetQuestBoardInfoPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.Quest;

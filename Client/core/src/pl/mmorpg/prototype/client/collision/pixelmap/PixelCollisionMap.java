@@ -61,12 +61,12 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	}
 
 	@Override
-	public void insert(T object)
+	public synchronized void insert(T object)
 	{
 		insert(new CollisionObjectInfo<>(object));
 	}
 
-	public void insert(CollisionObjectInfo<T> collisionInfo)
+	private void insert(CollisionObjectInfo<T> collisionInfo)
 	{
 		T object = collisionInfo.getObject();
 		insertedCollisionObjects.put(object.getId(), collisionInfo);
@@ -97,7 +97,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	}
 
 	@Override
-	public void remove(T object)
+	public synchronized void remove(T object)
 	{
 		insertedCollisionObjects.remove(object.getId());
 		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
@@ -115,7 +115,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	}
 
 	@Override
-	public void repositionGoingLeft(int moveValue, T object)
+	public synchronized void repositionGoingLeft(int moveValue, T object)
 	{
 		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
 		repositionGoingLeft(moveValue, collision, object);
@@ -150,7 +150,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	}
 
 	@Override
-	public void repositionGoingRight(int moveValue, T object)
+	public synchronized void repositionGoingRight(int moveValue, T object)
 	{
 		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
 		repositionGoingRight(moveValue, collision, object);
@@ -185,7 +185,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	}
 
 	@Override
-	public void repositionGoingDown(int moveValue, T object)
+	public synchronized void repositionGoingDown(int moveValue, T object)
 	{
 		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
 		repositionGoingDown(moveValue, collision, object);
@@ -242,7 +242,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	}
 
 	@Override
-	public void repositionGoingUp(int moveValue, T object)
+	public synchronized void repositionGoingUp(int moveValue, T object)
 	{
 		IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect());
 		repositionGoingUp(moveValue, collision, object);
@@ -277,7 +277,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	}
 
 	@Override
-	public void update(int shiftX, int shiftY)
+	public synchronized void update(int shiftX, int shiftY)
 	{
 		int deltaX = shiftX - this.shiftX;
 		int deltaY = shiftY - this.shiftY;
@@ -449,13 +449,13 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	}
 
 	@Override
-	public void clear()
+	public synchronized void clear()
 	{
 		Collection<CollisionObjectInfo<T>> values = new ArrayList(insertedCollisionObjects.values());
 		values.forEach(info -> remove(info.getObject()));
 	}
 
-	public void insertStaticObject(Rectangle rectangle)
+	public synchronized void insertStaticObject(Rectangle rectangle)
 	{
 		T object = undefinedStaticObjectCreator.create(rectangle, nextStaticObjectId--);
 		insert(object);
