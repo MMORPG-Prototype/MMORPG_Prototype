@@ -26,7 +26,7 @@ public class PlayerPropertiesBuilder extends MonsterProperties.Builder
 		 		.gold(dataPacket.getGold())
 		 		.experience(dataPacket.getExperience())
 		 		.level(dataPacket.getLevel())
-		 		.dexitirity(dataPacket.getDexterity())
+		 		.dexterity(dataPacket.getDexterity())
 		 		.strength(dataPacket.getStrength())
 		 		.intelligence(dataPacket.getIntelligence());
 		 return super.build();

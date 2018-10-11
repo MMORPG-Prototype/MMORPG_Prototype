@@ -13,7 +13,7 @@ public abstract class MultiEffect extends EffectBase<MultiEffect>
 	{
 		this.effects = effects
 				.stream()
-				.collect(Collectors.toMap( e ->  e.getClass(), e -> new MultiEffectWrapper(e)));
+				.collect(Collectors.toMap(Effect::getClass, MultiEffectWrapper::new));
 	}
 	
 	@Override
@@ -53,10 +53,9 @@ public abstract class MultiEffect extends EffectBase<MultiEffect>
 	@Override
 	public boolean shouldDeactivate()
 	{
-		return effects
-				.values()
+		return effects.values()
 				.stream()
-				.allMatch( e -> !e.isEffectActivated());
+				.noneMatch(MultiEffectWrapper::isEffectActivated);
 	}
 	
 	@Override
@@ -65,7 +64,7 @@ public abstract class MultiEffect extends EffectBase<MultiEffect>
 		this.effects.forEach( (key, value) ->
 		{
 			MultiEffectWrapper sameTypeEffect = effect.effects.get(key);
-			value.stackWithSameTypeEffect(sameTypeEffect.effect);
+			value.stackWithSameTypeEffect(sameTypeEffect.getEffect());
 		});
 	}
 

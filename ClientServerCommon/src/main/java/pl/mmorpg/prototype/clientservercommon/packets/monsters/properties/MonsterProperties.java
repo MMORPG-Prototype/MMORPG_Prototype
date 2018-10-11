@@ -88,9 +88,9 @@ public class MonsterProperties
 			return this;
 		}
 
-		public Builder dexitirity(int dexitirity)
+		public Builder dexterity(int dexterity)
 		{
-			monsterProperties.dexterity = dexitirity;
+			monsterProperties.dexterity = dexterity;
 			return this;
 		}
 		

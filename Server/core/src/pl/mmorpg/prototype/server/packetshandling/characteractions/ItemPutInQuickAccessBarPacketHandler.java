@@ -32,7 +32,7 @@ public class ItemPutInQuickAccessBarPacketHandler extends PacketHandlerBase<Item
 		quickAccessConfigElement.setFieldPosition(packet.getCellPosition());
 		quickAccessConfigElement.setItemIdentifier(ItemIdentifiers.valueOf(packet.getItemIdentifier()));
 		
-		character.putNewConfigElemetInItemQuickAccessBar(quickAccessConfigElement);
+		character.putNewConfigElementInItemQuickAccessBar(quickAccessConfigElement);
 	}
 
 }

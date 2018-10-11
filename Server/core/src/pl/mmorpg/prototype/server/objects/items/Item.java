@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server.objects.items;
 
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
+import pl.mmorpg.prototype.server.database.entities.components.EquipmentPosition;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.exceptions.ItemHasNoPositionException;
 import pl.mmorpg.prototype.server.objects.monsters.ItemsOwner;
@@ -8,8 +9,7 @@ import pl.mmorpg.prototype.server.objects.monsters.ItemsOwner;
 public abstract class Item
 {
     private final long id;
-    protected ItemsOwner owner = null;
-    private InventoryPosition inventoryPosition = null;
+    private InventoryPosition inventoryPosition;
 
     public Item(long id)
     {
@@ -30,21 +30,6 @@ public abstract class Item
     public ItemIdentifiers getIdentifier()
     {
         return ItemIdentifier.getIdentifier(getClass());
-    }
-    
-    public ItemsOwner getOwner()
-    {
-    	return owner;
-    }
-    
-    public void setOwner(ItemsOwner newOwner)
-    {
-    	owner = newOwner;
-    }
-    
-    public boolean hasOwner()
-    {
-    	return owner != null;
     }
     
     public InventoryPosition getInventoryPosition()

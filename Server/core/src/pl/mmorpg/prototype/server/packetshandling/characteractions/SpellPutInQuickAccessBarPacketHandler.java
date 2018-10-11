@@ -36,7 +36,7 @@ public class SpellPutInQuickAccessBarPacketHandler extends PacketHandlerBase<Spe
 		CharacterSpell spell = spellRepository.findByIdentifier(packet.getSpellIdentifier());
 		quickAccessConfigElement.setSpell(spell);
 		
-		character.putNewConfigElemetInSpellQuickAccessBar(quickAccessConfigElement);
+		character.putNewConfigElementInSpellQuickAccessBar(quickAccessConfigElement);
 	}
 
 }

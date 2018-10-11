@@ -138,20 +138,20 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 
 	private void ongoingEffectsHandle(float deltaTime)
 	{
-		for(Entry<Class<? extends Effect>, Effect> effectsElement : ongoingEffects.entrySet())
-		{
-			Effect effect = effectsElement.getValue();
-			effect.update(deltaTime);
-			if(effect.shouldDeactivate())
-			{
-				effect.deactivate();
-				ongoingEffects.remove(effectsElement.getKey());
-			}
-		}
-		
+		ongoingEffects.forEach((effectType, effect) -> handleEffect(deltaTime, effectType, effect));
 	}
 
-    @Override
+	private void handleEffect(float deltaTime, Class<? extends Effect> effectType, Effect effect)
+	{
+		effect.update(deltaTime);
+		if(effect.shouldDeactivate())
+		{
+			effect.deactivate();
+			ongoingEffects.remove(effectType);
+		}
+	}
+
+	@Override
     public void render(Batch batch)
     {
         super.render(batch);

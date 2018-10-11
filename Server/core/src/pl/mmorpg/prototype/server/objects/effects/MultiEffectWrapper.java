@@ -2,14 +2,19 @@ package pl.mmorpg.prototype.server.objects.effects;
 
 public class MultiEffectWrapper implements Effect
 {
-	Effect effect;
-	boolean isActivated = false;
+	private Effect effect;
+	private boolean isActivated = false;
 	
 	MultiEffectWrapper(Effect effect)
 	{
 		this.effect = effect;
 	}
-	
+
+	Effect getEffect()
+	{
+		return effect;
+	}
+
 	boolean isEffectActivated()
 	{
 		return isActivated;

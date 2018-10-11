@@ -11,7 +11,4 @@ public interface Effect
 	boolean shouldDeactivate();
 	
 	void stackWithSameTypeEffect(Effect effect);
-
-	
-
 }

@@ -121,7 +121,7 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 		return getItem(position) != null;
 	}
 
-	public void putNewConfigElemetInItemQuickAccessBar(ItemQuickAccessBarConfigurationElement quickAccessConfigElement)
+	public void putNewConfigElementInItemQuickAccessBar(ItemQuickAccessBarConfigurationElement quickAccessConfigElement)
 	{
 		userCharacter.getItemQuickAccessBarConfig().put(quickAccessConfigElement.getFieldPosition(), quickAccessConfigElement);
 	}
@@ -131,7 +131,7 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 		userCharacter.getItemQuickAccessBarConfig().remove(cellPosition);
 	}
 	
-	public void putNewConfigElemetInSpellQuickAccessBar(
+	public void putNewConfigElementInSpellQuickAccessBar(
 			SpellQuickAccessBarConfigurationElement quickAccessConfigElement)
 	{
 		userCharacter.getSpellQuickAccessBarConfig().put(quickAccessConfigElement.getFieldPosition(), quickAccessConfigElement);
