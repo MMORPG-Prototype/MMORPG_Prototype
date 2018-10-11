@@ -7,17 +7,21 @@ import pl.mmorpg.prototype.client.objects.AttackingGameObject;
 import pl.mmorpg.prototype.client.objects.CustomAnimation;
 import pl.mmorpg.prototype.client.objects.GameObject;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
+import pl.mmorpg.prototype.clientservercommon.StatisticsCalculator;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.Statistics;
 
 public abstract class Monster extends AttackingGameObject
 {
-	protected MonsterProperties properties;
+	private final MonsterProperties properties;
+	private final Statistics statistics;
 
 	protected Monster(TextureSheetAnimationInfo sheetInfo, long id, MonsterProperties properties,
 			CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
 	{
 		super(sheetInfo, id, collisionMap, registerer);
 		this.properties = properties;
+		this.statistics = StatisticsCalculator.calculateStatistics(properties);
 	}
 
 	public Monster(long id, PacketHandlerRegisterer registerer, CustomAnimation<TextureRegion> moveLeftAnimation,
@@ -26,6 +30,7 @@ public abstract class Monster extends AttackingGameObject
 	{
 		super(id, registerer, moveLeftAnimation, moveRightAnimation, moveDownAnimation, moveUpAnimation, collisionMap);
 		this.properties = properties;
+		this.statistics = StatisticsCalculator.calculateStatistics(properties);
 	}
 	
 	public MonsterProperties getProperties()
@@ -38,9 +43,8 @@ public abstract class Monster extends AttackingGameObject
 		properties.hp -= damage;	
 	}
 
-	public void setProperties(MonsterProperties properties)
+	public Statistics getStatistics()
 	{
-		this.properties = properties;		
+		return statistics;
 	}
-
 }

@@ -2,7 +2,7 @@ package pl.mmorpg.prototype.server.objects.monsters;
 
 import java.util.Collection;
 
-import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.SkeletonPropertiesBuilder;
+import pl.mmorpg.prototype.server.objects.monsters.properties.builders.SkeletonPropertiesBuilder;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.objects.GameObject;

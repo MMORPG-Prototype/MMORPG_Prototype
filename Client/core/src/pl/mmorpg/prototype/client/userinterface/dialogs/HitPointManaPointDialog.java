@@ -4,24 +4,25 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 
+import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
-import pl.mmorpg.prototype.clientservercommon.CharacterStatsCalculator;
+import pl.mmorpg.prototype.clientservercommon.StatisticsCalculator;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 
 public class HitPointManaPointDialog extends Dialog
 {
 	private final ProgressBar hitPoints;
 	private final ProgressBar manaPoints;
-	private UserCharacterDataPacket linkedData;
+	private final Player player;
 
-	public HitPointManaPointDialog(UserCharacterDataPacket character)
+	public HitPointManaPointDialog(Player player)
 	{
-
-		super(character.getNickname(), Settings.DEFAULT_SKIN);
-		this.linkedData = character;
-		hitPoints = new ProgressBar(0, CharacterStatsCalculator.getMaxHP(character), 1.0f, false, Settings.DEFAULT_SKIN);
+		super(player.getData().getNickname(), Settings.DEFAULT_SKIN);
+		this.player = player;
+		hitPoints = new ProgressBar(0, getMaxHp(), 1.0f, false, Settings.DEFAULT_SKIN);
 		hitPoints.setColor(new Color(1.0f, 0.2f, 0.2f, 0.9f));
-		manaPoints = new ProgressBar(0, CharacterStatsCalculator.getMaxMp(character), 1.0f, false, Settings.DEFAULT_SKIN);
+		manaPoints = new ProgressBar(0, getMaxMp(), 1.0f, false, Settings.DEFAULT_SKIN);
 		manaPoints.setColor(new Color(0.2f, 0.2f, 1.0f, 0.9f));
 		
 		this.getContentTable().row();
@@ -33,10 +34,20 @@ public class HitPointManaPointDialog extends Dialog
 		update();
 	}
 
+	private int getMaxHp()
+	{
+		return StatisticsCalculator.calculateMaxHp(player.getProperties());
+	}
+
+	private int getMaxMp()
+	{
+		return StatisticsCalculator.calculateMaxMp(player.getProperties());
+	}
+
 	public void update()
 	{
-		hitPoints.setValue(linkedData.getHitPoints());
-		manaPoints.setValue(linkedData.getManaPoints());
+		hitPoints.setValue(getMaxHp());
+		manaPoints.setValue(getMaxMp());
 	}
 	
 

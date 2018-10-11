@@ -7,10 +7,12 @@ import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.GreenDragonPropertiesBuilder;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 
 public class GreenDragon extends HealthBarMonster
 {
-	public GreenDragon(long id, CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
+	public GreenDragon(long id, MonsterProperties properties,
+			CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
 	{
 		super(new TextureSheetAnimationInfo
 				.Builder(Assets.get("monsterSheet.png"))
@@ -21,8 +23,8 @@ public class GreenDragon extends HealthBarMonster
 				.textureTileXOffset(0)
 				.textureTileYOffset(0)
 				.build(), 
-				id, 
-				new GreenDragonPropertiesBuilder().build(), collisionMap, registerer);
+				id,
+				properties, collisionMap, registerer);
 	}
 
 }

@@ -7,5 +7,4 @@ import pl.mmorpg.prototype.server.objects.MovableGameObject;
 interface MoveAction<T extends RectangleCollisionObject>
 {
 	void perform(MovableGameObject operationTarget, PixelCollisionMap<T> collisionMap);
-	int getMoveDirection();
 }

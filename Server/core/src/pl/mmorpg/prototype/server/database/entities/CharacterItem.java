@@ -14,6 +14,7 @@ import javax.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
+import pl.mmorpg.prototype.server.database.entities.components.EquipmentPosition;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 
 @Entity(name = "CharacterItem")
@@ -47,5 +48,8 @@ public class CharacterItem
 	private Character character;
 	
 	private InventoryPosition inventoryPosition;
-	
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "equipment_position", nullable = false)
+	private EquipmentPosition equipmentPosition = EquipmentPosition.NONE;
 }

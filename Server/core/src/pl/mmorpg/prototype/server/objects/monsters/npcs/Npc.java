@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.server.objects.monsters.npcs;
 
-import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.NpcDefaultPropertiesBuilder;
+import pl.mmorpg.prototype.server.objects.monsters.properties.builders.NpcDefaultPropertiesBuilder;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.monsters.WalkingMonster;

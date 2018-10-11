@@ -1,18 +1,13 @@
 package pl.mmorpg.prototype.client.objects;
 
 import pl.mmorpg.prototype.client.collision.interfaces.CollisionMap;
-import pl.mmorpg.prototype.client.exceptions.GameException;
+import pl.mmorpg.prototype.client.exceptions.ObjectIdentifierNotFoundException;
 import pl.mmorpg.prototype.client.objects.interactive.QuestBoard;
-import pl.mmorpg.prototype.client.objects.monsters.Skeleton;
-import pl.mmorpg.prototype.client.objects.monsters.Snake;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.GrayDragonBody;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.GreenDragonBody;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.RedDragonBody;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.SkeletonBody;
 import pl.mmorpg.prototype.client.objects.monsters.bodies.SnakeBody;
-import pl.mmorpg.prototype.client.objects.monsters.dragons.GrayDragon;
-import pl.mmorpg.prototype.client.objects.monsters.dragons.GreenDragon;
-import pl.mmorpg.prototype.client.objects.monsters.dragons.RedDragon;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.GroceryShopNpc;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.client.objects.spells.FireBall;
@@ -21,7 +16,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ObjectCreationPacket;
 
 public class ObjectsFactory
 {
-	private PacketHandlerRegisterer registerer;
+	protected PacketHandlerRegisterer registerer;
 
 	public ObjectsFactory(PacketHandlerRegisterer registerer)
 	{
@@ -35,51 +30,33 @@ public class ObjectsFactory
 
     public GameObject produce(String identifier, long id, float x, float y, CollisionMap<GameObject> linkedCollisionMap)
     {
-        GameObject object = null;
-        if (identifier.equals(ObjectsIdentifier.getObjectIdentifier(Player.class)))
-            object = new Player(id, linkedCollisionMap, registerer);
-        else if (identifier.equals(ObjectsIdentifier.getObjectIdentifier(GreenDragon.class)))
-            object = new GreenDragon(id, linkedCollisionMap, registerer);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GreenDragonBody.class)))
+        GameObject object;
+        if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GreenDragonBody.class)))
         	object = new GreenDragonBody(id);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(RedDragon.class)))
-        	object = new RedDragon(id, linkedCollisionMap, registerer);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(RedDragonBody.class)))
         	object = new RedDragonBody(id);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GrayDragon.class)))
-        	object = new GrayDragon(id, linkedCollisionMap, registerer); 
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GrayDragonBody.class)))
-        	object = new GrayDragonBody(id); 
+        	object = new GrayDragonBody(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(FireBall.class)))
             object = new FireBall(id, linkedCollisionMap, registerer);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(Skeleton.class)))
-        	object = new Skeleton(id, linkedCollisionMap, registerer);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SkeletonBody.class)))
         	object = new SkeletonBody(id);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GroceryShopNpc.class)))
-        	object = new GroceryShopNpc(id, linkedCollisionMap, registerer);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(Snake.class)))
-        	object = new Snake(id, linkedCollisionMap, registerer); 
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SnakeBody.class)))
         	object = new SnakeBody(id);
         else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(QuestBoard.class)))
         	object = new QuestBoard(id, registerer);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(QuestDialogNpc.class)))
-        	object = new QuestDialogNpc(id, linkedCollisionMap, registerer);
         else
             throw new ObjectIdentifierNotFoundException(identifier);
 
-        if (object instanceof MovableGameObject)
-            ((MovableGameObject) object).initPosition(x, y);
-        object.setPosition(x, y);
-        return object;
+		initializePosition(x, y, object);
+		return object;
     }
 
-    private static class ObjectIdentifierNotFoundException extends GameException
-    {
-        private ObjectIdentifierNotFoundException(String identifier)
-        {
-            super("Identifier: " + identifier);
-        }
-    }
+	protected void initializePosition(float x, float y, GameObject object)
+	{
+		if (object instanceof MovableGameObject)
+			((MovableGameObject) object).initPosition(x, y);
+		object.setPosition(x, y);
+	}
+
 }

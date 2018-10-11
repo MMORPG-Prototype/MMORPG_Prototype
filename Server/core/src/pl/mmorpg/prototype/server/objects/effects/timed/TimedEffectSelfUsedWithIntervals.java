@@ -1,4 +1,4 @@
-package pl.mmorpg.prototype.server.objects.effects;
+package pl.mmorpg.prototype.server.objects.effects.timed;
 
 public abstract class TimedEffectSelfUsedWithIntervals extends TimedEffect
 {
@@ -34,6 +34,5 @@ public abstract class TimedEffectSelfUsedWithIntervals extends TimedEffect
 	public void deactivate()
 	{
 	}
-
 
 }

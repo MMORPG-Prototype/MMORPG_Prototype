@@ -7,7 +7,7 @@ import pl.mmorpg.prototype.client.resources.Assets;
 
 public class SmallHealthPotion extends Potion
 {
-    private static final Texture LOOKOUT = Assets.get(Assets.Textures.Items.SMALL_HEALTH_POTION);
+    private static final Texture LOOKOUT = Assets.get("Items/SmallHealthPotion.png");
 
 	public SmallHealthPotion(long id)
     {
@@ -18,7 +18,6 @@ public class SmallHealthPotion extends Potion
 	{
     	super(LOOKOUT, id, itemCount);
 	}
-
 
     @Override
     public String getIdentifier()

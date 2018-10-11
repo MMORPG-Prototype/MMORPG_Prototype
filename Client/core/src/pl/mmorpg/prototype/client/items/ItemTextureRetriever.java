@@ -13,12 +13,14 @@ public class ItemTextureRetriever
 		ItemIdentifiers identifier = ItemIdentifiers.valueOf(itemIdentifier);
 		if(identifier.equals(ItemIdentifiers.BLUE_BERRY))
 			return Assets.get("Items/BlueBerry.png");
-		else if(identifier.equals(ItemIdentifiers.FISH))
+		if(identifier.equals(ItemIdentifiers.FISH))
 			return Assets.get("Items/fish.png");
-		else if(identifier.equals(ItemIdentifiers.SMALL_HP_POTION))
+		if(identifier.equals(ItemIdentifiers.SMALL_HP_POTION))
 			return Assets.get("Items/SmallHealthPotion.png");
-		else if(identifier.equals(ItemIdentifiers.SMALL_MP_POTION))
+		if(identifier.equals(ItemIdentifiers.SMALL_MP_POTION))
 			return Assets.get("Items/SmallManaPotion.png");
+		if(identifier.equals(ItemIdentifiers.SWORD))
+			return Assets.get("Items/metal-sword.png");
 		
 		throw new UnknownItemOrNoTextureException(itemIdentifier);
 	}

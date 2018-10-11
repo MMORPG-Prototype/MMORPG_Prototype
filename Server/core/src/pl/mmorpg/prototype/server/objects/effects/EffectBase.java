@@ -15,7 +15,7 @@ public abstract class EffectBase<T> implements Effect
 
 	private boolean isSameType(Effect effect)
 	{
-		return effect.getClass().equals(effect.getClass());
+		return this.getClass().equals(effect.getClass());
 	}
 	
 	public abstract void stackWithSameTypeEffect(T effect);

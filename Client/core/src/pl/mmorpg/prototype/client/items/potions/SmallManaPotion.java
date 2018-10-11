@@ -7,7 +7,7 @@ import pl.mmorpg.prototype.client.resources.Assets;
 
 public class SmallManaPotion extends Potion
 {
-    private static final Texture LOOKOUT = Assets.get(Assets.Textures.Items.SMALL_MANA_POTION);
+    private static final Texture LOOKOUT = Assets.get("Items/SmallManaPotion.png");
 
 	public SmallManaPotion(long id)
     {

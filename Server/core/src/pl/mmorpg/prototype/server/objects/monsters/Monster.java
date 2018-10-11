@@ -4,16 +4,16 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
+import pl.mmorpg.prototype.clientservercommon.StatisticsCalculator;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.Statistics;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.exceptions.CannotUseThisItemException;
@@ -40,6 +40,10 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     private final Map<Class<? extends Effect>, Effect> ongoingEffects = new ConcurrentHashMap<>();
 
     protected final MonsterProperties properties;
+    // Statistics calculated based on properties
+    private final Statistics baseStatistics;
+	// Actual statistics after modifications (by buffs, equipment, items etc)
+    private final Statistics actualStatistics;
     private Monster targetedMonster = null;
     private float hitTime = 1000.0f;
     protected PlayState linkedState;
@@ -50,8 +54,9 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     {
         super(lookout, id, playState);
         linkedState = playState;
-        font.setColor(new Color(1, 0, 0, 1));
         this.properties = properties;
+        this.baseStatistics = StatisticsCalculator.calculateStatistics(properties);
+        this.actualStatistics = StatisticsCalculator.calculateStatistics(properties);
     }
 
     @Override
@@ -92,7 +97,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 
     private boolean canAttackTarget()
     {
-        return hitTime >= properties.attackSpeed && distance(targetedMonster) <= properties.attackRange;
+        return hitTime >= actualStatistics.attackSpeed && distance(targetedMonster) <= actualStatistics.attackRange;
     }
 
     private double distance(Monster targetedMonster)
@@ -302,16 +307,20 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     
     public void heal(int healPower)
     {
-        MonsterProperties targetProperties = getProperties();
-        if(targetProperties.hp == targetProperties.maxHp)
+        MonsterProperties targetProperties = this.properties;
+        if(targetProperties.hp >= actualStatistics.maxHp)
         	return;
         int previous = targetProperties.hp;
         targetProperties.hp += healPower;
-        if(targetProperties.hp > targetProperties.maxHp)
-            targetProperties.hp = targetProperties.maxHp;
+        if(targetProperties.hp > actualStatistics.maxHp)
+            targetProperties.hp = actualStatistics.maxHp;
         int delta = targetProperties.hp - previous;
         
         linkedState.sendToAll(PacketsMaker.makeHpNotifiedIncreasePacket(delta, getId()));		
     }
 
+	public Statistics getStatistics()
+	{
+		return actualStatistics;
+	}
 }

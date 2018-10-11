@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.server.objects.items.food;
 
 import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.objects.effects.FoodNaturalRegenerationEffect;
+import pl.mmorpg.prototype.server.objects.effects.timed.FoodNaturalRegenerationEffect;
 import pl.mmorpg.prototype.server.objects.items.StackableUseableItem;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 

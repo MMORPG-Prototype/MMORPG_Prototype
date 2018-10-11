@@ -18,7 +18,7 @@ public abstract class HealthBarMonster extends Monster
 			CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
 	{
 		super(sheetInfo, id, monsterProperties, collisionMap, registerer);
-		healthBar = new HealthBar(monsterProperties.maxHp, this);
+		healthBar = new HealthBar(super.getStatistics().maxHp, this);
 	}
 
 	public HealthBarMonster(long id, CustomAnimation<TextureRegion> moveLeftAnimation, PacketHandlerRegisterer registerer,
@@ -26,14 +26,14 @@ public abstract class HealthBarMonster extends Monster
 			CustomAnimation<TextureRegion> moveUpAnimation, MonsterProperties monster, CollisionMap<GameObject> collisionMap)
 	{
 		super(id, registerer, moveLeftAnimation, moveRightAnimation, moveDownAnimation, moveUpAnimation, monster, collisionMap);
-		healthBar = new HealthBar(monster.maxHp, this);
+		healthBar = new HealthBar(super.getStatistics().maxHp, this);
 	
 	}
 	@Override
 	public void update(float deltaTime)
 	{
 		healthBar.update(deltaTime);
-		healthBar.updateBar(properties.hp);
+		healthBar.updateBar(getProperties().hp);
 		super.update(deltaTime);
 	}
 	
@@ -46,7 +46,7 @@ public abstract class HealthBarMonster extends Monster
 	
 	protected void recreateHealthBar()
 	{
-		healthBar = new HealthBar(getProperties().maxHp, this);
+		healthBar = new HealthBar(getStatistics().maxHp, this);
 	}
 
 }

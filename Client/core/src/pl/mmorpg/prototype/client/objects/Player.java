@@ -21,31 +21,34 @@ public class Player extends HealthBarMonster
     private UserCharacterDataPacket data;
     private Texture lockOnTexture = Assets.get("target.png");
 
-    public Player(long id, CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
+    public Player(long id, CollisionMap<GameObject> collisionMap,
+			UserCharacterDataPacket characterData, PacketHandlerRegisterer registerer)
     {
-        super(new TextureSheetAnimationInfo
-				.Builder(Assets.get("characters.png"))
-				.textureTileWidth(12)
-				.textureTileHeight(8)
-				.textureCountedTileWidth(3)
-				.textureCountedTileHeight(4) 
-				.textureTileXOffset(0)
-				.textureTileYOffset(0)
-				.build(), 
-				id, new MonsterProperties.Builder().build(), collisionMap, registerer);
-        disableSliding();
-        registerPacketHandler(new GoldReceivePacketHandler());
-        registerPacketHandler(new GoldAmountChangePacketHandler());
+    	this(id, collisionMap, characterData, new PlayerPropertiesBuilder(characterData).build(), registerer);
     }
 
-    public void initialize(UserCharacterDataPacket characterData)
-    {
-        this.data = characterData;
-        this.setName(characterData.getNickname());
-        setProperties(new PlayerPropertiesBuilder(characterData).build());
-        recreateHealthBar();
-        initPosition(data.getStartingX(), data.getStartingY());
-    }
+	public Player(long id, CollisionMap<GameObject> collisionMap,
+			UserCharacterDataPacket characterData, MonsterProperties properties, PacketHandlerRegisterer registerer)
+	{
+		super(new TextureSheetAnimationInfo
+						.Builder(Assets.get("characters.png"))
+						.textureTileWidth(12)
+						.textureTileHeight(8)
+						.textureCountedTileWidth(3)
+						.textureCountedTileHeight(4)
+						.textureTileXOffset(0)
+						.textureTileYOffset(0)
+						.build(),
+				id, properties, collisionMap, registerer);
+		disableSliding();
+		registerPacketHandler(new GoldReceivePacketHandler());
+		registerPacketHandler(new GoldAmountChangePacketHandler());
+
+		this.data = characterData;
+		this.setName(characterData.getNickname());
+		recreateHealthBar();
+		initPosition(data.getStartingX(), data.getStartingY());
+	}
 
     @Override
     public void render(SpriteBatch batch)

@@ -1,4 +1,6 @@
-package pl.mmorpg.prototype.server.objects.effects;
+package pl.mmorpg.prototype.server.objects.effects.timed;
+
+import pl.mmorpg.prototype.server.objects.effects.EffectBase;
 
 public abstract class TimedEffect extends EffectBase<TimedEffect>
 {

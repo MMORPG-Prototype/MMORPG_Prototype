@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.server.objects.monsters.dragons;
 import java.util.Collection;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
-import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.RedDragonPropertiesBuilder;
+import pl.mmorpg.prototype.server.objects.monsters.properties.builders.RedDragonPropertiesBuilder;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.objects.GameObject;

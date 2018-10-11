@@ -19,12 +19,14 @@ import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 
 @Entity(name = "Character")
 @Table(name = "characters")
 @Data
 @EqualsAndHashCode(of = "id")
+@ToString(exclude = {"user", "quests"})
 public class Character implements Serializable
 {
 	@ManyToOne

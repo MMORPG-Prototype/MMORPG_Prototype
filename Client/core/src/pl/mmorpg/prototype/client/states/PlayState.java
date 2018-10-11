@@ -122,18 +122,17 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		packetHandlerRegisterer.registerPrivateClassPacketHandlers(this);
 	}
 
-	public void initialize(UserCharacterDataPacket character)
+	public void initialize(UserCharacterDataPacket playerData)
 	{
-		map = Assets.get(String.format("Map/%s.tmx", character.getStartingMap()));
+		map = Assets.get(String.format("Map/%s.tmx", playerData.getStartingMap()));
 		mapWidth = map.getProperties().get("width", Integer.class) * map.getProperties().get("tilewidth", Integer.class);
 		mapHeight = map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class);
 		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
 
-		player = new Player(character.getId(), collisionMap, packetHandlerRegisterer);
-		player.initialize(character);
+		player = new Player(playerData.getId(), collisionMap, playerData, packetHandlerRegisterer);
 		add(player);
-		gameObjects.put((long) character.getId(), player);
-		userInterface = new UserInterface(this, character, packetHandlerRegisterer);
+		gameObjects.put((long) playerData.getId(), player);
+		userInterface = new UserInterface(this, player, packetHandlerRegisterer);
 		initializeInputHandlers();
 		insertMapObjectsIntoCollisionMap(collisionMap, map);
 		addClouds();
@@ -568,8 +567,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		@Override
 		protected void doHandle(PlayerCreationPacket packet)
 		{
-			Player player = new Player(packet.id, collisionMap, packetHandlerRegisterer);
-			player.initialize(packet.data);
+			Player player = new Player(packet.id, collisionMap, packet.data, packetHandlerRegisterer);
 			add(player);
 		}
 	}

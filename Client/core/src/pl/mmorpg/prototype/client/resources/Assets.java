@@ -288,22 +288,4 @@ public class Assets
 			super("Unloaded resource: " + fileName);
 		}
 	}
-
-	public static class Textures
-	{
-		public final static String MAIN_CHAR = "MainChar.png";
-
-		public static class Items
-		{
-			public static final String ITEM_FOLDER = "Items/";
-			public static final String SMALL_HEALTH_POTION = ITEM_FOLDER + "SmallHealthPotion.png";
-			public static final String SMALL_MANA_POTION = ITEM_FOLDER + "SmallManaPotion.png";
-		}
-
-		public static class Map
-		{
-			public static final String MAP_FOLDER = "MAP/";
-			public static final String GREEN_GRASS = MAP_FOLDER + "greenGrass0.png";
-		}
-	}
 }

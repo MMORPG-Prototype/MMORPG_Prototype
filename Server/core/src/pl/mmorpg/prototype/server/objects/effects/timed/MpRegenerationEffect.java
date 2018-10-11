@@ -1,17 +1,18 @@
-package pl.mmorpg.prototype.server.objects.effects;
+package pl.mmorpg.prototype.server.objects.effects.timed;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.Statistics;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
-public class HpRegenerationEffect extends TimedEffectSelfUsedWithIntervals
+public class MpRegenerationEffect extends TimedEffectSelfUsedWithIntervals
 {
 	private int regenerationPower;
 	private Monster target;
 	private PacketsSender packetSender;
 
-	public HpRegenerationEffect(float activeTime, float usageInterval, int regenerationPower, Monster target,
+	public MpRegenerationEffect(float activeTime, float usageInterval, int regenerationPower, Monster target,
 			PacketsSender packetSender)
 	{
 		super(activeTime, usageInterval);
@@ -24,11 +25,11 @@ public class HpRegenerationEffect extends TimedEffectSelfUsedWithIntervals
 	public void oneTimeUsage()
 	{
 		MonsterProperties targetProperties = target.getProperties();
-		if (targetProperties.hp + regenerationPower > targetProperties.maxHp)
-			targetProperties.hp = targetProperties.maxHp;
+		Statistics targetStatistics = target.getStatistics();
+		if (targetProperties.mp + regenerationPower > targetStatistics.maxMp)
+			targetProperties.mp = targetStatistics.maxMp;
 		else
-			targetProperties.hp += regenerationPower;
-		packetSender.sendToAll(PacketsMaker.makeHpUpdatePacket(target.getId(), targetProperties.hp));
+			targetProperties.mp += regenerationPower;
+		packetSender.sendToAll(PacketsMaker.makeMpUpdatePacket(target.getId(), targetProperties.mp));
 	}
-
 }

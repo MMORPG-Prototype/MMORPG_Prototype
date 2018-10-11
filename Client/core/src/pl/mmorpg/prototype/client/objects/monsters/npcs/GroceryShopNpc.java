@@ -7,12 +7,14 @@ import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo.Bui
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.NpcNames;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 
 public class GroceryShopNpc extends Npc implements Shop
 {
-	public GroceryShopNpc(long id, CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
+	public GroceryShopNpc(long id, MonsterProperties properties,
+			CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
 	{
-		super(NpcNames.GROCERY_NPC, getSheetInfo(), id, collisionMap, registerer);
+		super(NpcNames.GROCERY_NPC, getSheetInfo(), id, properties, collisionMap, registerer);
 	}
 
 	private static TextureSheetAnimationInfo getSheetInfo()

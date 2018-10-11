@@ -26,6 +26,7 @@ import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
 import pl.mmorpg.prototype.client.items.StackableItem;
+import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.objects.icons.DraggableIcon;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
@@ -87,14 +88,15 @@ public class UserInterface
 
 	private final PlayState linkedState;
 
-	public UserInterface(PlayState linkedState, UserCharacterDataPacket character, PacketHandlerRegisterer registerer)
+	public UserInterface(PlayState linkedState, Player player, PacketHandlerRegisterer registerer)
 	{
 		this.linkedState = linkedState;
+		UserCharacterDataPacket playerData = player.getData();
 		menuDialog = new MenuDialog(this);
-		inventoryDialog = new InventoryDialog(this, character.getGold(), registerer);
-		statisticsDialog = new StatisticsDialog(character, stage);
+		inventoryDialog = new InventoryDialog(this, playerData.getGold(), registerer);
+		statisticsDialog = new StatisticsDialog(player, stage);
 		shortcutBarDialog = new ShortcutBarPane(this);
-		hpMpDialog = new HitPointManaPointPane(character, registerer);
+		hpMpDialog = new HitPointManaPointPane(player, registerer);
 		itemQuickAccessDialog = new ItemQuickAccessDialog(this, (ItemCounter) inventoryDialog, registerer);
 		spellQuickAccessDialog = new SpellQuickAccessDialog(this, registerer);
 		equipmentDialog = new EquipmentDialog();
@@ -102,7 +104,7 @@ public class UserInterface
 		consoleDialog = new ConsoleDialog(this);
 		questListDialog = new QuestListDialog(registerer);
 		spellListDialog = new SpellListDialog(this, registerer);
-		levelUpDialog = new LevelUpDialog(this, character);
+		levelUpDialog = new LevelUpDialog(this, playerData);
 		mapDialogsWithKeys();
 		mapOtherDialogs();
 		addDialogsToStage();

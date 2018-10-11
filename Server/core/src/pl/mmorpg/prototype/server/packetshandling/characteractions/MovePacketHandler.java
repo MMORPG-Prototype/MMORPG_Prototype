@@ -23,8 +23,4 @@ public abstract class MovePacketHandler extends PacketHandlerBase<GameObjectTarg
 		MovableGameObject operationTarget = (MovableGameObject) playState.getObject(packet.getTargetId());
 		this.perform(operationTarget, playState.getCollisionMap());	
 	}
-	
-	
-	
-
 }

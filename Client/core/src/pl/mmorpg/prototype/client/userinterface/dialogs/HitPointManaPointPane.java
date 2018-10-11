@@ -3,7 +3,7 @@ package pl.mmorpg.prototype.client.userinterface.dialogs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 
-import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
+import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.clientservercommon.packets.HpChangeByItemUsagePacket;
@@ -17,21 +17,21 @@ public class HitPointManaPointPane extends ScrollPane
 	private static HitPointManaPointDialog dialogInitializer;
 	private final HitPointManaPointDialog dialog;
 	
-	public HitPointManaPointPane(UserCharacterDataPacket character, PacketHandlerRegisterer packetHandlerRegisterer)
+	public HitPointManaPointPane(Player player, PacketHandlerRegisterer packetHandlerRegisterer)
 	{
-		super(createDialog(character));
+		super(createDialog(player));
 		dialog = dialogInitializer;
-		initiazlizePosition();
+		initializePosition();
 		packetHandlerRegisterer.registerPrivateClassPacketHandlers(this);
 	} 
 	
-	private static HitPointManaPointDialog createDialog(UserCharacterDataPacket character)
+	private static HitPointManaPointDialog createDialog(Player player)
 	{
-		dialogInitializer = new HitPointManaPointDialog(character);
+		dialogInitializer = new HitPointManaPointDialog(player);
 		return dialogInitializer;
 	}
 
-	private void initiazlizePosition()
+	private void initializePosition()
 	{
 		this.setHeight(100);
 		this.setWidth(200);

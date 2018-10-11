@@ -7,11 +7,12 @@ import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.GrayDragonPropertiesBuilder;
+import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 
 public class GrayDragon  extends HealthBarMonster
 {
 
-	public GrayDragon(long id, CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
+	public GrayDragon(long id, MonsterProperties properties, CollisionMap<GameObject> collisionMap, PacketHandlerRegisterer registerer)
 	{
 		super(new TextureSheetAnimationInfo
 				.Builder(Assets.get("monsterSheet.png"))
@@ -22,8 +23,8 @@ public class GrayDragon  extends HealthBarMonster
 				.textureTileXOffset(3)
 				.textureTileYOffset(4)
 				.build(), 
-				id, 
-				new GrayDragonPropertiesBuilder().build(), collisionMap, registerer);
+				id,
+				properties, collisionMap, registerer);
 	}
 
 }

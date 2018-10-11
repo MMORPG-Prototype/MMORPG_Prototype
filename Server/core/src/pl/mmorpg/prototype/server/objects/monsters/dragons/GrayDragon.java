@@ -2,7 +2,7 @@ package pl.mmorpg.prototype.server.objects.monsters.dragons;
 
 import java.util.Collection;
 
-import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.GrayDragonPropertiesBuilder;
+import pl.mmorpg.prototype.server.objects.monsters.properties.builders.GrayDragonPropertiesBuilder;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.IdSupplier;

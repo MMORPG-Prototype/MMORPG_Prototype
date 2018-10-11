@@ -1,9 +1,13 @@
-package pl.mmorpg.prototype.server.objects.effects;
+package pl.mmorpg.prototype.server.objects.effects.timed;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
 import pl.mmorpg.prototype.server.communication.PacketsSender;
+import pl.mmorpg.prototype.server.objects.effects.Effect;
+import pl.mmorpg.prototype.server.objects.effects.MultiEffect;
+import pl.mmorpg.prototype.server.objects.effects.timed.HpRegenerationEffect;
+import pl.mmorpg.prototype.server.objects.effects.timed.MpRegenerationEffect;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 
 public class FoodNaturalRegenerationEffect extends MultiEffect
