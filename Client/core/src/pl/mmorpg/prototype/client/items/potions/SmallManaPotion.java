@@ -18,11 +18,4 @@ public class SmallManaPotion extends Potion
 	{
     	super(LOOKOUT, id, itemCount);
 	}
-
-    @Override
-    public String getIdentifier()
-    {
-        return ItemIdentifier.getObjectIdentifier(SmallManaPotion.class);
-    }
-
 }

@@ -1,27 +1,21 @@
 package pl.mmorpg.prototype.server.objects.monsters;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-
 import pl.mmorpg.prototype.clientservercommon.StatisticsCalculator;
+import pl.mmorpg.prototype.clientservercommon.StatisticsOperations;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.Statistics;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.exceptions.CannotUseThisItemException;
-import pl.mmorpg.prototype.server.exceptions.CharacterDoesntHaveItemException;
-import pl.mmorpg.prototype.server.exceptions.NoSuchItemToRemoveException;
-import pl.mmorpg.prototype.server.exceptions.NoSuchItemToRetrieveException;
+import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
+import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.server.exceptions.*;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.objects.effects.Effect;
+import pl.mmorpg.prototype.server.objects.items.equipment.EquipableItem;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.items.Useable;
@@ -30,20 +24,24 @@ import pl.mmorpg.prototype.server.objects.monsters.abilities.TimedAbility;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
-public abstract class Monster extends MovableGameObject implements ItemUser
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+public abstract class Monster extends MovableGameObject implements ItemUser, EquipableItemsUser
 {
 	private static final float RELEASE_TARGET_DISTANCE = 400.0f;
 	private static final BitmapFont font = Assets.getFont();
-	
+
+	// Only equipped items
+	private final Map<EquipmentPosition, ItemWithEffectWrapper> equipmentPositionToEffectMap = new ConcurrentHashMap<>();
+	// All items
 	private final Map<Long, Item> items = new ConcurrentHashMap<>();
     private final List<Ability> abilities = new LinkedList<>();
     private final Map<Class<? extends Effect>, Effect> ongoingEffects = new ConcurrentHashMap<>();
 
     protected final MonsterProperties properties;
-    // Statistics calculated based on properties
-    private final Statistics baseStatistics;
 	// Actual statistics after modifications (by buffs, equipment, items etc)
-    private final Statistics actualStatistics;
+    private Statistics actualStatistics;
     private Monster targetedMonster = null;
     private float hitTime = 1000.0f;
     protected PlayState linkedState;
@@ -55,7 +53,6 @@ public abstract class Monster extends MovableGameObject implements ItemUser
         super(lookout, id, playState);
         linkedState = playState;
         this.properties = properties;
-        this.baseStatistics = StatisticsCalculator.calculateStatistics(properties);
         this.actualStatistics = StatisticsCalculator.calculateStatistics(properties);
     }
 
@@ -78,7 +75,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 				attackHandle(deltaTime);
         }
 	}
-  
+
 
 	public boolean isTargetingAnotherMonster()
     {
@@ -122,7 +119,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
             target.die();
         }
     }
-    
+
 
     private void abilitiesUsageHandle()
 	{
@@ -139,7 +136,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
 			}
 		}
 	}
-    
+
 
 	private void ongoingEffectsHandle(float deltaTime)
 	{
@@ -196,17 +193,17 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     {
         return properties;
     }
-    
+
     public boolean isInGame()
     {
     	return linkedState.has(getId());
     }
-    
+
     protected void stopTargetingMonster()
     {
     	targetedMonster = null;
     }
-    
+
     @Override
     public void onRemoval()
     {
@@ -214,7 +211,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser
             targetedBY.targetedMonster = null;
     	super.onRemoval();
     }
-    
+
     @Override
 	public void addItemAllowStacking(Item newItem)
     {
@@ -226,17 +223,17 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     				((StackableItem)item).stackWith((StackableItem)newItem);
     				return;
     			}
-    		
+
     	}
     	items.put(newItem.getId(), newItem);
     }
-    
+
 	@Override
 	public void addItemDenyStacking(Item newItem)
 	{
     	items.put(newItem.getId(), newItem);
 	}
-	
+
     @Override
     public void addItemsAllowStacking(Collection<Item> items)
     {
@@ -271,40 +268,37 @@ public abstract class Monster extends MovableGameObject implements ItemUser
     {
         return items.values();
     }
-    
+
 	@Override
 	public Item getItem(long itemId)
 	{
-		Item result = items.get(itemId);
-		if(result == null)
-			throw new NoSuchItemToRetrieveException(itemId);
-		return result;
+		return items.get(itemId);
 	}
-    
+
     @Override
     public void removeItem(long id)
     {
     	if(items.remove(id) == null)
     		throw new NoSuchItemToRemoveException(id);
     }
-    
+
     protected void addAbility(Ability ability)
     {
     	abilities.add(ability);
     }
-    
+
     public void addEffect(Effect effect)
     {
     	Effect sameTypeEffect = ongoingEffects.get(effect.getClass());
-    	if(sameTypeEffect != null)
-    		sameTypeEffect.stackWithSameTypeEffect(effect);
+    	if(sameTypeEffect != null && sameTypeEffect.canStackWith(effect))
+    		sameTypeEffect.stackWithOtherEffect(effect);
     	else
     	{
     		effect.activate();
     		ongoingEffects.put(effect.getClass(), effect);
     	}
     }
-    
+
     public void heal(int healPower)
     {
         MonsterProperties targetProperties = this.properties;
@@ -315,12 +309,102 @@ public abstract class Monster extends MovableGameObject implements ItemUser
         if(targetProperties.hp > actualStatistics.maxHp)
             targetProperties.hp = actualStatistics.maxHp;
         int delta = targetProperties.hp - previous;
-        
-        linkedState.sendToAll(PacketsMaker.makeHpNotifiedIncreasePacket(delta, getId()));		
+
+        linkedState.sendToAll(PacketsMaker.makeHpNotifiedIncreasePacket(delta, getId()));
     }
 
 	public Statistics getStatistics()
 	{
 		return actualStatistics;
+	}
+
+	public void modifyByDeltaStatistics(Statistics deltaStatistics)
+	{
+		StatisticsOperations.modifyByDeltaStatistics(actualStatistics, deltaStatistics);
+	}
+
+	public void recalculateStatistics()
+	{
+		Collection<ItemWithEffectWrapper> deactivatedEffects = deactivateEquipmentEffects();
+		actualStatistics = StatisticsCalculator.calculateStatistics(properties);
+		deactivatedEffects.forEach(wrapper -> applyEquipmentItemEffect(wrapper.getItem()));
+	}
+
+	private Collection<ItemWithEffectWrapper> deactivateEquipmentEffects()
+	{
+		Collection<ItemWithEffectWrapper> toDeactivate = new ArrayList<>(equipmentPositionToEffectMap.values());
+		toDeactivate.forEach(wrapper -> wrapper.getEffect().deactivate());
+		equipmentPositionToEffectMap.clear();
+		return toDeactivate;
+	}
+
+	@Override
+	public void equip(EquipableItem equipableItem, EquipmentPosition equipmentPosition)
+	{
+		if(!canEquip(equipableItem, equipmentPosition))
+			throw new CannotEquipItemException(equipableItem, equipmentPosition);
+
+		if (!this.containsItem(equipableItem.getId()))
+			addItemDenyStacking(equipableItem);
+
+		equipableItem.setEquipmentPosition(equipmentPosition);
+		equipableItem.setInventoryPosition(null);
+		applyEquipmentItemEffect(equipableItem);
+	}
+
+	public void applyEquipmentItemEffect(EquipableItem equipableItem)
+	{
+		Effect itemEffect = equipableItem.createStatisticsModificationEffect(this);
+		addEffect(itemEffect);
+		equipmentPositionToEffectMap.put(equipableItem.getEquipmentPosition(),
+				new ItemWithEffectWrapper(equipableItem, itemEffect));
+	}
+
+	@Override
+	public boolean canTakeOff(EquipableItem equipableItem, InventoryPosition destinationPosition)
+	{
+		return hasItemInPosition(equipableItem.getEquipmentPosition()) && !hasItemInPosition(destinationPosition);
+	}
+
+	private boolean hasItemInPosition(EquipmentPosition equipmentPosition)
+	{
+		return equipmentPositionToEffectMap.containsKey(equipmentPosition);
+	}
+
+	public Item getItem(EquipmentPosition equipmentPosition)
+	{
+		return Optional.ofNullable(equipmentPositionToEffectMap.get(equipmentPosition))
+				.map(ItemWithEffectWrapper::getItem)
+				.orElse(null);
+	}
+
+	@Override
+	public void takeOff(EquipableItem equipableItem, InventoryPosition destinationPosition)
+	{
+		if(!canTakeOff(equipableItem, destinationPosition))
+			throw new CannotTakeOffItemException(equipableItem, destinationPosition);
+
+		ItemWithEffectWrapper wrapper = equipmentPositionToEffectMap.remove(equipableItem.getEquipmentPosition());
+		if (wrapper.getItem().getId() != equipableItem.getId())
+			throw new GameException("This should not happen");
+
+		wrapper.getEffect().deactivate();
+
+		equipableItem.setEquipmentPosition(EquipmentPosition.NONE);
+		equipableItem.setInventoryPosition(destinationPosition);
+	}
+
+	public Item getItem(InventoryPosition position)
+	{
+		//Linear search, may need to improve
+		return getItems().stream()
+				.filter(item -> item.getInventoryPosition() != null)
+				.filter(item -> item.getInventoryPosition().equals(position))
+				.findAny().orElse(null);
+	}
+
+	public boolean hasItemInPosition(InventoryPosition position)
+	{
+		return getItem(position) != null;
 	}
 }

@@ -26,7 +26,7 @@ public class ItemPutInQuickAccessBarPacketHandler extends PacketHandlerBase<Item
 	{
 		int characterId = gameData.getCharacterIdByConnectionId(connection.getID());
 		PlayerCharacter character = (PlayerCharacter)playState.getObject(characterId);
-		
+
 		ItemQuickAccessBarConfigurationElement quickAccessConfigElement = new ItemQuickAccessBarConfigurationElement();
 		quickAccessConfigElement.setCharacter(character.getUserCharacterData());
 		quickAccessConfigElement.setFieldPosition(packet.getCellPosition());

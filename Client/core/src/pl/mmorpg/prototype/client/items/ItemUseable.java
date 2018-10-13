@@ -8,4 +8,6 @@ public interface ItemUseable
 	void use(Monster target, PacketsSender packetSender);
 	
 	void useInterfaceUpdate();
+
+	boolean shouldBeRemoved();
 }

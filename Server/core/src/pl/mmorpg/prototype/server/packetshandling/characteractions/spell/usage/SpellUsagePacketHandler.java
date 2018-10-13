@@ -36,11 +36,13 @@ public abstract class SpellUsagePacketHandler<T> extends PacketHandlerBase<T>
 	private boolean canCharacterUseSpell(PlayerCharacter character, Class<? extends Spell> spellType)
 	{
 		Spell spell = character.getKnownSpell(spellType);
+		if(spell == null)
+			return false;
 		if(!character.hasMana(spell.getNeededMana()))
 			return false;
 		if(spell instanceof OffensiveSpell)
 			return character.isTargetingAnotherMonster();
-		return spell != null;
+		return true;
 	}
 	
 	private void use(PlayerCharacter character, Class<? extends Spell> spellType)

@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 
 @Entity(name = "CharacterSpell")
@@ -22,6 +23,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
 @Data
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
+@ToString(exclude = "characters")
 public class CharacterSpell
 {
 	@Id

@@ -23,6 +23,7 @@ import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
 import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.items.equipment.EquipableItem;
 import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -62,6 +63,7 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 		PlayerCharacter newPlayer = new PlayerCharacter(character, playState, clientId);
 		Collection<Item> playerItems = getPlayerItems(newPlayer);
 		playerItems.forEach(newPlayer::addItemDenyStacking);
+		applyEquipmentEffects(playerItems, newPlayer);
 		playState.add(newPlayer);
 		server.sendToAllExceptTCP(clientId, PacketsMaker.makeCreationPacket(newPlayer));
 		sendItemsDataToClient(playerItems, connection);
@@ -69,6 +71,14 @@ public class UserCharacterDataPacketHandler extends PacketHandlerBase<UserCharac
 		sendSpellQuickAccessBarConfigToClient(character.getSpellQuickAccessBarConfig().values(), connection);
 		sendQuestInfoToClient(character.getQuests(), connection);
 		sendAvailableSpellsToClient(character.getSpells(), connection);
+	}
+
+	private void applyEquipmentEffects(Collection<Item> playerItems, PlayerCharacter playerCharacter)
+	{
+		playerItems.stream()
+				.filter(EquipableItem.class::isInstance)
+				.map(item -> (EquipableItem)item)
+				.forEach(playerCharacter::applyEquipmentItemEffect);
 	}
 
 	private Collection<Item> getPlayerItems(PlayerCharacter newPlayer)

@@ -7,7 +7,6 @@ import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
-import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.RedDragonPropertiesBuilder;
 
 public class RedDragon extends HealthBarMonster
 {

@@ -12,24 +12,9 @@ import pl.mmorpg.prototype.clientservercommon.packets.NpcConversationAnwserChoos
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.InventoryPositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.GetQuestBoardInfoPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRemovedFromQuickAccessBarPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcDialogStartPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenShopPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveGoldRewardPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellRemovedFromQuickAccessBarPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SplitItemsPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeItemFromContainerPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakingGoldFromContainerPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TargetMonsterPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.*;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.spells.FireballSpellUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.spells.HealSpellUsagePacket;
 
@@ -236,6 +221,41 @@ public class PacketsMaker
 		packet.setDestinationPageX(destination.getPosition().x);
 		packet.setDestinationPageY(destination.getPosition().y);
 		packet.setSplitItemAmount(splitItemAmount);
+		return packet;
+	}
+
+	public static EquipItemPacket makeEquipItemPacket(long itemId, String desiredEquipmentPosition)
+	{
+		EquipItemPacket packet = new EquipItemPacket();
+		packet.setItemId(itemId);
+		packet.setEquipmentPosition(desiredEquipmentPosition);
+		return packet;
+	}
+
+	public static SwitchEquipmentItemPacket makeSwitchEquipmentItemPacket(long itemId, String equipmentPosition)
+	{
+		SwitchEquipmentItemPacket packet = new SwitchEquipmentItemPacket();
+		packet.setItemId(itemId);
+		packet.setEquipmentPosition(equipmentPosition);
+		return packet;
+	}
+
+	public static TakeOffItemPacket makeTakeOffItemPacket(long itemId, ItemInventoryPosition emptyDestinationPosition)
+	{
+		TakeOffItemPacket packet = new TakeOffItemPacket();
+		packet.setItemId(itemId);
+		packet.setDestinationPosition(makeInventoryPositionPacket(emptyDestinationPosition));
+		return packet;
+	}
+
+	private static InventoryPositionPacket makeInventoryPositionPacket(ItemInventoryPosition position)
+	{
+		if (position == null)
+			return null;
+		InventoryPositionPacket packet = new InventoryPositionPacket();
+		packet.setInventoryPageNumber(position.getPageNumber());
+		packet.setInventoryX(position.getPosition().x);
+		packet.setInventoryY(position.getPosition().y);
 		return packet;
 	}
 }

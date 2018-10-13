@@ -15,11 +15,4 @@ public class Fish extends FoodItem
 	{
     	super(Assets.get("Items/fish.png"), id, itemCount);
 	}
-
-	@Override
-	public String getIdentifier()
-	{
-		return ItemIdentifier.getObjectIdentifier(Fish.class);
-	}
-	
 }

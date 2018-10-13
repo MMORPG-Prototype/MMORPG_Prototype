@@ -18,6 +18,7 @@ import pl.mmorpg.prototype.server.database.repositories.SpellQuickAccessBarConfi
 import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
 import pl.mmorpg.prototype.server.database.repositories.CharacterSpellRepository;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.items.equipment.EquipableItem;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 
@@ -48,7 +49,8 @@ public class CharacterDatabaseSaver
     {
         Collection<Item> items = character.getItems();
         Collection<CharacterItem> databaseItems = items.stream()
-                .map((item) -> toDatabaseEquiv(item, (int) character.getId())).collect(Collectors.toList());
+                .map((item) -> toDatabaseEquiv(item, (int) character.getId()))
+                .collect(Collectors.toList());
         saveCharacterItems(character.getUserCharacterData(), databaseItems);
     }
 
@@ -68,6 +70,8 @@ public class CharacterDatabaseSaver
         characterItem.setInventoryPosition(item.getInventoryPosition());
         if (item instanceof StackableItem)
             characterItem.setCount(((StackableItem) item).getCount());
+        if (item instanceof EquipableItem)
+        	characterItem.setEquipmentPosition(((EquipableItem) item).getEquipmentPosition());
         return characterItem;
     }
 
@@ -91,7 +95,7 @@ public class CharacterDatabaseSaver
                 .values();
         itemQuickAccessBarConfigRepo.save(configElements);
     }
-    
+
 
 	private void saveCharacterSpellQuickAccessBarConfig(PlayerCharacter character)
 	{
@@ -101,7 +105,7 @@ public class CharacterDatabaseSaver
                 .values();
         spellQuickAccessBarConfigRepo.save(configElements);
 	}
-    
+
     private void saveCharacterSpells(PlayerCharacter character)
     {
     	Collection<CharacterSpell> spells = character.getUserCharacterData().getSpells();

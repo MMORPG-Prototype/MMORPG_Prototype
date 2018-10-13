@@ -1,24 +1,30 @@
 package pl.mmorpg.prototype.server.objects.effects;
 
-import pl.mmorpg.prototype.server.exceptions.DifferentTypeEffectException;
+import pl.mmorpg.prototype.server.exceptions.CannotStackWithOtherEffectException;
 
 public abstract class EffectBase<T> implements Effect
 {
 	@SuppressWarnings("unchecked")
     @Override
-	public void stackWithSameTypeEffect(Effect effect)
+	public void stackWithOtherEffect(Effect effect)
 	{
-		if(!isSameType(effect))
-			throw new DifferentTypeEffectException();
-		stackWithSameTypeEffect((T)effect);
+		if(!canStackWith(effect))
+			throw new CannotStackWithOtherEffectException(this, effect);
+		stackWithOtherEffect((T)effect);
+	}
+
+	@Override
+	public boolean canStackWith(Effect effect)
+	{
+		return isSameType(effect);
 	}
 
 	private boolean isSameType(Effect effect)
 	{
 		return this.getClass().equals(effect.getClass());
 	}
-	
-	public abstract void stackWithSameTypeEffect(T effect);
+
+	public abstract void stackWithOtherEffect(T effect);
 	
 	
 }

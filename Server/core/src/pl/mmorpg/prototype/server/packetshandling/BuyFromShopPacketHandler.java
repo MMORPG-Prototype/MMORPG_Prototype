@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.server.packetshandling;
 
 import com.esotericsoftware.kryonet.Connection;
 
+import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.BuyFromShopPacket;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
@@ -61,7 +62,7 @@ public class BuyFromShopPacketHandler extends PacketHandlerBase<BuyFromShopPacke
 	{
 		Item item = itemWrapper.getItem();
 		Item newItem = GameItemsFactory.produce(item.getIdentifier(), itemCount, IdSupplier.getId(),
-				itemInventoryPosition);
+				itemInventoryPosition, EquipmentPosition.NONE);
 		character.addItemAllowStacking(newItem);
 		connection.sendTCP(PacketsMaker.makeItemPacket(newItem));
 	}

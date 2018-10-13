@@ -13,12 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import pl.mmorpg.prototype.client.exceptions.NoFreeFieldException;
 import pl.mmorpg.prototype.client.exceptions.NoSuchFieldException;
+import pl.mmorpg.prototype.client.exceptions.NoSuchItemInInventoryException;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
 import pl.mmorpg.prototype.client.items.ItemUseable;
 import pl.mmorpg.prototype.client.items.StackableItem;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
-import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.client.states.helpers.Settings;
@@ -67,7 +67,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 
 		for (int i = 0; i < numberOfPages; i++)
 		{
-			InventoryTextField<Item> switchButton = createSwitchButton(i);
+			InventoryTextField<Item> switchButton = createPageSwitchButton(i);
 			switchButtons.addActor(switchButton);
 			switchPageButtons.add(switchButton);
 		}
@@ -84,7 +84,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		this.pack();
 	}
 
-	private InventoryTextField<Item> createSwitchButton(int pageIndex)
+	private InventoryTextField<Item> createPageSwitchButton(int pageIndex)
 	{
 		InventoryTextField<Item> switchButton = new InventoryTextField<>(String.valueOf(pageIndex + 1));
 		switchButton.setTextShiftX(-4);
@@ -94,7 +94,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 			@Override
 			public void clicked(InputEvent event, float x, float y)
 			{
-				switchButtonClicked(pageIndex);
+				pageSwitchButtonClicked(pageIndex);
 			}
 		});
 		return switchButton;
@@ -106,7 +106,7 @@ public class InventoryDialog extends Dialog implements ItemCounter
 		linkedInterface.inventoryFieldClicked(field, cellPosition);
 	}
 
-	private void switchButtonClicked(int pageIndex)
+	private void pageSwitchButtonClicked(int pageIndex)
 	{
 		for (InventoryTextField<Item> button : switchPageButtons)
 			button.setColor(1, 1, 1, 1);
@@ -312,6 +312,17 @@ public class InventoryDialog extends Dialog implements ItemCounter
 				return item;
 		}
 		return null;
+	}
+
+	public Item removeItem(long itemId)
+	{
+		for(InventoryPage inventoryPage : inventoryPages)
+		{
+			Item itemRemoved = inventoryPage.removeItem(itemId);
+			if (itemRemoved != null)
+				return itemRemoved;
+		}
+		throw new NoSuchItemInInventoryException(itemId);
 	}
 
 	@SuppressWarnings("unused")

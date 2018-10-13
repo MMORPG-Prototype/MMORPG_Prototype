@@ -3,10 +3,14 @@ package pl.mmorpg.prototype.server.helpers;
 import com.google.common.collect.Lists;
 
 import pl.mmorpg.prototype.SpringContext;
+import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.Character;
+import pl.mmorpg.prototype.server.database.entities.CharacterItem;
+import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
 import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
 import pl.mmorpg.prototype.server.database.repositories.CharacterSpellRepository;
 import pl.mmorpg.prototype.server.database.repositories.UserRepository;
@@ -31,9 +35,20 @@ public class CharacterCreator
 		CharacterSpellRepository spellRepo = SpringContext.getBean(CharacterSpellRepository.class);
 		character.setSpells(Lists.newArrayList(spellRepo.findAll()));
 		characterRepo.save(character);
+		addDebugThings(character);
 		replyPacket.setCharacter(PacketsMaker.makeCharacterPacket(character));
 		replyPacket.setCreated(true);
 
 		return replyPacket;
+	}
+
+	private static void addDebugThings(Character character)
+	{
+		CharacterItemRepository itemRepo = SpringContext.getBean(CharacterItemRepository.class);
+		CharacterItem item = new CharacterItem();
+		item.setInventoryPosition(new InventoryPosition(0, 1, 0));
+		item.setCharacter(character);
+		item.setIdentifier(ItemIdentifiers.SWORD);
+		itemRepo.save(item);
 	}
 }

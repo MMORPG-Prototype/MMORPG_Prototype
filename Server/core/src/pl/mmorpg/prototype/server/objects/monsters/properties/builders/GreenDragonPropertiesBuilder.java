@@ -9,7 +9,7 @@ public class GreenDragonPropertiesBuilder extends MonsterProperties.Builder
 	{
 		experienceGain(100)
 				.hp(100)
-				.strength(5)
+				.strength(8)
 				.level(1);
 		return super.build();
 	}

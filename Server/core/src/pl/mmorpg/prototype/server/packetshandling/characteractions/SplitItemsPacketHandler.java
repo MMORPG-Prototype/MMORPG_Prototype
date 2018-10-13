@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.server.packetshandling.characteractions;
 
 import com.esotericsoftware.kryonet.Connection;
 
+import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SplitItemsPacket;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
@@ -43,7 +44,7 @@ public class SplitItemsPacketHandler extends PacketHandlerBase<SplitItemsPacket>
 		if (destinationItem == null)
 		{
 			Item newItem = GameItemsFactory.produce(sourceItem.getIdentifier(), packet.getSplitItemAmount(), IdSupplier.getId(),
-					splitDestination);
+					splitDestination, EquipmentPosition.NONE);
 			player.addItemDenyStacking(newItem);
 			sourceItem.modifyAmount(-packet.getSplitItemAmount());
 			connection.sendTCP(PacketsMaker.makeItemPacket(newItem));

@@ -1,10 +1,8 @@
 package pl.mmorpg.prototype.server.objects.items;
 
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
-import pl.mmorpg.prototype.server.database.entities.components.EquipmentPosition;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.exceptions.ItemHasNoPositionException;
-import pl.mmorpg.prototype.server.objects.monsters.ItemsOwner;
 
 public abstract class Item
 {
@@ -34,8 +32,6 @@ public abstract class Item
     
     public InventoryPosition getInventoryPosition()
     {
-    	if(inventoryPosition == null)
-    		throw new ItemHasNoPositionException(ItemIdentifier.getIdentifier(getClass()));
     	return inventoryPosition;
     }
     

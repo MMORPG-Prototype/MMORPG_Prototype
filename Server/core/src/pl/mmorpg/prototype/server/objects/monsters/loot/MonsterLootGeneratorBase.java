@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.Range;
 
+import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
 import pl.mmorpg.prototype.server.objects.items.GameItemsFactory;
 import pl.mmorpg.prototype.server.objects.items.Item;
@@ -34,8 +35,8 @@ public abstract class MonsterLootGeneratorBase implements MonsterLootGenerator
 	{
 		Collection<ItemLootInfo> itemLootInfo = getItemLootInfo();
 		return itemLootInfo.stream()
-				.filter( itemLoot -> willLootRandom(itemLoot))
-				.map( itemLoot -> convertToItem(itemLoot))
+				.filter(this::willLootRandom)
+				.map(this::convertToItem)
 				.collect(Collectors.toList());				
 	}
 
@@ -50,7 +51,7 @@ public abstract class MonsterLootGeneratorBase implements MonsterLootGenerator
 	{
 		int numberOfItems = randomValueIn(itemLoot.getItemNumberRange());
 		//Warning, that null not sure
-		Item newItem = GameItemsFactory.produce(itemLoot.getItemIdentifier(), numberOfItems, IdSupplier.getId(), null);
+		Item newItem = GameItemsFactory.produce(itemLoot.getItemIdentifier(), numberOfItems, IdSupplier.getId(), null, EquipmentPosition.NONE);
 		return newItem;
 	}
 

@@ -1,11 +1,11 @@
 package pl.mmorpg.prototype.server.objects.effects;
 
-public class MultiEffectWrapper implements Effect
+public class EffectWrapper implements Effect
 {
 	private Effect effect;
 	private boolean isActivated = false;
 	
-	MultiEffectWrapper(Effect effect)
+	EffectWrapper(Effect effect)
 	{
 		this.effect = effect;
 	}
@@ -47,9 +47,15 @@ public class MultiEffectWrapper implements Effect
 	}
 
 	@Override
-	public void stackWithSameTypeEffect(Effect effect)
+	public boolean canStackWith(Effect effect)
 	{
-		this.effect.stackWithSameTypeEffect(effect);
+		return this.effect.canStackWith(effect);
+	}
+
+	@Override
+	public void stackWithOtherEffect(Effect effect)
+	{
+		this.effect.stackWithOtherEffect(effect);
 	}
 
 }

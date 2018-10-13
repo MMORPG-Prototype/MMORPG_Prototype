@@ -28,6 +28,7 @@ import pl.mmorpg.prototype.client.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.client.collision.pixelmap.UndefinedStaticObjectCreator;
 import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
+import pl.mmorpg.prototype.client.exceptions.GameException;
 import pl.mmorpg.prototype.client.input.InputMultiplexer;
 import pl.mmorpg.prototype.client.input.InputProcessorAdapter;
 import pl.mmorpg.prototype.client.input.NullInputHandler;
@@ -35,6 +36,7 @@ import pl.mmorpg.prototype.client.input.PlayInputContinuousHandler;
 import pl.mmorpg.prototype.client.input.PlayInputSingleHandle;
 import pl.mmorpg.prototype.client.items.ItemFactory;
 import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
+import pl.mmorpg.prototype.client.items.equipment.EquipmentItem;
 import pl.mmorpg.prototype.client.objects.*;
 import pl.mmorpg.prototype.client.objects.graphic.BloodAnimation;
 import pl.mmorpg.prototype.client.objects.graphic.DefinedAreaCloudCluster;
@@ -68,11 +70,13 @@ import pl.mmorpg.prototype.client.path.search.distanceComparators.ManhattanDista
 import pl.mmorpg.prototype.client.resources.Assets;
 import pl.mmorpg.prototype.client.states.helpers.GameObjectsContainer;
 import pl.mmorpg.prototype.client.userinterface.UserInterface;
+import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 import pl.mmorpg.prototype.clientservercommon.packets.*;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.InventoryPositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnDexteritySpentSuccessfullyPacket;
@@ -82,7 +86,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.quest.event.MonsterKilledEventPacket;
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
 {
@@ -579,11 +582,21 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		protected void doHandle(CharacterItemDataPacket itemData)
 		{
 			Item newItem = ItemFactory.produceItem(itemData);
-			ItemInventoryPosition position = new ItemInventoryPosition(itemData.getInventoryPageNumber(),
-					new Point(itemData.getInventoryX(), itemData.getInventoryY()));
-
-			userInterface.addItemToInventory(newItem, position);
-			userInterface.increaseQuickAccessDialogNumbers(newItem);
+			InventoryPositionPacket inventoryPosition = itemData.getInventoryPosition();
+			if (inventoryPosition != null)
+			{
+				ItemInventoryPosition position = new ItemInventoryPosition(inventoryPosition.getInventoryPageNumber(),
+						new Point(inventoryPosition.getInventoryX(), inventoryPosition.getInventoryY()));
+				userInterface.addItemToEquipment(newItem, position);
+				userInterface.increaseQuickAccessDialogNumbers(newItem);
+			}
+			else if (newItem instanceof EquipmentItem)
+			{
+				EquipmentPosition position = EquipmentPosition.valueOf(itemData.getEquipmentPosition());
+				userInterface.addItemToEquipment((EquipmentItem) newItem, position);
+			}
+			else
+				throw new GameException("This should not happen");
 		}
 	}
 

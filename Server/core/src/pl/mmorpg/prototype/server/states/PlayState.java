@@ -19,6 +19,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Server;
 
+import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.ServerSettings;
@@ -337,7 +338,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 			return;
 		}
 
-		Item item = GameItemsFactory.produce(identifier, amount, IdSupplier.getId(), inventoryPosition);
+		Item item = GameItemsFactory.produce(identifier, amount, IdSupplier.getId(), inventoryPosition, EquipmentPosition.NONE);
 		player.addItemDenyStacking(item);
 		sendTo(player.getConnectionId(), PacketsMaker.makeItemPacket(item));
 	}

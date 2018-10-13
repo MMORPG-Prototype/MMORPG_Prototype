@@ -9,6 +9,8 @@ public interface Effect
 	void update(float deltaTime);
 	
 	boolean shouldDeactivate();
-	
-	void stackWithSameTypeEffect(Effect effect);
+
+	boolean canStackWith(Effect effect);
+
+	void stackWithOtherEffect(Effect effect);
 }

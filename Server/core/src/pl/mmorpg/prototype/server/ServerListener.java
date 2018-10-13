@@ -8,6 +8,7 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.User;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerFactory;
@@ -57,6 +58,7 @@ public class ServerListener extends Listener
         {
             Log.error("Could not handle packet: " + object);
             e.printStackTrace();
+            connection.sendTCP(PacketsMaker.makeUnacceptableOperationPacket(e.toString()));
         }
     }
 

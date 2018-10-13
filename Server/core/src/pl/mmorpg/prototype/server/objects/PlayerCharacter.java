@@ -11,15 +11,14 @@ import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
 import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
-import pl.mmorpg.prototype.server.objects.items.Item;
-import pl.mmorpg.prototype.server.objects.monsters.InventoryRepositionableItemsOwner;
+import pl.mmorpg.prototype.server.objects.monsters.ItemsOwner;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.spells.Spell;
 import pl.mmorpg.prototype.server.objects.monsters.spells.SpellFactory;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
-public class PlayerCharacter extends Monster implements InventoryRepositionableItemsOwner
+public class PlayerCharacter extends Monster
 {
     private Character userCharacter;
     private final int connectionId;
@@ -99,26 +98,29 @@ public class PlayerCharacter extends Monster implements InventoryRepositionableI
 		userCharacter.setExperience(userCharacter.getExperience() + experience);
 	}
 
+	public void addDexterity()
+	{
+		getProperties().dexterity += 1;
+		userCharacter.setDexterity(userCharacter.getDexterity() + 1);
+	}
+
+	public void addStrength()
+	{
+		getProperties().strength += 1;
+		userCharacter.setStrength(userCharacter.getStrength() + 1);
+	}
+
+	public void addIntelligence()
+	{
+		getProperties().intelligence += 1;
+		userCharacter.setIntelligence(userCharacter.getIntelligence() + 1);
+	}
+
 	public void addLevel(int levelUpPoints)
 	{
 		getProperties().level += 1;
 		userCharacter.setLevel(userCharacter.getLevel() + 1);
 		userCharacter.setLevelUpPoints(userCharacter.getLevelUpPoints() + levelUpPoints);
-	}
-
-	@Override
-	public Item getItem(InventoryPosition position)
-	{
-		//Linear search, may need to improve
-		return getItems().stream()
-				.filter( item -> item.getInventoryPosition().equals(position))
-				.findAny().orElse(null);
-	}
-
-	@Override
-	public boolean hasItemInPosition(InventoryPosition position)
-	{
-		return getItem(position) != null;
 	}
 
 	public void putNewConfigElementInItemQuickAccessBar(ItemQuickAccessBarConfigurationElement quickAccessConfigElement)

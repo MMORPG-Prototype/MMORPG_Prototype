@@ -6,7 +6,6 @@ import pl.mmorpg.prototype.client.objects.monsters.HealthBarMonster;
 import pl.mmorpg.prototype.client.objects.monsters.TextureSheetAnimationInfo;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.resources.Assets;
-import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.GrayDragonPropertiesBuilder;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 
 public class GrayDragon  extends HealthBarMonster

@@ -13,8 +13,9 @@ import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
-import pl.mmorpg.prototype.server.database.entities.components.EquipmentPosition;
+import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 
 @Entity(name = "CharacterItem")
@@ -30,6 +31,7 @@ import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition
 )
 @Data
 @EqualsAndHashCode(of="id")
+@ToString(exclude = "character")
 public class CharacterItem
 {
 	@Id

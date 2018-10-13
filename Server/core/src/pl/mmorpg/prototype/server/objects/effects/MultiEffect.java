@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 
 public abstract class MultiEffect extends EffectBase<MultiEffect>
 {
-	private Map<Class<? extends Effect>, MultiEffectWrapper> effects;
+	private Map<Class<? extends Effect>, EffectWrapper> effects;
 
 	protected MultiEffect(Collection<Effect> effects)
 	{
 		this.effects = effects
 				.stream()
-				.collect(Collectors.toMap(Effect::getClass, MultiEffectWrapper::new));
+				.collect(Collectors.toMap(Effect::getClass, EffectWrapper::new));
 	}
 	
 	@Override
@@ -55,16 +55,16 @@ public abstract class MultiEffect extends EffectBase<MultiEffect>
 	{
 		return effects.values()
 				.stream()
-				.noneMatch(MultiEffectWrapper::isEffectActivated);
+				.noneMatch(EffectWrapper::isEffectActivated);
 	}
 	
 	@Override
-	public void stackWithSameTypeEffect(MultiEffect effect)
+	public void stackWithOtherEffect(MultiEffect effect)
 	{
 		this.effects.forEach( (key, value) ->
 		{
-			MultiEffectWrapper sameTypeEffect = effect.effects.get(key);
-			value.stackWithSameTypeEffect(sameTypeEffect.getEffect());
+			EffectWrapper sameTypeEffect = effect.effects.get(key);
+			value.stackWithOtherEffect(sameTypeEffect.getEffect());
 		});
 	}
 

@@ -19,10 +19,4 @@ public class SmallHealthPotion extends Potion
     	super(LOOKOUT, id, itemCount);
 	}
 
-    @Override
-    public String getIdentifier()
-    {
-        return ItemIdentifier.getObjectIdentifier(SmallHealthPotion.class);
-    }
-
 }

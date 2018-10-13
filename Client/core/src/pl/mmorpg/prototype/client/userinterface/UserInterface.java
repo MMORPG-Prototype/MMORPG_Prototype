@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.client.userinterface;
 
+import java.awt.*;
 import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
@@ -22,16 +23,13 @@ import pl.mmorpg.prototype.client.communication.PacketsMaker;
 import pl.mmorpg.prototype.client.communication.PacketsSender;
 import pl.mmorpg.prototype.client.exceptions.CannotFindSpecifiedDialogTypeException;
 import pl.mmorpg.prototype.client.input.ActorManipulator;
-import pl.mmorpg.prototype.client.items.ItemFactory;
-import pl.mmorpg.prototype.client.items.ItemInventoryPosition;
-import pl.mmorpg.prototype.client.items.ItemPositionSupplier;
-import pl.mmorpg.prototype.client.items.StackableItem;
+import pl.mmorpg.prototype.client.items.*;
+import pl.mmorpg.prototype.client.items.equipment.EquipmentItem;
 import pl.mmorpg.prototype.client.objects.Player;
 import pl.mmorpg.prototype.client.objects.icons.DraggableIcon;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.icons.spells.Spell;
 import pl.mmorpg.prototype.client.objects.monsters.npcs.Npc;
-import pl.mmorpg.prototype.client.packethandlers.PacketHandlerBase;
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerRegisterer;
 import pl.mmorpg.prototype.client.packethandlers.UserInterfacePacketHandlerBase;
 import pl.mmorpg.prototype.client.quests.Quest;
@@ -42,8 +40,11 @@ import pl.mmorpg.prototype.client.userinterface.dialogs.*;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.ItemQuickAccessIcon;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.TimedLabel;
 import pl.mmorpg.prototype.client.userinterface.dialogs.components.inventory.ButtonField;
+import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.InventoryPositionPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.playeractions.*;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestAcceptedPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestFinishedRewardPacket;
@@ -55,14 +56,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerGoldRemovalPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ContainerItemRemovalPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.InventoryItemRepositionRequestPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemRewardRemovePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcContinueDialogPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.QuestRewardGoldRemovalPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.playeractions.UnacceptableOperationPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.quest.event.MonsterKilledEventPacket;
 
 public class UserInterface
 {
@@ -99,7 +92,7 @@ public class UserInterface
 		hpMpDialog = new HitPointManaPointPane(player, registerer);
 		itemQuickAccessDialog = new ItemQuickAccessDialog(this, (ItemCounter) inventoryDialog, registerer);
 		spellQuickAccessDialog = new SpellQuickAccessDialog(this, registerer);
-		equipmentDialog = new EquipmentDialog();
+		equipmentDialog = new EquipmentDialog(this);
 		chatDialog = new ChatDialog(this, registerer);
 		consoleDialog = new ConsoleDialog(this);
 		questListDialog = new QuestListDialog(registerer);
@@ -243,23 +236,28 @@ public class UserInterface
 		if (mousePointerToIcon.icon == null && inventoryField.hasContent())
 			mousePointerToIcon.icon = inventoryField.getContent();
 		else if (mousePointerToIcon.icon instanceof Item)
-		{
-			if (mousePointerToIcon.icon instanceof StackableItem && ((StackableItem)mousePointerToIcon.icon).getItemCount() > 1
-					&& (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyJustPressed(Keys.SHIFT_RIGHT)))
-			{
-				Dialog splitItemsDialog = createSplitItemsDialog(cellPosition);
-				DialogUtils.centerPosition(splitItemsDialog);
-				addDialog(splitItemsDialog);
-			} else
-			{
-				InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
-						.makeInventoryItemRepositionRequestPacket(((Item) mousePointerToIcon.icon).getId(),
-								cellPosition);
-				((PacketsSender) linkedState).send(inventoryItemRepositionRequestPacket);
-			}
+			emptyFieldClickedWhileHoldingAnItem(cellPosition, (Item) mousePointerToIcon.icon);
+	}
 
-			mousePointerToIcon.icon = null;
-		}
+	private void emptyFieldClickedWhileHoldingAnItem(ItemInventoryPosition cellPosition, Item item)
+	{
+		if (item instanceof StackableItem
+				&& ((StackableItem)mousePointerToIcon.icon).getItemCount() > 1
+				&& (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyJustPressed(Keys.SHIFT_RIGHT)))
+			openSplitItemsDialog(cellPosition);
+		else if (item instanceof EquipmentItem && equipmentDialog.isItemEquipped((EquipmentItem)item))
+			takeOffItem((EquipmentItem)item, cellPosition);
+		else
+			repositionItem(cellPosition, item);
+
+		mousePointerToIcon.icon = null;
+	}
+
+	private void openSplitItemsDialog(ItemInventoryPosition cellPosition)
+	{
+		Dialog splitItemsDialog = createSplitItemsDialog(cellPosition);
+		DialogUtils.centerPosition(splitItemsDialog);
+		addDialog(splitItemsDialog);
 	}
 
 	private Dialog createSplitItemsDialog(ItemInventoryPosition cellPosition)
@@ -269,9 +267,22 @@ public class UserInterface
 			return new StackableItemsSplitWithSecondStackDialog((StackableItem) mousePointerToIcon.icon,
 					(StackableItem) destinationItem, cellPosition, dialogs, (PacketsSender) linkedState,
 					dialogIdSupplier.getId());
-		
+
 		return new StackableItemsSplitSingleStackDialog((StackableItem) mousePointerToIcon.icon, cellPosition, dialogs,
 				(PacketsSender) linkedState, dialogIdSupplier.getId());
+	}
+
+	private void repositionItem(ItemInventoryPosition cellPosition, Item item)
+	{
+		InventoryItemRepositionRequestPacket inventoryItemRepositionRequestPacket = PacketsMaker
+				.makeInventoryItemRepositionRequestPacket(item.getId(),
+						cellPosition);
+		((PacketsSender) linkedState).send(inventoryItemRepositionRequestPacket);
+	}
+
+	private void takeOffItem(EquipmentItem item, ItemInventoryPosition emptyDestinationPosition)
+	{
+		linkedState.send(PacketsMaker.makeTakeOffItemPacket(item.getId(), emptyDestinationPosition));
 	}
 
 	public void userWantsToDisconnect()
@@ -294,7 +305,7 @@ public class UserInterface
 		linkedState.userWantsToChangeCharacter();
 	}
 
-	public void addItemToInventory(Item newItem, ItemInventoryPosition position)
+	public void addItemToEquipment(Item newItem, ItemInventoryPosition position)
 	{
 		if (newItem instanceof StackableItem)
 			inventoryDialog.addItem((StackableItem) newItem, position);
@@ -302,13 +313,16 @@ public class UserInterface
 			inventoryDialog.addItem(newItem, position);
 	}
 
+	public void addItemToEquipment(EquipmentItem newItem, EquipmentPosition position)
+	{
+		equipmentDialog.equipItem(position, newItem);
+	}
+
 	public void itemQuickAccessButtonClicked(ButtonField<ItemQuickAccessIcon> field, int cellPosition)
 	{
 		DraggableIcon heldIcon = mousePointerToIcon.icon;
-		if (heldIcon != null)
+		if (heldIcon instanceof ItemUseable)
 		{
-			if (!(heldIcon instanceof Item))
-				return;
 			ItemQuickAccessIcon icon = new ItemQuickAccessIcon(((Item) heldIcon).getIdentifier(),
 					(ItemCounter) inventoryDialog);
 			field.put(icon);
@@ -329,9 +343,7 @@ public class UserInterface
 		{
 			buttonField.removeContent();
 			((PacketsSender) linkedState).send(PacketsMaker.makeSpellRemovedFromQuickAccessBarPacket(cellPosition));
-		} else if (!(heldIcon instanceof Spell))
-			return;
-		else
+		} else if (heldIcon instanceof Spell)
 		{
 			buttonField.put((Spell) heldIcon);
 			((PacketsSender) linkedState).send(
@@ -469,6 +481,28 @@ public class UserInterface
 	{
 		levelUpDialog.updateShownValues();
 		statisticsDialog.updateStatistics();
+	}
+
+	public void equipmentFieldClicked(EquipmentPosition equipmentPosition)
+	{
+		DraggableIcon heldIcon = mousePointerToIcon.icon;
+		ButtonField<? extends DraggableIcon> itemField = equipmentDialog.getItemField(equipmentPosition);
+		if (heldIcon == null && itemField.hasContent())
+			mousePointerToIcon.icon = itemField.getContent();
+		else if (heldIcon instanceof EquipmentItem)
+			equipmentItemFieldClickedWhileHoldingEquipmentItem(equipmentPosition,
+					(EquipmentItem) heldIcon, itemField);
+	}
+
+	private void equipmentItemFieldClickedWhileHoldingEquipmentItem(EquipmentPosition equipmentPosition, EquipmentItem equipmentItem,
+			ButtonField<? extends DraggableIcon> destinationField)
+	{
+		if(!destinationField.hasContent())
+			linkedState.send(PacketsMaker.makeEquipItemPacket(equipmentItem.getId(), equipmentPosition.toString()));
+		else
+			linkedState.send(PacketsMaker.makeSwitchEquipmentItemPacket(equipmentItem.getId(), equipmentPosition.toString()));
+
+		mousePointerToIcon.icon = null;
 	}
 
 	@SuppressWarnings("unused")
@@ -742,6 +776,35 @@ public class UserInterface
 			label.setY(55);
 
 			stage.addActor(label);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class EquipItemPacketResponseHandler extends UserInterfacePacketHandlerBase<ItemEquippedSuccessfullyPacket>
+	{
+		@Override
+		protected void doHandle(ItemEquippedSuccessfullyPacket packet)
+		{
+			EquipmentItem item = (EquipmentItem) inventoryDialog.removeItem(packet.getItemId());
+			equipmentDialog.equipItem(EquipmentPosition.valueOf(packet.getEquipmentPosition()), item);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private class ItemTookOffSuccessfullyPacketHandler extends UserInterfacePacketHandlerBase<ItemTookOffSuccessfullyPacket>
+	{
+		@Override
+		protected void doHandle(ItemTookOffSuccessfullyPacket packet)
+		{
+			EquipmentItem item = equipmentDialog.takeOffItem(EquipmentPosition.valueOf(packet.getEquipmentPosition()));
+			ItemInventoryPosition destinationPosition = toItemInventoryPosition(packet.getDestinationPosition());
+			inventoryDialog.addItem(item, destinationPosition);
+		}
+
+		private ItemInventoryPosition toItemInventoryPosition(InventoryPositionPacket position)
+		{
+			return new ItemInventoryPosition(position.getInventoryPageNumber(), new Point(position.getInventoryX(),
+					position.getInventoryY()));
 		}
 	}
 }

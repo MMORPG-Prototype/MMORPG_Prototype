@@ -94,7 +94,7 @@ public abstract class StackableItemsSplitDialog extends AutoCleanupOnCloseButton
 
 	protected static String getDialogName(Item item)
 	{
-		String identifier = ItemIdentifier.getObjectIdentifier(item.getClass());
+		String identifier = ItemIdentifier.getIdentifier(item.getClass());
 		String itemName = DialogUtils.humanReadableFromItemIdentifier(identifier);
 		return "Split " + itemName;
 	}

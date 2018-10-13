@@ -6,6 +6,7 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import com.esotericsoftware.kryonet.Connection;
 
+import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.RetrieveItemRewardPacket;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
@@ -44,7 +45,7 @@ public class RetrieveItemRewardPacketHandler extends PacketHandlerBase<RetrieveI
         Item gameItem;
         if (itemReward.getNumberOfItems() == packet.getNumberOfItems())
             gameItem = GameItemsFactory.produce(itemReward.getItemIdentifier(), itemReward.getNumberOfItems(),
-                    IdSupplier.getId(), inventoryPosition);
+                    IdSupplier.getId(), inventoryPosition, EquipmentPosition.NONE);
         else
             throw new NotImplementedException("Not implemented yet");
 
@@ -57,7 +58,8 @@ public class RetrieveItemRewardPacketHandler extends PacketHandlerBase<RetrieveI
     private CharactersQuests findSuiteQuest(Collection<CharactersQuests> quests, String questName)
     {
         return quests.stream()
-                .filter(characterQuest -> characterQuest.getQuest().getName().equals(questName)).findAny()
+                .filter(characterQuest -> characterQuest.getQuest().getName().equals(questName))
+                .findAny()
                 .get();
     }
 
@@ -65,7 +67,8 @@ public class RetrieveItemRewardPacketHandler extends PacketHandlerBase<RetrieveI
             String itemIdentifier)
     {
         return itemReward.stream()
-                .filter(reward -> ItemIdentifiers.valueOf(itemIdentifier).equals(reward.getItemIdentifier())).findAny()
+                .filter(reward -> ItemIdentifiers.valueOf(itemIdentifier).equals(reward.getItemIdentifier()))
+                .findAny()
                 .get();
     }
 }

@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.resources.Assets;
 
-public abstract class StackableItem extends Item
+public abstract class StackableItem extends Item implements ItemUseable
 {
     private Integer count = 1; 
     private final BitmapFont font = Assets.getFont();
@@ -71,9 +71,4 @@ public abstract class StackableItem extends Item
         	font.draw(batch, count.toString(), x + 22, y + 12);
     }
     
-	@Override
-	public boolean shouldBeRemoved()
-	{
-		return isDepleted();
-	}
 }

@@ -18,6 +18,7 @@ public class CharacterItemsTableSeeder implements TableSeeder
 	{
 		itemRepo.save(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_HP_POTION, 5, new InventoryPosition(2, 1, 1)));
 		itemRepo.save(createCharacterItem("PankievChar", ItemIdentifiers.SMALL_MP_POTION, 1, new InventoryPosition(1, 1, 1)));
+		itemRepo.save(createCharacterItem("PankievChar", ItemIdentifiers.SWORD, 1, new InventoryPosition(0, 1, 0)));
 		itemRepo.save(createCharacterItem("SmykChar", ItemIdentifiers.SMALL_MP_POTION, 7, new InventoryPosition(1, 1, 1)));
 	}
 

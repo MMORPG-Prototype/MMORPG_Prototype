@@ -1,10 +1,12 @@
 package pl.mmorpg.prototype.server.communication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.clientservercommon.packets.*;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.FireDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.damage.NormalDamagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.entities.InventoryPositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPacket;
@@ -27,6 +29,7 @@ import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
 import pl.mmorpg.prototype.server.objects.ineractivestaticobjects.QuestBoard;
+import pl.mmorpg.prototype.server.objects.items.equipment.EquipableItem;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -138,36 +141,40 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static CharacterItemDataPacket makeItemPacket(CharacterItem item, long id)
+	public static InventoryPositionPacket makeInventoryPositionPacket(InventoryPosition inventoryPosition)
 	{
-		CharacterItemDataPacket packet = new CharacterItemDataPacket();
-		packet.setId(id);
-		packet.setIdentifier(item.getIdentifier().toString());
-		packet.setCount(item.getCount());
-		InventoryPosition position = item.getInventoryPosition();
-		packet.setInventoryPageNumber(position.getInventoryPageNumber());
-		packet.setInventoryX(position.getInventoryX());
-		packet.setInventoryY(position.getInventoryY());
+		if (inventoryPosition == null)
+			return null;
+		return makeInventoryPositionPacket(inventoryPosition.getInventoryPageNumber(),
+				inventoryPosition.getInventoryX(), inventoryPosition.getInventoryY());
+	}
+
+	public static InventoryPositionPacket makeInventoryPositionPacket(int inventoryPage, int inventoryX, int inventoryY)
+	{
+		InventoryPositionPacket packet = new InventoryPositionPacket();
+		packet.setInventoryPageNumber(inventoryPage);
+		packet.setInventoryX(inventoryX);
+		packet.setInventoryY(inventoryY);
 		return packet;
 	}
 
 	public static CharacterItemDataPacket makeItemPacket(Item item)
 	{
-		InventoryPosition inventoryPosition = item.getInventoryPosition();
-		return makeItemPacket(item, inventoryPosition.getInventoryPageNumber(), inventoryPosition.getInventoryX(),
-				inventoryPosition.getInventoryY());
+		return makeItemPacket(item, item.getInventoryPosition());
 	}
 
-	private static CharacterItemDataPacket makeItemPacket(Item item, int inventoryPage, int inventoryX, int inventoryY)
+	public static CharacterItemDataPacket makeItemPacket(Item item, InventoryPosition inventoryPosition)
 	{
 		CharacterItemDataPacket packet = new CharacterItemDataPacket();
 		packet.setId(item.getId());
 		packet.setIdentifier(item.getIdentifier().toString());
 		if (item instanceof StackableItem)
 			packet.setCount(((StackableItem) item).getCount());
-		packet.setInventoryPageNumber(inventoryPage);
-		packet.setInventoryX(inventoryX);
-		packet.setInventoryY(inventoryY);
+		if (item instanceof EquipableItem)
+			packet.setEquipmentPosition(((EquipableItem) item).getEquipmentPosition().toString());
+		else
+			packet.setEquipmentPosition(EquipmentPosition.NONE.toString());
+		packet.setInventoryPosition(makeInventoryPositionPacket(inventoryPosition));
 		return packet;
 	}
 
@@ -278,7 +285,8 @@ public class PacketsMaker
 	{
 		int inventoryPage = 1;
 		int inventoryPositionY = 1;
-		return makeItemPacket(item, inventoryPage, inventoryPositionX, inventoryPositionY);
+		InventoryPosition inventoryPosition = new InventoryPosition(inventoryPage, inventoryPositionX, inventoryPositionY);
+		return makeItemPacket(item, inventoryPosition);
 	}
 
 	public static ContainerItemRemovalPacket makeContainerItemRemovalPacket(long containerId, long itemId)
@@ -677,5 +685,21 @@ public class PacketsMaker
 	public static NpcDialogStartEventPacket makeNpcDialogStartEventPacket(NpcDialogStartEvent event)
 	{
 		return new NpcDialogStartEventPacket();
+	}
+
+	public static ItemEquippedSuccessfullyPacket makeItemEquippedSuccessfullyPacket(long itemId, String equipmentPosition)
+	{
+		ItemEquippedSuccessfullyPacket packet = new ItemEquippedSuccessfullyPacket();
+		packet.setItemId(itemId);
+		packet.setEquipmentPosition(equipmentPosition);
+		return packet;
+	}
+
+	public static ItemTookOffSuccessfullyPacket makeItemTookOffSuccessfullyPacket(EquipmentPosition equipmentPosition, InventoryPositionPacket destinationPosition)
+	{
+		ItemTookOffSuccessfullyPacket packet = new ItemTookOffSuccessfullyPacket();
+		packet.setEquipmentPosition(equipmentPosition.toString());
+		packet.setDestinationPosition(destinationPosition);
+		return packet;
 	}
 }

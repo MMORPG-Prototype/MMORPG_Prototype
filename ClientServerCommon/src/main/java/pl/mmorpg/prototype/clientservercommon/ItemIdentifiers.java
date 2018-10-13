@@ -6,6 +6,7 @@ public enum ItemIdentifiers
     SMALL_MP_POTION, 
     BLUE_BERRY, 
     FISH,
-    SWORD
+    SWORD,
+    ARMOR
 }
  

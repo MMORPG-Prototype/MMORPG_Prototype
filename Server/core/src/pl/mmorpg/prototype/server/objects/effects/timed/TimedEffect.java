@@ -24,7 +24,7 @@ public abstract class TimedEffect extends EffectBase<TimedEffect>
 	}
 	
 	@Override
-	public void stackWithSameTypeEffect(TimedEffect effect)
+	public void stackWithOtherEffect(TimedEffect effect)
 	{
 		activeTime += effect.activeTime;
 	}

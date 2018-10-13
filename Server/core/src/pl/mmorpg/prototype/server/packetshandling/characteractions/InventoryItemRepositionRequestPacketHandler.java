@@ -7,7 +7,8 @@ import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.items.StackableItem;
-import pl.mmorpg.prototype.server.objects.monsters.InventoryRepositionableItemsOwner;
+import pl.mmorpg.prototype.server.objects.monsters.ItemsOwner;
+import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
 import pl.mmorpg.prototype.server.states.PlayState;
@@ -27,7 +28,7 @@ public class InventoryItemRepositionRequestPacketHandler extends PacketHandlerBa
 	public void handle(Connection connection, InventoryItemRepositionRequestPacket packet)
 	{
 		int characterId = gameData.getCharacterIdByConnectionId(connection.getID());
-		InventoryRepositionableItemsOwner playerCharacter = (InventoryRepositionableItemsOwner) playState
+		Monster playerCharacter = (Monster) playState
 				.getObject(characterId);
 		Item item = playerCharacter.getItem(packet.getTargetItemId());
 		InventoryPosition desiredPosition = new InventoryPosition(packet.getInventoryPageNumber(),

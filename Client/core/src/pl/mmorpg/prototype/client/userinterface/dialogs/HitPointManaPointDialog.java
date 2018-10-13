@@ -46,8 +46,8 @@ public class HitPointManaPointDialog extends Dialog
 
 	public void update()
 	{
-		hitPoints.setValue(getMaxHp());
-		manaPoints.setValue(getMaxMp());
+		hitPoints.setValue(player.getProperties().hp);
+		manaPoints.setValue(player.getProperties().mp);
 	}
 	
 
