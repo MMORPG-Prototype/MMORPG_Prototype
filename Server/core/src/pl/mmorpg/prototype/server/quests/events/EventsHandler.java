@@ -5,6 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.EventPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.server.database.entities.Quest;
@@ -16,7 +17,6 @@ import pl.mmorpg.prototype.server.quests.observers.QuestFinishedObserver;
 
 public class EventsHandler
 {
-    private final EventPacketFactory eventPacketFactory = new EventPacketFactory();
     private final Queue<Event> eventQueue = new LinkedBlockingQueue<>();
     private final QuestFinishedObserver observer;
 	private final PacketsSender packetsSender;
@@ -49,22 +49,12 @@ public class EventsHandler
 		Stream<Map.Entry<CharactersQuests, Collection<QuestTask>>> questTasks = getQuestTasks(receiver);
 		questTasks.forEach(task -> task.getValue().forEach(t -> {
 			boolean eventProcess = t.shouldProcess(event);
-			t.handleEvent(event, observer);
+			EventPacket eventPacket = t.handleEvent(event, observer);
 			if(eventProcess)
 				packetsSender.sendTo(receiver.getConnectionId(), PacketsMaker.makeQuestStateInfoPacket(task.getKey()));
+			if(eventPacket != null)
+				packetsSender.sendTo(receiver.getConnectionId(), eventPacket);
 		}));
-		sendEventPacket(receiver, event);
-	}
-
-	private void sendEventPacket(PlayerCharacter receiver, Event event)
-	{
-		Object eventPacket = eventPacketFactory.makeEventPacket(event);
-		packetsSender.sendTo(receiver.getConnectionId(), eventPacket);
-	}
-
-	private void sendQuestUpdatePacket(PlayerCharacter receiver, Object eventPacket)
-	{
-		packetsSender.sendTo(receiver.getConnectionId(), eventPacket);
 	}
 
 	private Stream<Map.Entry<CharactersQuests, Collection<QuestTask>>> getQuestTasks(PlayerCharacter playerCharacter)

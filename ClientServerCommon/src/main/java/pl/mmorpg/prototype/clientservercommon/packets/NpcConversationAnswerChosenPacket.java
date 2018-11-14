@@ -5,8 +5,8 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
 @Data
-public class NpcConversationAnwserChoosenPacket
+public class NpcConversationAnswerChosenPacket
 {
 	private long npcId;
-	private String anwser;
+	private String answer;
 }

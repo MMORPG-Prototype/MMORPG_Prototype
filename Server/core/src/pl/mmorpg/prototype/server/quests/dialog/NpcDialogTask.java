@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.EventPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.quests.QuestMakerIgnore;
 import pl.mmorpg.prototype.server.quests.QuestTaskBase;
@@ -36,29 +37,26 @@ public class NpcDialogTask extends QuestTaskBase<NpcDialogEvent>
 	public boolean isApplicable(NpcDialogEvent event)
 	{
 		return event.getNpc().getName().equals(npcName)
-				&& (event.isDialogStarting() || currentDialogStep.getPossibleAnswers().contains(event.getAnwser()));
+				&& (event.isDialogStarting() || currentDialogStep.getPossibleAnswers().contains(event.getAnswer()));
 	}
 
 	@Override
-	public void apply(NpcDialogEvent event)
+	public EventPacket apply(NpcDialogEvent event)
 	{
-		int connectionId = event.getReceivers().get(0).getConnectionId();
-		if (event.isDialogStarting())
-		{
-			currentDialogStep = dialogEntryPoint;
-			event.getPacketsSender().sendTo(connectionId, PacketsMaker.makeNpcStartDialogPacket(event.getNpc().getId(),
-					dialogEntryPoint.getSpeech(), dialogEntryPoint.getPossibleAnswers()));
-		} else
-		{
-			currentDialogStep = currentDialogStep.getNextDialogStep(event.getAnwser());
-			if (currentDialogStep.isLastStep()) 
-				isFinished = true;
-			Object npcDialogPacket = PacketsMaker.makeNpcContinueDialogPacket(event.getNpc().getId(),
-					currentDialogStep.getSpeech(), currentDialogStep.getPossibleAnswers());
-			event.getPacketsSender().sendTo(connectionId, npcDialogPacket);
-		}
+		currentDialogStep = getNextDialogStep(event);
+		if (currentDialogStep.isLastStep())
+			isFinished = true;
+		return PacketsMaker.makeNpcDialogEventPacket(getSourceTask(),
+				currentDialogStep.getSpeech(), currentDialogStep.getPossibleAnswers(), event);
 	}
 
+	private DialogStep getNextDialogStep(NpcDialogEvent event)
+	{
+		if (event.isDialogStarting())
+			return dialogEntryPoint;
+		else
+			return currentDialogStep.getNextDialogStep(event.getAnswer());
+	}
 
 	@Override
 	public String getDescription()

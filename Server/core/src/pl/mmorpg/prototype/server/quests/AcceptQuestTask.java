@@ -1,6 +1,8 @@
 package pl.mmorpg.prototype.server.quests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.EventPacket;
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.quests.events.AcceptQuestEvent;
 
 public class AcceptQuestTask extends QuestTaskBase<AcceptQuestEvent>
@@ -24,9 +26,10 @@ public class AcceptQuestTask extends QuestTaskBase<AcceptQuestEvent>
 	}
 
 	@Override
-	public void apply(AcceptQuestEvent event)
+	public EventPacket apply(AcceptQuestEvent event)
 	{
 		finished = true;
+		return PacketsMaker.makeQuestAcceptedEventPacket(getSourceTask());
 	}
 
 	@Override

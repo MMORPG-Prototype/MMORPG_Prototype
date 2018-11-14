@@ -86,6 +86,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ExperienceGa
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.MonsterTargetingReplyPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.NpcStartDialogPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.OpenContainterPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.NpcDialogEventPacket;
 
 public class PlayState implements State, GameObjectsContainer, PacketsSender, GraphicObjectsContainer
 {
@@ -416,7 +417,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		if(object instanceof Shop)
 			return PacketsMaker.makeOpenShopPacket(object.getId());
 		else if(object instanceof QuestDialogNpc)
-			return PacketsMaker.makeNpcDialogStartPacket(object.getId());
+			return PacketsMaker.makeNpcDialogStartRequestPacket(object.getId());
 		else if(object instanceof Monster)
 			return PacketsMaker.makeTargetMonsterPacket(object.getId());
 		else if(object instanceof QuestBoard)
@@ -825,19 +826,29 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		}
 	}
 
+
 	@SuppressWarnings("unused")
-	private class NpcStartDialogPacketHandler extends PacketHandlerBase<NpcStartDialogPacket>
+	private class NpcDialogEventPacketHandler extends PacketHandlerBase<NpcDialogEventPacket>
 	{
+
 		@Override
-		protected void doHandle(NpcStartDialogPacket packet)
+		protected void doHandle(NpcDialogEventPacket packet)
 		{
-			openNpcConversationDialog(packet.getNpcId(), packet.getSpeech(), packet.getPossibleAnswers());
+			if (isDialogStarting(packet))
+				openNpcConversationDialog(packet.getNpcId(), packet.getSpeech(), packet.getPossibleAnswers());
+			else
+				userInterface.continueNpcConversation(packet.getNpcId(), packet.getSpeech(), packet.getPossibleAnswers());
 		}
 
 		private void openNpcConversationDialog(long npcId, String speech, String[] possibleAnswers)
 		{
 			Npc npc = (Npc) gameObjects.get(npcId);
 			userInterface.openNpcConversationDialog(npc, speech, possibleAnswers);
+		}
+
+		private boolean isDialogStarting(NpcDialogEventPacket packet)
+		{
+			return !userInterface.isNpcDialogOpened(packet.getNpcId());
 		}
 	}
 

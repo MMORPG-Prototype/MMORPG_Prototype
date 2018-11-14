@@ -5,7 +5,7 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Registerable
 @Data
-public class MonsterKilledEventPacket
+public class MonsterKilledEventPacket extends EventPacket
 {
 	private String monsterIdentifier;
 }

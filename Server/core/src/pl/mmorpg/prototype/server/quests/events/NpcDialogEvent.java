@@ -9,12 +9,11 @@ import pl.mmorpg.prototype.server.objects.monsters.npcs.Npc;
 @AllArgsConstructor
 public class NpcDialogEvent extends EventBase
 {
-	private final String anwser;
+	private final String answer;
 	private final Npc npc;
-	private final PacketsSender packetsSender;
 	
 	public boolean isDialogStarting()
 	{
-		return anwser == null;
+		return answer == null;
 	}
 }

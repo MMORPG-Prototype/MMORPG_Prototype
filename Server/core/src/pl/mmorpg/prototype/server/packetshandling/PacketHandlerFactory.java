@@ -14,7 +14,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.DisconnectPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.GetUserCharactersPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.NpcConversationAnwserChoosenPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.NpcConversationAnswerChosenPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.RegisterationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
@@ -95,13 +95,14 @@ public class PacketHandlerFactory
 		packetHandlers.put(RetrieveGoldRewardPacket.class,
 				new RetrieveGoldRewardPacketHandler(gameDataRetriever, playState));
 		packetHandlers.put(AcceptQuestPacket.class, new AcceptQuestPacketHandler(gameDataRetriever));
-		packetHandlers.put(NpcConversationAnwserChoosenPacket.class,
-				new NpcConversationAnwserChoosenPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(NpcConversationAnswerChosenPacket.class,
+				new NpcConversationAnswerChosenPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(OpenShopPacket.class, new OpenShopPacketHandler(playState));
 		packetHandlers.put(TargetMonsterPacket.class, new TargetMonsterPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(GetQuestBoardInfoPacket.class,
 				new GetQuestBoardInfoPacketHandler(playState, gameDataRetriever));
-		packetHandlers.put(NpcDialogStartPacket.class, new NpcDialogStartPacketHandler(playState, gameDataRetriever));
+		packetHandlers.put(
+				NpcDialogStartRequestPacket.class, new NpcDialogStartPacketHandler(playState, gameDataRetriever));
 		packetHandlers.put(UseLevelUpPointOnStrengthPacket.class, new UseLevelUpPointOnStrengthPacketHandler(gameDataRetriever, playState));
 		packetHandlers.put(UseLevelUpPointOnIntelligencePacket.class, new UseLevelUpPointOnIntelligencePacketHandler(gameDataRetriever, playState));
 		packetHandlers.put(UseLevelUpPointOnDexterityPacket.class, new UseLevelUpPointOnDexterityPacketHandler(gameDataRetriever, playState));

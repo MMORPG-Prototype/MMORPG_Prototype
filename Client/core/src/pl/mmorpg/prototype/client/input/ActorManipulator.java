@@ -135,7 +135,7 @@ public class ActorManipulator
 	public boolean hasDialogOnPosition(float x, float y)
 	{
 		return Stream.concat(dialogs.stream(), mappedDialogs.values().stream())
-				.filter((d) -> d.isVisible() && mouseHovers(d)).findAny().isPresent();
+				.anyMatch((d) -> d.isVisible() && mouseHovers(d));
 	}
 
 	public boolean hasIdentifiableDialog(long dialogId)

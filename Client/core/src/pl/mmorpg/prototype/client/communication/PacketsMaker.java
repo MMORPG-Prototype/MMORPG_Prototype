@@ -8,7 +8,7 @@ import pl.mmorpg.prototype.client.objects.icons.items.Item;
 import pl.mmorpg.prototype.client.objects.monsters.Monster;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
-import pl.mmorpg.prototype.clientservercommon.packets.NpcConversationAnwserChoosenPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.NpcConversationAnswerChosenPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ObjectRemovePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
@@ -172,11 +172,11 @@ public class PacketsMaker
         return packet;
     }
 
-	public static NpcConversationAnwserChoosenPacket makeNpcConversationAnwserChoosenPacket(long npcId, String anwser)
+	public static NpcConversationAnswerChosenPacket makeNpcConversationAnwserChoosenPacket(long npcId, String anwser)
 	{
-		NpcConversationAnwserChoosenPacket packet = new NpcConversationAnwserChoosenPacket();
+		NpcConversationAnswerChosenPacket packet = new NpcConversationAnswerChosenPacket();
 		packet.setNpcId(npcId);
-		packet.setAnwser(anwser);
+		packet.setAnswer(anwser);
 		return packet;
 	}
 
@@ -206,9 +206,9 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static NpcDialogStartPacket makeNpcDialogStartPacket(long npcId)
+	public static NpcDialogStartRequestPacket makeNpcDialogStartRequestPacket(long npcId)
 	{
-		NpcDialogStartPacket packet = new NpcDialogStartPacket();
+		NpcDialogStartRequestPacket packet = new NpcDialogStartRequestPacket();
 		packet.setNpcId(npcId);
 		return packet;
 	}

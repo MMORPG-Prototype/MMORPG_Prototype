@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server.quests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.EventPacket;
 import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.quests.events.Event;
@@ -75,14 +76,17 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
     
     @SuppressWarnings("unchecked")
     @Override
-    public void process(Event e)
+    public EventPacket process(Event e)
     {
-        apply((T)e);
+        return apply((T)e);
     }
     
     public abstract boolean isApplicable(T event);
-    
-    public abstract void apply(T event);
+
+    /**
+     * See {@link QuestTask#process(Event)}
+     */
+    public abstract EventPacket apply(T event);
 
     @Override
     public void setSourceTask(CharactersQuests sourceTask)
@@ -99,5 +103,10 @@ public abstract class QuestTaskBase<T extends Event> implements QuestTask
     public Integer getParentIndex()
     {
         return parentIndex;
+    }
+
+    protected CharactersQuests getSourceTask()
+    {
+        return sourceTask;
     }
 }

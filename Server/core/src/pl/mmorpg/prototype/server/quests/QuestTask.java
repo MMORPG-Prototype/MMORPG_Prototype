@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.server.quests;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.EventPacket;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.quests.observers.QuestFinishedObserver;
@@ -25,7 +26,11 @@ public interface QuestTask extends Serializable
 
     boolean shouldProcess(Event e);
 
-    void process(Event e);
+	/**
+	 * Processes event and returns packet that should be sent to player
+	 * Can be null
+	 */
+    EventPacket process(Event e);
     
     List<QuestTask> getNextTasks();
 
@@ -33,17 +38,21 @@ public interface QuestTask extends Serializable
 
     void proceedToNextTasks();
 
-    default void handleEvent(Event e, QuestFinishedObserver observer)
+    default EventPacket handleEvent(Event e, QuestFinishedObserver observer)
     {
-        if (shouldProcess(e))
-            process(e);
-        if (isFinished())
-        {
-            proceedToNextTasks();
-            if (isLastTaskInQuest())
-                questFinished(observer);
-        }
-    }
+        if (shouldProcess(e)) {
+        	EventPacket eventPacket = process(e);
+
+			if (isFinished())
+			{
+				proceedToNextTasks();
+				if (isLastTaskInQuest())
+					questFinished(observer);
+			}
+			return eventPacket;
+		}
+        return null;
+	}
 
     void questFinished(QuestFinishedObserver observer);
 

@@ -29,7 +29,7 @@ public class AcceptQuestPacketHandler extends PacketHandlerBase<AcceptQuestPacke
         Quest quest = questRepository.findByNameFetchItemsReward(packet.getQuestName());
         CharactersQuests characterQuest = new CharactersQuests(character, quest);
         character.getQuests().add(characterQuest);
-        connection.sendTCP(PacketsMaker.makeQuestAcceptedPacket(characterQuest));
+        connection.sendTCP(PacketsMaker.makeQuestAcceptedEventPacket(characterQuest));
     }
 
 }

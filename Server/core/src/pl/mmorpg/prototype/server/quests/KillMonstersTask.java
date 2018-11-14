@@ -3,6 +3,8 @@ package pl.mmorpg.prototype.server.quests;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.EventPacket;
+import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.quests.events.MonsterKilledEvent;
 
 public class KillMonstersTask extends QuestTaskBase<MonsterKilledEvent>
@@ -31,11 +33,12 @@ public class KillMonstersTask extends QuestTaskBase<MonsterKilledEvent>
 	}
 
 	@Override
-	public void apply(MonsterKilledEvent event)
+	public EventPacket apply(MonsterKilledEvent event)
 	{
 		monstersLeftToKill--;
 		if (monstersLeftToKill < 0)
 			monstersLeftToKill = 0;
+		return PacketsMaker.makeMonsterKilledEventPacket(getSourceTask(), event);
 	}
 
 	@Override

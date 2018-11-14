@@ -5,7 +5,7 @@ import pl.mmorpg.prototype.clientservercommon.registering.Registerable;
 
 @Data
 @Registerable
-public class NpcDialogStartPacket
+public class NpcDialogStartRequestPacket
 {
 	private long npcId;
 }

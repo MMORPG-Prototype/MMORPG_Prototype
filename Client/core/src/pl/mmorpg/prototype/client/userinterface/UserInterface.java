@@ -45,7 +45,6 @@ import pl.mmorpg.prototype.clientservercommon.packets.ContainerContentPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ItemUsagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.InventoryPositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.*;
-import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestAcceptedPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestBoardInfoPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestFinishedRewardPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.QuestStateInfoPacket;
@@ -56,6 +55,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.ShopItemsPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.CharacterItemDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.QuestDataPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.entities.UserCharacterDataPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.QuestAcceptedEventPacket;
 
 public class UserInterface
 {
@@ -460,6 +460,17 @@ public class UserInterface
 		dialogs.add(newDialog);
 	}
 
+	public void continueNpcConversation(long npcId, String speech, String[] possibleAnswers)
+	{
+		NpcConversationDialog npcConversationDialog = dialogs.getIdentifiableDialog(npcId);
+		npcConversationDialog.update(speech, possibleAnswers);
+	}
+
+	public boolean isNpcDialogOpened(long npcId)
+	{
+		return dialogs.hasIdentifiableDialog(npcId);
+	}
+
 	public void focus(Actor actor)
 	{
 		stage.setKeyboardFocus(actor);
@@ -591,26 +602,10 @@ public class UserInterface
 	}
 
 	@SuppressWarnings("unused")
-	private class NpcContinueDialogPacketHandler extends UserInterfacePacketHandlerBase<NpcContinueDialogPacket>
+	private class QuestAcceptedPacketHandler extends UserInterfacePacketHandlerBase<QuestAcceptedEventPacket>
 	{
 		@Override
-		protected void doHandle(NpcContinueDialogPacket packet)
-		{
-			continueNpcConversation(packet.getNpcId(), packet.getSpeech(), packet.getPossibleAnswers());
-		}
-
-		private void continueNpcConversation(long npcId, String speech, String[] possibleAnswers)
-		{
-			NpcConversationDialog npcConversationDialog = dialogs.getIdentifiableDialog(npcId);
-			npcConversationDialog.update(speech, possibleAnswers);
-		}
-	}
-
-	@SuppressWarnings("unused")
-	private class QuestAcceptedPacketHandler extends UserInterfacePacketHandlerBase<QuestAcceptedPacket>
-	{
-		@Override
-		protected void doHandle(QuestAcceptedPacket packet)
+		protected void doHandle(QuestAcceptedEventPacket packet)
 		{
 			QuestStateInfoPacket questStatePacket = packet.getQuestStatePacket();
 			removeQuestPositionFromQuestBoardDialog(questStatePacket.getQuestName());

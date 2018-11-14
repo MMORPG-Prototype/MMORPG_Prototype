@@ -15,28 +15,28 @@ public class NpcConversationDialog extends AutoCleanupOnCloseButtonDialog
 	private PacketsSender packetsSender;
 	private Npc npc;
 
-	public NpcConversationDialog(Npc npc, String speech, String[] possibleAnwsers, PacketsSender packetsSender,
+	public NpcConversationDialog(Npc npc, String speech, String[] possibleAnswers, PacketsSender packetsSender,
 			ActorManipulator linkedManipulator)
 	{
 		super(npc.getName(), linkedManipulator, npc.getId());
 		this.npc = npc;
 		this.packetsSender = packetsSender;
 
-		update(speech, possibleAnwsers);
+		update(speech, possibleAnswers);
 		setPosition(0, 100);
 	}
 
-	public void update(String speech, String[] possibleAnwsers)
+	public void update(String speech, String[] possibleAnswers)
 	{
 		getContentTable().clear();
 		LineBreaker lineBreaker = new LineBreaker(speech, 30);
 		getContentTable().add(lineBreaker);
 		getContentTable().row();
-		for (String anwser : possibleAnwsers)
+		for (String answer : possibleAnswers)
 		{
 			Runnable onClickAction = () -> packetsSender
-					.send(PacketsMaker.makeNpcConversationAnwserChoosenPacket(npc.getId(), anwser));
-			Label label = new MouseHoverHighlightingClickableLabel(anwser, onClickAction);
+					.send(PacketsMaker.makeNpcConversationAnwserChoosenPacket(npc.getId(), answer));
+			Label label = new MouseHoverHighlightingClickableLabel(answer, onClickAction);
 			getContentTable().add(label);
 			getContentTable().row();
 		}

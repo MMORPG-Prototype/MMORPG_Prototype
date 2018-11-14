@@ -16,15 +16,13 @@ import pl.mmorpg.prototype.clientservercommon.packets.levelup.LevelUpPointOnStre
 import pl.mmorpg.prototype.clientservercommon.packets.movement.ObjectRepositionPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.*;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.*;
-import pl.mmorpg.prototype.clientservercommon.packets.quest.event.AcceptQuestEventPacket;
+import pl.mmorpg.prototype.clientservercommon.packets.quest.event.QuestAcceptedEventPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.event.MonsterKilledEventPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.event.NpcDialogEventPacket;
-import pl.mmorpg.prototype.clientservercommon.packets.quest.event.NpcDialogStartEventPacket;
 import pl.mmorpg.prototype.server.database.entities.Character;
 import pl.mmorpg.prototype.server.database.entities.*;
 import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
-import pl.mmorpg.prototype.server.exceptions.GameException;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
@@ -563,46 +561,6 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static QuestAcceptedPacket makeQuestAcceptedPacket(CharactersQuests characterQuest)
-	{
-		QuestAcceptedPacket packet = new QuestAcceptedPacket();
-		packet.setQuestStatePacket(makeQuestStateInfoPacket(characterQuest));
-		return packet;
-	}
-
-	public static NpcStartDialogPacket makeNpcStartDialogPacket(long npcId, String speech,
-			Collection<String> possibleAnswers)
-	{
-		String[] possibleAnswersInArray = possibleAnswers.toArray(new String[0]);
-		return makeNpcStartDialogPacket(npcId, speech, possibleAnswersInArray);
-	}
-
-	public static NpcStartDialogPacket makeNpcStartDialogPacket(long npcId, String speech, String[] possibleAnswers)
-	{
-		NpcStartDialogPacket packet = new NpcStartDialogPacket();
-		packet.setNpcId(npcId);
-		packet.setSpeech(speech);
-		packet.setPossibleAnswers(possibleAnswers);
-		return packet;
-	}
-
-	public static NpcContinueDialogPacket makeNpcContinueDialogPacket(long npcId, String speech,
-			Collection<String> possibleAnswers)
-	{
-		String[] possibleAnswersInArray = possibleAnswers.toArray(new String[0]);
-		return makeNpcContinueDialogPacket(npcId, speech, possibleAnswersInArray);
-	}
-
-	public static NpcContinueDialogPacket makeNpcContinueDialogPacket(long npcId, String speech,
-			String[] possibleAnswers)
-	{
-		NpcContinueDialogPacket packet = new NpcContinueDialogPacket();
-		packet.setNpcId(npcId);
-		packet.setSpeech(speech);
-		packet.setPossibleAnswers(possibleAnswers);
-		return packet;
-	}
-
 	public static InventoryItemStackPacket makeInventoryItemStackPacket(InventoryPosition firstPosition,
 			InventoryPosition secondPosition)
 	{
@@ -637,54 +595,38 @@ public class PacketsMaker
 		return packet;
 	}
 
-	public static AcceptQuestEventPacket makeAcceptQuestEventPacket(Event event)
+	public static QuestAcceptedEventPacket makeQuestAcceptedEventPacket(CharactersQuests quest)
 	{
-		if (!(event instanceof AcceptQuestEvent))
-			throw new GameException("Wrong type of event" + event.getClass().getName());
-		return makeAcceptQuestEventPacket((AcceptQuestEvent) event);
+		QuestAcceptedEventPacket packet = new QuestAcceptedEventPacket();
+		packet.setQuestName(quest.getQuest().getName());
+		packet.setQuestStatePacket(makeQuestStateInfoPacket(quest));
+		return packet;
 	}
 
-	public static AcceptQuestEventPacket makeAcceptQuestEventPacket(AcceptQuestEvent event)
-	{
-		return new AcceptQuestEventPacket();
-	}
-
-	public static MonsterKilledEventPacket makeMonsterKilledEvent(Event event)
-	{
-		if (!(event instanceof MonsterKilledEvent))
-			throw new GameException("Wrong type of event " + event.getClass().getName());
-		return makeMonsterKilledEvent((MonsterKilledEvent) event);
-	}
-
-	public static MonsterKilledEventPacket makeMonsterKilledEvent(MonsterKilledEvent event)
+	public static MonsterKilledEventPacket makeMonsterKilledEventPacket(CharactersQuests quest, MonsterKilledEvent event)
 	{
 		MonsterKilledEventPacket packet = new MonsterKilledEventPacket();
+		packet.setQuestName(quest.getQuest().getName());
 		packet.setMonsterIdentifier(event.getMonsterIdentifier());
 		return packet;
 	}
 
-	public static NpcDialogEventPacket makeNpcDialogEventPacket(Event event)
+	public static NpcDialogEventPacket makeNpcDialogEventPacket(CharactersQuests quest, String speech,
+			Collection<String> possibleAnswers, NpcDialogEvent event)
 	{
-		if (!(event instanceof NpcDialogEvent))
-			throw new GameException("Wrong type of event " + event.getClass().getName());
-		return makeNpcDialogEventPacket((NpcDialogEvent) event);
+		String[] possibleAnswersInArray = possibleAnswers.toArray(new String[0]);
+		return makeNpcDialogEventPacket(quest, speech, possibleAnswersInArray, event);
 	}
 
-	public static NpcDialogEventPacket makeNpcDialogEventPacket(NpcDialogEvent event)
+	public static NpcDialogEventPacket makeNpcDialogEventPacket(CharactersQuests quest, String speech,
+			String[] possibleAnswers, NpcDialogEvent event)
 	{
-		return new NpcDialogEventPacket();
-	}
-
-	public static NpcDialogStartEventPacket makeNpcDialogStartEventPacket(Event event)
-	{
-		if (!(event instanceof NpcDialogStartEvent))
-			throw new GameException("Wrong type of event " + event.getClass().getName());
-		return makeNpcDialogStartEventPacket((NpcDialogStartEvent) event);
-	}
-
-	public static NpcDialogStartEventPacket makeNpcDialogStartEventPacket(NpcDialogStartEvent event)
-	{
-		return new NpcDialogStartEventPacket();
+		NpcDialogEventPacket packet = new NpcDialogEventPacket();
+		packet.setQuestName(quest.getQuest().getName());
+		packet.setNpcId(event.getNpc().getId());
+		packet.setSpeech(speech);
+		packet.setPossibleAnswers(possibleAnswers);
+		return packet;
 	}
 
 	public static ItemEquippedSuccessfullyPacket makeItemEquippedSuccessfullyPacket(long itemId, String equipmentPosition)
