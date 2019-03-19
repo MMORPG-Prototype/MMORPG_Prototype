@@ -440,7 +440,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 			Collection<? extends Point> path = pathFinder.find(start, destination,
 					new ManhattanDistanceComparator(destination), collisionDetector);
 			drawPath(path);
-		}).run();
+		}).start();
 	}
 
 	private void drawPath(Collection<? extends Point> path)

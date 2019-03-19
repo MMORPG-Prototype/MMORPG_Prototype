@@ -85,16 +85,13 @@ public class Player extends HealthBarMonster
         data.setHitPoints(data.getHitPoints() - damage);
         super.gotHitBy(damage);
     }
-    
-    public void manaDrained(int manaDrain)
-    {
-        Integer manaPoints = data.getManaPoints();
-        manaPoints -= manaDrain;
-        if(manaPoints < 0)
-            manaPoints = 0;
-        data.setManaPoints(manaPoints);
-        getProperties().mp = manaPoints;
-    }
+
+	public void manaDrained(int manaDrain)
+	{
+		Integer manaPoints = Math.max(data.getManaPoints() - manaDrain, 0);
+		data.setManaPoints(manaPoints);
+		getProperties().mp = manaPoints;
+	}
 
 	public void addStrength()
 	{

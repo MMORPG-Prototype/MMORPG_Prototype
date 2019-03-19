@@ -6,14 +6,14 @@ import pl.mmorpg.prototype.server.collision.interfaces.CollisionMap;
 import pl.mmorpg.prototype.server.collision.interfaces.RectangleCollisionObject;
 import pl.mmorpg.prototype.server.objects.GameObject;
 
-public class RestrictedGameObjectCollisionDetector implements CollisionDetector
+public class RestrictedAreaGameObjectCollisionDetector implements CollisionDetector
 {
 	private final static float RESTRICTED_AREA_DISTANCE = 200.0f;
 	private final CollisionMap<GameObject> collisionMap;
 	private final GameObject gameObject;
 	private final Rectangle restrictedArea;
 
-	public RestrictedGameObjectCollisionDetector(CollisionMap<GameObject> collisionMap, GameObject gameObject)
+	public RestrictedAreaGameObjectCollisionDetector(CollisionMap<GameObject> collisionMap, GameObject gameObject)
 	{
 		this.collisionMap = collisionMap;
 		this.gameObject = gameObject;

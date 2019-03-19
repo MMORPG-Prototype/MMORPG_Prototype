@@ -24,11 +24,10 @@ public class BestFirstPathFinder implements PathFinder
 		TreeSet<Point> openList = new TreeSet<>(distanceComparator);
 		HashSet<Point> closedList = new HashSet<>();
 		openList.add(from);
-		Point n = null; 
 		Point closestNode = from;
 		while (!openList.isEmpty())
 		{
-			n = openList.pollFirst();
+			Point n = openList.pollFirst();
 
 			if(distanceComparator.compare(closestNode, n) > 0)
 				closestNode = n;

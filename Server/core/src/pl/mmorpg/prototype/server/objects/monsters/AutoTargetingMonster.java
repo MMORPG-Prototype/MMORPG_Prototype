@@ -14,7 +14,7 @@ import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.path.search.BestFirstPathFinder;
 import pl.mmorpg.prototype.server.path.search.PathFinder;
 import pl.mmorpg.prototype.server.path.search.PathSimplifier;
-import pl.mmorpg.prototype.server.path.search.collisionDetectors.RestrictedGameObjectCollisionDetector;
+import pl.mmorpg.prototype.server.path.search.collisionDetectors.RestrictedAreaGameObjectCollisionDetector;
 import pl.mmorpg.prototype.server.path.search.distanceComparators.DistanceComparator;
 import pl.mmorpg.prototype.server.path.search.distanceComparators.ManhattanDistanceComparator;
 import pl.mmorpg.prototype.server.resources.Assets;
@@ -27,9 +27,9 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 	private static final float recalculatePathTime = 1.0f;
 	private static final PathFinder pathFinder = new BestFirstPathFinder();
 
-	private PixelCollisionMap<GameObject> collisionMap;
+	private final PixelCollisionMap<GameObject> collisionMap;
 	private LinkedList<Point> currentPath = new LinkedList<>();
-	private RestrictedGameObjectCollisionDetector collisionDetector;
+	private final RestrictedAreaGameObjectCollisionDetector collisionDetector;
 	private float timeLeftForRecalculation = recalculatePathTime;
 
 	protected AutoTargetingMonster(Texture lookout, long id, MonsterProperties properties,
@@ -37,6 +37,7 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 	{
 		super(lookout, id, properties, collisionMap, playState);
 		this.collisionMap = collisionMap;
+		collisionDetector = new RestrictedAreaGameObjectCollisionDetector(collisionMap, this);
 	}
 
 	@Override
@@ -69,7 +70,6 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 		Point startPoint = new Point((int) getX() - (int)getX()%modulo, (int) getY() - (int)getY()%modulo);
 		Point endPoint = new Point((int) monster.getX() - (int)monster.getX()% modulo, (int) monster.getY() - (int)monster.getY()%modulo);
 		DistanceComparator distanceComparator = new ManhattanDistanceComparator(endPoint);
-		this.collisionDetector = new RestrictedGameObjectCollisionDetector(collisionMap, this);
 		Collection<? extends Point> path = pathFinder.find(startPoint, endPoint, distanceComparator, collisionDetector);
 		System.out.println("Path");
 		currentPath = new PathSimplifier().simplify(path);
@@ -86,19 +86,19 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 	@Override
 	protected void chaseTarget(float deltaTime, PixelCollisionMap<GameObject> collisionMap, Monster target)
 	{
-		if(timeLeftForRecalculation <= 0.0f)
+		if (timeLeftForRecalculation <= 0.0f)
 		{
 			findPathTo(target);
 			timeLeftForRecalculation = recalculatePathTime;
 		}
-		if(currentPath.isEmpty())
+		if (currentPath.isEmpty())
 		{
 			super.chaseTarget(deltaTime, collisionMap, target);
 			return;
 		}
 		Point nearestTarget = currentPath.getFirst();
 		makeStepToPoint(deltaTime, collisionMap, nearestTarget.x, nearestTarget.y);
-		if(nearPoint(nearestTarget))
+		if (nearPoint(nearestTarget))
 			currentPath.pollFirst();
 	}
 
@@ -125,7 +125,7 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 
 	private boolean canBeTargeted(GameObject gameObject)
 	{
-		return gameObject != null && gameObject != this && gameObject instanceof Monster
+		return gameObject instanceof Monster && gameObject != this
 				&& shouldTargetOn((Monster) gameObject);
 	}
 	
