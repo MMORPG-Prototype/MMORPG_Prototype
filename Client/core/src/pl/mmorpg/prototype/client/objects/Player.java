@@ -107,7 +107,7 @@ public class Player extends HealthBarMonster
 
 	public void addDexterity()
 	{
-		getProperties().strength += 1;
+		getProperties().dexterity += 1;
 		data.setDexterity(data.getDexterity() + 1);
 	}
 
