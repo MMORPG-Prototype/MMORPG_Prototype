@@ -8,9 +8,8 @@ import java.util.stream.Stream;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.event.EventPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.database.entities.Quest;
-import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
-import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
+import pl.mmorpg.prototype.data.entities.QuestTaskWrapper;
+import pl.mmorpg.prototype.data.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.quests.QuestTask;
 import pl.mmorpg.prototype.server.quests.observers.QuestFinishedObserver;
@@ -69,6 +68,7 @@ public class EventsHandler
 		return new AbstractMap.SimpleEntry<>(quest,
 				quest.getQuestTasks().stream()
 						.map(QuestTaskWrapper::getQuestTask)
+						.map(task -> (QuestTask) task)
 						.collect(Collectors.toList())
 		);
 	}

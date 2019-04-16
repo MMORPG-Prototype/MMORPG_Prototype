@@ -9,7 +9,7 @@ import pl.mmorpg.prototype.clientservercommon.packets.CharacterChangePacket;
 import pl.mmorpg.prototype.server.UserInfo;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.database.CharacterDatabaseSaver;
-import pl.mmorpg.prototype.server.database.entities.User;
+import pl.mmorpg.prototype.data.entities.User;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.states.PlayState;
 

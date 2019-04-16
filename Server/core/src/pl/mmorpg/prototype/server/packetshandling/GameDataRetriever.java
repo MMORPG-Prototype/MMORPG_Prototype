@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import pl.mmorpg.prototype.server.UserInfo;
-import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
-import pl.mmorpg.prototype.server.database.entities.User;
-import pl.mmorpg.prototype.server.database.entities.Character;
-import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
+import pl.mmorpg.prototype.data.entities.QuestTaskWrapper;
+import pl.mmorpg.prototype.data.entities.User;
+import pl.mmorpg.prototype.data.entities.Character;
+import pl.mmorpg.prototype.data.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.exceptions.UserIsNotInGameException;
 import pl.mmorpg.prototype.server.exceptions.UserNotConnectedException;
 import pl.mmorpg.prototype.server.quests.QuestTask;
@@ -62,13 +62,14 @@ public class GameDataRetriever
         Collection<CharactersQuests> quests = getCharacterQuestsByConnectionId(id);
         return getQuestTasks(quests);
     }
-	
+
 	private Collection<QuestTask> getQuestTasks(Collection<CharactersQuests> quests)
-    {
-        return quests.stream()
-            .map(CharactersQuests::getQuestTasks)
-            .flatMap(Collection::stream)
-            .map(QuestTaskWrapper::getQuestTask)
-            .collect(Collectors.toList());
-    }
+	{
+		return quests.stream()
+				.map(CharactersQuests::getQuestTasks)
+				.flatMap(Collection::stream)
+				.map(QuestTaskWrapper::getQuestTask)
+				.map(task -> (QuestTask) task)
+				.collect(Collectors.toList());
+	}
 }

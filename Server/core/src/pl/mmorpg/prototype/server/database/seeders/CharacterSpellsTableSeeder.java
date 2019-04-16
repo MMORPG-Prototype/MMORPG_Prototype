@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
-import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
-import pl.mmorpg.prototype.server.database.repositories.CharacterSpellRepository;
+import pl.mmorpg.prototype.data.entities.CharacterSpell;
+import pl.mmorpg.prototype.data.entities.repositories.CharacterSpellRepository;
 
 public class CharacterSpellsTableSeeder implements TableSeeder
 {

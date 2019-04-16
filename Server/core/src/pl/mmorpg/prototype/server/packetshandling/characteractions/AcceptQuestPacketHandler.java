@@ -5,10 +5,10 @@ import com.esotericsoftware.kryonet.Connection;
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.AcceptQuestPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.Quest;
-import pl.mmorpg.prototype.server.database.entities.Character;
-import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
-import pl.mmorpg.prototype.server.database.repositories.QuestRepository;
+import pl.mmorpg.prototype.data.entities.Quest;
+import pl.mmorpg.prototype.data.entities.Character;
+import pl.mmorpg.prototype.data.entities.jointables.CharactersQuests;
+import pl.mmorpg.prototype.data.entities.repositories.QuestRepository;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
 

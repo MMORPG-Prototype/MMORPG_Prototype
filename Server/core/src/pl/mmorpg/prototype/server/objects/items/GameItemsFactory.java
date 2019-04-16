@@ -2,8 +2,8 @@ package pl.mmorpg.prototype.server.objects.items;
 
 import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
-import pl.mmorpg.prototype.server.database.entities.CharacterItem;
-import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.data.entities.CharacterItem;
+import pl.mmorpg.prototype.data.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.exceptions.UnknownItemTypeException;
 import pl.mmorpg.prototype.server.objects.items.equipment.Armor;
 import pl.mmorpg.prototype.server.objects.items.equipment.EquipableItem;

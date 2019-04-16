@@ -6,12 +6,11 @@ import java.util.Map;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.PlayerPropertiesBuilder;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.Character;
-import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
-import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
-import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
-import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
-import pl.mmorpg.prototype.server.objects.monsters.ItemsOwner;
+import pl.mmorpg.prototype.data.entities.Character;
+import pl.mmorpg.prototype.data.entities.CharacterSpell;
+import pl.mmorpg.prototype.data.entities.ItemQuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.data.entities.SpellQuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.data.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.spells.Spell;
 import pl.mmorpg.prototype.server.objects.monsters.spells.SpellFactory;

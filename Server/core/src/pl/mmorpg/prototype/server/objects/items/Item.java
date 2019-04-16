@@ -1,8 +1,7 @@
 package pl.mmorpg.prototype.server.objects.items;
 
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
-import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
-import pl.mmorpg.prototype.server.exceptions.ItemHasNoPositionException;
+import pl.mmorpg.prototype.data.entities.components.InventoryPosition;
 
 public abstract class Item
 {

@@ -1,17 +1,15 @@
 package pl.mmorpg.prototype.server.quests;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.event.EventPacket;
-import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
+import pl.mmorpg.prototype.data.entities.components.EntityQuestTask;
 import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.quests.observers.QuestFinishedObserver;
 
 import java.io.Serializable;
 import java.util.List;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
-public interface QuestTask extends Serializable
+public interface QuestTask extends Serializable, EntityQuestTask
 {
     void addNextTask(QuestTask task);
 
@@ -31,10 +29,6 @@ public interface QuestTask extends Serializable
 	 * Can be null
 	 */
     EventPacket process(Event e);
-    
-    List<QuestTask> getNextTasks();
-
-    void setSourceTask(CharactersQuests sourceTask);
 
     void proceedToNextTasks();
 
@@ -56,11 +50,19 @@ public interface QuestTask extends Serializable
 
     void questFinished(QuestFinishedObserver observer);
 
+	List<QuestTask> getNextTasks();
+
+	@SuppressWarnings("unchecked")
+	default List<EntityQuestTask> getNextEntityTasks() {
+		return (List<EntityQuestTask>)(List)getNextTasks();
+	}
+
     @JsonIgnore
     String getDescription();
 
     @JsonIgnore
     float getPercentFinished();
+
     
     @JsonIgnore
     default boolean isFinished()

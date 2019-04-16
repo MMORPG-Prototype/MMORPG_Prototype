@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import pl.mmorpg.prototype.SpringContext;
-import pl.mmorpg.prototype.server.database.entities.Quest;
-import pl.mmorpg.prototype.server.database.repositories.QuestRepository;
+import pl.mmorpg.prototype.data.entities.Quest;
+import pl.mmorpg.prototype.data.entities.repositories.QuestRepository;
 import pl.mmorpg.prototype.server.resources.Assets;
 
 public class QuestBoard extends InteractiveStaticObject

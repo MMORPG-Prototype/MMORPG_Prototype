@@ -8,8 +8,8 @@ import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ScriptCodePacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.User;
-import pl.mmorpg.prototype.server.database.entities.UserRole;
+import pl.mmorpg.prototype.data.entities.User;
+import pl.mmorpg.prototype.data.entities.UserRole;
 import pl.mmorpg.prototype.server.states.PlayState;
 
 public class ScriptCodePacketHandler extends PacketHandlerBase<ScriptCodePacket>

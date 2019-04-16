@@ -12,7 +12,7 @@ import javax.script.ScriptException;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.UserInfo;
-import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.data.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.exceptions.UnknownItemTypeException;
 
 public class GameCommandsHandler

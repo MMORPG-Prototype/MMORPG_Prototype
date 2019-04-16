@@ -7,13 +7,13 @@ import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.Character;
-import pl.mmorpg.prototype.server.database.entities.CharacterItem;
-import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
-import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
-import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
-import pl.mmorpg.prototype.server.database.repositories.CharacterSpellRepository;
-import pl.mmorpg.prototype.server.database.repositories.UserRepository;
+import pl.mmorpg.prototype.data.entities.Character;
+import pl.mmorpg.prototype.data.entities.CharacterItem;
+import pl.mmorpg.prototype.data.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.data.entities.repositories.CharacterItemRepository;
+import pl.mmorpg.prototype.data.entities.repositories.CharacterRepository;
+import pl.mmorpg.prototype.data.entities.repositories.CharacterSpellRepository;
+import pl.mmorpg.prototype.data.entities.repositories.UserRepository;
 
 public class CharacterCreator
 {

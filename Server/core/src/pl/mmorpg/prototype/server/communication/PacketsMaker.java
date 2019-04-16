@@ -19,10 +19,10 @@ import pl.mmorpg.prototype.clientservercommon.packets.quest.*;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.event.QuestAcceptedEventPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.event.MonsterKilledEventPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.event.NpcDialogEventPacket;
-import pl.mmorpg.prototype.server.database.entities.Character;
-import pl.mmorpg.prototype.server.database.entities.*;
-import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
-import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
+import pl.mmorpg.prototype.data.entities.Character;
+import pl.mmorpg.prototype.data.entities.*;
+import pl.mmorpg.prototype.data.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.data.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.objects.containers.GameContainer;
@@ -513,7 +513,7 @@ public class PacketsMaker
 
 	private static QuestTask combineQuestDefinitionWithActualQuestState(CharactersQuests characterQuest)
 	{
-		QuestTask rootTask = deepCopy(characterQuest.getQuest().getQuestTask());
+		QuestTask rootTask = deepCopy((QuestTask) characterQuest.getQuest().getQuestTask());
 		int[] finishedQuestTasksPathIndexes = Stream.of(characterQuest.getFinishedQuestTasksPath().split(","))
 				.mapToInt(Integer::valueOf)
 				.toArray();
@@ -522,6 +522,7 @@ public class PacketsMaker
 		parentOfCurrentlyActiveQuestTasks.getNextTasks().clear();
 		List<QuestTask> currentlyActiveQuestTasks = characterQuest.getQuestTasks().stream()
 				.map(QuestTaskWrapper::getQuestTask)
+				.map(task -> (QuestTask) task)
 				.collect(Collectors.toList());
 		parentOfCurrentlyActiveQuestTasks.getNextTasks().addAll(currentlyActiveQuestTasks);
 		return rootTask;

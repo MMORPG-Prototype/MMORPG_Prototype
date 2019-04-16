@@ -9,8 +9,8 @@ import com.esotericsoftware.minlog.Log;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationReplyPacket;
 import pl.mmorpg.prototype.server.UserInfo;
-import pl.mmorpg.prototype.server.database.entities.User;
-import pl.mmorpg.prototype.server.database.entities.UserRole;
+import pl.mmorpg.prototype.data.entities.User;
+import pl.mmorpg.prototype.data.entities.UserRole;
 import pl.mmorpg.prototype.server.helpers.Authenticator;
 import pl.mmorpg.prototype.server.states.PlayState;
 

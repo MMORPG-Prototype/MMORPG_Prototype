@@ -2,8 +2,9 @@ package pl.mmorpg.prototype.server.quests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.event.EventPacket;
-import pl.mmorpg.prototype.server.database.entities.QuestTaskWrapper;
-import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
+import pl.mmorpg.prototype.data.entities.QuestTaskWrapper;
+import pl.mmorpg.prototype.data.entities.components.EntityQuestTask;
+import pl.mmorpg.prototype.data.entities.jointables.CharactersQuests;
 import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.quests.observers.QuestFinishedObserver;
 

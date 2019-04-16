@@ -8,7 +8,6 @@ import pl.mmorpg.prototype.server.objects.monsters.npcs.QuestDialogNpc;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;
 import pl.mmorpg.prototype.server.quests.events.Event;
-import pl.mmorpg.prototype.server.quests.events.NpcDialogEvent;
 import pl.mmorpg.prototype.server.quests.events.NpcDialogStartEvent;
 import pl.mmorpg.prototype.server.states.PlayState;
 

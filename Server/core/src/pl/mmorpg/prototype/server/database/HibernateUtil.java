@@ -47,7 +47,7 @@ public class HibernateUtil
 
 	private static void registerEntityTypes(Configuration config)
 	{
-		Reflections reflections = new Reflections("pl.mmorpg.prototype.server.database.entities");
+		Reflections reflections = new Reflections("pl.mmorpg.prototype.data.entities");
 		Set<Class<?>> entityTypes = reflections.getTypesAnnotatedWith(Table.class);
 		for (Class<?> type : entityTypes)
 			config = config.addAnnotatedClass(type);

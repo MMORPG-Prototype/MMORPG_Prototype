@@ -4,9 +4,9 @@ import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SpellPutInQuickAccessBarPacket;
-import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
-import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
-import pl.mmorpg.prototype.server.database.repositories.CharacterSpellRepository;
+import pl.mmorpg.prototype.data.entities.CharacterSpell;
+import pl.mmorpg.prototype.data.entities.SpellQuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.data.entities.repositories.CharacterSpellRepository;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;

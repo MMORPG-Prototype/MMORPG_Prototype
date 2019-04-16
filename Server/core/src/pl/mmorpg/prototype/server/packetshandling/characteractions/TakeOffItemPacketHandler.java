@@ -5,7 +5,7 @@ import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.SwitchEquipmentItemPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.TakeOffItemPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.data.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.items.equipment.EquipableItem;
 import pl.mmorpg.prototype.server.objects.items.Item;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;

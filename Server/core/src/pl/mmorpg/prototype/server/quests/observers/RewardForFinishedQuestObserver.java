@@ -2,7 +2,7 @@ package pl.mmorpg.prototype.server.quests.observers;
 
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
-import pl.mmorpg.prototype.server.database.entities.Quest;
+import pl.mmorpg.prototype.data.entities.Quest;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.states.GameObjectsContainer;
 

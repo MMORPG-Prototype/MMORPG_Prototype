@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.server.commandUtils.actions;
 
 import pl.mmorpg.prototype.SpringContext;
-import pl.mmorpg.prototype.server.database.repositories.UserRepository;
+import pl.mmorpg.prototype.data.entities.repositories.UserRepository;
 
 public class ShowRegisteredUsersCommand implements CommandAction
 {

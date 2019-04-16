@@ -1,6 +1,6 @@
 package pl.mmorpg.prototype.server.quests.observers;
 
-import pl.mmorpg.prototype.server.database.entities.Quest;
+import pl.mmorpg.prototype.data.entities.Quest;
 
 public interface QuestFinishedObserver
 {

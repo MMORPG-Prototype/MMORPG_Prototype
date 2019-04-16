@@ -107,7 +107,7 @@
 							<goal>push</goal>
 						</goals>
 					</execution>
-				</executions> 
+				</executions>
 				<configuration>
 					<repository>pankiev/mmorpgheadlessserver</repository>
 					<tag>latest</tag>
@@ -115,7 +115,7 @@
       				<registryUrl>https://index.docker.io/v1/</registryUrl>
 					<skip>${dockerfile.skip}</skip>
 				</configuration>
-			</plugin>		
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>

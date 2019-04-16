@@ -9,7 +9,7 @@ import com.esotericsoftware.minlog.Log;
 
 import pl.mmorpg.prototype.clientservercommon.packets.LogoutPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
-import pl.mmorpg.prototype.server.database.entities.User;
+import pl.mmorpg.prototype.data.entities.User;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandler;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerFactory;
 import pl.mmorpg.prototype.server.states.PlayState;

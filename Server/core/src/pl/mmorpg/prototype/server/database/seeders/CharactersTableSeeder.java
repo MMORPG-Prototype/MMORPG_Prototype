@@ -3,11 +3,11 @@ package pl.mmorpg.prototype.server.database.seeders;
 import com.google.common.collect.Lists;
 
 import pl.mmorpg.prototype.SpringContext;
-import pl.mmorpg.prototype.server.database.entities.Character;
-import pl.mmorpg.prototype.server.database.entities.User;
-import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
-import pl.mmorpg.prototype.server.database.repositories.CharacterSpellRepository;
-import pl.mmorpg.prototype.server.database.repositories.UserRepository;
+import pl.mmorpg.prototype.data.entities.Character;
+import pl.mmorpg.prototype.data.entities.User;
+import pl.mmorpg.prototype.data.entities.repositories.CharacterRepository;
+import pl.mmorpg.prototype.data.entities.repositories.CharacterSpellRepository;
+import pl.mmorpg.prototype.data.entities.repositories.UserRepository;
 
 public class CharactersTableSeeder implements TableSeeder
 {

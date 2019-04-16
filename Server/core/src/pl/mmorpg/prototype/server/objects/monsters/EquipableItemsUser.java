@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.server.objects.monsters;
 
 import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
-import pl.mmorpg.prototype.server.database.entities.components.InventoryPosition;
+import pl.mmorpg.prototype.data.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.objects.items.equipment.EquipableItem;
 import pl.mmorpg.prototype.server.objects.items.Item;
 

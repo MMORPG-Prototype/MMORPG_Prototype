@@ -1,5 +1,6 @@
 package pl.mmorpg.prototype.server.quests;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.mmorpg.prototype.clientservercommon.packets.quest.event.EventPacket;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
@@ -12,6 +13,7 @@ public class AcceptQuestTask extends QuestTaskBase<AcceptQuestEvent>
 
 	private final String questName;
 
+	@JsonCreator
 	public AcceptQuestTask(@JsonProperty("parentIndex") Integer parentIndex,
 	                       @JsonProperty("questName") String questName)
 	{

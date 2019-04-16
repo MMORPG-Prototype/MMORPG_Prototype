@@ -16,7 +16,7 @@ import com.esotericsoftware.minlog.Log;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 import pl.mmorpg.prototype.clientservercommon.registering.PacketHandlersRegisterer;
 import pl.mmorpg.prototype.server.commandUtils.CommandHandler;
-import pl.mmorpg.prototype.server.database.entities.User;
+import pl.mmorpg.prototype.data.entities.User;
 import pl.mmorpg.prototype.server.exceptions.CannotBindServerException;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;

@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.server.objects.monsters.spells;
 
 import pl.mmorpg.prototype.clientservercommon.packets.SpellIdentifiers;
-import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
+import pl.mmorpg.prototype.data.entities.CharacterSpell;
 import pl.mmorpg.prototype.server.exceptions.UnknownSpellException;
 
 public class SpellFactory

@@ -1,26 +1,18 @@
 package pl.mmorpg.prototype.server.database;
 
+import pl.mmorpg.prototype.SpringContext;
+import pl.mmorpg.prototype.data.entities.Character;
+import pl.mmorpg.prototype.data.entities.*;
+import pl.mmorpg.prototype.data.entities.jointables.CharactersQuests;
+import pl.mmorpg.prototype.data.entities.repositories.*;
+import pl.mmorpg.prototype.server.objects.PlayerCharacter;
+import pl.mmorpg.prototype.server.objects.items.Item;
+import pl.mmorpg.prototype.server.objects.items.StackableItem;
+import pl.mmorpg.prototype.server.objects.items.equipment.EquipableItem;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import pl.mmorpg.prototype.SpringContext;
-import pl.mmorpg.prototype.server.database.entities.CharacterItem;
-import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
-import pl.mmorpg.prototype.server.database.entities.SpellQuickAccessBarConfigurationElement;
-import pl.mmorpg.prototype.server.database.entities.Character;
-import pl.mmorpg.prototype.server.database.entities.CharacterSpell;
-import pl.mmorpg.prototype.server.database.entities.jointables.CharactersQuests;
-import pl.mmorpg.prototype.server.database.repositories.CharacterItemRepository;
-import pl.mmorpg.prototype.server.database.repositories.CharactersQuestsRepository;
-import pl.mmorpg.prototype.server.database.repositories.ItemQuickAccessBarConfigurationElementRepository;
-import pl.mmorpg.prototype.server.database.repositories.SpellQuickAccessBarConfigurationElementRepository;
-import pl.mmorpg.prototype.server.database.repositories.CharacterRepository;
-import pl.mmorpg.prototype.server.database.repositories.CharacterSpellRepository;
-import pl.mmorpg.prototype.server.objects.PlayerCharacter;
-import pl.mmorpg.prototype.server.objects.items.equipment.EquipableItem;
-import pl.mmorpg.prototype.server.objects.items.Item;
-import pl.mmorpg.prototype.server.objects.items.StackableItem;
 
 public class CharacterDatabaseSaver
 {

@@ -7,7 +7,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
-import pl.mmorpg.prototype.server.database.entities.User;
+import pl.mmorpg.prototype.data.entities.User;
 import pl.mmorpg.prototype.server.helpers.CharacterCreator;
 
 public class CharacterCreationPacketHandler extends PacketHandlerBase<CharacterCreationPacket>

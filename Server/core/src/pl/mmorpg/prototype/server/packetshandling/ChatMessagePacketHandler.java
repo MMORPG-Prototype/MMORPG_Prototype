@@ -9,7 +9,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessagePacket;
 import pl.mmorpg.prototype.clientservercommon.packets.ChatMessageReplyPacket;
-import pl.mmorpg.prototype.server.database.entities.Character;
+import pl.mmorpg.prototype.data.entities.Character;
 
 public class ChatMessagePacketHandler extends PacketHandlerBase<ChatMessagePacket>
 {

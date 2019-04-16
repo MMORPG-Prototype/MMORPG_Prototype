@@ -4,7 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.playeractions.ItemPutInQuickAccessBarPacket;
-import pl.mmorpg.prototype.server.database.entities.ItemQuickAccessBarConfigurationElement;
+import pl.mmorpg.prototype.data.entities.ItemQuickAccessBarConfigurationElement;
 import pl.mmorpg.prototype.server.objects.PlayerCharacter;
 import pl.mmorpg.prototype.server.packetshandling.GameDataRetriever;
 import pl.mmorpg.prototype.server.packetshandling.PacketHandlerBase;

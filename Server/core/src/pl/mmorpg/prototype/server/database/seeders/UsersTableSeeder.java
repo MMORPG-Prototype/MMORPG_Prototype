@@ -1,9 +1,9 @@
 package pl.mmorpg.prototype.server.database.seeders;
 
 import pl.mmorpg.prototype.SpringContext;
-import pl.mmorpg.prototype.server.database.entities.User;
-import pl.mmorpg.prototype.server.database.entities.UserRole;
-import pl.mmorpg.prototype.server.database.repositories.UserRepository;
+import pl.mmorpg.prototype.data.entities.User;
+import pl.mmorpg.prototype.data.entities.UserRole;
+import pl.mmorpg.prototype.data.entities.repositories.UserRepository;
 
 public class UsersTableSeeder implements TableSeeder
 {
