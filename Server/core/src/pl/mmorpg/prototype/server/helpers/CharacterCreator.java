@@ -31,7 +31,7 @@ public class CharacterCreator
 		UserRepository userRepo = SpringContext.getBean(UserRepository.class);
 		Character character = new Character();
 		character.setNickname(packet.getNickname());
-		character.setUser(userRepo.findOne(userId));
+		character.setUser(userRepo.findById(userId).get());
 		CharacterSpellRepository spellRepo = SpringContext.getBean(CharacterSpellRepository.class);
 		character.setSpells(Lists.newArrayList(spellRepo.findAll()));
 		characterRepo.save(character);

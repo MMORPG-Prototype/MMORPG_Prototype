@@ -19,7 +19,7 @@ public class CharacterSpellsTableSeeder implements TableSeeder
 		Collection<CharacterSpell> spells = Arrays.stream(SpellIdentifiers.values())
 				.map(CharacterSpell::new)
 				.collect(Collectors.toList());
-		spellRepo.save(spells);
+		spellRepo.saveAll(spells);
 	}
 
 }

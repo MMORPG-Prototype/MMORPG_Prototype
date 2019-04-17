@@ -49,14 +49,14 @@ public class CharacterDatabaseSaver
     private void saveCharacterItems(Character toSave, Collection<CharacterItem> items)
     {
         List<CharacterItem> oldItems = itemRepo.findByCharacter(toSave);
-        itemRepo.delete(oldItems);
-        itemRepo.save(items);
+        itemRepo.deleteAll(oldItems);
+        itemRepo.saveAll(items);
     }
 
     private CharacterItem toDatabaseEquiv(Item item, int ownerId)
     {
         CharacterItem characterItem = new CharacterItem();
-        Character character = characterRepo.findOne(ownerId);
+        Character character = characterRepo.findById(ownerId).get();
         characterItem.setCharacter(character);
         characterItem.setIdentifier(item.getIdentifier());
         characterItem.setInventoryPosition(item.getInventoryPosition());
@@ -76,31 +76,31 @@ public class CharacterDatabaseSaver
     private void saveCharacterQuestStates(PlayerCharacter character)
     {
         Collection<CharactersQuests> quests = character.getUserCharacterData().getQuests();
-        charactersQuestsRepo.save(quests);
+        charactersQuestsRepo.saveAll(quests);
     }
 
     private void saveCharacterItemQuickAccessBarConfig(PlayerCharacter character)
     {
         Character userCharacterData = character.getUserCharacterData();
-        itemQuickAccessBarConfigRepo.delete(itemQuickAccessBarConfigRepo.findByCharacter(userCharacterData));
+        itemQuickAccessBarConfigRepo.deleteAll(itemQuickAccessBarConfigRepo.findByCharacter(userCharacterData));
         Collection<ItemQuickAccessBarConfigurationElement> configElements = userCharacterData.getItemQuickAccessBarConfig()
                 .values();
-        itemQuickAccessBarConfigRepo.save(configElements);
+        itemQuickAccessBarConfigRepo.saveAll(configElements);
     }
 
 
 	private void saveCharacterSpellQuickAccessBarConfig(PlayerCharacter character)
 	{
 		Character userCharacterData = character.getUserCharacterData();
-        spellQuickAccessBarConfigRepo.delete(spellQuickAccessBarConfigRepo.findByCharacter(userCharacterData));
+        spellQuickAccessBarConfigRepo.deleteAll(spellQuickAccessBarConfigRepo.findByCharacter(userCharacterData));
         Collection<SpellQuickAccessBarConfigurationElement> configElements = userCharacterData.getSpellQuickAccessBarConfig()
                 .values();
-        spellQuickAccessBarConfigRepo.save(configElements);
+        spellQuickAccessBarConfigRepo.saveAll(configElements);
 	}
 
     private void saveCharacterSpells(PlayerCharacter character)
     {
     	Collection<CharacterSpell> spells = character.getUserCharacterData().getSpells();
-    	characterSpellRepo.save(spells);
+    	characterSpellRepo.saveAll(spells);
     }
 }

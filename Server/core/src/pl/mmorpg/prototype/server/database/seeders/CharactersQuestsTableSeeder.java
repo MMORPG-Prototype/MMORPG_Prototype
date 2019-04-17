@@ -31,7 +31,7 @@ public class CharactersQuestsTableSeeder implements TableSeeder
                 joinEntites.add(charactersQuests);
             }
         
-        charactersQuestRepository.save(joinEntites);
+        charactersQuestRepository.saveAll(joinEntites);
     }
 
 }
