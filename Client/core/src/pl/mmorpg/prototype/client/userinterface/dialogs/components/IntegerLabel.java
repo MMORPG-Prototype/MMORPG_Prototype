@@ -9,11 +9,6 @@ public class IntegerLabel extends Label
 	{
 		super(String.valueOf(value), skin);
 	}
-
-	public void setText(int value)
-	{
-		setText(String.valueOf(value));
-	}
 	
 	public int getIntValue()
 	{

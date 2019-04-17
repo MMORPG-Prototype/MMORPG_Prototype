@@ -114,7 +114,7 @@
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
-			<version>1.9.6</version>
+			<version>1.9.9</version>
 		</dependency>
 
 		<!-- Tests -->

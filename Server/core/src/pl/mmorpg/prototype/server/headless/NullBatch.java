@@ -32,14 +32,14 @@ public class NullBatch implements Batch
 	}
 
 	@Override
-	public void setColor(float color)
-	{
-	}
-
-	@Override
 	public Color getColor()
 	{
 		return null;
+	}
+
+	@Override
+	public void setPackedColor(float v)
+	{
 	}
 
 	@Override
@@ -134,6 +134,12 @@ public class NullBatch implements Batch
 	}
 
 	@Override
+	public void setBlendFunctionSeparate(int i, int i1, int i2, int i3)
+	{
+
+	}
+
+	@Override
 	public int getBlendSrcFunc()
 	{
 		return 0;
@@ -141,6 +147,18 @@ public class NullBatch implements Batch
 
 	@Override
 	public int getBlendDstFunc()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getBlendSrcFuncAlpha()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getBlendDstFuncAlpha()
 	{
 		return 0;
 	}
