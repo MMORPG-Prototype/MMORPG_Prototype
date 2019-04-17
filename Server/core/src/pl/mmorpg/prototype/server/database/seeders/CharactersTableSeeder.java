@@ -24,7 +24,7 @@ public class CharactersTableSeeder implements TableSeeder
 
 	private Character createUserCharacter(String username, String characterName)
 	{
-		User user = userRepo.findByUsername(username);
+		User user = userRepo.findByUsername(username).get();
 		Character character = new Character();
 		character.setUser(user);
 		character.setNickname(characterName);

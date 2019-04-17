@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server.helpers;
 
 import java.util.Map;
+import java.util.Optional;
 
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.packets.AuthenticationPacket;
@@ -29,22 +30,22 @@ public class Authenticator
         replyPacket = new AuthenticationReplyPacket();
 
         UserRepository userRepo = SpringContext.getBean(UserRepository.class);
-        User user = userRepo.findByUsername(packet.username);
-        if(user == null)
+        Optional<User> user = userRepo.findByUsername(packet.username);
+        if(!user.isPresent())
         {
             replyPacket.message = "Wrong username";
             return replyPacket;
         }
 
-        if (user.getPassword().compareTo(packet.password) == 0)
+        if (user.get().getPassword().compareTo(packet.password) == 0)
         {
-            if (authenticatedUsers.containsKey(user.getId()))
+            if (authenticatedUsers.containsKey(user.get().getId()))
                 replyPacket.message = "User is already logged in!";
             else
             {
-                replyPacket.userId = user.getId();
+                replyPacket.userId = user.get().getId();
                 replyPacket.isAuthenticated = true;
-                authenticatedUser = user;
+                authenticatedUser = user.get();
             }
         } else
             replyPacket.message = "Wrong password";

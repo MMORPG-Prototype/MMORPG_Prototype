@@ -15,7 +15,7 @@ public class UserChangeRoleCommand implements CommandAction
 		String[] split = args.split(" ");
 		String username = split[0];
 		UserRole userRole = UserRole.valueOf(split[1]);	
-		User user = userRepo.findByUsername(username);
+		User user = userRepo.findByUsername(username).get();
 		user.setRole(userRole);
 		userRepo.save(user);
 	}
