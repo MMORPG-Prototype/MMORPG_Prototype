@@ -29,10 +29,8 @@ public class HeadlessServerLauncher
     	LwjglNativesLoader.load();
 		Gdx.files = new LwjglFiles();
 		HeadlessNativesLoader.load();
-		MockGraphics mockGraphics = new MockGraphics();
-		Gdx.graphics = mockGraphics;
-		HeadlessNet headlessNet = new HeadlessNet();
-		Gdx.net = headlessNet;
+		Gdx.graphics = new MockGraphics();
+		Gdx.net = new HeadlessNet();
 		Gdx.gl = new NullGL20();
 		Gdx.gl20 = new NullGL20();
 		Gdx.gl30 = new NullGL30();
