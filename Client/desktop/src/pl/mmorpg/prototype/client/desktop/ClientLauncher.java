@@ -1,7 +1,7 @@
 package pl.mmorpg.prototype.client.desktop;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import pl.mmorpg.prototype.client.GameLoader;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 
@@ -9,11 +9,10 @@ public class ClientLauncher
 {
 	public static void main(String[] args)
 	{
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = Settings.WINDOW_WIDTH;
-		config.height = Settings.WINDOW_HEIGHT;
-		config.title = "Game client";
-		config.vSyncEnabled = false;
-		new LwjglApplication(new GameLoader(), config);
+		var config = new Lwjgl3ApplicationConfiguration();
+		config.setWindowedMode(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+		config.setTitle("Game client");
+		config.useVsync(true);
+		new Lwjgl3Application(new GameLoader(), config);
 	}
 }

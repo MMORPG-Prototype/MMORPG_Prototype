@@ -1,7 +1,7 @@
 package pl.mmorpg.protptype.server.desktop;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import pl.mmorpg.prototype.clientservercommon.Settings;
@@ -14,9 +14,8 @@ public class ServerLauncher
 	public static void main(String[] args)  
 	{
 		SpringApplication.run(ServerLauncher.class, args);
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = Settings.WINDOW_WIDTH;
-		config.height = Settings.WINDOW_HEIGHT; 
-		new LwjglApplication(new GameServer(), config);
+		var config = new Lwjgl3ApplicationConfiguration();
+		config.setWindowedMode(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+		new Lwjgl3Application(new GameServer(), config);
 	}
 }
