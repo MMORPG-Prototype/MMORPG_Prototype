@@ -13,7 +13,7 @@ public class ChatPane extends ScrollPane
 	public ChatPane()
 	{
 		super(new ChatList());
-		chatList = (ChatList) getWidget();
+		chatList = (ChatList) getActor();
 		setSmoothScrolling(false);  
 		setTransform(true); 
 	}

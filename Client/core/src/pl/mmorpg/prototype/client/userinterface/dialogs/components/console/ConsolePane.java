@@ -12,7 +12,7 @@ public class ConsolePane extends ScrollPane
 	public ConsolePane()
 	{
 		super(new ConsoleList());
-		consoleList = (ConsoleList) getWidget();
+		consoleList = (ConsoleList) getActor();
 		setSmoothScrolling(false);  
 		setTransform(true); 
 	}

@@ -19,7 +19,7 @@ public class Registerator
 			replyPacket.errorMessage = "Password cannot be empty";
 		else if (!packet.password.equals(packet.passwordRepeat))
 			replyPacket.errorMessage = "Passwords are not the same!";
-		else if (userRepo.findByUsername(packet.getUsername()) != null)
+		else if (userRepo.findByUsername(packet.getUsername()).isPresent())
 			replyPacket.errorMessage = "User '" + packet.getUsername() + "' already exists!";
 		else
 		{

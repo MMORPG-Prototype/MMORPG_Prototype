@@ -1,8 +1,9 @@
-version: '3'
+version: '3.7'
 services:
   mmorpg_headless_server:
     container_name: mmorpg_headless_server
     image: pankiev/mmorpgheadlessserver
+    build: ./Server/desktopHeadless
     ports:
       - 8000:8000/tcp
       - 8001:8001/udp

@@ -1,4 +1,4 @@
-FROM openjdk:8u151
+FROM openjdk:11.0.3-jdk-stretch
 
 EXPOSE 8000
 EXPOSE 8001

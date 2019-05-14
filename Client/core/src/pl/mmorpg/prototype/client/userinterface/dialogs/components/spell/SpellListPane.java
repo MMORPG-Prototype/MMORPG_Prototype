@@ -12,7 +12,7 @@ public class SpellListPane extends ScrollPane
 	public SpellListPane(UserInterface userInterface)
 	{
 		super(new SpellList(userInterface));
-		spellList = (SpellList) this.getWidget();
+		spellList = (SpellList) this.getActor();
 		this.setCullingArea(null);
 	}
 	
