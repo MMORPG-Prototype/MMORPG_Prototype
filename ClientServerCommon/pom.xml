@@ -4,6 +4,7 @@
 	<groupId>mmorpgClientServerCommon</groupId>
 	<artifactId>mmorpgClientServerCommon</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
@@ -16,6 +17,14 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>3.3.2</version>
+			</extension>
+		</extensions>
 	</build>
 
 	<properties>
@@ -42,4 +51,20 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+
+
+	<distributionManagement>
+		<repository>
+			<id>ftp</id>
+			<name>Ftp test</name>
+			<url>ftp://77.55.216.204/home/pankiev/</url>
+		</repository>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>ftp</id>
+			<url>ftp://77.55.216.204/home/pankiev/</url>
+		</repository>
+	</repositories>
 </project>

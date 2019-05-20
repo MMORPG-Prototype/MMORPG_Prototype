@@ -77,6 +77,14 @@
 				</executions>
 			</plugin>
 		</plugins>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>3.3.2</version>
+			</extension>
+		</extensions>
 	</build>
 
 	<properties>
@@ -105,5 +113,20 @@
 		</dependency>
 
 	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>ftp</id>
+			<name>Ftp test</name>
+			<url>ftp://77.55.216.204/home/pankiev/</url>
+		</repository>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>ftp</id>
+			<url>ftp://77.55.216.204/home/pankiev/</url>
+		</repository>
+	</repositories>
 
 </project>
