@@ -86,7 +86,7 @@
 			<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>1.3.7</version>
+				<version>1.4.12</version>
 				<executions>
 					<execution>
 						<id>default</id>
@@ -102,17 +102,11 @@
 					<serverId>docker-hub-pankiev</serverId>
       				<registryUrl>https://index.docker.io/v1/</registryUrl>
 					<skip>${dockerfile.skip}</skip>
+					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
 				</configuration>
 			</plugin>
 		</plugins>
 
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ftp</artifactId>
-				<version>3.3.2</version>
-			</extension>
-		</extensions>
 	</build>
 
 	<properties>
@@ -147,19 +141,4 @@
 		</dependency>
 
 	</dependencies>
-
-	<distributionManagement>
-		<repository>
-			<id>ftp</id>
-			<name>Ftp test</name>
-			<url>ftp://77.55.216.204/home/pankiev/</url>
-		</repository>
-	</distributionManagement>
-
-	<repositories>
-		<repository>
-			<id>ftp</id>
-			<url>ftp://77.55.216.204/home/pankiev/</url>
-		</repository>
-	</repositories>
 </project>
