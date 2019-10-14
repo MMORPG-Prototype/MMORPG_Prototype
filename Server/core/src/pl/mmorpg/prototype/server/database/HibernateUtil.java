@@ -1,6 +1,8 @@
 package pl.mmorpg.prototype.server.database;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.persistence.Table;
@@ -9,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.reflections.Reflections;
+import pl.mmorpg.prototype.server.exceptions.GameException;
 
 public class HibernateUtil
 {
@@ -40,7 +43,21 @@ public class HibernateUtil
 	
 	public static void recreateDatabase()
 	{
-		Configuration config = new Configuration().configure("hibernateRecreateDatabase.cfg.xml");
+		// try
+		// {
+		// 	String filePath = "hibernateRecreateDatabase.cfg.xml";
+		// 	String s = new String(HibernateUtil.class.getResourceAsStream(filePath).readAllBytes());
+		// } catch (IOException e)
+		// {
+		// 	throw new GameException("Could not read hibernate config file", e);
+		// }
+
+		Configuration config = new Configuration();
+		Properties properties = new Properties();
+		config.configure("hibernateRecreateDatabase.cfg.xml");
+		properties.setProperty("hibernate.connection.username", "root");
+		properties.setProperty("hibernate.connection.password", "root");
+		config.addProperties(properties);
 		registerEntityTypes(config);
 		config.buildSessionFactory().openSession().close();
 	}

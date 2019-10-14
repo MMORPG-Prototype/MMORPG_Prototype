@@ -15,7 +15,7 @@ public class SwordEffect extends ConstantEffect
 	protected Statistics getDeltaModificationStatistics(Statistics baseStatistics)
 	{
 		return new Statistics.Builder()
-				.attackPower(2)
+				.attackPower(16)
 				.attackRange(10)
 				.build();
 	}
