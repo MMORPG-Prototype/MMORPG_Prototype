@@ -100,7 +100,7 @@
 				<configuration>
 					<repository>pankiev/mmorpgheadlessserver</repository>
 					<tag>latest</tag>
-					<serverId>docker-hub-pankiev</serverId>
+					<serverId>pankiev/mmorpgheadlessserver</serverId>
       				<registryUrl>https://index.docker.io/v1/</registryUrl>
 					<skip>${dockerfile.skip}</skip>
 					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
