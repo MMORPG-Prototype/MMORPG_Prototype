@@ -140,7 +140,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		int maximumMonsterAmount = (int) properties.get("MaximumMonsterAmount");
 		IntegerRectangle spawnArea = new IntegerRectangle(spawnerElement.getRectangle());
 		MonsterSpawnerUnit spawnerUnit = new MonsterSpawnerUnit(monsterType, spawnArea,
-				new Rectangle(0, 0, Float.MAX_VALUE, Float.MAX_VALUE), maximumMonsterAmount, spawnInterval);
+				spawnerElement.getRectangle(), maximumMonsterAmount, spawnInterval);
 		monsterSpawner.addSpawner(spawnerUnit);
 	}
 
