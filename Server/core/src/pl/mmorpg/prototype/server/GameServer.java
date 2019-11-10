@@ -13,10 +13,13 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 
+import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.Settings;
 import pl.mmorpg.prototype.clientservercommon.registering.PacketHandlersRegisterer;
+import pl.mmorpg.prototype.data.entities.repositories.UserRepository;
 import pl.mmorpg.prototype.server.commandUtils.CommandHandler;
 import pl.mmorpg.prototype.data.entities.User;
+import pl.mmorpg.prototype.server.database.seeders.DatabaseSeeder;
 import pl.mmorpg.prototype.server.exceptions.CannotBindServerException;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
@@ -37,11 +40,19 @@ public class GameServer extends ApplicationAdapter
         Assets.loadAssets();
         batch = Assets.getBatch();
         server = initializeServer();
+        seedDatabaseIfEmpty();
 
         playState = new PlayState(server);
         server.addListener(
                 new ServerListener(loggedUsersKeyUserId, authenticatedClientsKeyClientId, server, playState));
         bindServer();
+    }
+
+    private void seedDatabaseIfEmpty()
+    {
+        boolean emptyDatabase = SpringContext.getBean(UserRepository.class).findAll().iterator().hasNext();
+        if (emptyDatabase)
+            new DatabaseSeeder().seed();
     }
 
     private void startCommandHandlerOnNewThread()
