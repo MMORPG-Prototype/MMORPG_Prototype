@@ -27,7 +27,6 @@ public class GameClient extends ApplicationAdapter
     private SpriteBatch batch;
     private Client client;
     private StateManager states;
-    private PlayState playState;
     private ClientListener clientListener;
 
     private Texture mousePointer;
@@ -44,7 +43,7 @@ public class GameClient extends ApplicationAdapter
         Consumer<State> disposeState = state -> state.unregisterHandlers(registerer);
 		states = new StateManager(disposeState);
         client = new Client();
-        playState = new PlayState(states, client, registerer);
+        PlayState playState = new PlayState(states, client, registerer);
         client = initializeClient(dispatcher);
         states.push(playState);
         states.push(new ConnectionState(client, states, registerer, new DefaultConnectionInfo()));
@@ -53,9 +52,8 @@ public class GameClient extends ApplicationAdapter
 
     private Client initializeClient(PacketHandlerDispatcher dispatcher)
     {
-        Kryo kryo = client.getKryo();
-        kryo = PacketHandlersRegisterer.registerPackets(kryo);
-        clientListener = new ClientListener(dispatcher, playState, states);
+        PacketHandlersRegisterer.registerPackets(client.getKryo());
+        clientListener = new ClientListener(dispatcher);
         client.addListener(clientListener);
         client.start();
         return client;
@@ -109,7 +107,6 @@ public class GameClient extends ApplicationAdapter
             Gdx.input.setCursorPosition(Gdx.graphics.getWidth(), Gdx.input.getY());
         if (Gdx.input.getY() > Gdx.graphics.getHeight())
             Gdx.input.setCursorPosition(Gdx.input.getX(), Gdx.graphics.getHeight());
-
     }
 
     @Override

@@ -13,7 +13,7 @@ public class ClientListener extends Listener
 {
 	private final PacketHandlerDispatcher packetHandlerDispatcher;
 
-	public ClientListener(final PacketHandlerDispatcher packetHandlerDispatcher, final PlayState playState, final StateManager states)
+	public ClientListener(final PacketHandlerDispatcher packetHandlerDispatcher)
 	{
 		this.packetHandlerDispatcher = packetHandlerDispatcher;
 	}

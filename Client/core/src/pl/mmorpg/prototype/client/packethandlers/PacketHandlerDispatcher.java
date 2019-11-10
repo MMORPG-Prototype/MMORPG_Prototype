@@ -66,17 +66,17 @@ public class PacketHandlerDispatcher
 		}
 	}
 
+	private GameException newOmittingPacketException(Object packet)
+	{
+		return new GameException("Omitting packet handling: " + packet.getClass().getSimpleName() + ", no handler registered");
+	}
+
 	private void dispatchNormalPacket(Object packet)
 	{
 		Collection<PacketHandler<Object>> packetHandlerGroup = packetHandlers.get(packet.getClass());
 		if (packetHandlerGroup == null)
 			throw newOmittingPacketException(packet);
 		packetHandlerGroup.forEach(handler -> handler.handle(packet));
-	}
-
-	private GameException newOmittingPacketException(Object packet)
-	{
-		return new GameException("Omitting packet handling: " + packet.getClass().getSimpleName() + ", no handler registered");
 	}
 
 	public void dispatchGameObjectTargetPacket(GameObjectTargetPacket packet)
