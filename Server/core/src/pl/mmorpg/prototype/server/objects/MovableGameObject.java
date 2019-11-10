@@ -45,6 +45,25 @@ public abstract class MovableGameObject extends GameObject
 		return collision;
 	}
 
+	public GameObject moveRight(PixelCollisionMap<GameObject> collisionMap, float deltaTime, float finalXTarget)
+	{
+		movementX += getMoveSpeed() * deltaTime;
+		int collisionMoveValue = (int) movementX;
+		movementX -= (int) movementX;
+		if(getX() + collisionMoveValue > finalXTarget) {
+			collisionMoveValue = (int)(finalXTarget - getX());
+		}
+		GameObject collision = moveRight(collisionMap, collisionMoveValue);
+		if (collision != null)
+		{
+			while (moveRight(collisionMap, 1) == null)
+				;
+		}
+		if (collision == null)
+			sendRepositionPacket();
+		return collision;
+	}
+
 	protected void sendRepositionPacket()
 	{
 		if (currentPacketSendingTime >= packetSendingInterval)
@@ -59,6 +78,26 @@ public abstract class MovableGameObject extends GameObject
 		movementX -= getMoveSpeed() * deltaTime;
 		int collisionMoveValue = (int) -movementX;
 		movementX -= (int) movementX;
+		GameObject collision = moveLeft(collisionMap, collisionMoveValue);
+		if (collision != null)
+		{
+			while (moveLeft(collisionMap, 1) == null)
+				;
+		}
+
+		if (collision == null)
+			sendRepositionPacket();
+		return collision;
+	}
+
+	public GameObject moveLeft(PixelCollisionMap<GameObject> collisionMap, float deltaTime, float finalXTarget)
+	{
+		movementX -= getMoveSpeed() * deltaTime;
+		int collisionMoveValue = (int) -movementX;
+		movementX -= (int) movementX;
+		if(getX() - collisionMoveValue < finalXTarget) {
+			collisionMoveValue = (int)(getX() - finalXTarget);
+		}
 		GameObject collision = moveLeft(collisionMap, collisionMoveValue);
 		if (collision != null)
 		{
@@ -88,11 +127,51 @@ public abstract class MovableGameObject extends GameObject
 		return collision;
 	}
 
+	public GameObject moveDown(PixelCollisionMap<GameObject> collisionMap, float deltaTime, float finalYTarget)
+	{
+		movementY -= getMoveSpeed() * deltaTime;
+		int collisionMoveValue = (int) -movementY;
+		movementY -= (int) movementY;
+		if(getY() - collisionMoveValue < finalYTarget) {
+			collisionMoveValue = (int)(getY() - finalYTarget);
+		}
+		GameObject collision = moveDown(collisionMap, collisionMoveValue);
+		if (collision != null)
+		{
+			while (moveDown(collisionMap, 1) == null)
+				;
+		}
+
+		if (collision == null)
+			sendRepositionPacket();
+		return collision;
+	}
+
 	public GameObject moveUp(PixelCollisionMap<GameObject> collisionMap, float deltaTime)
 	{
 		movementY += getMoveSpeed() * deltaTime;
 		int collisionMoveValue = (int) movementY;
 		movementY -= (int) movementY;
+		GameObject collision = moveUp(collisionMap, collisionMoveValue);
+		if (collision != null)
+		{
+			while (moveUp(collisionMap, 1) == null)
+				;
+		}
+
+		if (collision == null)
+			sendRepositionPacket();
+		return collision;
+	}
+
+	public GameObject moveUp(PixelCollisionMap<GameObject> collisionMap, float deltaTime, float finalYTarget)
+	{
+		movementY += getMoveSpeed() * deltaTime;
+		int collisionMoveValue = (int) movementY;
+		movementY -= (int) movementY;
+		if(getY() + collisionMoveValue > finalYTarget) {
+			collisionMoveValue = (int)(finalYTarget - getY());
+		}
 		GameObject collision = moveUp(collisionMap, collisionMoveValue);
 		if (collision != null)
 		{
@@ -198,18 +277,18 @@ public abstract class MovableGameObject extends GameObject
 	{
 		float deltaY = targetY - getY();
 		if (deltaY > 0)
-			moveUp(collisionMap, deltaTime);
+			moveUp(collisionMap, deltaTime, targetY);
 		else
-			moveDown(collisionMap, deltaTime);
+			moveDown(collisionMap, deltaTime, targetY);
 	}
 
 	private void makeStepToPointOnX(float deltaTime, PixelCollisionMap<GameObject> collisionMap, float targetX)
 	{
 		float deltaX = targetX - getX();
 		if (deltaX > 0)
-			moveRight(collisionMap, deltaTime);
+			moveRight(collisionMap, deltaTime, targetX);
 		else
-			moveLeft(collisionMap, deltaTime);
+			moveLeft(collisionMap, deltaTime, targetX);
 	}
 
 	protected void chaseTarget(float deltaTime, Monster target)

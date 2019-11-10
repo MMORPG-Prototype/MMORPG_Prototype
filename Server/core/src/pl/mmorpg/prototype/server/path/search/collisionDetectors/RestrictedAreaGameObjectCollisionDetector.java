@@ -8,7 +8,7 @@ import pl.mmorpg.prototype.server.objects.GameObject;
 
 public class RestrictedAreaGameObjectCollisionDetector implements CollisionDetector
 {
-	private final static float RESTRICTED_AREA_DISTANCE = 200.0f;
+	private final static float RESTRICTED_AREA_DISTANCE = 2000.0f;
 	private final CollisionMap<GameObject> collisionMap;
 	private final GameObject gameObject;
 	private final Rectangle restrictedArea;
@@ -22,19 +22,19 @@ public class RestrictedAreaGameObjectCollisionDetector implements CollisionDetec
 
 	private Rectangle createRestrictedAreaRectangle(float initialX, float initialY)
 	{
-		return new Rectangle((int)initialX-(int)RESTRICTED_AREA_DISTANCE/2, 
-				(int)initialY-(int)RESTRICTED_AREA_DISTANCE/2, 
-				(int)RESTRICTED_AREA_DISTANCE, 
+		return new Rectangle((int)initialX-(int)RESTRICTED_AREA_DISTANCE/2,
+				(int)initialY-(int)RESTRICTED_AREA_DISTANCE/2,
+				(int)RESTRICTED_AREA_DISTANCE,
 				(int)RESTRICTED_AREA_DISTANCE);
 	}
 
 	@Override
 	public boolean isColliding(int x, int y)
 	{
-		return !isInRestrictedArea(x, y) || !(isEmptyOrSameObject(x, y) 
-				&& isEmptyOrSameObject(x + (int)gameObject.getWidth(), y)
-				&& isEmptyOrSameObject(x, y + (int)gameObject.getHeight()) 
-				&& isEmptyOrSameObject(x + (int)gameObject.getWidth(), y + (int)gameObject.getHeight())
+		return !(isInRestrictedArea(x, y) && isEmptyOrSameObject(x - 2, y - 2)
+				&& isEmptyOrSameObject(x + (int)gameObject.getWidth() + 2, y - 2)
+				&& isEmptyOrSameObject(x - 2, y + (int)gameObject.getHeight() + 2)
+				&& isEmptyOrSameObject(x + (int)gameObject.getWidth() + 2, y + (int)gameObject.getHeight() + 2)
 				&& isEmptyOrSameObject(x + (int)gameObject.getWidth()/2, y + (int)gameObject.getHeight()/2));
 	}
 	

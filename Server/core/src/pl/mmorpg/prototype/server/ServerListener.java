@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server;
 
 import java.util.Map;
+import java.util.concurrent.*;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -16,6 +17,8 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class ServerListener extends Listener
 {
+    private final ExecutorService executor = Executors.newFixedThreadPool(8);
+    private final ExecutorService executorTimeoutWaiter = Executors.newSingleThreadExecutor();
     private final PacketHandlerFactory packetHandlersFactory;
     private Map<Integer, User> authenticatedClientsKeyClientId;
 
@@ -48,6 +51,26 @@ public class ServerListener extends Listener
 
     @Override
     public void received(Connection connection, Object object)
+    {
+        Future<?> future = executor.submit(() -> handlePacket(connection, object));
+        executorTimeoutWaiter.submit(() -> cancelTaskOnTimeout(future));
+    }
+
+    private void cancelTaskOnTimeout(Future<?> future)
+    {
+        try
+        {
+            future.get(10, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException e)
+        {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e)
+        {
+            future.cancel(true);
+        }
+    }
+
+    private void handlePacket(Connection connection, Object object)
     {
         try {
             PacketHandler packetHandler = packetHandlersFactory.produce(object);

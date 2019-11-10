@@ -80,8 +80,8 @@ public class PlayerCharacter extends Monster
 		userCharacter.setStrength(properties.strength);
 	}
 
-	public void startGoingTo(int x, int y) {
-    	//super.findPathTo(x, y);
+	public void findPathAndGoTo(int x, int y) {
+    	super.findPathTo(x, y);
 	}
 
 	public void addGold(int gold)

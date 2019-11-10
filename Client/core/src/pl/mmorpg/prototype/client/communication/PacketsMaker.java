@@ -240,6 +240,10 @@ public class PacketsMaker
 		return packet;
 	}
 
+	public static FindPathAndGoToPacket makeFindPathAndGoToPacket(int x, int y) {
+		return new FindPathAndGoToPacket(x, y);
+	}
+
 	public static TakeOffItemPacket makeTakeOffItemPacket(long itemId, ItemInventoryPosition emptyDestinationPosition)
 	{
 		TakeOffItemPacket packet = new TakeOffItemPacket();

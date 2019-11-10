@@ -1,6 +1,7 @@
 package pl.mmorpg.prototype.server.collision.pixelmap;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import pl.mmorpg.prototype.server.collision.interfaces.CollisionMap;
@@ -10,9 +11,9 @@ import pl.mmorpg.prototype.server.resources.Assets;
 @SuppressWarnings("unchecked")
 public class PixelCollisionMap<T extends RectangleCollisionObject> implements CollisionMap<T>
 {
-    private Object[][] collisionMap;
-    private int scale;
-    
+    private final Object[][] collisionMap;
+    private final int scale;
+
     public PixelCollisionMap(int width, int height)
     {
         this(width, height, 1);
@@ -23,13 +24,13 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
         this.scale = scale;
         collisionMap = createCollisionMap(width, height);
     }
-    
+
     public PixelCollisionMap(int width, int height, int scale, T borderObject)
     {
         this(width, height, scale);
         placeObjectOnBorder(borderObject);
     }
-    
+
     public PixelCollisionMap(int width, int height, T borderObject)
     {
         this(width, height);
@@ -48,11 +49,11 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
         return collisionMap;
     }
 
-    void placeObjectOnBorder(T object)
+    private void placeObjectOnBorder(T object)
     {
     	if(!object.isCurrentlyCollideable())
     		return;
-    	
+
         for (int i = 0; i < collisionMap.length; i++)
         {
             collisionMap[i][0] = object;
@@ -66,11 +67,6 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
         }
     }
 
-    public void setScale(int scale)
-    {
-        this.scale = scale;
-    }
-
     public int getScale()
     {
         return scale;
@@ -79,79 +75,95 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
     @Override
     public void insert(T object)
     {
-    	if(!object.isCurrentlyCollideable())
-    		return;
-    	
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
+        synchronized (object) {
+            if(!object.isCurrentlyCollideable())
+                return;
 
-        for (int i = collision.x; i <= collision.x + collision.width; i++)
-            for (int j = collision.y; j <= collision.y + collision.height; j++)
-                collisionMap[i][j] = object;
+            IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
+
+            for (int i = collision.x; i <= collision.x + collision.width; i++)
+                for (int j = collision.y; j <= collision.y + collision.height; j++)
+                    collisionMap[i][j] = object;
+        }
     }
 
     @Override
     public void remove(T object)
     {
-    	if(!object.isCurrentlyCollideable())
-    		return;
-    	
-        IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
+        synchronized (object) {
+            if(!object.isCurrentlyCollideable())
+                return;
 
-        for (int i = collision.x; i <= collision.x + collision.width; i++)
-            for (int j = collision.y; j <= collision.y + collision.height; j++)
-                collisionMap[i][j] = null;
+            IntegerRectangle collision = new IntegerRectangle(object.getCollisionRect(), scale);
+
+            for (int i = collision.x; i <= collision.x + collision.width; i++)
+                for (int j = collision.y; j <= collision.y + collision.height; j++)
+                    collisionMap[i][j] = null;
+        }
     }
 
     @Override
     public T tryToRepositionGoingLeft(int moveValue, T object)
     {
-    	if(!object.isCurrentlyCollideable())
-    		return null;
-    	
-        T possibleCollision = checkForSpaceGoingLeft(moveValue,
-                new IntegerRectangle(object.getCollisionRect(), scale));
-        if (possibleCollision == null)
-            repositionCollisionGoingLeft(moveValue, object);
-        return possibleCollision;
+        synchronized (object) {
+
+            if(!object.isCurrentlyCollideable())
+                return null;
+
+            T possibleCollision = checkForSpaceGoingLeft(moveValue,
+                    new IntegerRectangle(object.getCollisionRect(), scale));
+            if (possibleCollision == null)
+                repositionCollisionGoingLeft(moveValue, object);
+            return possibleCollision;
+        }
     }
 
     @Override
     public T tryToRepositionGoingRight(int moveValue, T object)
     {
-    	if(!object.isCurrentlyCollideable())
-    		return null;
-    	
-        T possibleCollision = checkForSpaceGoingRight(moveValue,
-                new IntegerRectangle(object.getCollisionRect(), scale));
-        if (possibleCollision == null)
-            repositionCollisionGoingRight(moveValue, object);
-        return possibleCollision;
+        synchronized (object) {
+
+            if(!object.isCurrentlyCollideable())
+                return null;
+
+            T possibleCollision = checkForSpaceGoingRight(moveValue,
+                    new IntegerRectangle(object.getCollisionRect(), scale));
+            if (possibleCollision == null)
+                repositionCollisionGoingRight(moveValue, object);
+            return possibleCollision;
+        }
     }
 
     @Override
     public T tryToRepositionGoingDown(int moveValue, T object)
     {
-    	if(!object.isCurrentlyCollideable())
-    		return null;
-    	
-        T possibleCollision = checkForSpaceGoingDown(moveValue,
-                new IntegerRectangle(object.getCollisionRect(), scale));
-        if (possibleCollision == null)
-            repositionCollisionGoingDown(moveValue, object);
-        return possibleCollision;
+        synchronized (object) {
+
+            if(!object.isCurrentlyCollideable())
+                return null;
+
+            T possibleCollision = checkForSpaceGoingDown(moveValue,
+                    new IntegerRectangle(object.getCollisionRect(), scale));
+            if (possibleCollision == null)
+                repositionCollisionGoingDown(moveValue, object);
+            return possibleCollision;
+        }
     }
 
     @Override
     public T tryToRepositionGoingUp(int moveValue, T object)
     {
-    	if(!object.isCurrentlyCollideable())
-    		return null;
-    	
-        T possibleCollision = checkForSpaceGoingUp(moveValue,
-                new IntegerRectangle(object.getCollisionRect(), scale));
-        if (possibleCollision == null)
-            repositionCollisionGoingUp(moveValue, object);
-        return possibleCollision;
+        synchronized (object) {
+
+            if(!object.isCurrentlyCollideable())
+                return null;
+
+            T possibleCollision = checkForSpaceGoingUp(moveValue,
+                    new IntegerRectangle(object.getCollisionRect(), scale));
+            if (possibleCollision == null)
+                repositionCollisionGoingUp(moveValue, object);
+            return possibleCollision;
+        }
     }
 
     private T checkForSpaceGoingLeft(int moveValue, IntegerRectangle collision)
@@ -242,7 +254,7 @@ public class PixelCollisionMap<T extends RectangleCollisionObject> implements Co
                 collisionMap[j][i] = null;
     }
 
-    public void render(SpriteBatch batch)
+    public void render(Batch batch)
     {
         Texture blackPixel = Assets.get("collisionMapDebug.png");
         for (int i = 0; i < collisionMap.length; i += 1)

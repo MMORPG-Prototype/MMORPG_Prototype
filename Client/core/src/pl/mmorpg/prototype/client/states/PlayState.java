@@ -176,6 +176,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	@Override
 	public void render(SpriteBatch batch)
 	{
+		synchronizedLock(() -> doRender(batch));
+	}
+
+	private void doRender(SpriteBatch batch)
+	{
 		batch.setProjectionMatrix(camera.combined);
 		batch.disableBlending();
 		updateMapRendererView();
@@ -198,6 +203,12 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		batch.end();
 	}
 
+	private void synchronizedLock(Runnable runnable) {
+		synchronized (this) {
+			runnable.run();
+		}
+	}
+
 	private void updateMapRendererView()
 	{
 		mapRenderer.setView(camera.combined, camera.position.x - camera.viewportWidth / 2,
@@ -207,6 +218,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	@Override
 	public void update(float deltaTime)
+	{
+		synchronizedLock(() -> doUpdate(deltaTime));
+	}
+
+	private void doUpdate(float deltaTime)
 	{
 		for (GameObject object : gameObjects.values())
 			object.update(deltaTime);
@@ -347,6 +363,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 
 	private void reset()
 	{
+		synchronizedLock(this::doReset);
+	}
+
+	private void doReset()
+	{
 		isInitialized = false;
 		packetHandlerRegisterer.unregister(PacketHandlerCategory.USER_INTERFACE);
 		inputHandler = new NullInputHandler();
@@ -397,32 +418,29 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		float realX = getRealX(x);
 		float realY = getRealY(y);
 		drawPathTo(realX, realY);
-		GameObject object = collisionMap.getObject((int) realX, (int) realY);
-		sendProperLeftClickedPacket(object);
-		if (object != null)
-			System.out.println("Id: " + object.getId() + ", " + object);
-
+		sendProperLeftClickedPacket(realX, realY);
 		System.out.println("X: " + realX + ", Y: " + realY);
 	}
 
-	private void sendProperLeftClickedPacket(GameObject object)
+	private void sendProperLeftClickedPacket(float realX, float realY)
 	{
-		Object packet = createProperLeftClickedPacket(object);
-		if(packet != null)
-			client.sendTCP(packet);
+		Object packet = createProperLeftClickedPacket(realX, realY);
+		client.sendTCP(packet);
 	}
 
-	private Object createProperLeftClickedPacket(GameObject object)
+	private Object createProperLeftClickedPacket(float realX, float realY)
 	{
-		if(object instanceof Shop)
+		GameObject object = collisionMap.getObject((int) realX, (int) realY);
+		if (object instanceof Shop)
 			return PacketsMaker.makeOpenShopPacket(object.getId());
-		else if(object instanceof QuestDialogNpc)
+		else if (object instanceof QuestDialogNpc)
 			return PacketsMaker.makeNpcDialogStartRequestPacket(object.getId());
-		else if(object instanceof Monster)
+		else if (object instanceof Monster)
 			return PacketsMaker.makeTargetMonsterPacket(object.getId());
-		else if(object instanceof QuestBoard)
+		else if (object instanceof QuestBoard)
 			return PacketsMaker.makeGetQuestBoardInfoPacket(object.getId());
-		return null;
+		else
+			return PacketsMaker.makeFindPathAndGoToPacket((int) realX, (int) realY);
 	}
 
 	private void drawPathTo(float x, float y)
@@ -733,6 +751,9 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		protected void doHandle(HpChangeByItemUsagePacket packet)
 		{
 			Monster target = (Monster) gameObjects.get(packet.getMonsterTargetId());
+			if(target == null) {
+				return;
+			}
 			target.getProperties().hp += packet.getHpChange();
 			HealLabel healLabel = new HealLabel(String.valueOf(packet.getHpChange()), target);
 			clientGraphics.add(healLabel);

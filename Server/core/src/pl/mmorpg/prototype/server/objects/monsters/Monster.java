@@ -192,7 +192,7 @@ public abstract class Monster extends MovableGameObject implements ItemUser, Equ
 	{
 		//TODO FIX modulos
 		int modulo = 3;
-		Point startPoint = new Point(x - x%modulo, y - y%modulo);
+		Point startPoint = new Point((int)getX() - (int)getX()%modulo, (int)getY() - (int)getY()%modulo);
 		Point endPoint = new Point(x - x% modulo, y - y%modulo);
 		DistanceComparator distanceComparator = new ManhattanDistanceComparator(endPoint);
 		Collection<? extends Point> path = pathFinder.find(startPoint, endPoint, distanceComparator, collisionDetector);

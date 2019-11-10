@@ -21,9 +21,10 @@ public class MenuDialog extends Dialog
 		getTitleTable().add(closeButton).size(15, 15).padRight(-5).top().right();
 
 		TextButton characterChangeButton = ButtonCreator.createTextButton("Change character",
-				() -> linkedInterface.userWantsToChangeCharacter());
-		TextButton logOutButton = ButtonCreator.createTextButton("Log out", () -> linkedInterface.userWantsToLogOut());
-		TextButton disconnectButton = ButtonCreator.createTextButton("Disconnect", () -> linkedInterface.userWantsToDisconnect());
+				linkedInterface::userWantsToChangeCharacter);
+		TextButton logOutButton = ButtonCreator.createTextButton("Log out", linkedInterface::userWantsToLogOut);
+		TextButton disconnectButton = ButtonCreator.createTextButton("Disconnect",
+				linkedInterface::userWantsToDisconnect);
 		TextButton exitButton = ButtonCreator.createTextButton("Exit", () -> Gdx.app.exit());
 
 		getContentTable().add(characterChangeButton);

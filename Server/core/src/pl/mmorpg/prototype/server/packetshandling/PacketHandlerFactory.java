@@ -108,6 +108,7 @@ public class PacketHandlerFactory
 		packetHandlers.put(UseLevelUpPointOnDexterityPacket.class, new UseLevelUpPointOnDexterityPacketHandler(gameDataRetriever, playState));
 		packetHandlers.put(EquipItemPacket.class, new EquipItemPacketHandler(gameDataRetriever, playState));
 		packetHandlers.put(TakeOffItemPacket.class, new TakeOffItemPacketHandler(gameDataRetriever, playState));
+		packetHandlers.put(FindPathAndGoToPacket.class, new FindPathAndGoToPacketHandler(gameDataRetriever, playState));
 
 		// Ignore framework packets
 		packetHandlers.put(FrameworkMessage.KeepAlive.class, new NullPacketHandler());

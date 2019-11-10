@@ -65,8 +65,7 @@ public class GameServer extends ApplicationAdapter
     private Server initializeServer()
     {
         server = new Server();
-        Kryo serverKryo = server.getKryo();
-        serverKryo = PacketHandlersRegisterer.registerPackets(serverKryo);
+        PacketHandlersRegisterer.registerPackets(server.getKryo());
         return server;
     }
 
@@ -108,6 +107,7 @@ public class GameServer extends ApplicationAdapter
     {
         Assets.dispose();
         batch.dispose();
+        System.exit(0);
     }
 
 }
