@@ -50,7 +50,7 @@ public class GameServer extends ApplicationAdapter
 
     private void seedDatabaseIfEmpty()
     {
-        boolean emptyDatabase = SpringContext.getBean(UserRepository.class).findAll().iterator().hasNext();
+        boolean emptyDatabase = !SpringContext.getBean(UserRepository.class).findAll().iterator().hasNext();
         if (emptyDatabase)
             new DatabaseSeeder().seed();
     }
