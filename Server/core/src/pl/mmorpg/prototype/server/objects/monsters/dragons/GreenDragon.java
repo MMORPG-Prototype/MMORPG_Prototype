@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.server.objects.monsters.dragons;
 
 import java.util.Collection;
 
+import com.badlogic.gdx.math.Rectangle;
 import pl.mmorpg.prototype.server.objects.monsters.properties.builders.GreenDragonPropertiesBuilder;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
@@ -20,9 +21,10 @@ public class GreenDragon extends Dragon
 {
 	private static final MonsterLootGenerator dragonLootGenerator = new GreenDragonLootGenerator();
 	
-	public GreenDragon(long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState)
+	public GreenDragon(long id, Rectangle walkingBounds,
+			PixelCollisionMap<GameObject> collisionMap, PlayState playState)
 	{
-		super(Assets.get("monster.png"), id, getDragonProperties(), collisionMap, playState);
+		super(Assets.get("monster.png"), id, getDragonProperties(), walkingBounds, collisionMap, playState);
 		this.addAbility(new TimedHealAbility(5.0f, 10));
 	}
 

@@ -14,8 +14,8 @@ public abstract class MovableGameObject extends GameObject
 	private final static float stopMovingTimeBound = 0.2f;
 	private float stopMovingTime = 0.0f;
 	private float stepSpeed = 150.0f;
-	private float targetX = 100.0f;
-	private float targetY = 100.0f;
+	private float targetX;
+	private float targetY;
 	private boolean slidingActive = true;
 	private final MoveInfo currentMoveInfo = new MoveInfo();
 	private CollisionMap<GameObject> linkedCollisionMap;
@@ -30,7 +30,7 @@ public abstract class MovableGameObject extends GameObject
 		registerPacketHandler(new ObjectRepositionPacketHandler());
 	}
 
-	public void initPosition(float x, float y)
+	protected void initPosition(float x, float y)
 	{
 		targetX = x;
 		targetY = y;
@@ -59,15 +59,21 @@ public abstract class MovableGameObject extends GameObject
 	private void repositionX(float deltaTime)
 	{
 		float deltaX = targetX - getX();
-		float stepValue = stepSpeed * deltaTime;
-		if (slidingActive)
-			stepValue *= (Math.abs(deltaX) / 30);
-		if (deltaX < 0)
-			stepValue = -stepValue;
+		float stepValue = getStepValue(deltaTime, deltaX);
 		if (Math.abs(deltaX) > Math.abs(stepValue))
 			directPositionChangeX(stepValue);
 		else
 			directPositionChangeX(deltaX);
+	}
+
+	private float getStepValue(float deltaTime, float deltaDistance)
+	{
+		float stepValue = stepSpeed * deltaTime;
+		if (slidingActive)
+			stepValue *= (Math.abs(deltaDistance) / 30);
+		if (deltaDistance < 0)
+			return -stepValue;
+		return stepValue;
 	}
 
 	private void directPositionChangeX(float moveValue)
@@ -86,11 +92,7 @@ public abstract class MovableGameObject extends GameObject
 	private void repositionY(float deltaTime)
 	{
 		float deltaY = targetY - getY();
-		float stepValue = stepSpeed * deltaTime;
-		if (slidingActive)
-			stepValue *= (Math.abs(deltaY) / 30);
-		if (deltaY < 0)
-			stepValue = -stepValue;
+		float stepValue = getStepValue(deltaTime, deltaY);
 		if (Math.abs(deltaY) > Math.abs(stepValue))
 			directPositionChangeY(stepValue);
 		else

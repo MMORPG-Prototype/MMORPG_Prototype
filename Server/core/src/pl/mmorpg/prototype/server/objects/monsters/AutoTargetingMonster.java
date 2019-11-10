@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import com.badlogic.gdx.math.Rectangle;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.objects.GameObject;
@@ -25,19 +26,15 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 	private static final int rangeOfCheckingForTarget = 200;
 	private static final int checkInterval = 20;
 	private static final float recalculatePathTime = 1.0f;
-	private static final PathFinder pathFinder = new BestFirstPathFinder();
 
 	private final PixelCollisionMap<GameObject> collisionMap;
-	private LinkedList<Point> currentPath = new LinkedList<>();
-	private final RestrictedAreaGameObjectCollisionDetector collisionDetector;
 	private float timeLeftForRecalculation = recalculatePathTime;
 
-	protected AutoTargetingMonster(Texture lookout, long id, MonsterProperties properties,
+	protected AutoTargetingMonster(Texture lookout, long id, MonsterProperties properties, Rectangle walkingBounds,
 			PixelCollisionMap<GameObject> collisionMap, PlayState playState)
 	{
-		super(lookout, id, properties, collisionMap, playState);
+		super(lookout, id, properties, walkingBounds, collisionMap, playState);
 		this.collisionMap = collisionMap;
-		collisionDetector = new RestrictedAreaGameObjectCollisionDetector(collisionMap, this);
 	}
 
 	@Override
@@ -58,23 +55,9 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 		if (monster != null)
 		{
 			targetMonster(monster);
-			findPathTo(monster);
+			findPathTo((int) monster.getX(), (int) monster.getY());
 			setMovingRandomly(false);
 		}
-	}
-
-	private void findPathTo(Monster monster)
-	{
-		//TODO FIX modulos
-		int modulo = 3;
-		Point startPoint = new Point((int) getX() - (int)getX()%modulo, (int) getY() - (int)getY()%modulo);
-		Point endPoint = new Point((int) monster.getX() - (int)monster.getX()% modulo, (int) monster.getY() - (int)monster.getY()%modulo);
-		DistanceComparator distanceComparator = new ManhattanDistanceComparator(endPoint);
-		Collection<? extends Point> path = pathFinder.find(startPoint, endPoint, distanceComparator, collisionDetector);
-		System.out.println("Path");
-		currentPath = new PathSimplifier().simplify(path);
-		Collections.reverse(currentPath);
-		//currentPath.pollFirst();
 	}
 
 	private void whenHasTarget(float deltaTime)
@@ -88,30 +71,18 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 	{
 		if (timeLeftForRecalculation <= 0.0f)
 		{
-			findPathTo(target);
+			findPathTo((int) target.getX(), (int) target.getY());
 			timeLeftForRecalculation = recalculatePathTime;
 		}
-		if (currentPath.isEmpty())
-		{
+		if (!isFollowingPath())
 			super.chaseTarget(deltaTime, collisionMap, target);
-			return;
-		}
-		Point nearestTarget = currentPath.getFirst();
-		makeStepToPoint(deltaTime, collisionMap, nearestTarget.x, nearestTarget.y);
-		if (nearPoint(nearestTarget))
-			currentPath.pollFirst();
-	}
-
-	private boolean nearPoint(Point nearestTarget)
-	{
-		return Math.abs(getX() - nearestTarget.x) + Math.abs(getY() - nearestTarget.y) < 2.0f;
 	}
 
 	private Monster tryToFindTarget()
 	{
 		int numberOfCheckingPointPerDimension = rangeOfCheckingForTarget / checkInterval;
-		int searchingStartingPointX = (int) getX() - numberOfCheckingPointPerDimension / 2;
-		int searchingStartingPointY = (int) getY() - numberOfCheckingPointPerDimension / 2;
+		int searchingStartingPointX = (int) getX() - rangeOfCheckingForTarget / 2;
+		int searchingStartingPointY = (int) getY() - rangeOfCheckingForTarget / 2;
 		for (int i = 0; i < numberOfCheckingPointPerDimension; i++)
 			for (int j = 0; j < numberOfCheckingPointPerDimension; j++)
 			{
@@ -127,15 +98,6 @@ public abstract class AutoTargetingMonster extends WalkingMonster
 	{
 		return gameObject instanceof Monster && gameObject != this
 				&& shouldTargetOn((Monster) gameObject);
-	}
-	
-	@Override
-	public void render(Batch batch)
-	{
-		Texture debugTexture = Assets.get("debug.png");
-		for(Point point : currentPath)
-			batch.draw(debugTexture, point.x, point.y, 3, 3);
-		super.render(batch);
 	}
 
 	protected abstract boolean shouldTargetOn(Monster monster);

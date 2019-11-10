@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.server.objects.monsters.dragons;
 
 import java.util.Collection;
 
+import com.badlogic.gdx.math.Rectangle;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.server.objects.monsters.properties.builders.RedDragonPropertiesBuilder;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
@@ -21,10 +22,11 @@ public class RedDragon extends Dragon
 {
 	private static final MonsterLootGenerator dragonLootGenerator = new GreenDragonLootGenerator();
 	
-	public RedDragon(long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState)
+	public RedDragon(long id, Rectangle walkingBounds, PixelCollisionMap<GameObject> collisionMap,
+			PlayState playState)
 	{
-		super(Assets.get("monster.png"), id, getDragonProperies(), collisionMap, playState);
-		this.addAbility(new FireballAbility(this, (GameObjectsContainer)playState));
+		super(Assets.get("monster.png"), id, getDragonProperies(), walkingBounds, collisionMap, playState);
+		this.addAbility(new FireballAbility(this, playState));
 	}
 
 	public static MonsterProperties getDragonProperies()
@@ -43,8 +45,7 @@ public class RedDragon extends Dragon
 	{
 		dragonLootGenerator.generateAndApplyLoot(this);
 		Collection<Item> items = getItems();
-		RedDragonBody dragonBody = new RedDragonBody(IdSupplier.getId(), getProperties().gold, items);
-		return dragonBody;
+		return new RedDragonBody(IdSupplier.getId(), getProperties().gold, items);
 	}
 
 }

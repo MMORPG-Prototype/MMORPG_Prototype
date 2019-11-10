@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.PlayerPropertiesBuilder;
+import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.data.entities.Character;
 import pl.mmorpg.prototype.data.entities.CharacterSpell;
@@ -77,6 +78,10 @@ public class PlayerCharacter extends Monster
 		userCharacter.setIntelligence(properties.intelligence);
 		userCharacter.setManaPoints(properties.mp);
 		userCharacter.setStrength(properties.strength);
+	}
+
+	public void startGoingTo(int x, int y) {
+    	//super.findPathTo(x, y);
 	}
 
 	public void addGold(int gold)

@@ -1,18 +1,16 @@
 package pl.mmorpg.prototype.server.objects.spawners;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
+import com.badlogic.gdx.math.Rectangle;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
 import pl.mmorpg.prototype.server.objects.monsters.GameObjectsFactory;
 
 public class MonsterSpawner
 {
-	private Map<Long, MonsterSpawnerUnit> spawnersKeyMonsterId = new HashMap<>();
-	private Collection<MonsterSpawnerUnit> spawners = new LinkedList<>();
-	private GameObjectsFactory factory;
+	private final Map<Long, MonsterSpawnerUnit> spawnersKeyMonsterId = new HashMap<>();
+	private final Collection<MonsterSpawnerUnit> spawners = new LinkedList<>();
+	private final GameObjectsFactory factory;
 	
 	public MonsterSpawner(GameObjectsFactory factory)
 	{
@@ -28,21 +26,23 @@ public class MonsterSpawner
 	{
 		spawners.forEach( s -> s.updateSpawnInterval(deltaTime));
 	}
-	
-	public Monster getNewMonster(long id)
+
+	public Optional<Monster> getNewMonster(long id)
 	{
-		MonsterSpawnerUnit monsterSpawnerUnit = getSuiteSpawnerUnit();
-		if(monsterSpawnerUnit == null)
-			return null;
-		
-		Monster monster = monsterSpawnerUnit.getNewMonster(factory, id);
-		spawnersKeyMonsterId.put(monster.getId(), monsterSpawnerUnit);
-		return monster;
+		Optional<MonsterSpawnerUnit> monsterSpawnerUnit = getSuiteSpawnerUnit();
+		if (monsterSpawnerUnit.isEmpty())
+			return Optional.empty();
+
+		Monster monster = monsterSpawnerUnit.get().getNewMonster(factory, id);
+		spawnersKeyMonsterId.put(monster.getId(), monsterSpawnerUnit.get());
+		return Optional.of(monster);
 	}
 
-	private MonsterSpawnerUnit getSuiteSpawnerUnit()
+	private Optional<MonsterSpawnerUnit> getSuiteSpawnerUnit()
 	{
-		return spawners.stream().filter(sp -> sp.shouldSpawnMonster()).findAny().orElse(null);
+		return spawners.stream()
+				.filter(MonsterSpawnerUnit::shouldSpawnMonster)
+				.findAny();
 	}
 	
 	public void monsterHasDied(long monsterId)

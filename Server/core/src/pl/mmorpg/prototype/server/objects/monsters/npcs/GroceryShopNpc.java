@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.server.objects.monsters.npcs;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import com.badlogic.gdx.math.Rectangle;
 import pl.mmorpg.prototype.clientservercommon.NpcNames;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
@@ -13,9 +14,10 @@ import pl.mmorpg.prototype.server.states.PlayState;
 
 public class GroceryShopNpc extends ShopNpc
 {
-	public GroceryShopNpc(long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState)
+	public GroceryShopNpc(long id, Rectangle walkingBounds,
+			PixelCollisionMap<GameObject> collisionMap, PlayState playState)
 	{
-		super(NpcNames.GROCERY_NPC, id, collisionMap, playState, getShopItems());
+		super(NpcNames.GROCERY_NPC, id, walkingBounds, collisionMap, playState, getShopItems());
 	}
 
 	private static Collection<ShopItemWrapper> getShopItems()

@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.server.objects.spawners;
 import java.awt.Point;
 import java.util.Random;
 
+import com.badlogic.gdx.math.Rectangle;
 import pl.mmorpg.prototype.server.collision.pixelmap.IntegerRectangle;
 import pl.mmorpg.prototype.server.objects.monsters.GameObjectsFactory;
 import pl.mmorpg.prototype.server.objects.monsters.Monster;
@@ -14,22 +15,24 @@ public class MonsterSpawnerUnit
 
 	private final Class<? extends Monster> monsterType;
 	private final IntegerRectangle spawnArea;
+	private final Rectangle walkingBounds;
 	private final int maximumAmount;
 	private final float spawnInterval;
 
 	private float currentSpawnTime = 0.0f;
 	private int currentAmount = 0;
 
-	public MonsterSpawnerUnit(Class<? extends Monster> monsterType, IntegerRectangle spawnArea, int maximumAmount)
+	public MonsterSpawnerUnit(Class<? extends Monster> monsterType, IntegerRectangle spawnArea, Rectangle walkingBounds, int maximumAmount)
 	{
-		this(monsterType, spawnArea, maximumAmount, DEFAULT_SPAWN_INTERVAL);
+		this(monsterType, spawnArea, walkingBounds, maximumAmount, DEFAULT_SPAWN_INTERVAL);
 	}
 
-	public MonsterSpawnerUnit(Class<? extends Monster> monsterType, IntegerRectangle spawnArea, int maximumAmount,
+	public MonsterSpawnerUnit(Class<? extends Monster> monsterType, IntegerRectangle spawnArea, Rectangle walkingBounds, int maximumAmount,
 			float spawnInterval)
 	{
 		this.monsterType = monsterType;
 		this.spawnArea = spawnArea;
+		this.walkingBounds = walkingBounds;
 		this.maximumAmount = maximumAmount;
 		this.spawnInterval = spawnInterval;
 	}
@@ -51,7 +54,7 @@ public class MonsterSpawnerUnit
 
 	public Monster getNewMonster(GameObjectsFactory factory, long id)
 	{
-		Monster monster = (Monster) factory.produce(monsterType, id);
+		Monster monster = (Monster) factory.produce(monsterType, id, walkingBounds);
 		Point randomSpawnLocation = getRandomSpawnLocation();
 		monster.setPosition(randomSpawnLocation.x, randomSpawnLocation.y);
 		currentAmount++;

@@ -30,27 +30,30 @@ public class ObjectsFactory
 
     public GameObject produce(String identifier, long id, float x, float y, CollisionMap<GameObject> linkedCollisionMap)
     {
-        GameObject object;
-        if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GreenDragonBody.class)))
-        	object = new GreenDragonBody(id);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(RedDragonBody.class)))
-        	object = new RedDragonBody(id);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GrayDragonBody.class)))
-        	object = new GrayDragonBody(id);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(FireBall.class)))
-            object = new FireBall(id, linkedCollisionMap, registerer);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SkeletonBody.class)))
-        	object = new SkeletonBody(id);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SnakeBody.class)))
-        	object = new SnakeBody(id);
-        else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(QuestBoard.class)))
-        	object = new QuestBoard(id, registerer);
-        else
-            throw new ObjectIdentifierNotFoundException(identifier);
-
+        GameObject object = doProduce(identifier, id, linkedCollisionMap);
 		initializePosition(x, y, object);
 		return object;
     }
+
+	private GameObject doProduce(String identifier, long id, CollisionMap<GameObject> linkedCollisionMap)
+	{
+		if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GreenDragonBody.class)))
+			return new GreenDragonBody(id);
+		else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(RedDragonBody.class)))
+			return new RedDragonBody(id);
+		else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(GrayDragonBody.class)))
+			return new GrayDragonBody(id);
+		else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(FireBall.class)))
+			return new FireBall(id, linkedCollisionMap, registerer);
+		else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SkeletonBody.class)))
+			return new SkeletonBody(id);
+		else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(SnakeBody.class)))
+			return new SnakeBody(id);
+		else if(identifier.equals(ObjectsIdentifier.getObjectIdentifier(QuestBoard.class)))
+			return new QuestBoard(id, registerer);
+		
+		throw new ObjectIdentifierNotFoundException(identifier);
+	}
 
 	protected void initializePosition(float x, float y, GameObject object)
 	{

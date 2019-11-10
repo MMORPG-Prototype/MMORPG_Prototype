@@ -3,6 +3,7 @@ package pl.mmorpg.prototype.server.states;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.script.ScriptException;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Server;
 
@@ -99,7 +101,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		Gdx.input.setInputProcessor(inputHandler);
 
 		addNpcs();
-		addGameObject(ObjectsIdentifiers.QUEST_BOARD, 100, 100);
+		addGameObject(ObjectsIdentifiers.QUEST_BOARD, 100, 100, new Rectangle(100, 100, 0, 0));
 	}
 
 	private Integer getMapProperty(TiledMap map, String name)
@@ -137,20 +139,26 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		float spawnInterval = (float) properties.get("spawnInterval");
 		int maximumMonsterAmount = (int) properties.get("MaximumMonsterAmount");
 		IntegerRectangle spawnArea = new IntegerRectangle(spawnerElement.getRectangle());
-		MonsterSpawnerUnit spawnerUnit = new MonsterSpawnerUnit(monsterType, spawnArea, maximumMonsterAmount,
-				spawnInterval);
+		MonsterSpawnerUnit spawnerUnit = new MonsterSpawnerUnit(monsterType, spawnArea,
+				new Rectangle(0, 0, Float.MAX_VALUE, Float.MAX_VALUE), maximumMonsterAmount, spawnInterval);
 		monsterSpawner.addSpawner(spawnerUnit);
 	}
 
 	private void addNpcs()
 	{
-		addGameObject(ObjectsIdentifiers.GROCERY_NPC, 400, 400);
-		addGameObject(ObjectsIdentifiers.QUEST_DIALOG_NPC, 300, 300);
+		addGameObject(ObjectsIdentifiers.GROCERY_NPC, 400, 400, new Rectangle(300, 300, 200, 200));
+		addGameObject(ObjectsIdentifiers.QUEST_DIALOG_NPC, 300, 300, new Rectangle(300, 300, 200, 200));
 	}
 
 	void addGameObject(String identifier, int x, int y)
 	{
-		GameObject gameObject = objectsFactory.produce(ObjectsIdentifier.getObjectType(identifier), IdSupplier.getId());
+		Rectangle unrestrictedWalkingBounds = new Rectangle(0, 0, Float.MAX_VALUE, Float.MAX_VALUE);
+		addGameObject(identifier, x, y, unrestrictedWalkingBounds);
+	}
+
+	void addGameObject(String identifier, int x, int y, Rectangle walkingBounds)
+	{
+		GameObject gameObject = objectsFactory.produce(ObjectsIdentifier.getObjectType(identifier), IdSupplier.getId(), walkingBounds);
 		gameObject.setPosition(x, y);
 		addGameObject(gameObject);
 	}
@@ -195,9 +203,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 	private void handleSpawner(float deltaTime)
 	{
 		monsterSpawner.updateSpawners(deltaTime);
-		Monster spawnedMonster = monsterSpawner.getNewMonster(IdSupplier.getId());
-		if (spawnedMonster != null)
-			addGameObject(spawnedMonster);
+		monsterSpawner.getNewMonster(IdSupplier.getId())
+				.ifPresent(this::addGameObject);
 	}
 
 	@Override

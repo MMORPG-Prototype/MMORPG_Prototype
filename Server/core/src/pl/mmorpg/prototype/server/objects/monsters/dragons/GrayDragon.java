@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.server.objects.monsters.dragons;
 
 import java.util.Collection;
 
+import com.badlogic.gdx.math.Rectangle;
 import pl.mmorpg.prototype.server.objects.monsters.properties.builders.GrayDragonPropertiesBuilder;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
@@ -19,9 +20,10 @@ public class GrayDragon extends Dragon
 {
 	private static final MonsterLootGenerator dragonLootGenerator = new GreenDragonLootGenerator();
 
-	public GrayDragon(long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState)
+	public GrayDragon(long id, Rectangle walkingBounds,
+			PixelCollisionMap<GameObject> collisionMap, PlayState playState)
 	{
-		super(Assets.get("monster.png"), id, getDragonProperies(), collisionMap, playState);
+		super(Assets.get("monster.png"), id, getDragonProperies(), walkingBounds, collisionMap, playState);
 	}
 	
 	private static MonsterProperties getDragonProperies()

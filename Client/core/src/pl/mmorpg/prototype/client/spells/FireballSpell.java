@@ -14,7 +14,7 @@ public class FireballSpell extends Spell
 	@Override
 	public String getDescription()
 	{
-		return "Some much longer description, you bastard, Some much longer description, you bastardSome much longer description, you bastardSome much longer description, you bastard";
+		return "Don't get burned";
 	}
 
 	@Override

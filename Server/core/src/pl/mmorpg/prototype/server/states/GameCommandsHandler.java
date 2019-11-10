@@ -9,6 +9,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import com.badlogic.gdx.math.Rectangle;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.ObjectsIdentifiers;
 import pl.mmorpg.prototype.server.UserInfo;
@@ -48,7 +49,7 @@ public class GameCommandsHandler
 
 	public void addMonster(String identifier, int x, int y)
 	{
-		game.addGameObject(identifier, x, y);
+		game.addGameObject(identifier, x, y, new Rectangle(0, 0, Float.MAX_VALUE, Float.MAX_VALUE));
 	}
 
 	public void addGreenDragon(int x, int y)

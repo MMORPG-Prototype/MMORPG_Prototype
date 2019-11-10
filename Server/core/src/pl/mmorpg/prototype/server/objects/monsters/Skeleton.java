@@ -2,6 +2,7 @@ package pl.mmorpg.prototype.server.objects.monsters;
 
 import java.util.Collection;
 
+import com.badlogic.gdx.math.Rectangle;
 import pl.mmorpg.prototype.server.objects.monsters.properties.builders.SkeletonPropertiesBuilder;
 import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.IdSupplier;
@@ -19,9 +20,10 @@ public class Skeleton extends LootableMonster
 {
 	public static final MonsterLootGenerator skeletonLootGenerator = new SkeletonLootGenerator();
 	
-	public Skeleton(long id, PixelCollisionMap<GameObject> collisionMap, PlayState playState)
+	public Skeleton(long id, Rectangle walkingBounds, PixelCollisionMap<GameObject> collisionMap,
+			PlayState playState)
 	{
-		super(Assets.get("monster.png"), id, new SkeletonPropertiesBuilder().build(), collisionMap, playState);
+		super(Assets.get("monster.png"), id, new SkeletonPropertiesBuilder().build(), walkingBounds, collisionMap, playState);
 	}
 
 	@Override

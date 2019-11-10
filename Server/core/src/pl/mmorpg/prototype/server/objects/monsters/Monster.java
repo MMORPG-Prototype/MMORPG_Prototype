@@ -8,11 +8,14 @@ import pl.mmorpg.prototype.clientservercommon.StatisticsCalculator;
 import pl.mmorpg.prototype.clientservercommon.StatisticsOperations;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.MonsterProperties;
 import pl.mmorpg.prototype.clientservercommon.packets.monsters.properties.Statistics;
+import pl.mmorpg.prototype.server.collision.interfaces.CollisionMap;
+import pl.mmorpg.prototype.server.collision.pixelmap.PixelCollisionMap;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.server.communication.PacketsSender;
 import pl.mmorpg.prototype.clientservercommon.EquipmentPosition;
 import pl.mmorpg.prototype.data.entities.components.InventoryPosition;
 import pl.mmorpg.prototype.server.exceptions.*;
+import pl.mmorpg.prototype.server.objects.GameObject;
 import pl.mmorpg.prototype.server.objects.MovableGameObject;
 import pl.mmorpg.prototype.server.objects.effects.Effect;
 import pl.mmorpg.prototype.server.objects.items.equipment.EquipableItem;
@@ -21,9 +24,17 @@ import pl.mmorpg.prototype.server.objects.items.StackableItem;
 import pl.mmorpg.prototype.server.objects.items.Useable;
 import pl.mmorpg.prototype.server.objects.monsters.abilities.Ability;
 import pl.mmorpg.prototype.server.objects.monsters.abilities.TimedAbility;
+import pl.mmorpg.prototype.server.path.search.BestFirstPathFinder;
+import pl.mmorpg.prototype.server.path.search.PathFinder;
+import pl.mmorpg.prototype.server.path.search.PathSimplifier;
+import pl.mmorpg.prototype.server.path.search.collisionDetectors.RestrictedAreaGameObjectCollisionDetector;
+import pl.mmorpg.prototype.server.path.search.distanceComparators.DistanceComparator;
+import pl.mmorpg.prototype.server.path.search.distanceComparators.ManhattanDistanceComparator;
 import pl.mmorpg.prototype.server.resources.Assets;
 import pl.mmorpg.prototype.server.states.PlayState;
 
+import java.awt.*;
+import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,29 +42,33 @@ public abstract class Monster extends MovableGameObject implements ItemUser, Equ
 {
 	private static final float RELEASE_TARGET_DISTANCE = 400.0f;
 	private static final BitmapFont font = Assets.getFont();
+	private static final PathFinder pathFinder = new BestFirstPathFinder();
 
 	// Only equipped items
 	private final Map<EquipmentPosition, ItemWithEffectWrapper> equipmentPositionToEffectMap = new ConcurrentHashMap<>();
 	// All items
 	private final Map<Long, Item> items = new ConcurrentHashMap<>();
-    private final List<Ability> abilities = new LinkedList<>();
-    private final Map<Class<? extends Effect>, Effect> ongoingEffects = new ConcurrentHashMap<>();
+	private final List<Ability> abilities = new LinkedList<>();
+	private final Map<Class<? extends Effect>, Effect> ongoingEffects = new ConcurrentHashMap<>();
+	private LinkedList<Point> currentPath = new LinkedList<>();
 
-    protected final MonsterProperties properties;
+	protected final MonsterProperties properties;
 	// Actual statistics after modifications (by buffs, equipment, items etc)
-    private Statistics actualStatistics;
-    private Monster targetedMonster = null;
-    private float hitTime = 1000.0f;
-    protected PlayState linkedState;
+	private Statistics actualStatistics;
+	private Monster targetedMonster = null;
+	private final RestrictedAreaGameObjectCollisionDetector collisionDetector;
+	private float hitTime = 1000.0f;
+	protected PlayState linkedState;
 
     private List<Monster> targetedBy = new LinkedList<>();
 
     public Monster(Texture lookout, long id, PlayState playState, MonsterProperties properties)
     {
         super(lookout, id, playState);
-        linkedState = playState;
+		linkedState = playState;
         this.properties = properties;
         this.actualStatistics = StatisticsCalculator.calculateStatistics(properties);
+		collisionDetector = new RestrictedAreaGameObjectCollisionDetector(playState.getCollisionMap(), this);
     }
 
     @Override
@@ -63,7 +78,8 @@ public abstract class Monster extends MovableGameObject implements ItemUser, Equ
         targetedMonsterHandle(deltaTime);
         abilitiesUsageHandle();
         ongoingEffectsHandle(deltaTime);
-    }
+		pathFollowingHandle(deltaTime);
+	}
 
 	private void targetedMonsterHandle(float deltaTime)
 	{
@@ -153,14 +169,59 @@ public abstract class Monster extends MovableGameObject implements ItemUser, Equ
 		}
 	}
 
+	private void pathFollowingHandle(float deltaTime)
+	{
+		if (!currentPath.isEmpty())
+			followPath(deltaTime);
+	}
+
+	private void followPath(float deltaTime)
+	{
+		Point nearestTarget = currentPath.getFirst();
+		makeStepToPoint(deltaTime, linkedState.getCollisionMap(), nearestTarget.x, nearestTarget.y);
+		if (nearPoint(nearestTarget))
+			currentPath.pollFirst();
+	}
+
+	private boolean nearPoint(Point nearestTarget)
+	{
+		return Math.abs(getX() - nearestTarget.x) + Math.abs(getY() - nearestTarget.y) < 2.0f;
+	}
+
+	protected void findPathTo(int x, int y)
+	{
+		//TODO FIX modulos
+		int modulo = 3;
+		Point startPoint = new Point(x - x%modulo, y - y%modulo);
+		Point endPoint = new Point(x - x% modulo, y - y%modulo);
+		DistanceComparator distanceComparator = new ManhattanDistanceComparator(endPoint);
+		Collection<? extends Point> path = pathFinder.find(startPoint, endPoint, distanceComparator, collisionDetector);
+		System.out.println("Path");
+		currentPath = new PathSimplifier().simplify(path);
+		Collections.reverse(currentPath);
+	}
+
+	public boolean isFollowingPath() {
+    	return !currentPath.isEmpty();
+	}
+
 	@Override
     public void render(Batch batch)
     {
         super.render(batch);
         font.draw(batch, String.valueOf(properties.hp), getX() + 3, getY() + 40);
-    }
 
-    public void targetMonster(Monster target)
+		drawDebugPath(batch);
+	}
+
+	private void drawDebugPath(Batch batch)
+	{
+		Texture debugTexture = Assets.get("debug.png");
+		for(Point point : currentPath)
+			batch.draw(debugTexture, point.x, point.y, 3, 3);
+	}
+
+	public void targetMonster(Monster target)
     {
         targetedMonster = target;
         target.addBeingTargetedBy(this);
