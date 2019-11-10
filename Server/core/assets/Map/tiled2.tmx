@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="right-down" width="170" height="124" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="401">
+<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="right-down" width="170" height="124" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="409">
  <properties>
   <property name="minimap" value="graphics/minimaps/055-1.png"/>
   <property name="music" value="mystique-forest.ogg"/>
@@ -945,6 +945,48 @@
    <properties>
     <property name="MaximumMonsterAmount" type="int" value="2"/>
     <property name="MonsterType" value="Green Dragon"/>
+    <property name="spawnInterval" type="float" value="30"/>
+   </properties>
+  </object>
+  <object id="403" x="440.667" y="3387.33" width="191.333" height="294.667">
+   <properties>
+    <property name="MaximumMonsterAmount" type="int" value="1"/>
+    <property name="MonsterType" value="Quest dialog npc"/>
+    <property name="spawnInterval" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="404" x="52.3335" y="3362.67" width="191.333" height="294.667">
+   <properties>
+    <property name="MaximumMonsterAmount" type="int" value="1"/>
+    <property name="MonsterType" value="Grocery npc"/>
+    <property name="spawnInterval" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="405" x="1643.67" y="2246.5" width="571.333" height="460.333">
+   <properties>
+    <property name="MaximumMonsterAmount" type="int" value="5"/>
+    <property name="MonsterType" value="Snake"/>
+    <property name="spawnInterval" type="float" value="30"/>
+   </properties>
+  </object>
+  <object id="406" x="797.667" y="3105.17" width="498" height="235">
+   <properties>
+    <property name="MaximumMonsterAmount" type="int" value="1"/>
+    <property name="MonsterType" value="Red Dragon"/>
+    <property name="spawnInterval" type="float" value="30"/>
+   </properties>
+  </object>
+  <object id="407" x="580.333" y="2830.5" width="70" height="84.3333">
+   <properties>
+    <property name="MaximumMonsterAmount" type="int" value="1"/>
+    <property name="MonsterType" value="Gray Dragon"/>
+    <property name="spawnInterval" type="float" value="30"/>
+   </properties>
+  </object>
+  <object id="408" x="184.333" y="2887.17" width="70" height="84.3333">
+   <properties>
+    <property name="MaximumMonsterAmount" type="int" value="1"/>
+    <property name="MonsterType" value="Skeleton"/>
     <property name="spawnInterval" type="float" value="30"/>
    </properties>
   </object>

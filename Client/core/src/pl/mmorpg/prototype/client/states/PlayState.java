@@ -417,7 +417,6 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	{
 		float realX = getRealX(x);
 		float realY = getRealY(y);
-		drawPathTo(realX, realY);
 		sendProperLeftClickedPacket(realX, realY);
 		System.out.println("X: " + realX + ", Y: " + realY);
 	}
@@ -440,7 +439,10 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		else if (object instanceof QuestBoard)
 			return PacketsMaker.makeGetQuestBoardInfoPacket(object.getId());
 		else
+		{
+			drawPathTo(realX, realY);
 			return PacketsMaker.makeFindPathAndGoToPacket((int) realX, (int) realY);
+		}
 	}
 
 	private void drawPathTo(float x, float y)

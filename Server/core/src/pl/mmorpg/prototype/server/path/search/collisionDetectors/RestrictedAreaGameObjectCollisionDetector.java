@@ -3,20 +3,17 @@ package pl.mmorpg.prototype.server.path.search.collisionDetectors;
 import java.awt.Rectangle;
 
 import pl.mmorpg.prototype.server.collision.interfaces.CollisionMap;
-import pl.mmorpg.prototype.server.collision.interfaces.RectangleCollisionObject;
 import pl.mmorpg.prototype.server.objects.GameObject;
 
 public class RestrictedAreaGameObjectCollisionDetector implements CollisionDetector
 {
 	private final static float RESTRICTED_AREA_DISTANCE = 2000.0f;
-	private final CollisionMap<GameObject> collisionMap;
-	private final GameObject gameObject;
+	private final SimpleCollisionDetector simpleCollisionDetector;
 	private final Rectangle restrictedArea;
 
 	public RestrictedAreaGameObjectCollisionDetector(CollisionMap<GameObject> collisionMap, GameObject gameObject)
 	{
-		this.collisionMap = collisionMap;
-		this.gameObject = gameObject;
+		simpleCollisionDetector = new SimpleCollisionDetector(collisionMap, gameObject);
 		this.restrictedArea = createRestrictedAreaRectangle(gameObject.getX(), gameObject.getY());
 	}
 
@@ -29,24 +26,14 @@ public class RestrictedAreaGameObjectCollisionDetector implements CollisionDetec
 	}
 
 	@Override
-	public boolean isColliding(int x, int y)
+	public boolean areColliding(int x, int y)
 	{
-		return !(isInRestrictedArea(x, y) && isEmptyOrSameObject(x - 2, y - 2)
-				&& isEmptyOrSameObject(x + (int)gameObject.getWidth() + 2, y - 2)
-				&& isEmptyOrSameObject(x - 2, y + (int)gameObject.getHeight() + 2)
-				&& isEmptyOrSameObject(x + (int)gameObject.getWidth() + 2, y + (int)gameObject.getHeight() + 2)
-				&& isEmptyOrSameObject(x + (int)gameObject.getWidth()/2, y + (int)gameObject.getHeight()/2));
+		return !isInRestrictedArea(x, y) || simpleCollisionDetector.areColliding(x, y);
 	}
 	
 	private boolean isInRestrictedArea(int x, int y)
 	{
 		return restrictedArea.contains(x, y);
-	}
-
-	private boolean isEmptyOrSameObject(int x, int y)
-	{
-		RectangleCollisionObject object = collisionMap.getTopObject(x, y);
-		return (object == null || object == this.gameObject) && collisionMap.isValidPoint(x, y);
 	}
 
 }

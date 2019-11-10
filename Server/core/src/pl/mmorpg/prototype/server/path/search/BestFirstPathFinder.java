@@ -82,7 +82,7 @@ public class BestFirstPathFinder implements PathFinder
 
 	private void addIfNotColliding(CollisionDetector collisionDetector, Collection<Point> successors, Point e)
 	{
-		if (!collisionDetector.isColliding(e.x, e.y))
+		if (!collisionDetector.areColliding(e.x, e.y))
 			successors.add(e);
 	}
 }

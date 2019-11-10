@@ -6,14 +6,16 @@ import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.ItemIdentifiers;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationPacket;
 import pl.mmorpg.prototype.clientservercommon.packets.CharacterCreationReplyPacket;
+import pl.mmorpg.prototype.data.entities.jointables.CharactersQuests;
+import pl.mmorpg.prototype.data.entities.repositories.*;
 import pl.mmorpg.prototype.server.communication.PacketsMaker;
 import pl.mmorpg.prototype.data.entities.Character;
 import pl.mmorpg.prototype.data.entities.CharacterItem;
 import pl.mmorpg.prototype.data.entities.components.InventoryPosition;
-import pl.mmorpg.prototype.data.entities.repositories.CharacterItemRepository;
-import pl.mmorpg.prototype.data.entities.repositories.CharacterRepository;
-import pl.mmorpg.prototype.data.entities.repositories.CharacterSpellRepository;
-import pl.mmorpg.prototype.data.entities.repositories.UserRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class CharacterCreator
 {
@@ -34,6 +36,11 @@ public class CharacterCreator
 		character.setUser(userRepo.findById(userId).get());
 		CharacterSpellRepository spellRepo = SpringContext.getBean(CharacterSpellRepository.class);
 		character.setSpells(Lists.newArrayList(spellRepo.findAll()));
+		List<CharactersQuests> quests = StreamSupport
+				.stream(SpringContext.getBean(QuestRepository.class).findAllFetchItemReward().spliterator(), false)
+				.map(quest -> new CharactersQuests(character, quest))
+				.collect(Collectors.toList());
+		character.setQuests(quests);
 		characterRepo.save(character);
 		addDebugThings(character);
 		replyPacket.setCharacter(PacketsMaker.makeCharacterPacket(character));

@@ -51,6 +51,7 @@ import pl.mmorpg.prototype.server.objects.monsters.bodies.MonsterBody;
 import pl.mmorpg.prototype.server.objects.monsters.spells.objects.ThrowableObject;
 import pl.mmorpg.prototype.server.objects.spawners.MonsterSpawner;
 import pl.mmorpg.prototype.server.objects.spawners.MonsterSpawnerUnit;
+import pl.mmorpg.prototype.server.path.search.collisionDetectors.SimpleCollisionDetector;
 import pl.mmorpg.prototype.server.quests.events.Event;
 import pl.mmorpg.prototype.server.quests.events.EventsHandler;
 import pl.mmorpg.prototype.server.quests.events.MonsterKilledEvent;
@@ -100,8 +101,7 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 
 		Gdx.input.setInputProcessor(inputHandler);
 
-		addNpcs();
-		addGameObject(ObjectsIdentifiers.QUEST_BOARD, 100, 100, new Rectangle(100, 100, 0, 0));
+		addGameObject(ObjectsIdentifiers.QUEST_BOARD, 240, 240, new Rectangle(240, 240, 0, 0));
 	}
 
 	private Integer getMapProperty(TiledMap map, String name)
@@ -140,14 +140,8 @@ public class PlayState extends State implements GameObjectsContainer, PacketsSen
 		int maximumMonsterAmount = (int) properties.get("MaximumMonsterAmount");
 		IntegerRectangle spawnArea = new IntegerRectangle(spawnerElement.getRectangle());
 		MonsterSpawnerUnit spawnerUnit = new MonsterSpawnerUnit(monsterType, spawnArea,
-				spawnerElement.getRectangle(), maximumMonsterAmount, spawnInterval);
+				spawnerElement.getRectangle(), maximumMonsterAmount, spawnInterval, collisionMap);
 		monsterSpawner.addSpawner(spawnerUnit);
-	}
-
-	private void addNpcs()
-	{
-		addGameObject(ObjectsIdentifiers.GROCERY_NPC, 400, 400, new Rectangle(300, 300, 200, 200));
-		addGameObject(ObjectsIdentifiers.QUEST_DIALOG_NPC, 300, 300, new Rectangle(300, 300, 200, 200));
 	}
 
 	void addGameObject(String identifier, int x, int y)

@@ -21,7 +21,6 @@ public class FireballAbility extends TimedAbility
 		this.linkedContainer = linkedContainer;
 	}
 
-
 	@Override
 	public void use(Monster target, PacketsSender packetSender)
 	{
