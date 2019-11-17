@@ -47,7 +47,7 @@ public class LevelUpDialog extends Dialog
 
 		getContentTable().add(strengthAddButton);
 		getContentTable().row();
-		text("Magic: ").left();
+		text("Intelligence: ").left();
 		intelligenceValueLabel = new Label(character.getIntelligence().toString(), getSkin());
 		text(intelligenceValueLabel).right();
 

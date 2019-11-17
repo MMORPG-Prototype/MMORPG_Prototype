@@ -24,12 +24,12 @@ public class StatisticsCalculator
 
 	public static int calculateAttackRange(MonsterProperties properties)
 	{
-		return 40;
+		return 40 + properties.dexterity;
 	}
 
 	public static float calculateAttackSpeed(MonsterProperties properties)
 	{
-		return 2.0f;
+		return 2.0f - properties.dexterity*0.05f;
 	}
 
 	public static int calculateDefense(MonsterProperties properties)

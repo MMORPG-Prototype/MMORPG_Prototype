@@ -21,12 +21,7 @@ public class MonsterProperties
 
 	public static class Builder
 	{
-		private MonsterProperties monsterProperties;
-
-		public Builder()
-		{
-			monsterProperties = new MonsterProperties();
-		}
+		private MonsterProperties monsterProperties = new MonsterProperties();
 
 		public Builder experienceGain(int experienceGain)
 		{
