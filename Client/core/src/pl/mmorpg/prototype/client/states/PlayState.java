@@ -103,7 +103,7 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 	private final OrthographicCamera camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
 	private TiledMap map;
 	private TiledMapRenderer mapRenderer;
-	private PixelCollisionMap<GameObject> collisionMap = createCollisionMap(camera);
+	private PixelCollisionMap<GameObject> collisionMap;
 	private InputProcessorAdapter inputHandler;
 	private Player player;
 	private UserInterface userInterface;
@@ -133,7 +133,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		mapHeight = map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class);
 		mapRenderer = new OrthogonalTiledMapRenderer(map, Assets.getBatch());
 
+		int newCameraX = playerData.getStartingX() - 8;
+		int newCameraY = playerData.getStartingY() - 8;
+		collisionMap = createCollisionMap(newCameraX, newCameraY);
 		player = new Player(playerData.getId(), collisionMap, playerData, packetHandlerRegisterer);
+		cameraUpdate();
 		add(player);
 		gameObjects.put((long) playerData.getId(), player);
 		userInterface = new UserInterface(this, player, packetHandlerRegisterer);
@@ -386,11 +390,11 @@ public class PlayState implements State, GameObjectsContainer, PacketsSender, Gr
 		collision.forEach((rectangle) -> collisionMap.insertStaticObject(rectangle.getRectangle()));
 	}
 
-	private static PixelCollisionMap<GameObject> createCollisionMap(Camera camera)
+	private static PixelCollisionMap<GameObject> createCollisionMap(int cameraX, int cameraY)
 	{
 		UndefinedStaticObjectCreator<GameObject> collisionObjectCreator = GameObject.CollisionMapGameObject::new;
-		return new PixelCollisionMap<>(CAMERA_WIDTH + 100, CAMERA_HEIGHT + 100, (int) camera.position.x,
-				(int) camera.position.y, collisionObjectCreator);
+		return new PixelCollisionMap<>(CAMERA_WIDTH + 100, CAMERA_HEIGHT + 100, cameraX,
+				cameraY, collisionObjectCreator);
 	}
 
 	public void userWantsToChangeCharacter()

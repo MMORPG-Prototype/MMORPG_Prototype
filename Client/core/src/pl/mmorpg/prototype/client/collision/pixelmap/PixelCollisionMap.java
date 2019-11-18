@@ -21,8 +21,8 @@ public class PixelCollisionMap<T extends RectangleCollisionObject & Identifiable
 	private final Object[][] collisionMap;
 	private final Map<Long, CollisionObjectInfo<T>> insertedCollisionObjects = new ConcurrentHashMap<>();
 	private final UndefinedStaticObjectCreator<T> undefinedStaticObjectCreator;
-	private int shiftX = 0;
-	private int shiftY = 0;
+	private int shiftX;
+	private int shiftY;
 
 	public PixelCollisionMap(int width, int height)
 	{
