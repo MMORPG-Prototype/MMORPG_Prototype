@@ -20,8 +20,8 @@ public class PlayInputSingleHandle extends InputProcessorAdapter
     {
         this.userInterface = userInterface;
         this.packetSender = packetSender;
-        this.itemQuickAccessDialog = (ItemQuickAccessDialog) userInterface.getDialogs().searchForDialog(ItemQuickAccessDialog.class);
-        this.spellQuickAccessDialog = (SpellQuickAccessDialog) userInterface.getDialogs().searchForDialog(SpellQuickAccessDialog.class);
+        this.itemQuickAccessDialog = userInterface.getDialogs().searchForDialog(ItemQuickAccessDialog.class);
+        this.spellQuickAccessDialog = userInterface.getDialogs().searchForDialog(SpellQuickAccessDialog.class);
         this.player = player;
     }
     
@@ -42,6 +42,10 @@ public class PlayInputSingleHandle extends InputProcessorAdapter
             dialogs.showOrHide(keycode);
         else if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9)
         	spellQuickAccessAction(keycode - Keys.NUM_1);
+        else if (keycode == Keys.MINUS)
+            spellQuickAccessAction(10);
+        else if (keycode == Keys.EQUALS)
+            spellQuickAccessAction(11);
         else if (keycode >= Keys.F1 && keycode <= Keys.F12)
             itemQuickAccessAction(keycode - Keys.F1);
 
