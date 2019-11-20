@@ -30,20 +30,12 @@ public class PacketHandlersRegisterer
         return destination;
     }
 
-    public static Kryo registerAllAnnotated(Kryo destination, Class<? extends Annotation> annotationType)
-    {
-        String currentPackageName = getUsedPackageName();
-        destination = registerAllAnnotated(destination, defaultAnnotationType, currentPackageName);
-        return destination;
-    }
-
     private static String getUsedPackageName()
     {
 		return "pl.mmorpg.prototype.clientservercommon.packets";
     }
 
-    public static Kryo registerAllAnnotated(Kryo destination, Class<? extends Annotation> annotationType,
-            String sourcePackageName)
+    public static Kryo registerAllAnnotated(Kryo destination, Class<? extends Annotation> annotationType)
     {
 		Reflections reflections = new Reflections(getUsedPackageName());
         Set<Class<?>> registerableTypes = reflections.getTypesAnnotatedWith(annotationType);
