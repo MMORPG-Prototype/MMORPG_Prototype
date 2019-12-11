@@ -12,7 +12,7 @@ import org.reflections.Reflections;
 
 import com.esotericsoftware.kryo.Kryo;
 
-public class PacketHandlersRegisterer
+public class PacketsRegisterer
 {
     private final static Class<? extends Annotation> defaultAnnotationType = Registerable.class;
     private final static Class<? extends Annotation> defaultAnnotationBase = RegisterableBase.class;

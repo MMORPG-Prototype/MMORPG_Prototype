@@ -9,13 +9,12 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 
 import pl.mmorpg.prototype.SpringContext;
 import pl.mmorpg.prototype.clientservercommon.Settings;
-import pl.mmorpg.prototype.clientservercommon.registering.PacketHandlersRegisterer;
+import pl.mmorpg.prototype.clientservercommon.registering.PacketsRegisterer;
 import pl.mmorpg.prototype.data.entities.repositories.UserRepository;
 import pl.mmorpg.prototype.server.commandUtils.CommandHandler;
 import pl.mmorpg.prototype.data.entities.User;
@@ -76,7 +75,7 @@ public class GameServer extends ApplicationAdapter
     private Server initializeServer()
     {
         server = new Server();
-        PacketHandlersRegisterer.registerPackets(server.getKryo());
+        PacketsRegisterer.registerPackets(server.getKryo());
         return server;
     }
 

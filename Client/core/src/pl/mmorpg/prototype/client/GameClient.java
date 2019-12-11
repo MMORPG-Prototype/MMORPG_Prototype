@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 
 import pl.mmorpg.prototype.client.packethandlers.PacketHandlerDispatcher;
@@ -20,7 +19,7 @@ import pl.mmorpg.prototype.client.states.DefaultConnectionInfo;
 import pl.mmorpg.prototype.client.states.PlayState;
 import pl.mmorpg.prototype.client.states.State;
 import pl.mmorpg.prototype.client.states.StateManager;
-import pl.mmorpg.prototype.clientservercommon.registering.PacketHandlersRegisterer;
+import pl.mmorpg.prototype.clientservercommon.registering.PacketsRegisterer;
 
 public class GameClient extends ApplicationAdapter
 {
@@ -52,7 +51,7 @@ public class GameClient extends ApplicationAdapter
 
     private Client initializeClient(PacketHandlerDispatcher dispatcher)
     {
-        PacketHandlersRegisterer.registerPackets(client.getKryo());
+        PacketsRegisterer.registerPackets(client.getKryo());
         clientListener = new ClientListener(dispatcher);
         client.addListener(clientListener);
         client.start();
